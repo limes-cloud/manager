@@ -1,0 +1,293 @@
+syntax = "proto3";
+
+package manager;
+option go_package = "./v1;v1";
+
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+import "manager_role.proto";
+import "manager_menu.proto";
+import "manager_department.proto";
+import "manager_user.proto";
+import "manager_user_role.proto";
+import "manager_role_menu.proto";
+import "manager_auth.proto";
+
+
+service Service {
+
+
+  // GetRole 获取指定角色，不开放http，只允许内部grpc调用
+  rpc GetRole (GetRoleRequest) returns (GetRoleReply) {}
+
+  // CurrentRoleMenus 获取当前用户的角色列表
+  rpc CurrentRoleMenuTree (google.protobuf.Empty) returns (CurrentRoleMenuTreeReply) {
+    option (google.api.http) = {
+      get: "/manager/v1/role/menu/tree",
+      response_body:"list"
+    };
+  }
+
+  // CurrentRoleMenus 获取当前用户的角色列表
+  rpc GetRoleMenuIds (GetRoleMenuIdsRequest) returns (GetRoleMenuIdsReply) {
+    option (google.api.http) = {
+      get: "/manager/v1/role/menu/ids",
+      response_body:"list",
+    };
+  }
+
+  // AddRoleMenus 更新角色菜单
+  rpc UpdateRoleMenus(UpdateRoleMenuRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      put: "/manager/v1/role/menu",
+      body: "*"
+    };
+  }
+
+  // GetRoleTree 获取角色树
+  rpc GetRoleTree (google.protobuf.Empty) returns (GetRoleTreeReply) {
+    option (google.api.http) = {
+      get: "/manager/v1/role/tree",
+      response_body: "role",
+    };
+  }
+
+  // AddRole 新增角色
+  rpc AddRole (AddRoleRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/manager/v1/role",
+      body: "*",
+    };
+  }
+
+  // UpdateRole 更新角色
+  rpc UpdateRole (UpdateRoleRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      put: "/manager/v1/role",
+      body: "*",
+    };
+  }
+
+  // DeleteRole 删除角色
+  rpc DeleteRole (DeleteRoleRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      delete: "/manager/v1/role",
+    };
+  }
+
+  // GetMenuTree 获取菜单树
+  rpc GetMenuTree (google.protobuf.Empty) returns (GetMenuTreeReply) {
+    option (google.api.http) = {
+      get: "/manager/v1/menu/tree",
+      response_body: "list",
+    };
+  }
+
+  // AddMenu 新增菜单
+  rpc AddMenu (AddMenuRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/manager/v1/menu",
+      body: "*",
+    };
+  }
+
+  // UpdateMenu 更新菜单
+  rpc UpdateMenu (UpdateMenuRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      put: "/manager/v1/menu",
+      body: "*",
+    };
+  }
+
+  // DeleteMenu 删除菜单
+  rpc DeleteMenu (DeleteMenuRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      delete: "/manager/v1/menu",
+    };
+  }
+
+  // GetDepartmentTree 获取指定部门，不开放http，只允许内部grpc调用
+  rpc GetDepartment (GetDepartmentRequest) returns (GetDepartmentReply) {}
+
+  // GetDepartmentTree 获取部门树
+  rpc GetDepartmentTree (google.protobuf.Empty) returns (GetDepartmentTreeReply) {
+    option (google.api.http) = {
+      get: "/manager/v1/department/tree",
+      response_body: "department",
+    };
+  }
+
+  // AddDepartment 删除部门信息
+  rpc AddDepartment (AddDepartmentRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/manager/v1/department",
+      body: "*",
+    };
+  }
+
+  // UpdateDepartment 更新部门信息
+  rpc UpdateDepartment (UpdateDepartmentRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      put: "/manager/v1/department",
+      body: "*",
+    };
+  }
+
+  // DeleteDepartment 删除部门信息
+  rpc DeleteDepartment (DeleteDepartmentRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      delete: "/manager/v1/department",
+    };
+  }
+
+  // GetUser 获取指定用户信息，不开放http，只允许内部grpc调用
+  rpc GetUser (GetUserRequest) returns (GetUserReply) {}
+
+  // CurrentUser 获取当前用户信息
+  rpc CurrentUser (google.protobuf.Empty) returns (GetUserReply) {
+    option (google.api.http) = {
+      get: "/manager/v1/user/current",
+      response_body: "user",
+    };
+  }
+
+  // PageUser 新增用户信息
+  rpc PageUser (PageUserRequest) returns (PageUserReply) {
+    option (google.api.http) = {
+      get: "/manager/v1/users"
+    };
+  }
+
+  // AddUser 新增用户信息
+  rpc AddUser (AddUserRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/manager/v1/user",
+      body: "*",
+    };
+  }
+
+  // ChangeUserPasswordCaptcha 用户修改密码验证码
+  rpc ChangeUserPasswordCaptcha(google.protobuf.Empty) returns (ChangeUserPasswordCaptchaReply) {
+    option (google.api.http) = {
+      post: "/manager/v1/user/password/captcha",
+    };
+  }
+
+  // ResetUserPassword 重置用户密码
+  rpc ResetUserPassword(ResetUserPasswordRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/manager/v1/user/password/reset",
+      body: "*"
+    };
+  }
+
+  // ChangeUserPassword 用户修改密码
+  rpc ChangeUserPassword(ChangeUserPasswordRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/manager/v1/user/password/change",
+    };
+  }
+
+  // DisableUser 禁用用户
+  rpc DisableUser (DisableUserRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/manager/v1/user/disable",
+      body: "*",
+    };
+  }
+
+  // DisableUser 禁用用户
+  rpc EnableUser (EnableUserRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/manager/v1/user/enable",
+      body: "*",
+    };
+  }
+
+  // DisableUser 禁用用户
+  rpc OfflineUser (OfflineUserRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/manager/v1/user/offline",
+      body: "*",
+    };
+  }
+
+  // UpdateUser 更新用户信息
+  rpc UpdateUser (UpdateUserRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      put: "/manager/v1/user",
+      body: "*",
+    };
+  }
+
+  // DeleteUser 删除用户信息
+  rpc DeleteUser (DeleteUserRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      delete: "/manager/v1/user",
+    };
+  }
+
+  // CurrentUserRoles 获取当前用户的角色列表
+  rpc CurrentUserRoles (google.protobuf.Empty) returns (GetUserRolesReply) {
+    option (google.api.http) = {
+      get: "/manager/v1/user/current/roles",
+      response_body: "user_role"
+    };
+  }
+
+  // SwitchCurrentUserRole 切换用户当前角色
+  rpc SwitchCurrentUserRole (SwitchCurrentUserRoleRequest) returns (SwitchCurrentUserRoleReply) {
+    option (google.api.http) = {
+      post: "/manager/v1/user/role/switch",
+      body: "*"
+    };
+  }
+
+  // CurrentUserRoles 获取当前用户的角色列表
+  rpc GetUserRoles (GetUserRolesRequest) returns (GetUserRolesReply) {
+    option (google.api.http) = {
+      get: "/manager/v1/user/roles",
+      response_body: "user_role"
+    };
+  }
+
+  rpc Auth(AuthRequest) returns(google.protobuf.Empty){
+    option (google.api.http) = {
+      post: "/manager/v1/auth",
+      body: "*"
+    };
+  }
+
+  rpc Login(LoginRequest) returns(LoginReply){
+    option (google.api.http) = {
+      post: "/manager/v1/login",
+      body: "*"
+    };
+  }
+
+  rpc LoginCaptcha(google.protobuf.Empty) returns(LoginCaptchaReply){
+    option (google.api.http) = {
+      post: "/manager/v1/login/captcha"
+    };
+  }
+
+  rpc Logout(google.protobuf.Empty) returns(google.protobuf.Empty){
+    option (google.api.http) = {
+      post: "/manager/v1/logout",
+    };
+  }
+
+  rpc ParseToken(google.protobuf.Empty) returns(ParseTokenReply){
+    option (google.api.http) = {
+      post: "/manager/v1/token/parse",
+    };
+  }
+
+  rpc RefreshToken(google.protobuf.Empty) returns(RefreshTokenReply){
+    option (google.api.http) = {
+      post: "/manager/v1/token/refresh",
+    };
+  }
+}
+
+

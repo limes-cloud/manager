@@ -1,0 +1,107 @@
+syntax = "proto3";
+
+package manager;
+
+option go_package = "./v1;v1";
+
+import "validate/validate.proto";
+import "manager_department.proto";
+import "manager_role.proto";
+
+message User {
+  uint32 id = 1;
+  uint32 department_id = 2;
+  uint32 role_id = 3;
+  string name = 4;
+  string nickname = 5;
+  string gender = 6;
+  string phone = 7;
+  string avatar = 8;
+  string email = 9;
+  optional bool status = 10;
+  optional string disabled = 11;
+  optional uint32 last_login = 12;
+  uint32 created_at = 13;
+  uint32 updated_at = 14;
+  Department department = 15;
+  Role role = 16;
+  repeated Role roles = 17;
+}
+
+message GetUserRequest{
+  uint32 id = 1[(validate.rules).uint32 = {gt:0}];
+}
+
+message GetUserReply{
+  User user = 1;
+}
+
+message PageUserRequest{
+  int32 page = 1[(validate.rules).int32 = {gt: 0}];
+  int32 page_size = 2[(validate.rules).int32 = {gt: 0,lte:50}];
+  optional string username = 3;
+  optional bool status = 4;
+  optional uint32 role_id = 5;
+  optional uint32 department_id = 6;
+  optional uint32 start_time = 7;
+  optional uint32 end_time = 8;
+  optional string name = 9;
+}
+
+message PageUserReply{
+  uint32 total = 1;
+  repeated User list = 2;
+}
+
+message AddUserRequest{
+  uint32 department_id = 1[(validate.rules).uint32 = {gt:0}];
+  repeated uint32 role_ids = 2[(validate.rules).repeated = {min_items:1}];
+  string name = 3[(validate.rules).string = {min_len:1}];
+  string gender = 4[(validate.rules).string = {in:["M","F","U"]}];
+  string phone = 5[(validate.rules).string = {len:11}];
+  string email = 6[(validate.rules).string = {email:true}];
+  bool status = 7;
+}
+
+message UpdateUserRequest{
+  uint32 id = 1[(validate.rules).uint32 = {gt:0}];
+  uint32 department_id = 2[(validate.rules).uint32 = {gt:0}];
+  repeated uint32 role_ids = 3[(validate.rules).repeated = {min_items:1}];
+  string name = 4[(validate.rules).string = {min_len:1}];
+  string gender = 5[(validate.rules).string = {in:["M","F","U"]}];
+  string phone = 6[(validate.rules).string = {len:11}];
+  string email = 7[(validate.rules).string = {email:true}];
+}
+
+message ResetUserPasswordRequest{
+  uint32 id = 1[(validate.rules).uint32 = {gt:0}];
+}
+
+message ChangeUserPasswordRequest{
+  string password = 1[(validate.rules).string = {min_len:6}];
+  string captcha_id = 2[(validate.rules).string = {min_len:1}];
+  string captcha = 3[(validate.rules).string = {min_len:1}];
+}
+
+message ChangeUserPasswordCaptchaReply{
+  string uuid = 1;
+  string captcha = 2;
+  uint32 expire = 3;
+}
+
+message OfflineUserRequest{
+  uint32 id = 1[(validate.rules).uint32 = {gt:0}];
+}
+
+message DisableUserRequest{
+  uint32 id = 1[(validate.rules).uint32 = {gt:0}];
+  string desc = 2[(validate.rules).string = {min_len:1}];
+}
+
+message EnableUserRequest{
+  uint32 id = 1[(validate.rules).uint32 = {gt:0}];
+}
+
+message DeleteUserRequest{
+  uint32 id = 1[(validate.rules).uint32 = {gt:0}];
+}

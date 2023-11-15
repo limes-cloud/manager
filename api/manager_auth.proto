@@ -1,0 +1,39 @@
+syntax = "proto3";
+
+package manager;
+
+option go_package = "./v1;v1";
+
+import "validate/validate.proto";
+
+message LoginCaptchaReply{
+  string uuid = 1;
+  string captcha = 2;
+  uint32 expire = 3;
+}
+
+// UserLoginRequest 用户登录
+message LoginRequest {
+  string username = 1[(validate.rules).string = {min_len:6}];
+  string password = 2[(validate.rules).string = {min_len:6}];
+  string captcha_id = 3[(validate.rules).string = {min_len:1}];
+  string captcha = 4[(validate.rules).string = {min_len:1}];
+}
+
+message LoginReply{
+  string token = 1;
+}
+
+message ParseTokenReply{
+  uint32 user_id = 1;
+  uint32 role_id = 2;
+}
+
+message RefreshTokenReply{
+  string token = 1;
+}
+
+message AuthRequest{
+  string path = 1;
+  string method = 2;
+}
