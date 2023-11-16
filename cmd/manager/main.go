@@ -1,12 +1,11 @@
 package main
 
 import (
+	"github.com/limes-cloud/kratos/contrib/config/configure"
 	v1 "manager/api/v1"
 	srcConf "manager/config"
 	"manager/internal/handler"
 	"os"
-
-	"github.com/limes-cloud/kratos/config/file"
 
 	"github.com/limes-cloud/kratos"
 	"github.com/limes-cloud/kratos/config"
@@ -38,8 +37,7 @@ func main() {
 		kratos.Name(Name),
 		kratos.Version(Version),
 		kratos.Metadata(map[string]string{}),
-		kratos.Config(file.NewSource("config/config.yaml")),
-		//kratos.Config(configure.New(ConfigHost, Name, ConfigToken)),
+		kratos.Config(configure.New(ConfigHost, Name, ConfigToken)),
 		kratos.RegistrarServer(RegisterServer),
 		kratos.LoggerWith(kratos.LogField{
 			"id":      id,
