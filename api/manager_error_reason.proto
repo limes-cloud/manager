@@ -5,7 +5,6 @@ package manager;
 import "errors/errors.proto";
 option go_package = "./v1;v1";
 
-
 enum ErrorReason {
   // 设置缺省错误码
   option (errors.default_code) = 200;
