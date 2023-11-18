@@ -16,7 +16,6 @@ import "manager_auth.proto";
 
 service Service {
 
-
   // GetRole 获取指定角色，不开放http，只允许内部grpc调用
   rpc GetRole (GetRoleRequest) returns (GetRoleReply) {}
 
