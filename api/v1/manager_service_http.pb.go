@@ -40,6 +40,7 @@ const OperationServiceGetDepartmentTree = "/manager.Service/GetDepartmentTree"
 const OperationServiceGetMenuTree = "/manager.Service/GetMenuTree"
 const OperationServiceGetRoleMenuIds = "/manager.Service/GetRoleMenuIds"
 const OperationServiceGetRoleTree = "/manager.Service/GetRoleTree"
+const OperationServiceGetSetting = "/manager.Service/GetSetting"
 const OperationServiceGetUserRoles = "/manager.Service/GetUserRoles"
 const OperationServiceLogin = "/manager.Service/Login"
 const OperationServiceLoginCaptcha = "/manager.Service/LoginCaptcha"
@@ -96,6 +97,8 @@ type ServiceHTTPServer interface {
 	GetRoleMenuIds(context.Context, *GetRoleMenuIdsRequest) (*GetRoleMenuIdsReply, error)
 	// GetRoleTree GetRoleTree 获取角色树
 	GetRoleTree(context.Context, *emptypb.Empty) (*GetRoleTreeReply, error)
+	// GetSetting GetSetting 获取当前系统的配置
+	GetSetting(context.Context, *emptypb.Empty) (*GetSettingReply, error)
 	// GetUserRoles CurrentUserRoles 获取当前用户的角色列表
 	GetUserRoles(context.Context, *GetUserRolesRequest) (*GetUserRolesReply, error)
 	Login(context.Context, *LoginRequest) (*LoginReply, error)
@@ -125,6 +128,7 @@ type ServiceHTTPServer interface {
 
 func RegisterServiceHTTPServer(s *http.Server, srv ServiceHTTPServer) {
 	r := s.Route("/")
+	r.GET("/manager/v1/setting", _Service_GetSetting0_HTTP_Handler(srv))
 	r.GET("/manager/v1/role/menu/tree", _Service_CurrentRoleMenuTree0_HTTP_Handler(srv))
 	r.GET("/manager/v1/role/menu/ids", _Service_GetRoleMenuIds0_HTTP_Handler(srv))
 	r.PUT("/manager/v1/role/menu", _Service_UpdateRoleMenus0_HTTP_Handler(srv))
@@ -160,6 +164,25 @@ func RegisterServiceHTTPServer(s *http.Server, srv ServiceHTTPServer) {
 	r.POST("/manager/v1/logout", _Service_Logout0_HTTP_Handler(srv))
 	r.POST("/manager/v1/token/parse", _Service_ParseToken0_HTTP_Handler(srv))
 	r.POST("/manager/v1/token/refresh", _Service_RefreshToken0_HTTP_Handler(srv))
+}
+
+func _Service_GetSetting0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in emptypb.Empty
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationServiceGetSetting)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.GetSetting(ctx, req.(*emptypb.Empty))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*GetSettingReply)
+		return ctx.Result(200, reply)
+	}
 }
 
 func _Service_CurrentRoleMenuTree0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Context) error {
@@ -896,6 +919,7 @@ type ServiceHTTPClient interface {
 	GetMenuTree(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *GetMenuTreeReply, err error)
 	GetRoleMenuIds(ctx context.Context, req *GetRoleMenuIdsRequest, opts ...http.CallOption) (rsp *GetRoleMenuIdsReply, err error)
 	GetRoleTree(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *GetRoleTreeReply, err error)
+	GetSetting(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *GetSettingReply, err error)
 	GetUserRoles(ctx context.Context, req *GetUserRolesRequest, opts ...http.CallOption) (rsp *GetUserRolesReply, err error)
 	Login(ctx context.Context, req *LoginRequest, opts ...http.CallOption) (rsp *LoginReply, err error)
 	LoginCaptcha(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *LoginCaptchaReply, err error)
@@ -1175,6 +1199,19 @@ func (c *ServiceHTTPClientImpl) GetRoleTree(ctx context.Context, in *emptypb.Emp
 	opts = append(opts, http.Operation(OperationServiceGetRoleTree))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out.Role, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *ServiceHTTPClientImpl) GetSetting(ctx context.Context, in *emptypb.Empty, opts ...http.CallOption) (*GetSettingReply, error) {
+	var out GetSettingReply
+	pattern := "/manager/v1/setting"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationServiceGetSetting))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {
 		return nil, err
 	}

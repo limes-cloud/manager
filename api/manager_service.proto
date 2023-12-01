@@ -12,9 +12,16 @@ import "manager_user.proto";
 import "manager_user_role.proto";
 import "manager_role_menu.proto";
 import "manager_auth.proto";
-
+import "manager_setting.proto";
 
 service Service {
+
+  // GetSetting 获取当前系统的配置
+  rpc GetSetting (google.protobuf.Empty) returns (GetSettingReply) {
+    option (google.api.http) = {
+      get: "/manager/v1/setting",
+    };
+  }
 
   // GetRole 获取指定角色，不开放http，只允许内部grpc调用
   rpc GetRole (GetRoleRequest) returns (GetRoleReply) {}

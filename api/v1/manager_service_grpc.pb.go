@@ -20,6 +20,7 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
+	Service_GetSetting_FullMethodName                = "/manager.Service/GetSetting"
 	Service_GetRole_FullMethodName                   = "/manager.Service/GetRole"
 	Service_CurrentRoleMenuTree_FullMethodName       = "/manager.Service/CurrentRoleMenuTree"
 	Service_GetRoleMenuIds_FullMethodName            = "/manager.Service/GetRoleMenuIds"
@@ -64,6 +65,8 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ServiceClient interface {
+	// GetSetting 获取当前系统的配置
+	GetSetting(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetSettingReply, error)
 	// GetRole 获取指定角色，不开放http，只允许内部grpc调用
 	GetRole(ctx context.Context, in *GetRoleRequest, opts ...grpc.CallOption) (*GetRoleReply, error)
 	// CurrentRoleMenus 获取当前用户的角色列表
@@ -142,6 +145,15 @@ type serviceClient struct {
 
 func NewServiceClient(cc grpc.ClientConnInterface) ServiceClient {
 	return &serviceClient{cc}
+}
+
+func (c *serviceClient) GetSetting(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetSettingReply, error) {
+	out := new(GetSettingReply)
+	err := c.cc.Invoke(ctx, Service_GetSetting_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *serviceClient) GetRole(ctx context.Context, in *GetRoleRequest, opts ...grpc.CallOption) (*GetRoleReply, error) {
@@ -490,6 +502,8 @@ func (c *serviceClient) RefreshToken(ctx context.Context, in *emptypb.Empty, opt
 // All implementations must embed UnimplementedServiceServer
 // for forward compatibility
 type ServiceServer interface {
+	// GetSetting 获取当前系统的配置
+	GetSetting(context.Context, *emptypb.Empty) (*GetSettingReply, error)
 	// GetRole 获取指定角色，不开放http，只允许内部grpc调用
 	GetRole(context.Context, *GetRoleRequest) (*GetRoleReply, error)
 	// CurrentRoleMenus 获取当前用户的角色列表
@@ -567,6 +581,9 @@ type ServiceServer interface {
 type UnimplementedServiceServer struct {
 }
 
+func (UnimplementedServiceServer) GetSetting(context.Context, *emptypb.Empty) (*GetSettingReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetSetting not implemented")
+}
 func (UnimplementedServiceServer) GetRole(context.Context, *GetRoleRequest) (*GetRoleReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetRole not implemented")
 }
@@ -692,6 +709,24 @@ type UnsafeServiceServer interface {
 
 func RegisterServiceServer(s grpc.ServiceRegistrar, srv ServiceServer) {
 	s.RegisterService(&Service_ServiceDesc, srv)
+}
+
+func _Service_GetSetting_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ServiceServer).GetSetting(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Service_GetSetting_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ServiceServer).GetSetting(ctx, req.(*emptypb.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _Service_GetRole_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -1385,6 +1420,10 @@ var Service_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "manager.Service",
 	HandlerType: (*ServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "GetSetting",
+			Handler:    _Service_GetSetting_Handler,
+		},
 		{
 			MethodName: "GetRole",
 			Handler:    _Service_GetRole_Handler,

@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package manager;
+
+option go_package = "./v1;v1";
+
+import "validate/validate.proto";
+
+message GetSettingReply {
+  string name = 1;
+  bool debug = 2;
+  string title = 3;
+  string desc = 4;
+  string copyright = 5;
+  string logo = 6;
+}

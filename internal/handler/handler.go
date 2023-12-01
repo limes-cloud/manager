@@ -15,6 +15,7 @@ type Service struct {
 	userRole   *logic.UserRole
 	roleMenu   *logic.RoleMenu
 	auth       *logic.Auth
+	setting    *logic.Setting
 }
 
 func New(conf *config.Config) *Service {
@@ -26,5 +27,6 @@ func New(conf *config.Config) *Service {
 		userRole:   logic.NewUserRole(conf),
 		roleMenu:   logic.NewRoleMenu(conf),
 		auth:       logic.NewAuth(conf),
+		setting:    logic.NewSetting(conf),
 	}
 }

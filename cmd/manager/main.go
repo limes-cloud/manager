@@ -1,11 +1,12 @@
 package main
 
 import (
-	"github.com/limes-cloud/kratos/contrib/config/configure"
 	v1 "manager/api/v1"
 	srcConf "manager/config"
 	"manager/internal/handler"
 	"os"
+
+	"github.com/limes-cloud/kratos/contrib/config/configure"
 
 	"github.com/limes-cloud/kratos"
 	"github.com/limes-cloud/kratos/config"
@@ -18,15 +19,8 @@ import (
 
 // go build -ldflags "-X main.Version=x.y.z"
 var (
-	// ConfigHost is  configure addr
-	ConfigHost string
-	// ConfigToken is configure token
-	ConfigToken string
-
 	// Name is the name of the compiled software.
-	Name string
-	// Version is the version of the compiled software.
-	Version string
+	Name = os.Getenv("APP_NAME")
 
 	id, _ = os.Hostname()
 )
@@ -35,16 +29,14 @@ func main() {
 	app := kratos.New(
 		kratos.ID(id),
 		kratos.Name(Name),
-		kratos.Version(Version),
 		kratos.Metadata(map[string]string{}),
-		kratos.Config(configure.New(ConfigHost, Name, ConfigToken)),
+		kratos.Config(configure.NewFromEnv()),
 		kratos.RegistrarServer(RegisterServer),
 		kratos.LoggerWith(kratos.LogField{
-			"id":      id,
-			"name":    Name,
-			"version": Version,
-			"trace":   tracing.TraceID(),
-			"span":    tracing.SpanID(),
+			"id":    id,
+			"name":  Name,
+			"trace": tracing.TraceID(),
+			"span":  tracing.SpanID(),
 		}),
 	)
 
