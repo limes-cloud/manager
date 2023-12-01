@@ -8,7 +8,7 @@ ADD go.sum .
 RUN go mod download
 WORKDIR /go/build
 ADD . .
-RUN GOOS=linux CGO_ENABLED=0 go build -ldflags="-s -w -X main.Version=${APP_VERSION} -X main.Name=${APP_NAME} -X main.ConfigHost=${CONFIG_HOST}  -X main.ConfigToken=${CONFIG_TOKEN}" -installsuffix cgo -o manager cmd/manager/main.go
+RUN GOOS=linux CGO_ENABLED=0 go build -ldflags="-s -w" -installsuffix cgo -o manager cmd/manager/main.go
 
 # 构建执行镜像
 FROM alpine

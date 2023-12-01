@@ -75,4 +75,35 @@ INSERT INTO `menu` VALUES (75, 'Configure', 69, '预发布环境', 'A', NULL, NU
 INSERT INTO `menu` VALUES (76, 'Configure', 69, '回归测试环境', 'A', NULL, NULL, NULL, 'configure:configure:sync:BETA', NULL, NULL, '/configure/v1/configure/BETA', 'PUT', 0, NULL, NULL, NULL, NULL, 1699609789, 1699615655);
 INSERT INTO `menu` VALUES (77, 'Configure', 69, '生产环境', 'A', NULL, NULL, NULL, 'configure:configure:sync:PROD', NULL, NULL, '/configure/v1/configure/PROD', 'PUT', 0, NULL, NULL, NULL, NULL, 1699609871, 1699615673);
 INSERT INTO `menu` VALUES (78, 'Configure', 61, '配置业务变量值', 'A', NULL, NULL, NULL, 'configure:business:value', NULL, NULL, '/configure/business/value', 'PUT', 0, NULL, NULL, NULL, NULL, 1699617844, 1699617844);
+INSERT INTO `menu` VALUES (79, 'Resource', 0, '资源中心', 'R', 'Resource', 'file', '/resource', NULL, 'Layout', NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, 1700744316, 1700744316);
+INSERT INTO `menu` VALUES (80, 'Resource', 79, '文件管理', 'M', 'File', 'file', '/resource/file', NULL, 'resource/file/index', NULL, NULL, NULL, 0, 0, 1, NULL, 1, 1700744655, 1700790343);
+INSERT INTO `menu` VALUES (81, 'Resource', 80, '目录管理', 'G', NULL, NULL, NULL, 'resource:directory:group', NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, 1701420127, 1701420545);
+INSERT INTO `menu` VALUES (82, 'Resource', 81, '查看目录', 'A', NULL, NULL, NULL, 'resource:directory:query', NULL, NULL, '/resource/v1/directory', 'GET', 0, NULL, NULL, NULL, NULL, 1701420313, 1701420313);
+INSERT INTO `menu` VALUES (83, 'Resource', 81, '新增目录', 'A', NULL, NULL, NULL, 'resource:directory:add', NULL, NULL, '/resource/v1/directory', 'POST', 0, NULL, NULL, NULL, NULL, 1701420340, 1701420340);
+INSERT INTO `menu` VALUES (84, 'Resource', 81, '修改目录', 'A', NULL, NULL, NULL, 'resource:directory:update', NULL, NULL, '/resource/v1/directory', 'PUT', 0, NULL, NULL, NULL, NULL, 1701420366, 1701420366);
+INSERT INTO `menu` VALUES (85, 'Resource', 81, '删除目录', 'A', NULL, NULL, NULL, 'resource:directory:delete', NULL, NULL, '/resource/v1/directory', 'DELETE', 0, NULL, NULL, NULL, NULL, 1701420405, 1701420405);
+INSERT INTO `menu` VALUES (86, 'Resource', 80, '文件管理', 'G', NULL, NULL, NULL, 'resource:file:group', NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, 1701420536, 1701420536);
+INSERT INTO `menu` VALUES (87, 'Resource', 86, '查看文件', 'A', NULL, NULL, NULL, 'resource:file:query', NULL, NULL, '/resource/v1/files', 'GET', 0, NULL, NULL, NULL, NULL, 1701420717, 1701420717);
+INSERT INTO `menu` VALUES (88, 'Resource', 92, '分块上传文件', 'A', NULL, NULL, NULL, 'resource:file:upload', NULL, NULL, '/resource/v1/upload', 'POST', 0, NULL, NULL, NULL, NULL, 1701420751, 1701421037);
+INSERT INTO `menu` VALUES (89, 'Resource', 86, '修改文件', 'A', NULL, NULL, NULL, 'resource:file:upload', NULL, NULL, '/resource/v1/file', 'PUT', 0, NULL, NULL, NULL, NULL, 1701420801, 1701420801);
+INSERT INTO `menu` VALUES (90, 'Resource', 81, '删除文件', 'A', NULL, NULL, NULL, 'resource:file:delete', NULL, NULL, '/resource/v1/file', 'DELETE', 0, NULL, NULL, NULL, NULL, 1701420836, 1701420836);
+INSERT INTO `menu` VALUES (91, 'Resource', 86, '删除文件', 'A', NULL, NULL, NULL, 'resource:file:delete', NULL, NULL, '/resource/v1/file', 'DELETE', 0, NULL, NULL, NULL, NULL, 1701420980, 1701420980);
+INSERT INTO `menu` VALUES (92, 'Resource', 86, '上传文件', 'G', NULL, NULL, NULL, 'resource:file:upload:group', NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, 1701421014, 1701421014);
+INSERT INTO `menu` VALUES (93, 'Resource', 92, '预上传文件', 'A', NULL, NULL, NULL, 'resource:file:upload', NULL, NULL, '/resource/v1/upload/prepare', 'POST', 0, NULL, NULL, NULL, NULL, 1701421098, 1701421098);
 COMMIT;
+
+DOCKERFILE_PATH: Dockerfile
+DOCKER_IMAGE_NAME:basic-platform
+DOCKER_REPO_NAME: Dockerfile
+DOCKER_IMAGE_VERSION:${GIT_LOCAL_BRANCH}-${GIT_COMMIT_SHORT}
+DOCKER_BUILD_CONTEXT:.
+REMOTE_HOST: 101.34.229.39
+REMOTE_CRED:.
+REMOTE_SSH_PORT:22
+REMOTE_USER_NAME:root
+DOCKER_RUN_PORT:7001
+DOCKER_LISTEN_PORT:80
+APP_VERSION:${GIT_COMMIT_SHORT}
+APP_NAME:Resource
+CONFIG_TOKEN:5B655B7D4A51BF79C974C9F27C27D992
+CONFIG_HOST:localhost:6082
