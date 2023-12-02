@@ -40,6 +40,10 @@ func (s *Service) UpdateUser(ctx context.Context, in *v1.UpdateUserRequest) (*em
 	return s.user.Update(kratos.MustContext(ctx), in)
 }
 
+func (s *Service) UpdateUserBasic(ctx context.Context, in *v1.UpdateUserBasicRequest) (*emptypb.Empty, error) {
+	return s.user.UpdateBasic(kratos.MustContext(ctx), in)
+}
+
 func (s *Service) DeleteUser(ctx context.Context, in *v1.DeleteUserRequest) (*emptypb.Empty, error) {
 	return s.user.Delete(kratos.MustContext(ctx), in)
 }

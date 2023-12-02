@@ -73,6 +73,11 @@ message UpdateUserRequest{
   string email = 7[(validate.rules).string = {email:true}];
 }
 
+ message UpdateUserBasicRequest{
+   string nickname = 1[(validate.rules).string = {min_len:1}];
+   string gender = 2[(validate.rules).string = {in:["M","F","U"]}];
+ }
+
 message ResetUserPasswordRequest{
   uint32 id = 1[(validate.rules).uint32 = {gt:0}];
 }

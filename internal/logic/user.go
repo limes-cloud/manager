@@ -87,14 +87,14 @@ func (r *User) ChangePassword(ctx kratos.Context, in *v1.ChangeUserPasswordReque
 
 	// 验证验证码
 	if err := ctx.Captcha().VerifyEmail(captcha, ctx.ClientIP(), in.CaptchaId, in.Captcha); err != nil {
-		return nil, v1.ErrorVerifyCaptchaFormat(err.Error())
+		return nil, v1.ErrorVerifyCaptcha()
 	}
 
 	// 修改密码
 	nu := model.User{}
 	nu.ID = user.ID
 	nu.Password = in.Password
-	if err := user.Update(ctx); err != nil {
+	if err := nu.Update(ctx); err != nil {
 		return nil, v1.ErrorDatabase()
 	}
 
@@ -361,6 +361,23 @@ func (r *User) Update(ctx kratos.Context, in *v1.UpdateUserRequest) (*emptypb.Em
 	return nil, nil
 }
 
+// UpdateBasic 更新用户基础信息
+func (r *User) UpdateBasic(ctx kratos.Context, in *v1.UpdateUserBasicRequest) (*emptypb.Empty, error) {
+	user := model.User{
+		BaseModel: model.BaseModel{ID: md.UserId(ctx)},
+		Nickname:  in.Nickname,
+		Gender:    in.Gender,
+	}
+
+	// 更新用户信息
+	if err := user.Update(ctx); err != nil {
+		return nil, v1.ErrorDatabaseFormat(err.Error())
+	}
+
+	return nil, nil
+}
+
+// Delete 删除用户
 func (r *User) Delete(ctx kratos.Context, in *v1.DeleteUserRequest) (*emptypb.Empty, error) {
 	if in.Id == consts.SuperAdmin {
 		return nil, v1.ErrorDeleteSystemData()

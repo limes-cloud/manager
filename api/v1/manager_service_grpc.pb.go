@@ -49,6 +49,7 @@ const (
 	Service_EnableUser_FullMethodName                = "/manager.Service/EnableUser"
 	Service_OfflineUser_FullMethodName               = "/manager.Service/OfflineUser"
 	Service_UpdateUser_FullMethodName                = "/manager.Service/UpdateUser"
+	Service_UpdateUserBasic_FullMethodName           = "/manager.Service/UpdateUserBasic"
 	Service_DeleteUser_FullMethodName                = "/manager.Service/DeleteUser"
 	Service_CurrentUserRoles_FullMethodName          = "/manager.Service/CurrentUserRoles"
 	Service_SwitchCurrentUserRole_FullMethodName     = "/manager.Service/SwitchCurrentUserRole"
@@ -123,6 +124,8 @@ type ServiceClient interface {
 	OfflineUser(ctx context.Context, in *OfflineUserRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	// UpdateUser 更新用户信息
 	UpdateUser(ctx context.Context, in *UpdateUserRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	// UpdateUserBasic 更新用户基础信息
+	UpdateUserBasic(ctx context.Context, in *UpdateUserBasicRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	// DeleteUser 删除用户信息
 	DeleteUser(ctx context.Context, in *DeleteUserRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	// CurrentUserRoles 获取当前用户的角色列表
@@ -408,6 +411,15 @@ func (c *serviceClient) UpdateUser(ctx context.Context, in *UpdateUserRequest, o
 	return out, nil
 }
 
+func (c *serviceClient) UpdateUserBasic(ctx context.Context, in *UpdateUserBasicRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, Service_UpdateUserBasic_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *serviceClient) DeleteUser(ctx context.Context, in *DeleteUserRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	out := new(emptypb.Empty)
 	err := c.cc.Invoke(ctx, Service_DeleteUser_FullMethodName, in, out, opts...)
@@ -560,6 +572,8 @@ type ServiceServer interface {
 	OfflineUser(context.Context, *OfflineUserRequest) (*emptypb.Empty, error)
 	// UpdateUser 更新用户信息
 	UpdateUser(context.Context, *UpdateUserRequest) (*emptypb.Empty, error)
+	// UpdateUserBasic 更新用户基础信息
+	UpdateUserBasic(context.Context, *UpdateUserBasicRequest) (*emptypb.Empty, error)
 	// DeleteUser 删除用户信息
 	DeleteUser(context.Context, *DeleteUserRequest) (*emptypb.Empty, error)
 	// CurrentUserRoles 获取当前用户的角色列表
@@ -667,6 +681,9 @@ func (UnimplementedServiceServer) OfflineUser(context.Context, *OfflineUserReque
 }
 func (UnimplementedServiceServer) UpdateUser(context.Context, *UpdateUserRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateUser not implemented")
+}
+func (UnimplementedServiceServer) UpdateUserBasic(context.Context, *UpdateUserBasicRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateUserBasic not implemented")
 }
 func (UnimplementedServiceServer) DeleteUser(context.Context, *DeleteUserRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteUser not implemented")
@@ -1233,6 +1250,24 @@ func _Service_UpdateUser_Handler(srv interface{}, ctx context.Context, dec func(
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Service_UpdateUserBasic_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateUserBasicRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ServiceServer).UpdateUserBasic(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Service_UpdateUserBasic_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ServiceServer).UpdateUserBasic(ctx, req.(*UpdateUserBasicRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Service_DeleteUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(DeleteUserRequest)
 	if err := dec(in); err != nil {
@@ -1535,6 +1570,10 @@ var Service_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UpdateUser",
 			Handler:    _Service_UpdateUser_Handler,
+		},
+		{
+			MethodName: "UpdateUserBasic",
+			Handler:    _Service_UpdateUserBasic_Handler,
 		},
 		{
 			MethodName: "DeleteUser",

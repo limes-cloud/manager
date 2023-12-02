@@ -56,6 +56,7 @@ const OperationServiceUpdateMenu = "/manager.Service/UpdateMenu"
 const OperationServiceUpdateRole = "/manager.Service/UpdateRole"
 const OperationServiceUpdateRoleMenus = "/manager.Service/UpdateRoleMenus"
 const OperationServiceUpdateUser = "/manager.Service/UpdateUser"
+const OperationServiceUpdateUserBasic = "/manager.Service/UpdateUserBasic"
 
 type ServiceHTTPServer interface {
 	// AddDepartment AddDepartment 删除部门信息
@@ -124,6 +125,8 @@ type ServiceHTTPServer interface {
 	UpdateRoleMenus(context.Context, *UpdateRoleMenuRequest) (*emptypb.Empty, error)
 	// UpdateUser UpdateUser 更新用户信息
 	UpdateUser(context.Context, *UpdateUserRequest) (*emptypb.Empty, error)
+	// UpdateUserBasic UpdateUserBasic 更新用户基础信息
+	UpdateUserBasic(context.Context, *UpdateUserBasicRequest) (*emptypb.Empty, error)
 }
 
 func RegisterServiceHTTPServer(s *http.Server, srv ServiceHTTPServer) {
@@ -154,6 +157,7 @@ func RegisterServiceHTTPServer(s *http.Server, srv ServiceHTTPServer) {
 	r.POST("/manager/v1/user/enable", _Service_EnableUser0_HTTP_Handler(srv))
 	r.POST("/manager/v1/user/offline", _Service_OfflineUser0_HTTP_Handler(srv))
 	r.PUT("/manager/v1/user", _Service_UpdateUser0_HTTP_Handler(srv))
+	r.PUT("/manager/v1/user/basic", _Service_UpdateUserBasic0_HTTP_Handler(srv))
 	r.DELETE("/manager/v1/user", _Service_DeleteUser0_HTTP_Handler(srv))
 	r.GET("/manager/v1/user/current/roles", _Service_CurrentUserRoles0_HTTP_Handler(srv))
 	r.POST("/manager/v1/user/role/switch", _Service_SwitchCurrentUserRole0_HTTP_Handler(srv))
@@ -595,6 +599,9 @@ func _Service_ResetUserPassword0_HTTP_Handler(srv ServiceHTTPServer) func(ctx ht
 func _Service_ChangeUserPassword0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in ChangeUserPasswordRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
@@ -689,6 +696,28 @@ func _Service_UpdateUser0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Cont
 		http.SetOperation(ctx, OperationServiceUpdateUser)
 		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
 			return srv.UpdateUser(ctx, req.(*UpdateUserRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*emptypb.Empty)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Service_UpdateUserBasic0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in UpdateUserBasicRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationServiceUpdateUserBasic)
+		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+			return srv.UpdateUserBasic(ctx, req.(*UpdateUserBasicRequest))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
@@ -935,6 +964,7 @@ type ServiceHTTPClient interface {
 	UpdateRole(ctx context.Context, req *UpdateRoleRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	UpdateRoleMenus(ctx context.Context, req *UpdateRoleMenuRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	UpdateUser(ctx context.Context, req *UpdateUserRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
+	UpdateUserBasic(ctx context.Context, req *UpdateUserBasicRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 }
 
 type ServiceHTTPClientImpl struct {
@@ -1013,10 +1043,10 @@ func (c *ServiceHTTPClientImpl) Auth(ctx context.Context, in *AuthRequest, opts 
 func (c *ServiceHTTPClientImpl) ChangeUserPassword(ctx context.Context, in *ChangeUserPasswordRequest, opts ...http.CallOption) (*emptypb.Empty, error) {
 	var out emptypb.Empty
 	pattern := "/manager/v1/user/password/change"
-	path := binding.EncodeURL(pattern, in, true)
+	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationServiceChangeUserPassword))
 	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "POST", path, nil, &out, opts...)
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1405,6 +1435,19 @@ func (c *ServiceHTTPClientImpl) UpdateUser(ctx context.Context, in *UpdateUserRe
 	pattern := "/manager/v1/user"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationServiceUpdateUser))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "PUT", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *ServiceHTTPClientImpl) UpdateUserBasic(ctx context.Context, in *UpdateUserBasicRequest, opts ...http.CallOption) (*emptypb.Empty, error) {
+	var out emptypb.Empty
+	pattern := "/manager/v1/user/basic"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationServiceUpdateUserBasic))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "PUT", path, in, &out, opts...)
 	if err != nil {

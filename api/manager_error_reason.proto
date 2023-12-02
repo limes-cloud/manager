@@ -39,6 +39,7 @@ enum ErrorReason {
   USERNAME_NOT_EXIST = 27[(errors.message)="用户不存在"];
   DISABLE_SELF_USER = 28[(errors.message)="不能禁用当前用户"];
   FORBIDDEN = 29[(errors.message)="无接口权限"];
+
 }
 
 

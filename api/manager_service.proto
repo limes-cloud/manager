@@ -191,6 +191,7 @@ service Service {
   rpc ChangeUserPassword(ChangeUserPasswordRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
       post: "/manager/v1/user/password/change",
+      body: "*"
     };
   }
 
@@ -225,6 +226,15 @@ service Service {
       body: "*",
     };
   }
+
+  // UpdateUserBasic 更新用户基础信息
+  rpc UpdateUserBasic (UpdateUserBasicRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      put: "/manager/v1/user/basic",
+      body: "*",
+    };
+  }
+
 
   // DeleteUser 删除用户信息
   rpc DeleteUser (DeleteUserRequest) returns (google.protobuf.Empty) {
