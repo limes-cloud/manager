@@ -19,6 +19,10 @@ type Service struct {
 }
 
 func New(conf *config.Config) *Service {
+	if err := logic.NewInit(conf).Init(); err != nil {
+		panic(err)
+	}
+
 	return &Service{
 		role:       logic.NewRole(conf),
 		menu:       logic.NewMenu(conf),

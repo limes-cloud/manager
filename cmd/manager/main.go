@@ -52,6 +52,7 @@ func RegisterServer(hs *http.Server, gs *grpc.Server, c config.Config) {
 	}
 
 	srv := handler.New(conf)
+
 	v1.RegisterServiceHTTPServer(hs, srv)
 	v1.RegisterServiceServer(gs, srv)
 }
