@@ -17,15 +17,13 @@ import (
 	_ "go.uber.org/automaxprocs"
 )
 
-// go build -ldflags "-X main.Version=x.y.z"
 var (
-	// Name is the name of the compiled software.
-	Name = os.Getenv("APP_NAME")
-
+	Name  = os.Getenv("APP_NAME")
 	id, _ = os.Hostname()
 )
 
 func main() {
+
 	app := kratos.New(
 		kratos.ID(id),
 		kratos.Name(Name),
