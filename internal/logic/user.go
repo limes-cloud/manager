@@ -191,6 +191,10 @@ func (r *User) ResetPassword(ctx kratosx.Context, in *v1.ResetUserPasswordReques
 		return nil, v1.EditSystemDataError()
 	}
 
+	if in.Id == md.UserId(ctx) {
+		return nil, v1.ResetSelfUserPasswordError()
+	}
+
 	// 查询用户信息
 	user := model.User{}
 	if err := user.OneByID(ctx, in.Id); err != nil {
@@ -380,6 +384,10 @@ func (r *User) UpdateBasic(ctx kratosx.Context, in *v1.UpdateUserBasicRequest) (
 func (r *User) Delete(ctx kratosx.Context, in *v1.DeleteUserRequest) (*emptypb.Empty, error) {
 	if in.Id == consts.SuperAdmin {
 		return nil, v1.DeleteSystemDataError()
+	}
+
+	if in.Id == md.UserId(ctx) {
+		return nil, v1.DeleteSelfUserError()
 	}
 
 	user := model.User{}

@@ -39,6 +39,8 @@ enum ErrorReason {
   UsernameNotExistError = 27[(errors.message)="用户不存在"];
   DisableSelfUserError = 28[(errors.message)="不能禁用当前用户"];
   ForbiddenError = 29[(errors.message)="无接口权限"];
+  DeleteSelfUserError = 30[(errors.message)="不能删除当前账号"];
+  ResetSelfUserPasswordError = 31[(errors.message)="不能重置当前账号密码"];
 }
 
 

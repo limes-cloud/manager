@@ -490,3 +490,35 @@ func ForbiddenErrorFormat(format string, args ...any) *errors.Error {
 func ForbiddenError() *errors.Error {
 	return errors.New(200, ErrorReason_ForbiddenError.String(), "无接口权限")
 }
+
+func IsDeleteSelfUserError(err error) bool {
+	if err == nil {
+		return false
+	}
+	e := errors.FromError(err)
+	return e.Reason == ErrorReason_DeleteSelfUserError.String() && e.Code == 200
+}
+
+func DeleteSelfUserErrorFormat(format string, args ...any) *errors.Error {
+	return errors.New(200, ErrorReason_DeleteSelfUserError.String(), "不能删除当前账号:"+fmt.Sprintf(format, args...))
+}
+
+func DeleteSelfUserError() *errors.Error {
+	return errors.New(200, ErrorReason_DeleteSelfUserError.String(), "不能删除当前账号")
+}
+
+func IsResetSelfUserPasswordError(err error) bool {
+	if err == nil {
+		return false
+	}
+	e := errors.FromError(err)
+	return e.Reason == ErrorReason_ResetSelfUserPasswordError.String() && e.Code == 200
+}
+
+func ResetSelfUserPasswordErrorFormat(format string, args ...any) *errors.Error {
+	return errors.New(200, ErrorReason_ResetSelfUserPasswordError.String(), "不能重置当前账号密码:"+fmt.Sprintf(format, args...))
+}
+
+func ResetSelfUserPasswordError() *errors.Error {
+	return errors.New(200, ErrorReason_ResetSelfUserPasswordError.String(), "不能重置当前账号密码")
+}
