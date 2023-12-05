@@ -8,11 +8,10 @@ import (
 	"manager/pkg/tree"
 	"manager/pkg/util"
 
+	"github.com/limes-cloud/kratosx"
 	"gorm.io/gorm"
 
 	"google.golang.org/protobuf/types/known/emptypb"
-
-	"github.com/limes-cloud/kratos"
 )
 
 type Menu struct {
@@ -26,11 +25,11 @@ func NewMenu(conf *config.Config) *Menu {
 }
 
 // Tree 查询系统菜单树
-func (r *Menu) Tree(ctx kratos.Context) (*v1.GetMenuTreeReply, error) {
+func (r *Menu) Tree(ctx kratosx.Context) (*v1.GetMenuTreeReply, error) {
 	menu := model.Menu{}
 	list, err := menu.All(ctx, nil)
 	if err != nil {
-		return nil, v1.ErrorDatabaseFormat(err.Error())
+		return nil, v1.DatabaseErrorFormat(err.Error())
 	}
 
 	var (
@@ -55,19 +54,19 @@ func (r *Menu) Tree(ctx kratos.Context) (*v1.GetMenuTreeReply, error) {
 
 	reply := v1.GetMenuTreeReply{}
 	if err = util.Transform(roots, &reply.List); err != nil {
-		return nil, v1.ErrorTransformFormat(err.Error())
+		return nil, v1.TransformErrorFormat(err.Error())
 	}
 	return &reply, nil
 }
 
-func (r *Menu) Add(ctx kratos.Context, in *v1.AddMenuRequest) (*emptypb.Empty, error) {
+func (r *Menu) Add(ctx kratosx.Context, in *v1.AddMenuRequest) (*emptypb.Empty, error) {
 	menu := model.Menu{}
 	if err := util.Transform(in, &menu); err != nil {
-		return nil, v1.ErrorTransformFormat(err.Error())
+		return nil, v1.TransformErrorFormat(err.Error())
 	}
 
 	if err := menu.Create(ctx); err != nil {
-		return nil, v1.ErrorDatabaseFormat(err.Error())
+		return nil, v1.DatabaseErrorFormat(err.Error())
 	}
 
 	// 更新菜单首页
@@ -83,14 +82,14 @@ func (r *Menu) Add(ctx kratos.Context, in *v1.AddMenuRequest) (*emptypb.Empty, e
 	return nil, nil
 }
 
-func (r *Menu) Update(ctx kratos.Context, in *v1.UpdateMenuRequest) (*emptypb.Empty, error) {
+func (r *Menu) Update(ctx kratosx.Context, in *v1.UpdateMenuRequest) (*emptypb.Empty, error) {
 	oldMenu := model.Menu{}
 	if err := oldMenu.OneByID(ctx, in.Id); err != nil {
-		return nil, v1.ErrorNotFoundFormat(err.Error())
+		return nil, v1.NotFoundErrorFormat(err.Error())
 	}
 
 	if in.Id == in.ParentId {
-		return nil, v1.ErrorParentMenu()
+		return nil, v1.ParentMenuError()
 	}
 
 	enforce := ctx.Authentication().Enforce()
@@ -151,11 +150,11 @@ func (r *Menu) Update(ctx kratos.Context, in *v1.UpdateMenuRequest) (*emptypb.Em
 	// 修改数据库
 	menu := model.Menu{}
 	if err := util.Transform(in, &menu); err != nil {
-		return nil, v1.ErrorTransformFormat(err.Error())
+		return nil, v1.TransformErrorFormat(err.Error())
 	}
 
 	if err := menu.Update(ctx); err != nil {
-		return nil, v1.ErrorDatabaseFormat(err.Error())
+		return nil, v1.DatabaseErrorFormat(err.Error())
 	}
 
 	// 更新为菜单首页
@@ -166,14 +165,14 @@ func (r *Menu) Update(ctx kratos.Context, in *v1.UpdateMenuRequest) (*emptypb.Em
 	return nil, nil
 }
 
-func (r *Menu) Delete(ctx kratos.Context, in *v1.DeleteMenuRequest) (*emptypb.Empty, error) {
+func (r *Menu) Delete(ctx kratosx.Context, in *v1.DeleteMenuRequest) (*emptypb.Empty, error) {
 	if in.Id == consts.SuperAdmin {
-		return nil, v1.ErrorDeleteSystemData()
+		return nil, v1.DeleteSystemDataError()
 	}
 	menu := model.Menu{}
 	// 查询当前菜单
 	if err := menu.OneByID(ctx, in.Id); err != nil {
-		return nil, v1.ErrorDatabaseFormat(err.Error())
+		return nil, v1.DatabaseErrorFormat(err.Error())
 	}
 
 	// 获取当前服务的所有菜单
@@ -206,7 +205,7 @@ func (r *Menu) Delete(ctx kratos.Context, in *v1.DeleteMenuRequest) (*emptypb.Em
 
 	// 删除数据库
 	if err := menu.DeleteByIds(ctx, ids); err != nil {
-		return nil, v1.ErrorDatabaseFormat(err.Error())
+		return nil, v1.DatabaseErrorFormat(err.Error())
 	}
 
 	// 删除api的rbac权限表

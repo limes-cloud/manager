@@ -9,37 +9,36 @@ enum ErrorReason {
   // 设置缺省错误码
   option (errors.default_code) = 200;
 
-  NOT_FOUND = 0[(errors.message)="数据不存在"];
-  DATABASE = 1[(errors.message)="数据库错误"];
-  METADATA = 2[(errors.message)="元数据异常"];
-  TRANSFORM = 3[(errors.message)="数据转换失败"];
-  DEPARTMENT_PERMISSIONS= 4[(errors.message)="无此部门权限"];
-  ROLE_PERMISSIONS= 5[(errors.message)="无此角色权限"];
-  USER_PERMISSIONS= 6[(errors.message)="无此用户权限"];
-  MENU_PERMISSIONS= 7[(errors.message)="无此菜单权限"];
-  EDIT_SYSTEM_DATA = 8[(errors.message)="系统数据，不允许修改"];
-  DELETE_SYSTEM_DATA = 9[(errors.message)="系统数据，不允许删除"];
-  NEW_CAPTCHA = 10[(errors.message)="二维码生成失败"];
-  VERIFY_CAPTCHA = 11[(errors.message)="验证码验证失败"];
-  RSA_DECODE = 12[(errors.message)="rsa解密失败"];
-  PASSWORD_FORMAT = 13[(errors.message)="密码格式错误"];
-  PASSWORD_EXPIRE = 14[(errors.message)="密码已过期"];
-  USER_DISABLE = 15[(errors.message)="用户已被禁用"];
-  ROLE_DISABLE = 16[(errors.message)="角色已被禁用"];
-  USER_PASSWORD = 17[(errors.message)="用户密码错误"];
-  NEW_TOKEN = 18[(errors.message)="token生成失败"];
-  PARSE_TOKEN = 19[(errors.message)="token解析失败"];
-  REFRESH_TOKEN = 20 [(errors.code)=401,(errors.message)="刷新token失败"];
-  EMPTY_TOKEN = 21[(errors.message)="token不能为空"];
-  DELETE_SELF_ROLE = 22[(errors.message)="不能删除自己的当前所属角色"];
-  DELETE_SELF_DEPARTMENT = 23[(errors.message)="不能删除自己的当前所属部门"];
-  PARENT_MENU = 24[(errors.message)="当前菜单的父菜单不能为自己"];
-  SEND_EMAIL_CAPTCHA = 25[(errors.message)="发送邮箱验证码失败"];
-  USERNAME_FORMAT = 26[(errors.message)="用户名格式错误"];
-  USERNAME_NOT_EXIST = 27[(errors.message)="用户不存在"];
-  DISABLE_SELF_USER = 28[(errors.message)="不能禁用当前用户"];
-  FORBIDDEN = 29[(errors.message)="无接口权限"];
-
+  NotFoundError = 0[(errors.message)="数据不存在"];
+  DatabaseError = 1[(errors.message)="数据库错误"];
+  MetadataError = 2[(errors.message)="元数据异常"];
+  TransformError = 3[(errors.message)="数据转换失败"];
+  DepartmentPermissionsError = 4[(errors.message)="无此部门权限"];
+  RolePermissionsError= 5[(errors.message)="无此角色权限"];
+  UserPermissionsError= 6[(errors.message)="无此用户权限"];
+  MenuPermissionsError= 7[(errors.message)="无此菜单权限"];
+  EditSystemDataError = 8[(errors.message)="系统数据，不允许修改"];
+  DeleteSystemDataError = 9[(errors.message)="系统数据，不允许删除"];
+  NewCaptchaError = 10[(errors.message)="二维码生成失败"];
+  VerifyCaptchaError = 11[(errors.message)="验证码验证失败"];
+  RsaDecodeError = 12[(errors.message)="rsa解密失败"];
+  PasswordFormatError = 13[(errors.message)="密码格式错误"];
+  PasswordExpireError = 14[(errors.message)="密码已过期"];
+  UserDisableError = 15[(errors.message)="用户已被禁用"];
+  RoleDisableError = 16[(errors.message)="角色已被禁用"];
+  UserPasswordError = 17[(errors.message)="用户密码错误"];
+  NewTokenError = 18[(errors.message)="token生成失败"];
+  ParseTokenError = 19[(errors.message)="token解析失败"];
+  RefreshTokenError = 20 [(errors.code)=401,(errors.message)="刷新token失败"];
+  EmptyTokenError = 21[(errors.message)="token不能为空"];
+  DeleteSelfRoleError = 22[(errors.message)="不能删除自己的当前所属角色"];
+  DeleteSelfDepartmentError = 23[(errors.message)="不能删除自己的当前所属部门"];
+  ParentMenuError = 24[(errors.message)="当前菜单的父菜单不能为自己"];
+  SendEmailCaptchaError = 25[(errors.message)="发送邮箱验证码失败"];
+  UsernameFormatError = 26[(errors.message)="用户名格式错误"];
+  UsernameNotExistError = 27[(errors.message)="用户不存在"];
+  DisableSelfUserError = 28[(errors.message)="不能禁用当前用户"];
+  ForbiddenError = 29[(errors.message)="无接口权限"];
 }
 
 

@@ -3,8 +3,7 @@ package model
 import (
 	"manager/pkg/tree"
 
-	"github.com/limes-cloud/kratos"
-
+	"github.com/limes-cloud/kratosx"
 	"gorm.io/gorm"
 )
 
@@ -52,22 +51,22 @@ func (m *Menu) ChildrenNode() []tree.Tree {
 }
 
 // Create 创建菜单
-func (m *Menu) Create(ctx kratos.Context) error {
+func (m *Menu) Create(ctx kratosx.Context) error {
 	return ctx.DB().Create(m).Error
 }
 
 // OneByID 通过id查询指定菜单
-func (m *Menu) OneByID(ctx kratos.Context, id uint32) error {
+func (m *Menu) OneByID(ctx kratosx.Context, id uint32) error {
 	return ctx.DB().First(m, id).Error
 }
 
 // OneByKeyword 通过keyword条件查询指定菜单
-func (m *Menu) OneByKeyword(ctx kratos.Context, keyword string) error {
+func (m *Menu) OneByKeyword(ctx kratosx.Context, keyword string) error {
 	return ctx.DB().First(m, "keyword=?", keyword).Error
 }
 
 // All 获取全部的菜单列表
-func (m *Menu) All(ctx kratos.Context, scopes Scopes) ([]*Menu, error) {
+func (m *Menu) All(ctx kratosx.Context, scopes Scopes) ([]*Menu, error) {
 	var list []*Menu
 	db := ctx.DB()
 	if scopes != nil {
@@ -77,7 +76,7 @@ func (m *Menu) All(ctx kratos.Context, scopes Scopes) ([]*Menu, error) {
 }
 
 // Tree 获取菜单树
-func (m *Menu) Tree(ctx kratos.Context, scopes Scopes) (tree.Tree, error) {
+func (m *Menu) Tree(ctx kratosx.Context, scopes Scopes) (tree.Tree, error) {
 	list, err := m.All(ctx, scopes)
 
 	if err != nil {
@@ -91,12 +90,12 @@ func (m *Menu) Tree(ctx kratos.Context, scopes Scopes) (tree.Tree, error) {
 }
 
 // Update 更新菜单
-func (m *Menu) Update(ctx kratos.Context) error {
+func (m *Menu) Update(ctx kratosx.Context) error {
 	return ctx.DB().Updates(m).Error
 }
 
 // UseHome 讲此菜单用于首页菜单
-func (m *Menu) UseHome(ctx kratos.Context, srvKey string, menuId uint32) error {
+func (m *Menu) UseHome(ctx kratosx.Context, srvKey string, menuId uint32) error {
 	return ctx.DB().Model(Menu{}).Transaction(func(tx *gorm.DB) error {
 		if err := tx.Where("server_keyword=?", srvKey).
 			Where("id!=?", menuId).
@@ -111,6 +110,6 @@ func (m *Menu) UseHome(ctx kratos.Context, srvKey string, menuId uint32) error {
 }
 
 // DeleteByIds 通过条件删除菜单
-func (m *Menu) DeleteByIds(ctx kratos.Context, ids []uint32) error {
+func (m *Menu) DeleteByIds(ctx kratosx.Context, ids []uint32) error {
 	return ctx.DB().Where("id in ?", ids).Delete(Menu{}).Error
 }

@@ -3,7 +3,7 @@ package md
 import (
 	"manager/internal/model"
 
-	"github.com/limes-cloud/kratos"
+	"github.com/limes-cloud/kratosx"
 )
 
 const (
@@ -13,11 +13,6 @@ const (
 	did  = "department_id"
 	dkey = "department_keyword"
 )
-
-//type Metadata struct {
-//	UserID uint32 `json:"user_id"`
-//	RoleID uint32 `json:"role_id"`
-//}
 
 func New(info *model.User) map[string]any {
 	return map[string]any{
@@ -29,7 +24,7 @@ func New(info *model.User) map[string]any {
 	}
 }
 
-func UserId(ctx kratos.Context) uint32 {
+func UserId(ctx kratosx.Context) uint32 {
 	m, err := ctx.JWT().ParseMapClaims(ctx)
 	if err != nil {
 		return 0
@@ -37,7 +32,7 @@ func UserId(ctx kratos.Context) uint32 {
 	return uint32(m[uid].(float64))
 }
 
-func RoleId(ctx kratos.Context) uint32 {
+func RoleId(ctx kratosx.Context) uint32 {
 	m, err := ctx.JWT().ParseMapClaims(ctx)
 	if err != nil {
 		return 0
@@ -45,7 +40,7 @@ func RoleId(ctx kratos.Context) uint32 {
 	return uint32(m[rid].(float64))
 }
 
-func RoleKeyword(ctx kratos.Context) string {
+func RoleKeyword(ctx kratosx.Context) string {
 	m, err := ctx.JWT().ParseMapClaims(ctx)
 	if err != nil {
 		return ""
@@ -53,7 +48,7 @@ func RoleKeyword(ctx kratos.Context) string {
 	return m[rkey].(string)
 }
 
-func DepartmentId(ctx kratos.Context) uint32 {
+func DepartmentId(ctx kratosx.Context) uint32 {
 	m, err := ctx.JWT().ParseMapClaims(ctx)
 	if err != nil {
 		return 0
@@ -61,7 +56,7 @@ func DepartmentId(ctx kratos.Context) uint32 {
 	return uint32(m[did].(float64))
 }
 
-func DepartmentKeyword(ctx kratos.Context) string {
+func DepartmentKeyword(ctx kratosx.Context) string {
 	m, err := ctx.JWT().ParseMapClaims(ctx)
 	if err != nil {
 		return ""

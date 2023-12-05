@@ -8,8 +8,8 @@ package v1
 
 import (
 	context "context"
-	http "github.com/limes-cloud/kratos/transport/http"
-	binding "github.com/limes-cloud/kratos/transport/http/binding"
+	http "github.com/go-kratos/kratos/v2/transport/http"
+	binding "github.com/go-kratos/kratos/v2/transport/http/binding"
 	emptypb "google.golang.org/protobuf/types/known/emptypb"
 )
 
@@ -177,7 +177,7 @@ func _Service_GetSetting0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Cont
 			return err
 		}
 		http.SetOperation(ctx, OperationServiceGetSetting)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
 			return srv.GetSetting(ctx, req.(*emptypb.Empty))
 		})
 		out, err := h(ctx, &in)
@@ -196,7 +196,7 @@ func _Service_CurrentRoleMenuTree0_HTTP_Handler(srv ServiceHTTPServer) func(ctx 
 			return err
 		}
 		http.SetOperation(ctx, OperationServiceCurrentRoleMenuTree)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
 			return srv.CurrentRoleMenuTree(ctx, req.(*emptypb.Empty))
 		})
 		out, err := h(ctx, &in)
@@ -215,7 +215,7 @@ func _Service_GetRoleMenuIds0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.
 			return err
 		}
 		http.SetOperation(ctx, OperationServiceGetRoleMenuIds)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
 			return srv.GetRoleMenuIds(ctx, req.(*GetRoleMenuIdsRequest))
 		})
 		out, err := h(ctx, &in)
@@ -237,7 +237,7 @@ func _Service_UpdateRoleMenus0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http
 			return err
 		}
 		http.SetOperation(ctx, OperationServiceUpdateRoleMenus)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
 			return srv.UpdateRoleMenus(ctx, req.(*UpdateRoleMenuRequest))
 		})
 		out, err := h(ctx, &in)
@@ -256,7 +256,7 @@ func _Service_GetRoleTree0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Con
 			return err
 		}
 		http.SetOperation(ctx, OperationServiceGetRoleTree)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
 			return srv.GetRoleTree(ctx, req.(*emptypb.Empty))
 		})
 		out, err := h(ctx, &in)
@@ -278,7 +278,7 @@ func _Service_AddRole0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Context
 			return err
 		}
 		http.SetOperation(ctx, OperationServiceAddRole)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
 			return srv.AddRole(ctx, req.(*AddRoleRequest))
 		})
 		out, err := h(ctx, &in)
@@ -300,7 +300,7 @@ func _Service_UpdateRole0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Cont
 			return err
 		}
 		http.SetOperation(ctx, OperationServiceUpdateRole)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
 			return srv.UpdateRole(ctx, req.(*UpdateRoleRequest))
 		})
 		out, err := h(ctx, &in)
@@ -319,7 +319,7 @@ func _Service_DeleteRole0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Cont
 			return err
 		}
 		http.SetOperation(ctx, OperationServiceDeleteRole)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
 			return srv.DeleteRole(ctx, req.(*DeleteRoleRequest))
 		})
 		out, err := h(ctx, &in)
@@ -338,7 +338,7 @@ func _Service_GetMenuTree0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Con
 			return err
 		}
 		http.SetOperation(ctx, OperationServiceGetMenuTree)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
 			return srv.GetMenuTree(ctx, req.(*emptypb.Empty))
 		})
 		out, err := h(ctx, &in)
@@ -360,7 +360,7 @@ func _Service_AddMenu0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Context
 			return err
 		}
 		http.SetOperation(ctx, OperationServiceAddMenu)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
 			return srv.AddMenu(ctx, req.(*AddMenuRequest))
 		})
 		out, err := h(ctx, &in)
@@ -382,7 +382,7 @@ func _Service_UpdateMenu0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Cont
 			return err
 		}
 		http.SetOperation(ctx, OperationServiceUpdateMenu)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
 			return srv.UpdateMenu(ctx, req.(*UpdateMenuRequest))
 		})
 		out, err := h(ctx, &in)
@@ -401,7 +401,7 @@ func _Service_DeleteMenu0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Cont
 			return err
 		}
 		http.SetOperation(ctx, OperationServiceDeleteMenu)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
 			return srv.DeleteMenu(ctx, req.(*DeleteMenuRequest))
 		})
 		out, err := h(ctx, &in)
@@ -420,7 +420,7 @@ func _Service_GetDepartmentTree0_HTTP_Handler(srv ServiceHTTPServer) func(ctx ht
 			return err
 		}
 		http.SetOperation(ctx, OperationServiceGetDepartmentTree)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
 			return srv.GetDepartmentTree(ctx, req.(*emptypb.Empty))
 		})
 		out, err := h(ctx, &in)
@@ -442,7 +442,7 @@ func _Service_AddDepartment0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.C
 			return err
 		}
 		http.SetOperation(ctx, OperationServiceAddDepartment)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
 			return srv.AddDepartment(ctx, req.(*AddDepartmentRequest))
 		})
 		out, err := h(ctx, &in)
@@ -464,7 +464,7 @@ func _Service_UpdateDepartment0_HTTP_Handler(srv ServiceHTTPServer) func(ctx htt
 			return err
 		}
 		http.SetOperation(ctx, OperationServiceUpdateDepartment)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
 			return srv.UpdateDepartment(ctx, req.(*UpdateDepartmentRequest))
 		})
 		out, err := h(ctx, &in)
@@ -483,7 +483,7 @@ func _Service_DeleteDepartment0_HTTP_Handler(srv ServiceHTTPServer) func(ctx htt
 			return err
 		}
 		http.SetOperation(ctx, OperationServiceDeleteDepartment)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
 			return srv.DeleteDepartment(ctx, req.(*DeleteDepartmentRequest))
 		})
 		out, err := h(ctx, &in)
@@ -502,7 +502,7 @@ func _Service_CurrentUser0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Con
 			return err
 		}
 		http.SetOperation(ctx, OperationServiceCurrentUser)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
 			return srv.CurrentUser(ctx, req.(*emptypb.Empty))
 		})
 		out, err := h(ctx, &in)
@@ -521,7 +521,7 @@ func _Service_PageUser0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Contex
 			return err
 		}
 		http.SetOperation(ctx, OperationServicePageUser)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
 			return srv.PageUser(ctx, req.(*PageUserRequest))
 		})
 		out, err := h(ctx, &in)
@@ -543,7 +543,7 @@ func _Service_AddUser0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Context
 			return err
 		}
 		http.SetOperation(ctx, OperationServiceAddUser)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
 			return srv.AddUser(ctx, req.(*AddUserRequest))
 		})
 		out, err := h(ctx, &in)
@@ -562,7 +562,7 @@ func _Service_ChangeUserPasswordCaptcha0_HTTP_Handler(srv ServiceHTTPServer) fun
 			return err
 		}
 		http.SetOperation(ctx, OperationServiceChangeUserPasswordCaptcha)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
 			return srv.ChangeUserPasswordCaptcha(ctx, req.(*emptypb.Empty))
 		})
 		out, err := h(ctx, &in)
@@ -584,7 +584,7 @@ func _Service_ResetUserPassword0_HTTP_Handler(srv ServiceHTTPServer) func(ctx ht
 			return err
 		}
 		http.SetOperation(ctx, OperationServiceResetUserPassword)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
 			return srv.ResetUserPassword(ctx, req.(*ResetUserPasswordRequest))
 		})
 		out, err := h(ctx, &in)
@@ -606,7 +606,7 @@ func _Service_ChangeUserPassword0_HTTP_Handler(srv ServiceHTTPServer) func(ctx h
 			return err
 		}
 		http.SetOperation(ctx, OperationServiceChangeUserPassword)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
 			return srv.ChangeUserPassword(ctx, req.(*ChangeUserPasswordRequest))
 		})
 		out, err := h(ctx, &in)
@@ -628,7 +628,7 @@ func _Service_DisableUser0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Con
 			return err
 		}
 		http.SetOperation(ctx, OperationServiceDisableUser)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
 			return srv.DisableUser(ctx, req.(*DisableUserRequest))
 		})
 		out, err := h(ctx, &in)
@@ -650,7 +650,7 @@ func _Service_EnableUser0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Cont
 			return err
 		}
 		http.SetOperation(ctx, OperationServiceEnableUser)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
 			return srv.EnableUser(ctx, req.(*EnableUserRequest))
 		})
 		out, err := h(ctx, &in)
@@ -672,7 +672,7 @@ func _Service_OfflineUser0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Con
 			return err
 		}
 		http.SetOperation(ctx, OperationServiceOfflineUser)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
 			return srv.OfflineUser(ctx, req.(*OfflineUserRequest))
 		})
 		out, err := h(ctx, &in)
@@ -694,7 +694,7 @@ func _Service_UpdateUser0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Cont
 			return err
 		}
 		http.SetOperation(ctx, OperationServiceUpdateUser)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
 			return srv.UpdateUser(ctx, req.(*UpdateUserRequest))
 		})
 		out, err := h(ctx, &in)
@@ -716,7 +716,7 @@ func _Service_UpdateUserBasic0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http
 			return err
 		}
 		http.SetOperation(ctx, OperationServiceUpdateUserBasic)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
 			return srv.UpdateUserBasic(ctx, req.(*UpdateUserBasicRequest))
 		})
 		out, err := h(ctx, &in)
@@ -735,7 +735,7 @@ func _Service_DeleteUser0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Cont
 			return err
 		}
 		http.SetOperation(ctx, OperationServiceDeleteUser)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
 			return srv.DeleteUser(ctx, req.(*DeleteUserRequest))
 		})
 		out, err := h(ctx, &in)
@@ -754,7 +754,7 @@ func _Service_CurrentUserRoles0_HTTP_Handler(srv ServiceHTTPServer) func(ctx htt
 			return err
 		}
 		http.SetOperation(ctx, OperationServiceCurrentUserRoles)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
 			return srv.CurrentUserRoles(ctx, req.(*emptypb.Empty))
 		})
 		out, err := h(ctx, &in)
@@ -776,7 +776,7 @@ func _Service_SwitchCurrentUserRole0_HTTP_Handler(srv ServiceHTTPServer) func(ct
 			return err
 		}
 		http.SetOperation(ctx, OperationServiceSwitchCurrentUserRole)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
 			return srv.SwitchCurrentUserRole(ctx, req.(*SwitchCurrentUserRoleRequest))
 		})
 		out, err := h(ctx, &in)
@@ -795,7 +795,7 @@ func _Service_GetUserRoles0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Co
 			return err
 		}
 		http.SetOperation(ctx, OperationServiceGetUserRoles)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
 			return srv.GetUserRoles(ctx, req.(*GetUserRolesRequest))
 		})
 		out, err := h(ctx, &in)
@@ -817,7 +817,7 @@ func _Service_Auth0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Context) e
 			return err
 		}
 		http.SetOperation(ctx, OperationServiceAuth)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
 			return srv.Auth(ctx, req.(*AuthRequest))
 		})
 		out, err := h(ctx, &in)
@@ -839,7 +839,7 @@ func _Service_Login0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Context) 
 			return err
 		}
 		http.SetOperation(ctx, OperationServiceLogin)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
 			return srv.Login(ctx, req.(*LoginRequest))
 		})
 		out, err := h(ctx, &in)
@@ -858,7 +858,7 @@ func _Service_LoginCaptcha0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Co
 			return err
 		}
 		http.SetOperation(ctx, OperationServiceLoginCaptcha)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
 			return srv.LoginCaptcha(ctx, req.(*emptypb.Empty))
 		})
 		out, err := h(ctx, &in)
@@ -877,7 +877,7 @@ func _Service_Logout0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Context)
 			return err
 		}
 		http.SetOperation(ctx, OperationServiceLogout)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
 			return srv.Logout(ctx, req.(*emptypb.Empty))
 		})
 		out, err := h(ctx, &in)
@@ -896,7 +896,7 @@ func _Service_ParseToken0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Cont
 			return err
 		}
 		http.SetOperation(ctx, OperationServiceParseToken)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
 			return srv.ParseToken(ctx, req.(*emptypb.Empty))
 		})
 		out, err := h(ctx, &in)
@@ -915,7 +915,7 @@ func _Service_RefreshToken0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Co
 			return err
 		}
 		http.SetOperation(ctx, OperationServiceRefreshToken)
-		h := ctx.Middleware(func(ctx context.Context, req interface{}) (interface{}, error) {
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
 			return srv.RefreshToken(ctx, req.(*emptypb.Empty))
 		})
 		out, err := h(ctx, &in)

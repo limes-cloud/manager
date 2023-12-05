@@ -7,9 +7,8 @@ import (
 	"manager/consts"
 	"manager/internal/model"
 
+	"github.com/limes-cloud/kratosx"
 	"gorm.io/gorm"
-
-	"github.com/limes-cloud/kratos"
 )
 
 type Init struct {
@@ -24,7 +23,7 @@ func NewInit(conf *config.Config) *Init {
 
 // Init 执行系统初始化
 func (a *Init) Init() error {
-	ctx := kratos.MustContext(context.Background())
+	ctx := kratosx.MustContext(context.Background())
 	if err := a.InitAuthentication(ctx); err != nil {
 		return err
 	}
@@ -32,14 +31,14 @@ func (a *Init) Init() error {
 	return nil
 }
 
-func (a *Init) InitAuthentication(ctx kratos.Context) error {
+func (a *Init) InitAuthentication(ctx kratosx.Context) error {
 	menu := model.Menu{}
 	list, err := menu.All(ctx, func(db *gorm.DB) *gorm.DB {
 		return db.Where("type=?", consts.MENU_BASIC)
 	})
 
 	if err != nil {
-		return v1.ErrorDatabase()
+		return v1.DatabaseError()
 	}
 
 	for _, item := range list {

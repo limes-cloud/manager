@@ -4,489 +4,489 @@ package v1
 
 import (
 	fmt "fmt"
-	errors "github.com/limes-cloud/kratos/errors"
+	errors "github.com/go-kratos/kratos/v2/errors"
 )
 
 // This is a compile-time assertion to ensure that this generated file
 // is compatible with the kratos package it is being compiled against.
 const _ = errors.SupportPackageIsVersion1
 
-func IsNotFound(err error) bool {
+func IsNotFoundError(err error) bool {
 	if err == nil {
 		return false
 	}
 	e := errors.FromError(err)
-	return e.Reason == ErrorReason_NOT_FOUND.String() && e.Code == 200
+	return e.Reason == ErrorReason_NotFoundError.String() && e.Code == 200
 }
 
-func ErrorNotFoundFormat(format string, args ...interface{}) *errors.Error {
-	return errors.New(200, ErrorReason_NOT_FOUND.String(), "数据不存在:"+fmt.Sprintf(format, args...))
+func NotFoundErrorFormat(format string, args ...any) *errors.Error {
+	return errors.New(200, ErrorReason_NotFoundError.String(), "数据不存在:"+fmt.Sprintf(format, args...))
 }
 
-func ErrorNotFound() *errors.Error {
-	return errors.New(200, ErrorReason_NOT_FOUND.String(), "数据不存在")
+func NotFoundError() *errors.Error {
+	return errors.New(200, ErrorReason_NotFoundError.String(), "数据不存在")
 }
 
-func IsDatabase(err error) bool {
+func IsDatabaseError(err error) bool {
 	if err == nil {
 		return false
 	}
 	e := errors.FromError(err)
-	return e.Reason == ErrorReason_DATABASE.String() && e.Code == 200
+	return e.Reason == ErrorReason_DatabaseError.String() && e.Code == 200
 }
 
-func ErrorDatabaseFormat(format string, args ...interface{}) *errors.Error {
-	return errors.New(200, ErrorReason_DATABASE.String(), "数据库错误:"+fmt.Sprintf(format, args...))
+func DatabaseErrorFormat(format string, args ...any) *errors.Error {
+	return errors.New(200, ErrorReason_DatabaseError.String(), "数据库错误:"+fmt.Sprintf(format, args...))
 }
 
-func ErrorDatabase() *errors.Error {
-	return errors.New(200, ErrorReason_DATABASE.String(), "数据库错误")
+func DatabaseError() *errors.Error {
+	return errors.New(200, ErrorReason_DatabaseError.String(), "数据库错误")
 }
 
-func IsMetadata(err error) bool {
+func IsMetadataError(err error) bool {
 	if err == nil {
 		return false
 	}
 	e := errors.FromError(err)
-	return e.Reason == ErrorReason_METADATA.String() && e.Code == 200
+	return e.Reason == ErrorReason_MetadataError.String() && e.Code == 200
 }
 
-func ErrorMetadataFormat(format string, args ...interface{}) *errors.Error {
-	return errors.New(200, ErrorReason_METADATA.String(), "元数据异常:"+fmt.Sprintf(format, args...))
+func MetadataErrorFormat(format string, args ...any) *errors.Error {
+	return errors.New(200, ErrorReason_MetadataError.String(), "元数据异常:"+fmt.Sprintf(format, args...))
 }
 
-func ErrorMetadata() *errors.Error {
-	return errors.New(200, ErrorReason_METADATA.String(), "元数据异常")
+func MetadataError() *errors.Error {
+	return errors.New(200, ErrorReason_MetadataError.String(), "元数据异常")
 }
 
-func IsTransform(err error) bool {
+func IsTransformError(err error) bool {
 	if err == nil {
 		return false
 	}
 	e := errors.FromError(err)
-	return e.Reason == ErrorReason_TRANSFORM.String() && e.Code == 200
+	return e.Reason == ErrorReason_TransformError.String() && e.Code == 200
 }
 
-func ErrorTransformFormat(format string, args ...interface{}) *errors.Error {
-	return errors.New(200, ErrorReason_TRANSFORM.String(), "数据转换失败:"+fmt.Sprintf(format, args...))
+func TransformErrorFormat(format string, args ...any) *errors.Error {
+	return errors.New(200, ErrorReason_TransformError.String(), "数据转换失败:"+fmt.Sprintf(format, args...))
 }
 
-func ErrorTransform() *errors.Error {
-	return errors.New(200, ErrorReason_TRANSFORM.String(), "数据转换失败")
+func TransformError() *errors.Error {
+	return errors.New(200, ErrorReason_TransformError.String(), "数据转换失败")
 }
 
-func IsDepartmentPermissions(err error) bool {
+func IsDepartmentPermissionsError(err error) bool {
 	if err == nil {
 		return false
 	}
 	e := errors.FromError(err)
-	return e.Reason == ErrorReason_DEPARTMENT_PERMISSIONS.String() && e.Code == 200
+	return e.Reason == ErrorReason_DepartmentPermissionsError.String() && e.Code == 200
 }
 
-func ErrorDepartmentPermissionsFormat(format string, args ...interface{}) *errors.Error {
-	return errors.New(200, ErrorReason_DEPARTMENT_PERMISSIONS.String(), "无此部门权限:"+fmt.Sprintf(format, args...))
+func DepartmentPermissionsErrorFormat(format string, args ...any) *errors.Error {
+	return errors.New(200, ErrorReason_DepartmentPermissionsError.String(), "无此部门权限:"+fmt.Sprintf(format, args...))
 }
 
-func ErrorDepartmentPermissions() *errors.Error {
-	return errors.New(200, ErrorReason_DEPARTMENT_PERMISSIONS.String(), "无此部门权限")
+func DepartmentPermissionsError() *errors.Error {
+	return errors.New(200, ErrorReason_DepartmentPermissionsError.String(), "无此部门权限")
 }
 
-func IsRolePermissions(err error) bool {
+func IsRolePermissionsError(err error) bool {
 	if err == nil {
 		return false
 	}
 	e := errors.FromError(err)
-	return e.Reason == ErrorReason_ROLE_PERMISSIONS.String() && e.Code == 200
+	return e.Reason == ErrorReason_RolePermissionsError.String() && e.Code == 200
 }
 
-func ErrorRolePermissionsFormat(format string, args ...interface{}) *errors.Error {
-	return errors.New(200, ErrorReason_ROLE_PERMISSIONS.String(), "无此角色权限:"+fmt.Sprintf(format, args...))
+func RolePermissionsErrorFormat(format string, args ...any) *errors.Error {
+	return errors.New(200, ErrorReason_RolePermissionsError.String(), "无此角色权限:"+fmt.Sprintf(format, args...))
 }
 
-func ErrorRolePermissions() *errors.Error {
-	return errors.New(200, ErrorReason_ROLE_PERMISSIONS.String(), "无此角色权限")
+func RolePermissionsError() *errors.Error {
+	return errors.New(200, ErrorReason_RolePermissionsError.String(), "无此角色权限")
 }
 
-func IsUserPermissions(err error) bool {
+func IsUserPermissionsError(err error) bool {
 	if err == nil {
 		return false
 	}
 	e := errors.FromError(err)
-	return e.Reason == ErrorReason_USER_PERMISSIONS.String() && e.Code == 200
+	return e.Reason == ErrorReason_UserPermissionsError.String() && e.Code == 200
 }
 
-func ErrorUserPermissionsFormat(format string, args ...interface{}) *errors.Error {
-	return errors.New(200, ErrorReason_USER_PERMISSIONS.String(), "无此用户权限:"+fmt.Sprintf(format, args...))
+func UserPermissionsErrorFormat(format string, args ...any) *errors.Error {
+	return errors.New(200, ErrorReason_UserPermissionsError.String(), "无此用户权限:"+fmt.Sprintf(format, args...))
 }
 
-func ErrorUserPermissions() *errors.Error {
-	return errors.New(200, ErrorReason_USER_PERMISSIONS.String(), "无此用户权限")
+func UserPermissionsError() *errors.Error {
+	return errors.New(200, ErrorReason_UserPermissionsError.String(), "无此用户权限")
 }
 
-func IsMenuPermissions(err error) bool {
+func IsMenuPermissionsError(err error) bool {
 	if err == nil {
 		return false
 	}
 	e := errors.FromError(err)
-	return e.Reason == ErrorReason_MENU_PERMISSIONS.String() && e.Code == 200
+	return e.Reason == ErrorReason_MenuPermissionsError.String() && e.Code == 200
 }
 
-func ErrorMenuPermissionsFormat(format string, args ...interface{}) *errors.Error {
-	return errors.New(200, ErrorReason_MENU_PERMISSIONS.String(), "无此菜单权限:"+fmt.Sprintf(format, args...))
+func MenuPermissionsErrorFormat(format string, args ...any) *errors.Error {
+	return errors.New(200, ErrorReason_MenuPermissionsError.String(), "无此菜单权限:"+fmt.Sprintf(format, args...))
 }
 
-func ErrorMenuPermissions() *errors.Error {
-	return errors.New(200, ErrorReason_MENU_PERMISSIONS.String(), "无此菜单权限")
+func MenuPermissionsError() *errors.Error {
+	return errors.New(200, ErrorReason_MenuPermissionsError.String(), "无此菜单权限")
 }
 
-func IsEditSystemData(err error) bool {
+func IsEditSystemDataError(err error) bool {
 	if err == nil {
 		return false
 	}
 	e := errors.FromError(err)
-	return e.Reason == ErrorReason_EDIT_SYSTEM_DATA.String() && e.Code == 200
+	return e.Reason == ErrorReason_EditSystemDataError.String() && e.Code == 200
 }
 
-func ErrorEditSystemDataFormat(format string, args ...interface{}) *errors.Error {
-	return errors.New(200, ErrorReason_EDIT_SYSTEM_DATA.String(), "系统数据，不允许修改:"+fmt.Sprintf(format, args...))
+func EditSystemDataErrorFormat(format string, args ...any) *errors.Error {
+	return errors.New(200, ErrorReason_EditSystemDataError.String(), "系统数据，不允许修改:"+fmt.Sprintf(format, args...))
 }
 
-func ErrorEditSystemData() *errors.Error {
-	return errors.New(200, ErrorReason_EDIT_SYSTEM_DATA.String(), "系统数据，不允许修改")
+func EditSystemDataError() *errors.Error {
+	return errors.New(200, ErrorReason_EditSystemDataError.String(), "系统数据，不允许修改")
 }
 
-func IsDeleteSystemData(err error) bool {
+func IsDeleteSystemDataError(err error) bool {
 	if err == nil {
 		return false
 	}
 	e := errors.FromError(err)
-	return e.Reason == ErrorReason_DELETE_SYSTEM_DATA.String() && e.Code == 200
+	return e.Reason == ErrorReason_DeleteSystemDataError.String() && e.Code == 200
 }
 
-func ErrorDeleteSystemDataFormat(format string, args ...interface{}) *errors.Error {
-	return errors.New(200, ErrorReason_DELETE_SYSTEM_DATA.String(), "系统数据，不允许删除:"+fmt.Sprintf(format, args...))
+func DeleteSystemDataErrorFormat(format string, args ...any) *errors.Error {
+	return errors.New(200, ErrorReason_DeleteSystemDataError.String(), "系统数据，不允许删除:"+fmt.Sprintf(format, args...))
 }
 
-func ErrorDeleteSystemData() *errors.Error {
-	return errors.New(200, ErrorReason_DELETE_SYSTEM_DATA.String(), "系统数据，不允许删除")
+func DeleteSystemDataError() *errors.Error {
+	return errors.New(200, ErrorReason_DeleteSystemDataError.String(), "系统数据，不允许删除")
 }
 
-func IsNewCaptcha(err error) bool {
+func IsNewCaptchaError(err error) bool {
 	if err == nil {
 		return false
 	}
 	e := errors.FromError(err)
-	return e.Reason == ErrorReason_NEW_CAPTCHA.String() && e.Code == 200
+	return e.Reason == ErrorReason_NewCaptchaError.String() && e.Code == 200
 }
 
-func ErrorNewCaptchaFormat(format string, args ...interface{}) *errors.Error {
-	return errors.New(200, ErrorReason_NEW_CAPTCHA.String(), "二维码生成失败:"+fmt.Sprintf(format, args...))
+func NewCaptchaErrorFormat(format string, args ...any) *errors.Error {
+	return errors.New(200, ErrorReason_NewCaptchaError.String(), "二维码生成失败:"+fmt.Sprintf(format, args...))
 }
 
-func ErrorNewCaptcha() *errors.Error {
-	return errors.New(200, ErrorReason_NEW_CAPTCHA.String(), "二维码生成失败")
+func NewCaptchaError() *errors.Error {
+	return errors.New(200, ErrorReason_NewCaptchaError.String(), "二维码生成失败")
 }
 
-func IsVerifyCaptcha(err error) bool {
+func IsVerifyCaptchaError(err error) bool {
 	if err == nil {
 		return false
 	}
 	e := errors.FromError(err)
-	return e.Reason == ErrorReason_VERIFY_CAPTCHA.String() && e.Code == 200
+	return e.Reason == ErrorReason_VerifyCaptchaError.String() && e.Code == 200
 }
 
-func ErrorVerifyCaptchaFormat(format string, args ...interface{}) *errors.Error {
-	return errors.New(200, ErrorReason_VERIFY_CAPTCHA.String(), "验证码验证失败:"+fmt.Sprintf(format, args...))
+func VerifyCaptchaErrorFormat(format string, args ...any) *errors.Error {
+	return errors.New(200, ErrorReason_VerifyCaptchaError.String(), "验证码验证失败:"+fmt.Sprintf(format, args...))
 }
 
-func ErrorVerifyCaptcha() *errors.Error {
-	return errors.New(200, ErrorReason_VERIFY_CAPTCHA.String(), "验证码验证失败")
+func VerifyCaptchaError() *errors.Error {
+	return errors.New(200, ErrorReason_VerifyCaptchaError.String(), "验证码验证失败")
 }
 
-func IsRsaDecode(err error) bool {
+func IsRsaDecodeError(err error) bool {
 	if err == nil {
 		return false
 	}
 	e := errors.FromError(err)
-	return e.Reason == ErrorReason_RSA_DECODE.String() && e.Code == 200
+	return e.Reason == ErrorReason_RsaDecodeError.String() && e.Code == 200
 }
 
-func ErrorRsaDecodeFormat(format string, args ...interface{}) *errors.Error {
-	return errors.New(200, ErrorReason_RSA_DECODE.String(), "rsa解密失败:"+fmt.Sprintf(format, args...))
+func RsaDecodeErrorFormat(format string, args ...any) *errors.Error {
+	return errors.New(200, ErrorReason_RsaDecodeError.String(), "rsa解密失败:"+fmt.Sprintf(format, args...))
 }
 
-func ErrorRsaDecode() *errors.Error {
-	return errors.New(200, ErrorReason_RSA_DECODE.String(), "rsa解密失败")
+func RsaDecodeError() *errors.Error {
+	return errors.New(200, ErrorReason_RsaDecodeError.String(), "rsa解密失败")
 }
 
-func IsPasswordFormat(err error) bool {
+func IsPasswordFormatError(err error) bool {
 	if err == nil {
 		return false
 	}
 	e := errors.FromError(err)
-	return e.Reason == ErrorReason_PASSWORD_FORMAT.String() && e.Code == 200
+	return e.Reason == ErrorReason_PasswordFormatError.String() && e.Code == 200
 }
 
-func ErrorPasswordFormatFormat(format string, args ...interface{}) *errors.Error {
-	return errors.New(200, ErrorReason_PASSWORD_FORMAT.String(), "密码格式错误:"+fmt.Sprintf(format, args...))
+func PasswordFormatErrorFormat(format string, args ...any) *errors.Error {
+	return errors.New(200, ErrorReason_PasswordFormatError.String(), "密码格式错误:"+fmt.Sprintf(format, args...))
 }
 
-func ErrorPasswordFormat() *errors.Error {
-	return errors.New(200, ErrorReason_PASSWORD_FORMAT.String(), "密码格式错误")
+func PasswordFormatError() *errors.Error {
+	return errors.New(200, ErrorReason_PasswordFormatError.String(), "密码格式错误")
 }
 
-func IsPasswordExpire(err error) bool {
+func IsPasswordExpireError(err error) bool {
 	if err == nil {
 		return false
 	}
 	e := errors.FromError(err)
-	return e.Reason == ErrorReason_PASSWORD_EXPIRE.String() && e.Code == 200
+	return e.Reason == ErrorReason_PasswordExpireError.String() && e.Code == 200
 }
 
-func ErrorPasswordExpireFormat(format string, args ...interface{}) *errors.Error {
-	return errors.New(200, ErrorReason_PASSWORD_EXPIRE.String(), "密码已过期:"+fmt.Sprintf(format, args...))
+func PasswordExpireErrorFormat(format string, args ...any) *errors.Error {
+	return errors.New(200, ErrorReason_PasswordExpireError.String(), "密码已过期:"+fmt.Sprintf(format, args...))
 }
 
-func ErrorPasswordExpire() *errors.Error {
-	return errors.New(200, ErrorReason_PASSWORD_EXPIRE.String(), "密码已过期")
+func PasswordExpireError() *errors.Error {
+	return errors.New(200, ErrorReason_PasswordExpireError.String(), "密码已过期")
 }
 
-func IsUserDisable(err error) bool {
+func IsUserDisableError(err error) bool {
 	if err == nil {
 		return false
 	}
 	e := errors.FromError(err)
-	return e.Reason == ErrorReason_USER_DISABLE.String() && e.Code == 200
+	return e.Reason == ErrorReason_UserDisableError.String() && e.Code == 200
 }
 
-func ErrorUserDisableFormat(format string, args ...interface{}) *errors.Error {
-	return errors.New(200, ErrorReason_USER_DISABLE.String(), "用户已被禁用:"+fmt.Sprintf(format, args...))
+func UserDisableErrorFormat(format string, args ...any) *errors.Error {
+	return errors.New(200, ErrorReason_UserDisableError.String(), "用户已被禁用:"+fmt.Sprintf(format, args...))
 }
 
-func ErrorUserDisable() *errors.Error {
-	return errors.New(200, ErrorReason_USER_DISABLE.String(), "用户已被禁用")
+func UserDisableError() *errors.Error {
+	return errors.New(200, ErrorReason_UserDisableError.String(), "用户已被禁用")
 }
 
-func IsRoleDisable(err error) bool {
+func IsRoleDisableError(err error) bool {
 	if err == nil {
 		return false
 	}
 	e := errors.FromError(err)
-	return e.Reason == ErrorReason_ROLE_DISABLE.String() && e.Code == 200
+	return e.Reason == ErrorReason_RoleDisableError.String() && e.Code == 200
 }
 
-func ErrorRoleDisableFormat(format string, args ...interface{}) *errors.Error {
-	return errors.New(200, ErrorReason_ROLE_DISABLE.String(), "角色已被禁用:"+fmt.Sprintf(format, args...))
+func RoleDisableErrorFormat(format string, args ...any) *errors.Error {
+	return errors.New(200, ErrorReason_RoleDisableError.String(), "角色已被禁用:"+fmt.Sprintf(format, args...))
 }
 
-func ErrorRoleDisable() *errors.Error {
-	return errors.New(200, ErrorReason_ROLE_DISABLE.String(), "角色已被禁用")
+func RoleDisableError() *errors.Error {
+	return errors.New(200, ErrorReason_RoleDisableError.String(), "角色已被禁用")
 }
 
-func IsUserPassword(err error) bool {
+func IsUserPasswordError(err error) bool {
 	if err == nil {
 		return false
 	}
 	e := errors.FromError(err)
-	return e.Reason == ErrorReason_USER_PASSWORD.String() && e.Code == 200
+	return e.Reason == ErrorReason_UserPasswordError.String() && e.Code == 200
 }
 
-func ErrorUserPasswordFormat(format string, args ...interface{}) *errors.Error {
-	return errors.New(200, ErrorReason_USER_PASSWORD.String(), "用户密码错误:"+fmt.Sprintf(format, args...))
+func UserPasswordErrorFormat(format string, args ...any) *errors.Error {
+	return errors.New(200, ErrorReason_UserPasswordError.String(), "用户密码错误:"+fmt.Sprintf(format, args...))
 }
 
-func ErrorUserPassword() *errors.Error {
-	return errors.New(200, ErrorReason_USER_PASSWORD.String(), "用户密码错误")
+func UserPasswordError() *errors.Error {
+	return errors.New(200, ErrorReason_UserPasswordError.String(), "用户密码错误")
 }
 
-func IsNewToken(err error) bool {
+func IsNewTokenError(err error) bool {
 	if err == nil {
 		return false
 	}
 	e := errors.FromError(err)
-	return e.Reason == ErrorReason_NEW_TOKEN.String() && e.Code == 200
+	return e.Reason == ErrorReason_NewTokenError.String() && e.Code == 200
 }
 
-func ErrorNewTokenFormat(format string, args ...interface{}) *errors.Error {
-	return errors.New(200, ErrorReason_NEW_TOKEN.String(), "token生成失败:"+fmt.Sprintf(format, args...))
+func NewTokenErrorFormat(format string, args ...any) *errors.Error {
+	return errors.New(200, ErrorReason_NewTokenError.String(), "token生成失败:"+fmt.Sprintf(format, args...))
 }
 
-func ErrorNewToken() *errors.Error {
-	return errors.New(200, ErrorReason_NEW_TOKEN.String(), "token生成失败")
+func NewTokenError() *errors.Error {
+	return errors.New(200, ErrorReason_NewTokenError.String(), "token生成失败")
 }
 
-func IsParseToken(err error) bool {
+func IsParseTokenError(err error) bool {
 	if err == nil {
 		return false
 	}
 	e := errors.FromError(err)
-	return e.Reason == ErrorReason_PARSE_TOKEN.String() && e.Code == 200
+	return e.Reason == ErrorReason_ParseTokenError.String() && e.Code == 200
 }
 
-func ErrorParseTokenFormat(format string, args ...interface{}) *errors.Error {
-	return errors.New(200, ErrorReason_PARSE_TOKEN.String(), "token解析失败:"+fmt.Sprintf(format, args...))
+func ParseTokenErrorFormat(format string, args ...any) *errors.Error {
+	return errors.New(200, ErrorReason_ParseTokenError.String(), "token解析失败:"+fmt.Sprintf(format, args...))
 }
 
-func ErrorParseToken() *errors.Error {
-	return errors.New(200, ErrorReason_PARSE_TOKEN.String(), "token解析失败")
+func ParseTokenError() *errors.Error {
+	return errors.New(200, ErrorReason_ParseTokenError.String(), "token解析失败")
 }
 
-func IsRefreshToken(err error) bool {
+func IsRefreshTokenError(err error) bool {
 	if err == nil {
 		return false
 	}
 	e := errors.FromError(err)
-	return e.Reason == ErrorReason_REFRESH_TOKEN.String() && e.Code == 401
+	return e.Reason == ErrorReason_RefreshTokenError.String() && e.Code == 401
 }
 
-func ErrorRefreshTokenFormat(format string, args ...interface{}) *errors.Error {
-	return errors.New(401, ErrorReason_REFRESH_TOKEN.String(), "刷新token失败:"+fmt.Sprintf(format, args...))
+func RefreshTokenErrorFormat(format string, args ...any) *errors.Error {
+	return errors.New(401, ErrorReason_RefreshTokenError.String(), "刷新token失败:"+fmt.Sprintf(format, args...))
 }
 
-func ErrorRefreshToken() *errors.Error {
-	return errors.New(401, ErrorReason_REFRESH_TOKEN.String(), "刷新token失败")
+func RefreshTokenError() *errors.Error {
+	return errors.New(401, ErrorReason_RefreshTokenError.String(), "刷新token失败")
 }
 
-func IsEmptyToken(err error) bool {
+func IsEmptyTokenError(err error) bool {
 	if err == nil {
 		return false
 	}
 	e := errors.FromError(err)
-	return e.Reason == ErrorReason_EMPTY_TOKEN.String() && e.Code == 200
+	return e.Reason == ErrorReason_EmptyTokenError.String() && e.Code == 200
 }
 
-func ErrorEmptyTokenFormat(format string, args ...interface{}) *errors.Error {
-	return errors.New(200, ErrorReason_EMPTY_TOKEN.String(), "token不能为空:"+fmt.Sprintf(format, args...))
+func EmptyTokenErrorFormat(format string, args ...any) *errors.Error {
+	return errors.New(200, ErrorReason_EmptyTokenError.String(), "token不能为空:"+fmt.Sprintf(format, args...))
 }
 
-func ErrorEmptyToken() *errors.Error {
-	return errors.New(200, ErrorReason_EMPTY_TOKEN.String(), "token不能为空")
+func EmptyTokenError() *errors.Error {
+	return errors.New(200, ErrorReason_EmptyTokenError.String(), "token不能为空")
 }
 
-func IsDeleteSelfRole(err error) bool {
+func IsDeleteSelfRoleError(err error) bool {
 	if err == nil {
 		return false
 	}
 	e := errors.FromError(err)
-	return e.Reason == ErrorReason_DELETE_SELF_ROLE.String() && e.Code == 200
+	return e.Reason == ErrorReason_DeleteSelfRoleError.String() && e.Code == 200
 }
 
-func ErrorDeleteSelfRoleFormat(format string, args ...interface{}) *errors.Error {
-	return errors.New(200, ErrorReason_DELETE_SELF_ROLE.String(), "不能删除自己的当前所属角色:"+fmt.Sprintf(format, args...))
+func DeleteSelfRoleErrorFormat(format string, args ...any) *errors.Error {
+	return errors.New(200, ErrorReason_DeleteSelfRoleError.String(), "不能删除自己的当前所属角色:"+fmt.Sprintf(format, args...))
 }
 
-func ErrorDeleteSelfRole() *errors.Error {
-	return errors.New(200, ErrorReason_DELETE_SELF_ROLE.String(), "不能删除自己的当前所属角色")
+func DeleteSelfRoleError() *errors.Error {
+	return errors.New(200, ErrorReason_DeleteSelfRoleError.String(), "不能删除自己的当前所属角色")
 }
 
-func IsDeleteSelfDepartment(err error) bool {
+func IsDeleteSelfDepartmentError(err error) bool {
 	if err == nil {
 		return false
 	}
 	e := errors.FromError(err)
-	return e.Reason == ErrorReason_DELETE_SELF_DEPARTMENT.String() && e.Code == 200
+	return e.Reason == ErrorReason_DeleteSelfDepartmentError.String() && e.Code == 200
 }
 
-func ErrorDeleteSelfDepartmentFormat(format string, args ...interface{}) *errors.Error {
-	return errors.New(200, ErrorReason_DELETE_SELF_DEPARTMENT.String(), "不能删除自己的当前所属部门:"+fmt.Sprintf(format, args...))
+func DeleteSelfDepartmentErrorFormat(format string, args ...any) *errors.Error {
+	return errors.New(200, ErrorReason_DeleteSelfDepartmentError.String(), "不能删除自己的当前所属部门:"+fmt.Sprintf(format, args...))
 }
 
-func ErrorDeleteSelfDepartment() *errors.Error {
-	return errors.New(200, ErrorReason_DELETE_SELF_DEPARTMENT.String(), "不能删除自己的当前所属部门")
+func DeleteSelfDepartmentError() *errors.Error {
+	return errors.New(200, ErrorReason_DeleteSelfDepartmentError.String(), "不能删除自己的当前所属部门")
 }
 
-func IsParentMenu(err error) bool {
+func IsParentMenuError(err error) bool {
 	if err == nil {
 		return false
 	}
 	e := errors.FromError(err)
-	return e.Reason == ErrorReason_PARENT_MENU.String() && e.Code == 200
+	return e.Reason == ErrorReason_ParentMenuError.String() && e.Code == 200
 }
 
-func ErrorParentMenuFormat(format string, args ...interface{}) *errors.Error {
-	return errors.New(200, ErrorReason_PARENT_MENU.String(), "当前菜单的父菜单不能为自己:"+fmt.Sprintf(format, args...))
+func ParentMenuErrorFormat(format string, args ...any) *errors.Error {
+	return errors.New(200, ErrorReason_ParentMenuError.String(), "当前菜单的父菜单不能为自己:"+fmt.Sprintf(format, args...))
 }
 
-func ErrorParentMenu() *errors.Error {
-	return errors.New(200, ErrorReason_PARENT_MENU.String(), "当前菜单的父菜单不能为自己")
+func ParentMenuError() *errors.Error {
+	return errors.New(200, ErrorReason_ParentMenuError.String(), "当前菜单的父菜单不能为自己")
 }
 
-func IsSendEmailCaptcha(err error) bool {
+func IsSendEmailCaptchaError(err error) bool {
 	if err == nil {
 		return false
 	}
 	e := errors.FromError(err)
-	return e.Reason == ErrorReason_SEND_EMAIL_CAPTCHA.String() && e.Code == 200
+	return e.Reason == ErrorReason_SendEmailCaptchaError.String() && e.Code == 200
 }
 
-func ErrorSendEmailCaptchaFormat(format string, args ...interface{}) *errors.Error {
-	return errors.New(200, ErrorReason_SEND_EMAIL_CAPTCHA.String(), "发送邮箱验证码失败:"+fmt.Sprintf(format, args...))
+func SendEmailCaptchaErrorFormat(format string, args ...any) *errors.Error {
+	return errors.New(200, ErrorReason_SendEmailCaptchaError.String(), "发送邮箱验证码失败:"+fmt.Sprintf(format, args...))
 }
 
-func ErrorSendEmailCaptcha() *errors.Error {
-	return errors.New(200, ErrorReason_SEND_EMAIL_CAPTCHA.String(), "发送邮箱验证码失败")
+func SendEmailCaptchaError() *errors.Error {
+	return errors.New(200, ErrorReason_SendEmailCaptchaError.String(), "发送邮箱验证码失败")
 }
 
-func IsUsernameFormat(err error) bool {
+func IsUsernameFormatError(err error) bool {
 	if err == nil {
 		return false
 	}
 	e := errors.FromError(err)
-	return e.Reason == ErrorReason_USERNAME_FORMAT.String() && e.Code == 200
+	return e.Reason == ErrorReason_UsernameFormatError.String() && e.Code == 200
 }
 
-func ErrorUsernameFormatFormat(format string, args ...interface{}) *errors.Error {
-	return errors.New(200, ErrorReason_USERNAME_FORMAT.String(), "用户名格式错误:"+fmt.Sprintf(format, args...))
+func UsernameFormatErrorFormat(format string, args ...any) *errors.Error {
+	return errors.New(200, ErrorReason_UsernameFormatError.String(), "用户名格式错误:"+fmt.Sprintf(format, args...))
 }
 
-func ErrorUsernameFormat() *errors.Error {
-	return errors.New(200, ErrorReason_USERNAME_FORMAT.String(), "用户名格式错误")
+func UsernameFormatError() *errors.Error {
+	return errors.New(200, ErrorReason_UsernameFormatError.String(), "用户名格式错误")
 }
 
-func IsUsernameNotExist(err error) bool {
+func IsUsernameNotExistError(err error) bool {
 	if err == nil {
 		return false
 	}
 	e := errors.FromError(err)
-	return e.Reason == ErrorReason_USERNAME_NOT_EXIST.String() && e.Code == 200
+	return e.Reason == ErrorReason_UsernameNotExistError.String() && e.Code == 200
 }
 
-func ErrorUsernameNotExistFormat(format string, args ...interface{}) *errors.Error {
-	return errors.New(200, ErrorReason_USERNAME_NOT_EXIST.String(), "用户不存在:"+fmt.Sprintf(format, args...))
+func UsernameNotExistErrorFormat(format string, args ...any) *errors.Error {
+	return errors.New(200, ErrorReason_UsernameNotExistError.String(), "用户不存在:"+fmt.Sprintf(format, args...))
 }
 
-func ErrorUsernameNotExist() *errors.Error {
-	return errors.New(200, ErrorReason_USERNAME_NOT_EXIST.String(), "用户不存在")
+func UsernameNotExistError() *errors.Error {
+	return errors.New(200, ErrorReason_UsernameNotExistError.String(), "用户不存在")
 }
 
-func IsDisableSelfUser(err error) bool {
+func IsDisableSelfUserError(err error) bool {
 	if err == nil {
 		return false
 	}
 	e := errors.FromError(err)
-	return e.Reason == ErrorReason_DISABLE_SELF_USER.String() && e.Code == 200
+	return e.Reason == ErrorReason_DisableSelfUserError.String() && e.Code == 200
 }
 
-func ErrorDisableSelfUserFormat(format string, args ...interface{}) *errors.Error {
-	return errors.New(200, ErrorReason_DISABLE_SELF_USER.String(), "不能禁用当前用户:"+fmt.Sprintf(format, args...))
+func DisableSelfUserErrorFormat(format string, args ...any) *errors.Error {
+	return errors.New(200, ErrorReason_DisableSelfUserError.String(), "不能禁用当前用户:"+fmt.Sprintf(format, args...))
 }
 
-func ErrorDisableSelfUser() *errors.Error {
-	return errors.New(200, ErrorReason_DISABLE_SELF_USER.String(), "不能禁用当前用户")
+func DisableSelfUserError() *errors.Error {
+	return errors.New(200, ErrorReason_DisableSelfUserError.String(), "不能禁用当前用户")
 }
 
-func IsForbidden(err error) bool {
+func IsForbiddenError(err error) bool {
 	if err == nil {
 		return false
 	}
 	e := errors.FromError(err)
-	return e.Reason == ErrorReason_FORBIDDEN.String() && e.Code == 200
+	return e.Reason == ErrorReason_ForbiddenError.String() && e.Code == 200
 }
 
-func ErrorForbiddenFormat(format string, args ...interface{}) *errors.Error {
-	return errors.New(200, ErrorReason_FORBIDDEN.String(), "无接口权限:"+fmt.Sprintf(format, args...))
+func ForbiddenErrorFormat(format string, args ...any) *errors.Error {
+	return errors.New(200, ErrorReason_ForbiddenError.String(), "无接口权限:"+fmt.Sprintf(format, args...))
 }
 
-func ErrorForbidden() *errors.Error {
-	return errors.New(200, ErrorReason_FORBIDDEN.String(), "无接口权限")
+func ForbiddenError() *errors.Error {
+	return errors.New(200, ErrorReason_ForbiddenError.String(), "无接口权限")
 }

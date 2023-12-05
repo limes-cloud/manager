@@ -1,7 +1,7 @@
 package model
 
 import (
-	"github.com/limes-cloud/kratos"
+	"github.com/limes-cloud/kratosx"
 	"gorm.io/gorm"
 )
 
@@ -14,7 +14,7 @@ type RoleMenu struct {
 }
 
 // Update 批量更新角色所属菜单
-func (rm *RoleMenu) Update(ctx kratos.Context, roleId uint32, menuIds []uint32) error {
+func (rm *RoleMenu) Update(ctx kratosx.Context, roleId uint32, menuIds []uint32) error {
 
 	// 组装新的菜单数据
 	list := make([]RoleMenu, 0)
@@ -34,18 +34,18 @@ func (rm *RoleMenu) Update(ctx kratos.Context, roleId uint32, menuIds []uint32) 
 }
 
 // RoleMenus 通过角色ID获取角色菜单
-func (rm *RoleMenu) RoleMenus(ctx kratos.Context, roleId uint32) ([]*RoleMenu, error) {
+func (rm *RoleMenu) RoleMenus(ctx kratosx.Context, roleId uint32) ([]*RoleMenu, error) {
 	var list []*RoleMenu
 	return list, ctx.DB().Find(&list, "role_id=?", roleId).Error
 }
 
 // MenuRoles 通过菜单ID获取角色菜单列表
-func (rm *RoleMenu) MenuRoles(ctx kratos.Context, menuId uint32) ([]*RoleMenu, error) {
+func (rm *RoleMenu) MenuRoles(ctx kratosx.Context, menuId uint32) ([]*RoleMenu, error) {
 	var list []*RoleMenu
 	return list, ctx.DB().Find(&list, "menu_id=?", menuId).Error
 }
 
 // DeleteByRoleID 通过角色id删除 角色所属菜单
-func (rm *RoleMenu) DeleteByRoleID(ctx kratos.Context, roleId uint32) error {
+func (rm *RoleMenu) DeleteByRoleID(ctx kratosx.Context, roleId uint32) error {
 	return ctx.DB().Delete(rm, "role_id=?", roleId).Error
 }

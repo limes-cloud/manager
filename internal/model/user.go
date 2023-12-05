@@ -7,7 +7,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/limes-cloud/kratos"
+	"github.com/limes-cloud/kratosx"
 )
 
 type User struct {
@@ -30,25 +30,25 @@ type User struct {
 }
 
 // OneByID 通过id查询用户信息
-func (u *User) OneByID(ctx kratos.Context, id uint32) error {
+func (u *User) OneByID(ctx kratosx.Context, id uint32) error {
 	db := ctx.DB().Model(u).Preload("Role").Preload("Department")
 	return db.First(u, id).Error
 }
 
 // OneByPhone 通过phone查询用户信息
-func (u *User) OneByPhone(ctx kratos.Context, phone string) error {
+func (u *User) OneByPhone(ctx kratosx.Context, phone string) error {
 	db := ctx.DB().Model(u).Preload("Role").Preload("Department")
 	return db.First(u, "phone=?", phone).Error
 }
 
 // OneByEmail 通过email查询用户信息
-func (u *User) OneByEmail(ctx kratos.Context, email string) error {
+func (u *User) OneByEmail(ctx kratosx.Context, email string) error {
 	db := ctx.DB().Model(u).Preload("Role").Preload("Department")
 	return db.First(u, "email=?", email).Error
 }
 
 // Page 查询分页数据
-func (u *User) Page(ctx kratos.Context, options *PageOptions) ([]*User, uint32, error) {
+func (u *User) Page(ctx kratosx.Context, options *PageOptions) ([]*User, uint32, error) {
 	var list []*User
 	total := int64(0)
 
@@ -66,17 +66,17 @@ func (u *User) Page(ctx kratos.Context, options *PageOptions) ([]*User, uint32, 
 }
 
 // Create 创建用户信息
-func (u *User) Create(ctx kratos.Context) error {
+func (u *User) Create(ctx kratosx.Context) error {
 	u.Password = util.ParsePwd(u.Password)
 	return ctx.DB().Model(u).Create(u).Error
 }
 
-func (u *User) UpdateLastLogin(ctx kratos.Context, t uint32) error {
+func (u *User) UpdateLastLogin(ctx kratosx.Context, t uint32) error {
 	return ctx.DB().Model(u).Where("id", u.ID).Update("last_login", t).Error
 }
 
 // Update 更新用户信息
-func (u *User) Update(ctx kratos.Context) error {
+func (u *User) Update(ctx kratosx.Context) error {
 	if u.Password != "" {
 		u.Password = util.ParsePwd(u.Password)
 	}
@@ -84,12 +84,12 @@ func (u *User) Update(ctx kratos.Context) error {
 }
 
 // DeleteByID 通过id删除用户信息
-func (u *User) DeleteByID(ctx kratos.Context, id uint32) error {
+func (u *User) DeleteByID(ctx kratosx.Context, id uint32) error {
 	return ctx.DB().Delete(u, id).Error
 }
 
 // DataScope 通过用户id获取用户所管理的部门id
-func (u *User) DataScope(ctx kratos.Context, id uint32) ([]uint32, error) {
+func (u *User) DataScope(ctx kratosx.Context, id uint32) ([]uint32, error) {
 	// 操作者信息
 	user := User{}
 	if err := user.OneByID(ctx, id); err != nil {
@@ -148,7 +148,7 @@ func (u *User) DataScope(ctx kratos.Context, id uint32) ([]uint32, error) {
 }
 
 // RoleScope 通过用户id获取用户所管理的角色ID
-func (u *User) RoleScope(ctx kratos.Context, id uint32) ([]uint32, error) {
+func (u *User) RoleScope(ctx kratosx.Context, id uint32) ([]uint32, error) {
 	// 操作者信息
 	user := User{}
 	if err := user.OneByID(ctx, id); err != nil {
@@ -164,7 +164,7 @@ func (u *User) RoleScope(ctx kratos.Context, id uint32) ([]uint32, error) {
 	return tree.GetTreeID(roleTree), nil
 }
 
-func (u *User) HasUserScope(ctx kratos.Context, mid, id uint32) bool {
+func (u *User) HasUserScope(ctx kratosx.Context, mid, id uint32) bool {
 	user := User{}
 
 	depIds, err := u.DataScope(ctx, mid)

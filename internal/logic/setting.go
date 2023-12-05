@@ -5,7 +5,7 @@ import (
 	"manager/config"
 	"manager/pkg/util"
 
-	"github.com/limes-cloud/kratos"
+	"github.com/limes-cloud/kratosx"
 )
 
 type Setting struct {
@@ -19,10 +19,10 @@ func NewSetting(conf *config.Config) *Setting {
 }
 
 // Get 获取配置
-func (a *Setting) Get(ctx kratos.Context) (*v1.GetSettingReply, error) {
+func (a *Setting) Get(ctx kratosx.Context) (*v1.GetSettingReply, error) {
 	reply := v1.GetSettingReply{}
 	if util.Transform(a.conf.Setting, &reply) != nil {
-		return nil, v1.ErrorTransform()
+		return nil, v1.TransformError()
 	}
 	return &reply, nil
 }

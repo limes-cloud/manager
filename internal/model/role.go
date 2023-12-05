@@ -3,7 +3,7 @@ package model
 import (
 	"manager/pkg/tree"
 
-	"github.com/limes-cloud/kratos"
+	"github.com/limes-cloud/kratosx"
 )
 
 type Role struct {
@@ -40,17 +40,17 @@ func (r *Role) ChildrenNode() []tree.Tree {
 }
 
 // Create 创建角色信息
-func (r *Role) Create(ctx kratos.Context) error {
+func (r *Role) Create(ctx kratosx.Context) error {
 	return ctx.DB().Create(r).Error
 }
 
 // OneByID 通过ID查询角色信息
-func (r *Role) OneByID(ctx kratos.Context, id uint32) error {
+func (r *Role) OneByID(ctx kratosx.Context, id uint32) error {
 	return ctx.DB().First(r, "id=?", id).Error
 }
 
 // All 查询全部角色信息
-func (r *Role) All(ctx kratos.Context, scopes Scopes) ([]*Role, error) {
+func (r *Role) All(ctx kratosx.Context, scopes Scopes) ([]*Role, error) {
 	var list []*Role
 	db := ctx.DB()
 	if scopes != nil {
@@ -60,7 +60,7 @@ func (r *Role) All(ctx kratos.Context, scopes Scopes) ([]*Role, error) {
 }
 
 // TreeByID 查询指定角色为根节点的角色树
-func (r *Role) TreeByID(ctx kratos.Context, id uint32) (tree.Tree, error) {
+func (r *Role) TreeByID(ctx kratosx.Context, id uint32) (tree.Tree, error) {
 	list, err := r.All(ctx, nil)
 	if err != nil {
 		return nil, err
@@ -73,7 +73,7 @@ func (r *Role) TreeByID(ctx kratos.Context, id uint32) (tree.Tree, error) {
 }
 
 // Tree 查询角色为根节点的角色树
-func (r *Role) Tree(ctx kratos.Context) (tree.Tree, error) {
+func (r *Role) Tree(ctx kratosx.Context) (tree.Tree, error) {
 	list, err := r.All(ctx, nil)
 	if err != nil {
 		return nil, err
@@ -86,17 +86,17 @@ func (r *Role) Tree(ctx kratos.Context) (tree.Tree, error) {
 }
 
 // Update 更新角色信息
-func (r *Role) Update(ctx kratos.Context) error {
+func (r *Role) Update(ctx kratosx.Context) error {
 	return ctx.DB().Updates(r).Error
 }
 
 // DeleteByID 通过ID删除角色信息
-func (r *Role) DeleteByID(ctx kratos.Context, id uint32) error {
+func (r *Role) DeleteByID(ctx kratosx.Context, id uint32) error {
 	return ctx.DB().Delete(r, "id=?", id).Error
 }
 
 // RoleStatus 获取角色状态
-func (r *Role) RoleStatus(ctx kratos.Context, id uint32) bool {
+func (r *Role) RoleStatus(ctx kratosx.Context, id uint32) bool {
 	roleTree, err := r.Tree(ctx)
 	if err != nil {
 		return false

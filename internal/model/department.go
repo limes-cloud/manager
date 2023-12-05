@@ -3,7 +3,7 @@ package model
 import (
 	"manager/pkg/tree"
 
-	"github.com/limes-cloud/kratos"
+	"github.com/limes-cloud/kratosx"
 )
 
 type Department struct {
@@ -37,12 +37,12 @@ func (t *Department) ChildrenNode() []tree.Tree {
 }
 
 // Create 创建部门
-func (t *Department) Create(ctx kratos.Context) error {
+func (t *Department) Create(ctx kratosx.Context) error {
 	return ctx.DB().Create(t).Error
 }
 
 // Tree 获取部门树
-func (t *Department) Tree(ctx kratos.Context) (tree.Tree, error) {
+func (t *Department) Tree(ctx kratosx.Context) (tree.Tree, error) {
 	// 获取部门列表
 	list, err := t.All(ctx)
 	if err != nil {
@@ -57,7 +57,7 @@ func (t *Department) Tree(ctx kratos.Context) (tree.Tree, error) {
 	return tree.BuildTree(trees), nil
 }
 
-func (t *Department) TreeByID(ctx kratos.Context, id uint32) (tree.Tree, error) {
+func (t *Department) TreeByID(ctx kratosx.Context, id uint32) (tree.Tree, error) {
 	// 获取部门列表
 	list, err := t.All(ctx)
 	if err != nil {
@@ -73,28 +73,28 @@ func (t *Department) TreeByID(ctx kratos.Context, id uint32) (tree.Tree, error) 
 }
 
 // All 获取全部部门
-func (t *Department) All(ctx kratos.Context) ([]*Department, error) {
+func (t *Department) All(ctx kratosx.Context) ([]*Department, error) {
 	list := make([]*Department, 0)
 	return list, ctx.DB().Find(&list).Error
 }
 
 // OneByID 通过部门id查询
-func (t *Department) OneByID(ctx kratos.Context, id uint32) error {
+func (t *Department) OneByID(ctx kratosx.Context, id uint32) error {
 	return ctx.DB().First(t, "id=?", id).Error
 }
 
 // OneByKeyword 通过部门keyword查询
-func (t *Department) OneByKeyword(ctx kratos.Context, keyword string) error {
+func (t *Department) OneByKeyword(ctx kratosx.Context, keyword string) error {
 	return ctx.DB().First(t, "keyword=?", keyword).Error
 }
 
 // Update 更新部门信息
-func (t *Department) Update(ctx kratos.Context) error {
+func (t *Department) Update(ctx kratosx.Context) error {
 	return ctx.DB().Updates(t).Error
 }
 
 // DeleteByID 通过id删除指定部门 以及部门下的部门
-func (t *Department) DeleteByID(ctx kratos.Context, id uint32) error {
+func (t *Department) DeleteByID(ctx kratosx.Context, id uint32) error {
 	list, err := t.All(ctx)
 	if err != nil {
 		return err
