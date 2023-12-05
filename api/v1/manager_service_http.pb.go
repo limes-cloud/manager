@@ -36,11 +36,11 @@ const OperationServiceDeleteRole = "/manager.Service/DeleteRole"
 const OperationServiceDeleteUser = "/manager.Service/DeleteUser"
 const OperationServiceDisableUser = "/manager.Service/DisableUser"
 const OperationServiceEnableUser = "/manager.Service/EnableUser"
-const OperationServiceGetDepartmentTree = "/manager.Service/GetDepartmentTree"
 const OperationServiceGetMenuTree = "/manager.Service/GetMenuTree"
 const OperationServiceGetRoleMenuIds = "/manager.Service/GetRoleMenuIds"
 const OperationServiceGetRoleTree = "/manager.Service/GetRoleTree"
 const OperationServiceGetSetting = "/manager.Service/GetSetting"
+const OperationServiceGetUserDepartmentTree = "/manager.Service/GetUserDepartmentTree"
 const OperationServiceGetUserRoles = "/manager.Service/GetUserRoles"
 const OperationServiceLogin = "/manager.Service/Login"
 const OperationServiceLoginCaptcha = "/manager.Service/LoginCaptcha"
@@ -90,8 +90,6 @@ type ServiceHTTPServer interface {
 	DisableUser(context.Context, *DisableUserRequest) (*emptypb.Empty, error)
 	// EnableUser DisableUser 禁用用户
 	EnableUser(context.Context, *EnableUserRequest) (*emptypb.Empty, error)
-	// GetDepartmentTree GetDepartmentTree 获取部门树
-	GetDepartmentTree(context.Context, *emptypb.Empty) (*GetDepartmentTreeReply, error)
 	// GetMenuTree GetMenuTree 获取菜单树
 	GetMenuTree(context.Context, *emptypb.Empty) (*GetMenuTreeReply, error)
 	// GetRoleMenuIds CurrentRoleMenus 获取当前用户的角色列表
@@ -100,6 +98,8 @@ type ServiceHTTPServer interface {
 	GetRoleTree(context.Context, *emptypb.Empty) (*GetRoleTreeReply, error)
 	// GetSetting GetSetting 获取当前系统的配置
 	GetSetting(context.Context, *emptypb.Empty) (*GetSettingReply, error)
+	// GetUserDepartmentTree GetDepartmentTree 获取部门树
+	GetUserDepartmentTree(context.Context, *emptypb.Empty) (*GetUserDepartmentTreeReply, error)
 	// GetUserRoles CurrentUserRoles 获取当前用户的角色列表
 	GetUserRoles(context.Context, *GetUserRolesRequest) (*GetUserRolesReply, error)
 	Login(context.Context, *LoginRequest) (*LoginReply, error)
@@ -143,7 +143,7 @@ func RegisterServiceHTTPServer(s *http.Server, srv ServiceHTTPServer) {
 	r.POST("/manager/v1/menu", _Service_AddMenu0_HTTP_Handler(srv))
 	r.PUT("/manager/v1/menu", _Service_UpdateMenu0_HTTP_Handler(srv))
 	r.DELETE("/manager/v1/menu", _Service_DeleteMenu0_HTTP_Handler(srv))
-	r.GET("/manager/v1/department/tree", _Service_GetDepartmentTree0_HTTP_Handler(srv))
+	r.GET("/manager/v1/department/tree", _Service_GetUserDepartmentTree0_HTTP_Handler(srv))
 	r.POST("/manager/v1/department", _Service_AddDepartment0_HTTP_Handler(srv))
 	r.PUT("/manager/v1/department", _Service_UpdateDepartment0_HTTP_Handler(srv))
 	r.DELETE("/manager/v1/department", _Service_DeleteDepartment0_HTTP_Handler(srv))
@@ -413,22 +413,22 @@ func _Service_DeleteMenu0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Cont
 	}
 }
 
-func _Service_GetDepartmentTree0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Context) error {
+func _Service_GetUserDepartmentTree0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in emptypb.Empty
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationServiceGetDepartmentTree)
+		http.SetOperation(ctx, OperationServiceGetUserDepartmentTree)
 		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
-			return srv.GetDepartmentTree(ctx, req.(*emptypb.Empty))
+			return srv.GetUserDepartmentTree(ctx, req.(*emptypb.Empty))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		reply := out.(*GetDepartmentTreeReply)
-		return ctx.Result(200, reply.Department)
+		reply := out.(*GetUserDepartmentTreeReply)
+		return ctx.Result(200, reply.List)
 	}
 }
 
@@ -944,11 +944,11 @@ type ServiceHTTPClient interface {
 	DeleteUser(ctx context.Context, req *DeleteUserRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	DisableUser(ctx context.Context, req *DisableUserRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	EnableUser(ctx context.Context, req *EnableUserRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
-	GetDepartmentTree(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *GetDepartmentTreeReply, err error)
 	GetMenuTree(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *GetMenuTreeReply, err error)
 	GetRoleMenuIds(ctx context.Context, req *GetRoleMenuIdsRequest, opts ...http.CallOption) (rsp *GetRoleMenuIdsReply, err error)
 	GetRoleTree(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *GetRoleTreeReply, err error)
 	GetSetting(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *GetSettingReply, err error)
+	GetUserDepartmentTree(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *GetUserDepartmentTreeReply, err error)
 	GetUserRoles(ctx context.Context, req *GetUserRolesRequest, opts ...http.CallOption) (rsp *GetUserRolesReply, err error)
 	Login(ctx context.Context, req *LoginRequest, opts ...http.CallOption) (rsp *LoginReply, err error)
 	LoginCaptcha(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *LoginCaptchaReply, err error)
@@ -1183,19 +1183,6 @@ func (c *ServiceHTTPClientImpl) EnableUser(ctx context.Context, in *EnableUserRe
 	return &out, err
 }
 
-func (c *ServiceHTTPClientImpl) GetDepartmentTree(ctx context.Context, in *emptypb.Empty, opts ...http.CallOption) (*GetDepartmentTreeReply, error) {
-	var out GetDepartmentTreeReply
-	pattern := "/manager/v1/department/tree"
-	path := binding.EncodeURL(pattern, in, true)
-	opts = append(opts, http.Operation(OperationServiceGetDepartmentTree))
-	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "GET", path, nil, &out.Department, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return &out, err
-}
-
 func (c *ServiceHTTPClientImpl) GetMenuTree(ctx context.Context, in *emptypb.Empty, opts ...http.CallOption) (*GetMenuTreeReply, error) {
 	var out GetMenuTreeReply
 	pattern := "/manager/v1/menu/tree"
@@ -1242,6 +1229,19 @@ func (c *ServiceHTTPClientImpl) GetSetting(ctx context.Context, in *emptypb.Empt
 	opts = append(opts, http.Operation(OperationServiceGetSetting))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *ServiceHTTPClientImpl) GetUserDepartmentTree(ctx context.Context, in *emptypb.Empty, opts ...http.CallOption) (*GetUserDepartmentTreeReply, error) {
+	var out GetUserDepartmentTreeReply
+	pattern := "/manager/v1/department/tree"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationServiceGetUserDepartmentTree))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out.List, opts...)
 	if err != nil {
 		return nil, err
 	}

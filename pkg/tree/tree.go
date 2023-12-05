@@ -60,3 +60,24 @@ func GetTreeID(tree Tree) []uint32 {
 	getTreeID(tree, &ids)
 	return ids
 }
+
+func FindRoots(array []Tree) []uint32 {
+	idSet := make(map[uint32]bool)
+	for _, item := range array {
+		idSet[item.ID()] = true
+	}
+
+	rootSet := map[uint32]struct{}{}
+	for _, item := range array {
+		if !idSet[item.Parent()] {
+			rootSet[item.ID()] = struct{}{}
+		}
+	}
+
+	roots := []uint32{}
+	for id, _ := range rootSet {
+		roots = append(roots, id)
+	}
+
+	return roots
+}

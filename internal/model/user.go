@@ -7,6 +7,8 @@ import (
 	"strconv"
 	"strings"
 
+	"gorm.io/gorm"
+
 	"github.com/limes-cloud/kratosx"
 )
 
@@ -88,6 +90,77 @@ func (u *User) DeleteByID(ctx kratosx.Context, id uint32) error {
 	return ctx.DB().Delete(u, id).Error
 }
 
+// DataScopeTree 用户所管理的部门树
+func (u *User) DataScopeTree(ctx kratosx.Context, id uint32) ([]tree.Tree, error) {
+	// 操作者信息
+	user := User{}
+	if err := user.OneByID(ctx, id); err != nil {
+		return nil, err
+	}
+
+	// 查询角色信息
+	role := Role{}
+	if err := role.OneByID(ctx, user.RoleID); err != nil {
+		return nil, err
+	}
+
+	// 只存在当前部门的管理权限
+	if role.DataScope == consts.DATA_SCOPE_CURRENT {
+		return []tree.Tree{user.Department}, nil
+	}
+
+	var list []*Department
+	var trees []tree.Tree
+	dep := Department{}
+
+	// 自定义部门权限
+	if role.DataScope == consts.DATA_SCOPE_CUSTOM {
+		ids := make([]uint32, 0)
+		arr := strings.Split(*role.DepartmentIds, ",")
+		for _, item := range arr {
+			pid, _ := strconv.Atoi(item)
+			ids = append(ids, uint32(pid))
+		}
+		list, _ = dep.All(ctx, func(db *gorm.DB) *gorm.DB {
+			return db.Where("id in ?", ids)
+		})
+	} else {
+		list, _ = dep.All(ctx, nil)
+	}
+
+	for _, item := range list {
+		trees = append(trees, item)
+	}
+
+	// 自定义部门
+	if role.DataScope == consts.DATA_SCOPE_CUSTOM {
+		var resTree []tree.Tree
+		roots := tree.FindRoots(trees)
+		for _, root := range roots {
+			resTree = append(resTree, tree.BuildTreeByID(trees, root))
+		}
+		return resTree, nil
+	}
+
+	// 当前部门级以下部门
+	if role.DataScope == consts.DATA_SCOPE_CURRENT_DOWN {
+		return []tree.Tree{tree.BuildTreeByID(trees, id)}, nil
+	}
+
+	// 下级部门
+	if role.DataScope == consts.DATA_SCOPE_DOWN {
+		resTree := tree.BuildTreeByID(trees, id)
+		return resTree.ChildrenNode(), nil
+	}
+
+	// 所有部门
+	if role.DataScope == consts.DATA_SCOPE_ALL {
+		return []tree.Tree{tree.BuildTree(trees)}, nil
+	}
+
+	return []tree.Tree{}, nil
+}
+
 // DataScope 通过用户id获取用户所管理的部门id
 func (u *User) DataScope(ctx kratosx.Context, id uint32) ([]uint32, error) {
 	// 操作者信息
@@ -107,7 +180,7 @@ func (u *User) DataScope(ctx kratosx.Context, id uint32) ([]uint32, error) {
 	case consts.DATA_SCOPE_ALL: // 所有部门
 		dep := Department{}
 		ids := make([]uint32, 0)
-		deps, err := dep.All(ctx)
+		deps, err := dep.All(ctx, nil)
 		if err != nil {
 			return nil, err
 		}

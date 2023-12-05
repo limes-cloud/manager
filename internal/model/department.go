@@ -44,7 +44,7 @@ func (t *Department) Create(ctx kratosx.Context) error {
 // Tree 获取部门树
 func (t *Department) Tree(ctx kratosx.Context) (tree.Tree, error) {
 	// 获取部门列表
-	list, err := t.All(ctx)
+	list, err := t.All(ctx, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -59,7 +59,7 @@ func (t *Department) Tree(ctx kratosx.Context) (tree.Tree, error) {
 
 func (t *Department) TreeByID(ctx kratosx.Context, id uint32) (tree.Tree, error) {
 	// 获取部门列表
-	list, err := t.All(ctx)
+	list, err := t.All(ctx, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -73,9 +73,13 @@ func (t *Department) TreeByID(ctx kratosx.Context, id uint32) (tree.Tree, error)
 }
 
 // All 获取全部部门
-func (t *Department) All(ctx kratosx.Context) ([]*Department, error) {
+func (t *Department) All(ctx kratosx.Context, scopes Scopes) ([]*Department, error) {
 	list := make([]*Department, 0)
-	return list, ctx.DB().Find(&list).Error
+	db := ctx.DB().Model(Department{})
+	if scopes != nil {
+		db = scopes(db)
+	}
+	return list, db.Find(&list).Error
 }
 
 // OneByID 通过部门id查询
@@ -95,7 +99,7 @@ func (t *Department) Update(ctx kratosx.Context) error {
 
 // DeleteByID 通过id删除指定部门 以及部门下的部门
 func (t *Department) DeleteByID(ctx kratosx.Context, id uint32) error {
-	list, err := t.All(ctx)
+	list, err := t.All(ctx, nil)
 	if err != nil {
 		return err
 	}

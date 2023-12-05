@@ -12,6 +12,10 @@ func (s *Service) GetDepartment(ctx context.Context, in *v1.GetDepartmentRequest
 	return s.department.Get(kratosx.MustContext(ctx), in)
 }
 
+func (s *Service) GetUserDepartmentTree(ctx context.Context, in *emptypb.Empty) (*v1.GetUserDepartmentTreeReply, error) {
+	return s.department.UserTree(kratosx.MustContext(ctx))
+}
+
 func (s *Service) GetDepartmentTree(ctx context.Context, in *emptypb.Empty) (*v1.GetDepartmentTreeReply, error) {
 	return s.department.Tree(kratosx.MustContext(ctx))
 }

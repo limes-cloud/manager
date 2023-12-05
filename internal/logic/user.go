@@ -207,9 +207,12 @@ func (r *User) ResetPassword(ctx kratosx.Context, in *v1.ResetUserPasswordReques
 	}
 
 	// 重置密码
-	nu := model.User{}
-	nu.ID = in.Id
-	nu.Password = r.conf.DefaultUserPassword
+	nu := model.User{
+		BaseModel: model.BaseModel{
+			ID: in.Id,
+		},
+		Password: r.conf.DefaultUserPassword,
+	}
 	if err := nu.Update(ctx); err != nil {
 		return nil, v1.DatabaseErrorFormat(err.Error())
 	}

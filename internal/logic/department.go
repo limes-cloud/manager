@@ -36,7 +36,21 @@ func (d *Department) Get(ctx kratosx.Context, in *v1.GetDepartmentRequest) (*v1.
 	return &reply, nil
 }
 
-// Tree 查询部门树
+// UserTree 查询用户的部门树
+func (d *Department) UserTree(ctx kratosx.Context) (*v1.GetUserDepartmentTreeReply, error) {
+	user := model.User{}
+	treeList, err := user.DataScopeTree(ctx, md.UserId(ctx))
+	if err != nil {
+		return nil, v1.DatabaseErrorFormat(err.Error())
+	}
+
+	reply := v1.GetUserDepartmentTreeReply{}
+	if err = util.Transform(treeList, &reply.List); err != nil {
+		return nil, v1.TransformErrorFormat(err.Error())
+	}
+	return &reply, nil
+}
+
 func (d *Department) Tree(ctx kratosx.Context) (*v1.GetDepartmentTreeReply, error) {
 	department := model.Department{}
 	tree, err := department.Tree(ctx)

@@ -18,7 +18,11 @@ message Department {
 }
 
 message GetDepartmentTreeReply{
-  Department department = 1;
+   Department department = 1;
+}
+
+message GetUserDepartmentTreeReply{
+  repeated Department list = 1;
 }
 
 message GetDepartmentRequest{

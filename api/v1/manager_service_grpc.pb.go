@@ -35,6 +35,7 @@ const (
 	Service_DeleteMenu_FullMethodName                = "/manager.Service/DeleteMenu"
 	Service_GetDepartment_FullMethodName             = "/manager.Service/GetDepartment"
 	Service_GetDepartmentTree_FullMethodName         = "/manager.Service/GetDepartmentTree"
+	Service_GetUserDepartmentTree_FullMethodName     = "/manager.Service/GetUserDepartmentTree"
 	Service_AddDepartment_FullMethodName             = "/manager.Service/AddDepartment"
 	Service_UpdateDepartment_FullMethodName          = "/manager.Service/UpdateDepartment"
 	Service_DeleteDepartment_FullMethodName          = "/manager.Service/DeleteDepartment"
@@ -96,6 +97,8 @@ type ServiceClient interface {
 	GetDepartment(ctx context.Context, in *GetDepartmentRequest, opts ...grpc.CallOption) (*GetDepartmentReply, error)
 	// GetDepartmentTree 获取部门树
 	GetDepartmentTree(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetDepartmentTreeReply, error)
+	// GetDepartmentTree 获取部门树
+	GetUserDepartmentTree(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetUserDepartmentTreeReply, error)
 	// AddDepartment 删除部门信息
 	AddDepartment(ctx context.Context, in *AddDepartmentRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	// UpdateDepartment 更新部门信息
@@ -279,6 +282,15 @@ func (c *serviceClient) GetDepartment(ctx context.Context, in *GetDepartmentRequ
 func (c *serviceClient) GetDepartmentTree(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetDepartmentTreeReply, error) {
 	out := new(GetDepartmentTreeReply)
 	err := c.cc.Invoke(ctx, Service_GetDepartmentTree_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *serviceClient) GetUserDepartmentTree(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetUserDepartmentTreeReply, error) {
+	out := new(GetUserDepartmentTreeReply)
+	err := c.cc.Invoke(ctx, Service_GetUserDepartmentTree_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -544,6 +556,8 @@ type ServiceServer interface {
 	GetDepartment(context.Context, *GetDepartmentRequest) (*GetDepartmentReply, error)
 	// GetDepartmentTree 获取部门树
 	GetDepartmentTree(context.Context, *emptypb.Empty) (*GetDepartmentTreeReply, error)
+	// GetDepartmentTree 获取部门树
+	GetUserDepartmentTree(context.Context, *emptypb.Empty) (*GetUserDepartmentTreeReply, error)
 	// AddDepartment 删除部门信息
 	AddDepartment(context.Context, *AddDepartmentRequest) (*emptypb.Empty, error)
 	// UpdateDepartment 更新部门信息
@@ -639,6 +653,9 @@ func (UnimplementedServiceServer) GetDepartment(context.Context, *GetDepartmentR
 }
 func (UnimplementedServiceServer) GetDepartmentTree(context.Context, *emptypb.Empty) (*GetDepartmentTreeReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetDepartmentTree not implemented")
+}
+func (UnimplementedServiceServer) GetUserDepartmentTree(context.Context, *emptypb.Empty) (*GetUserDepartmentTreeReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetUserDepartmentTree not implemented")
 }
 func (UnimplementedServiceServer) AddDepartment(context.Context, *AddDepartmentRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddDepartment not implemented")
@@ -994,6 +1011,24 @@ func _Service_GetDepartmentTree_Handler(srv interface{}, ctx context.Context, de
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ServiceServer).GetDepartmentTree(ctx, req.(*emptypb.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Service_GetUserDepartmentTree_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ServiceServer).GetUserDepartmentTree(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Service_GetUserDepartmentTree_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ServiceServer).GetUserDepartmentTree(ctx, req.(*emptypb.Empty))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1514,6 +1549,10 @@ var Service_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetDepartmentTree",
 			Handler:    _Service_GetDepartmentTree_Handler,
+		},
+		{
+			MethodName: "GetUserDepartmentTree",
+			Handler:    _Service_GetUserDepartmentTree_Handler,
 		},
 		{
 			MethodName: "AddDepartment",

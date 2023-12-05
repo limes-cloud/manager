@@ -59,11 +59,3 @@ func IsPhone(phone string) bool {
 	reg := regexp.MustCompile(`^1[3456789]\d{9}$`)
 	return reg.MatchString(phone)
 }
-
-//type CompareType interface {
-//	~string | ~int | ~uint32 | ~float64 | ~*string | ~*int | ~*uint32 | ~*float64
-//}
-//
-//func CompareValue[CompareType comparable](v1 CompareType, v2 CompareType) bool {
-//	return v1 == v2
-//}

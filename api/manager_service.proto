@@ -116,10 +116,13 @@ service Service {
   rpc GetDepartment (GetDepartmentRequest) returns (GetDepartmentReply) {}
 
   // GetDepartmentTree 获取部门树
-  rpc GetDepartmentTree (google.protobuf.Empty) returns (GetDepartmentTreeReply) {
+  rpc GetDepartmentTree (google.protobuf.Empty) returns (GetDepartmentTreeReply) {}
+
+  // GetDepartmentTree 获取部门树
+  rpc GetUserDepartmentTree (google.protobuf.Empty) returns (GetUserDepartmentTreeReply) {
     option (google.api.http) = {
       get: "/manager/v1/department/tree",
-      response_body: "department",
+      response_body: "list",
     };
   }
 
