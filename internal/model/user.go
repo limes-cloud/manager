@@ -1,9 +1,9 @@
 package model
 
 import (
-	"manager/consts"
-	"manager/pkg/tree"
-	"manager/pkg/util"
+	"github.com/limes-cloud/manager/consts"
+	"github.com/limes-cloud/manager/pkg/tree"
+	"github.com/limes-cloud/manager/pkg/util"
 	"strconv"
 	"strings"
 

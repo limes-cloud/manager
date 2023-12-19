@@ -1,10 +1,10 @@
 package main
 
 import (
+	v1 "github.com/limes-cloud/manager/api/v1"
+	srcConf "github.com/limes-cloud/manager/config"
+	"github.com/limes-cloud/manager/internal/handler"
 	"log"
-	v1 "manager/api/v1"
-	srcConf "manager/config"
-	"manager/internal/handler"
 
 	"github.com/go-kratos/kratos/v2/transport/grpc"
 	"github.com/go-kratos/kratos/v2/transport/http"

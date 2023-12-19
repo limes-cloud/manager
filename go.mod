@@ -1,4 +1,4 @@
-module manager
+module github.com/limes-cloud/manager
 
 go 1.21.1
 
@@ -8,7 +8,6 @@ require (
 	github.com/go-kratos/kratos/v2 v2.7.1
 	github.com/json-iterator/go v1.1.12
 	github.com/limes-cloud/configure v1.0.14
-	github.com/limes-cloud/kratos v1.0.30
 	github.com/limes-cloud/kratosx v1.0.1
 	go.uber.org/automaxprocs v1.5.1
 	golang.org/x/crypto v0.14.0
@@ -53,6 +52,7 @@ require (
 	github.com/jackc/pgx/v5 v5.4.3 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.5 // indirect
+	github.com/lib/pq v1.10.6 // indirect
 	github.com/limes-cloud/library/gte v0.0.0-20231025145839-5dc0dee270f9 // indirect
 	github.com/lufia/plan9stats v0.0.0-20230326075908-cb1d2100619a // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect

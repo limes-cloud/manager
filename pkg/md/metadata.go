@@ -1,7 +1,7 @@
 package md
 
 import (
-	"manager/internal/model"
+	"github.com/limes-cloud/manager/internal/model"
 
 	"github.com/limes-cloud/kratosx"
 )

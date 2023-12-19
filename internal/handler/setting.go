@@ -2,7 +2,7 @@ package handler
 
 import (
 	"context"
-	v1 "manager/api/v1"
+	v1 "github.com/limes-cloud/manager/api/v1"
 
 	"github.com/limes-cloud/kratosx"
 	"google.golang.org/protobuf/types/known/emptypb"

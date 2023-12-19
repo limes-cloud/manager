@@ -1,7 +1,7 @@
 package model
 
 import (
-	"manager/pkg/tree"
+	"github.com/limes-cloud/manager/pkg/tree"
 
 	"github.com/limes-cloud/kratosx"
 	"gorm.io/gorm"

@@ -3,12 +3,12 @@ package logic
 import (
 	"encoding/base64"
 	"encoding/json"
-	v1 "manager/api/v1"
-	"manager/config"
-	"manager/internal/model"
-	"manager/internal/types"
-	"manager/pkg/md"
-	"manager/pkg/util"
+	v1 "github.com/limes-cloud/manager/api/v1"
+	"github.com/limes-cloud/manager/config"
+	"github.com/limes-cloud/manager/internal/model"
+	"github.com/limes-cloud/manager/internal/types"
+	"github.com/limes-cloud/manager/pkg/md"
+	"github.com/limes-cloud/manager/pkg/util"
 	"time"
 
 	"github.com/forgoer/openssl"

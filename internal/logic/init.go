@@ -2,10 +2,10 @@ package logic
 
 import (
 	"context"
-	v1 "manager/api/v1"
-	"manager/config"
-	"manager/consts"
-	"manager/internal/model"
+	v1 "github.com/limes-cloud/manager/api/v1"
+	"github.com/limes-cloud/manager/config"
+	"github.com/limes-cloud/manager/consts"
+	"github.com/limes-cloud/manager/internal/model"
 
 	"github.com/limes-cloud/kratosx"
 	"gorm.io/gorm"

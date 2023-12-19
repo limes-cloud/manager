@@ -1,9 +1,9 @@
 package handler
 
 import (
-	v1 "manager/api/v1"
-	"manager/config"
-	"manager/internal/logic"
+	v1 "github.com/limes-cloud/manager/api/v1"
+	"github.com/limes-cloud/manager/config"
+	"github.com/limes-cloud/manager/internal/logic"
 )
 
 type Service struct {

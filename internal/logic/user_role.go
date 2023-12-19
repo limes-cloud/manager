@@ -1,11 +1,11 @@
 package logic
 
 import (
-	v1 "manager/api/v1"
-	"manager/config"
-	"manager/internal/model"
-	"manager/pkg/md"
-	"manager/pkg/util"
+	v1 "github.com/limes-cloud/manager/api/v1"
+	"github.com/limes-cloud/manager/config"
+	"github.com/limes-cloud/manager/internal/model"
+	"github.com/limes-cloud/manager/pkg/md"
+	"github.com/limes-cloud/manager/pkg/util"
 
 	"github.com/limes-cloud/kratosx"
 )
