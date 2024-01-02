@@ -7,7 +7,7 @@ require (
 	github.com/forgoer/openssl v1.6.0
 	github.com/go-kratos/kratos/v2 v2.7.1
 	github.com/json-iterator/go v1.1.12
-	github.com/limes-cloud/kratosx v1.0.1
+	github.com/limes-cloud/kratosx v1.0.5
 	go.uber.org/automaxprocs v1.5.1
 	golang.org/x/crypto v0.14.0
 	google.golang.org/genproto/googleapis/api v0.0.0-20231016165738-49dd2c1f3d0b
@@ -113,5 +113,3 @@ require (
 	modernc.org/memory v1.7.2 // indirect
 	modernc.org/sqlite v1.26.0 // indirect
 )
-
-replace github.com/limes-cloud/kratosx v1.0.1 => ../kratosx
