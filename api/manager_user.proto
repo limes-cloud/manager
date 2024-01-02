@@ -7,6 +7,7 @@ option go_package = "./v1;v1";
 import "validate/validate.proto";
 import "manager_department.proto";
 import "manager_role.proto";
+import "manager_job.proto";
 
 message User {
   uint32 id = 1;
@@ -26,6 +27,7 @@ message User {
   Department department = 15;
   Role role = 16;
   repeated Role roles = 17;
+  repeated Job jobs = 18;
 }
 
 message GetUserRequest{
@@ -37,8 +39,8 @@ message GetUserReply{
 }
 
 message PageUserRequest{
-  int32 page = 1[(validate.rules).int32 = {gt: 0}];
-  int32 page_size = 2[(validate.rules).int32 = {gt: 0,lte:50}];
+  uint32 page = 1[(validate.rules).uint32 = {gt: 0}];
+  uint32 page_size = 2[(validate.rules).uint32 = {gt: 0,lte:50}];
   optional string username = 3;
   optional bool status = 4;
   optional uint32 role_id = 5;
@@ -56,6 +58,7 @@ message PageUserReply{
 message AddUserRequest{
   uint32 department_id = 1[(validate.rules).uint32 = {gt:0}];
   repeated uint32 role_ids = 2[(validate.rules).repeated = {min_items:1}];
+  repeated uint32 job_ids = 8[(validate.rules).repeated = {min_items:1}];
   string name = 3[(validate.rules).string = {min_len:1}];
   string gender = 4[(validate.rules).string = {in:["M","F","U"]}];
   string phone = 5[(validate.rules).string = {len:11}];
@@ -66,6 +69,7 @@ message AddUserRequest{
 message UpdateUserRequest{
   uint32 id = 1[(validate.rules).uint32 = {gt:0}];
   uint32 department_id = 2[(validate.rules).uint32 = {gt:0}];
+  repeated uint32 job_ids = 8[(validate.rules).repeated = {min_items:1}];
   repeated uint32 role_ids = 3[(validate.rules).repeated = {min_items:1}];
   string name = 4[(validate.rules).string = {min_len:1}];
   string gender = 5[(validate.rules).string = {in:["M","F","U"]}];

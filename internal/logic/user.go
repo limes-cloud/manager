@@ -2,19 +2,19 @@ package logic
 
 import (
 	"fmt"
+
+	"github.com/limes-cloud/kratosx"
+	"github.com/limes-cloud/kratosx/types"
+	"google.golang.org/protobuf/proto"
+	"google.golang.org/protobuf/types/known/emptypb"
+	"gorm.io/gorm"
+
 	v1 "github.com/limes-cloud/manager/api/v1"
 	"github.com/limes-cloud/manager/config"
 	"github.com/limes-cloud/manager/consts"
 	"github.com/limes-cloud/manager/internal/model"
 	"github.com/limes-cloud/manager/pkg/md"
 	"github.com/limes-cloud/manager/pkg/util"
-
-	"github.com/limes-cloud/kratosx"
-	"google.golang.org/protobuf/proto"
-
-	"gorm.io/gorm"
-
-	"google.golang.org/protobuf/types/known/emptypb"
 )
 
 type User struct {
@@ -34,12 +34,12 @@ const (
 // Get 查询指定的用户信息，提供给外部rpc调用
 func (r *User) Get(ctx kratosx.Context, in *v1.GetUserRequest) (*v1.GetUserReply, error) {
 	user := model.User{}
-	if err := user.OneByID(ctx, in.Id); err != nil {
+	if err := user.FindByID(ctx, in.Id); err != nil {
 		return nil, v1.DatabaseErrorFormat(err.Error())
 	}
 
 	// 获取用户的全部角色
-	roles := []*model.Role{}
+	var roles []*model.Role
 	rm := model.UserRole{}
 	rms, _ := rm.UserRoles(ctx, in.Id)
 	for _, item := range rms {
@@ -61,7 +61,7 @@ func (r *User) Get(ctx kratosx.Context, in *v1.GetUserRequest) (*v1.GetUserReply
 // ChangePasswordCaptcha 重置用户密码验证码
 func (r *User) ChangePasswordCaptcha(ctx kratosx.Context, in *emptypb.Empty) (*v1.ChangeUserPasswordCaptchaReply, error) {
 	user := model.User{}
-	if err := user.OneByID(ctx, md.UserId(ctx)); err != nil {
+	if err := user.FindByID(ctx, md.UserId(ctx)); err != nil {
 		return nil, v1.NotFoundError()
 	}
 
@@ -80,7 +80,7 @@ func (r *User) ChangePasswordCaptcha(ctx kratosx.Context, in *emptypb.Empty) (*v
 func (r *User) ChangePassword(ctx kratosx.Context, in *v1.ChangeUserPasswordRequest) (*emptypb.Empty, error) {
 	// 查询用户
 	user := model.User{}
-	if err := user.OneByID(ctx, md.UserId(ctx)); err != nil {
+	if err := user.FindByID(ctx, md.UserId(ctx)); err != nil {
 		return nil, v1.NotFoundError()
 	}
 
@@ -104,18 +104,18 @@ func (r *User) ChangePassword(ctx kratosx.Context, in *v1.ChangeUserPasswordRequ
 func (r *User) Enable(ctx kratosx.Context, in *v1.EnableUserRequest) (*emptypb.Empty, error) {
 	// 查询用户
 	user := model.User{}
-	if err := user.OneByID(ctx, md.UserId(ctx)); err != nil {
+	if err := user.FindByID(ctx, md.UserId(ctx)); err != nil {
 		return nil, v1.NotFoundError()
 	}
 
 	// 判断当前用户是否具有部门的权限
-	depIds, _ := user.DataScope(ctx, md.UserId(ctx))
+	depIds, _ := user.ManagerDepartmentIds(ctx, md.UserId(ctx))
 	if !util.InList(depIds, user.DepartmentID) {
 		return nil, v1.DepartmentPermissionsError()
 	}
 
 	// 判断是否具有当前用户的管理权限
-	if !user.HasUserScope(ctx, md.UserId(ctx), in.Id) {
+	if !user.HasUserManagerScope(ctx, md.UserId(ctx), in.Id) {
 		return nil, v1.UserPermissionsError()
 	}
 
@@ -145,12 +145,12 @@ func (r *User) Disable(ctx kratosx.Context, in *v1.DisableUserRequest) (*emptypb
 
 	// 查询用户
 	user := model.User{}
-	if err := user.OneByID(ctx, md.UserId(ctx)); err != nil {
+	if err := user.FindByID(ctx, md.UserId(ctx)); err != nil {
 		return nil, v1.NotFoundError()
 	}
 
 	// 判断是否具有当前用户的管理权限
-	if !user.HasUserScope(ctx, md.UserId(ctx), in.Id) {
+	if !user.HasUserManagerScope(ctx, md.UserId(ctx), in.Id) {
 		return nil, v1.UserPermissionsError()
 	}
 
@@ -170,12 +170,12 @@ func (r *User) Disable(ctx kratosx.Context, in *v1.DisableUserRequest) (*emptypb
 func (r *User) Offline(ctx kratosx.Context, in *v1.OfflineUserRequest) (*emptypb.Empty, error) {
 	// 查询用户
 	user := model.User{}
-	if err := user.OneByID(ctx, md.UserId(ctx)); err != nil {
+	if err := user.FindByID(ctx, md.UserId(ctx)); err != nil {
 		return nil, v1.NotFoundError()
 	}
 
 	// 判断是否具有当前用户的管理权限
-	if !user.HasUserScope(ctx, md.UserId(ctx), in.Id) {
+	if !user.HasUserManagerScope(ctx, md.UserId(ctx), in.Id) {
 		return nil, v1.UserPermissionsError()
 	}
 
@@ -197,18 +197,18 @@ func (r *User) ResetPassword(ctx kratosx.Context, in *v1.ResetUserPasswordReques
 
 	// 查询用户信息
 	user := model.User{}
-	if err := user.OneByID(ctx, in.Id); err != nil {
+	if err := user.FindByID(ctx, in.Id); err != nil {
 		return nil, v1.NotFoundError()
 	}
 
 	// 判断是否具有当前用户的管理权限
-	if !user.HasUserScope(ctx, md.UserId(ctx), in.Id) {
+	if !user.HasUserManagerScope(ctx, md.UserId(ctx), in.Id) {
 		return nil, v1.UserPermissionsError()
 	}
 
 	// 重置密码
 	nu := model.User{
-		BaseModel: model.BaseModel{
+		BaseModel: types.BaseModel{
 			ID: in.Id,
 		},
 		Password: r.conf.DefaultUserPassword,
@@ -230,17 +230,17 @@ func (r *User) Current(ctx kratosx.Context) (*v1.GetUserReply, error) {
 func (r *User) Page(ctx kratosx.Context, in *v1.PageUserRequest) (*v1.PageUserReply, error) {
 	user := model.User{}
 	// 获取用户所管理的部门
-	ids, err := user.DataScope(ctx, md.UserId(ctx))
+	ids, err := user.ManagerDepartmentIds(ctx, md.UserId(ctx))
 	if err != nil {
 		return nil, v1.DatabaseErrorFormat(err.Error())
 	}
 
-	list, total, err := user.Page(ctx, &model.PageOptions{
+	list, total, err := user.Page(ctx, &types.PageOptions{
 		Page:     in.Page,
 		PageSize: in.PageSize,
 		Scopes: func(db *gorm.DB) *gorm.DB {
 			if in.Username != nil {
-				db = db.Where("email=? or phone=?", *in.Username, *in.Username)
+				db = db.Where("email=? or phFind=?", *in.Username, *in.Username)
 			}
 			if in.Status != nil {
 				db = db.Where("status=?", *in.Status)
@@ -281,15 +281,16 @@ func (r *User) Add(ctx kratosx.Context, in *v1.AddUserRequest) (*emptypb.Empty, 
 	user := model.User{}
 
 	// 判断当前用户是否具有部门的权限
-	depIds, _ := user.DataScope(ctx, md.UserId(ctx))
+	depIds, _ := user.ManagerDepartmentIds(ctx, md.UserId(ctx))
 	if !util.InList(depIds, in.DepartmentId) {
 		return nil, v1.DepartmentPermissionsError()
 	}
 
 	// 判断当前用户是否具有角色的权限
-	roleIds, _ := user.RoleScope(ctx, md.UserId(ctx))
+	role := model.Role{BaseModel: types.BaseModel{ID: md.RoleId(ctx)}}
+	rids, _ := role.FindManagerIds(ctx)
 	for _, id := range in.RoleIds {
-		if !util.InList(roleIds, id) {
+		if !util.InList(rids, id) {
 			return nil, v1.DepartmentPermissionsErrorFormat(fmt.Sprintf("role_id:%d", id))
 		}
 	}
@@ -304,6 +305,7 @@ func (r *User) Add(ctx kratosx.Context, in *v1.AddUserRequest) (*emptypb.Empty, 
 	user.Avatar = r.conf.DefaultUserAvatar
 	user.Password = util.ParsePwd(r.conf.DefaultUserPassword)
 	user.RoleID = in.RoleIds[0]
+	user.Status = proto.Bool(true)
 
 	// 创建用户
 	if err := user.Create(ctx); err != nil {
@@ -315,6 +317,13 @@ func (r *User) Add(ctx kratosx.Context, in *v1.AddUserRequest) (*emptypb.Empty, 
 	if err := userRole.Update(ctx, user.ID, in.RoleIds); err != nil {
 		return nil, v1.DatabaseErrorFormat(err.Error())
 	}
+
+	// 更新用户职位信息
+	userJob := model.UserJob{}
+	if err := userJob.Update(ctx, user.ID, in.JobIds); err != nil {
+		return nil, v1.DatabaseErrorFormat(err.Error())
+	}
+
 	return nil, nil
 }
 
@@ -327,21 +336,22 @@ func (r *User) Update(ctx kratosx.Context, in *v1.UpdateUserRequest) (*emptypb.E
 
 	user := model.User{}
 	// 判断当前用户是否具有部门的权限
-	depIds, _ := user.DataScope(ctx, md.UserId(ctx))
+	depIds, _ := user.ManagerDepartmentIds(ctx, md.UserId(ctx))
 	if !util.InList(depIds, in.DepartmentId) {
 		return nil, v1.DepartmentPermissionsError()
 	}
 
 	// 判断当前用户是否具有角色的权限
-	roleIds, _ := user.RoleScope(ctx, md.UserId(ctx))
+	role := model.Role{BaseModel: types.BaseModel{ID: md.RoleId(ctx)}}
+	rids, _ := role.FindManagerIds(ctx)
 	for _, id := range in.RoleIds {
-		if !util.InList(roleIds, id) {
+		if !util.InList(rids, id) {
 			return nil, v1.DepartmentPermissionsErrorFormat(fmt.Sprintf("role_id:%d", id))
 		}
 	}
 
 	// 判断是否具有当前用户的管理权限
-	if !user.HasUserScope(ctx, md.UserId(ctx), in.Id) {
+	if !user.HasUserManagerScope(ctx, md.UserId(ctx), in.Id) {
 		return nil, v1.UserPermissionsError()
 	}
 
@@ -364,13 +374,19 @@ func (r *User) Update(ctx kratosx.Context, in *v1.UpdateUserRequest) (*emptypb.E
 		return nil, v1.DatabaseErrorFormat(err.Error())
 	}
 
+	// 更新用户职位信息
+	userJob := model.UserJob{}
+	if err := userJob.Update(ctx, user.ID, in.JobIds); err != nil {
+		return nil, v1.DatabaseErrorFormat(err.Error())
+	}
+
 	return nil, nil
 }
 
 // UpdateBasic 更新用户基础信息
 func (r *User) UpdateBasic(ctx kratosx.Context, in *v1.UpdateUserBasicRequest) (*emptypb.Empty, error) {
 	user := model.User{
-		BaseModel: model.BaseModel{ID: md.UserId(ctx)},
+		BaseModel: types.BaseModel{ID: md.UserId(ctx)},
 		Nickname:  in.Nickname,
 		Gender:    in.Gender,
 	}
@@ -395,7 +411,7 @@ func (r *User) Delete(ctx kratosx.Context, in *v1.DeleteUserRequest) (*emptypb.E
 
 	user := model.User{}
 	// 判断是否具有当前用户的管理权限
-	if !user.HasUserScope(ctx, md.UserId(ctx), in.Id) {
+	if !user.HasUserManagerScope(ctx, md.UserId(ctx), in.Id) {
 		return nil, v1.UserPermissionsError()
 	}
 

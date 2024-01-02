@@ -1,13 +1,13 @@
 package logic
 
 import (
+	"github.com/limes-cloud/kratosx"
+
 	v1 "github.com/limes-cloud/manager/api/v1"
 	"github.com/limes-cloud/manager/config"
 	"github.com/limes-cloud/manager/internal/model"
 	"github.com/limes-cloud/manager/pkg/md"
 	"github.com/limes-cloud/manager/pkg/util"
-
-	"github.com/limes-cloud/kratosx"
 )
 
 type UserRole struct {
@@ -48,19 +48,19 @@ func (r *UserRole) CurrentUserRoles(ctx kratosx.Context) (*v1.GetUserRolesReply,
 func (r *UserRole) SwitchCurrentUserRole(ctx kratosx.Context, in *v1.SwitchCurrentUserRoleRequest) (*v1.SwitchCurrentUserRoleReply, error) {
 	// 判断是具有被切换的角色
 	ur := model.UserRole{}
-	if err := ur.OneByUserAndRole(ctx, md.UserId(ctx), in.RoleId); err != nil {
+	if err := ur.FindByUserAndRole(ctx, md.UserId(ctx), in.RoleId); err != nil {
 		return nil, v1.NotFoundError()
 	}
 
 	// 获取当前角色
 	role := model.Role{}
-	if err := role.OneByID(ctx, in.RoleId); err != nil {
+	if err := role.FindByID(ctx, in.RoleId); err != nil {
 		return nil, v1.DatabaseErrorFormat(err.Error())
 	}
 
 	// 获取当前用户信息
 	user := model.User{}
-	if err := user.OneByID(ctx, md.UserId(ctx)); err != nil {
+	if err := user.FindByID(ctx, md.UserId(ctx)); err != nil {
 		return nil, v1.DatabaseErrorFormat(err.Error())
 	}
 

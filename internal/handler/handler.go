@@ -16,13 +16,12 @@ type Service struct {
 	roleMenu   *logic.RoleMenu
 	auth       *logic.Auth
 	setting    *logic.Setting
+	job        *logic.Job
+	dict       *logic.Dict
+	dictValue  *logic.DictValue
 }
 
 func New(conf *config.Config) *Service {
-	if err := logic.NewInit(conf).Init(); err != nil {
-		panic(err)
-	}
-
 	return &Service{
 		role:       logic.NewRole(conf),
 		menu:       logic.NewMenu(conf),
@@ -32,5 +31,8 @@ func New(conf *config.Config) *Service {
 		roleMenu:   logic.NewRoleMenu(conf),
 		auth:       logic.NewAuth(conf),
 		setting:    logic.NewSetting(conf),
+		job:        logic.NewJob(conf),
+		dict:       logic.NewDict(conf),
+		dictValue:  logic.NewDictValue(conf),
 	}
 }

@@ -69,6 +69,8 @@ func (m *GetSettingReply) validate(all bool) error {
 
 	// no validation rules for Logo
 
+	// no validation rules for Id
+
 	if len(errors) > 0 {
 		return GetSettingReplyMultiError(errors)
 	}

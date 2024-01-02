@@ -2,17 +2,18 @@ package model
 
 import (
 	"github.com/limes-cloud/kratosx"
+	"github.com/limes-cloud/kratosx/types"
 	"gorm.io/gorm"
 )
 
 type UserRole struct {
-	CreateModel
-	RoleID uint32 `json:"role_id" gour:"not null;size:32;comment:角色id"`
-	UserID uint32 `json:"user_id" gour:"not null;size:32;comment:菜单id"`
-	Role   *Role  `json:"role" gour:"->;constraint:OnDelete:cascade"`
+	types.CreateModel
+	RoleID uint32 `json:"role_id" gorm:"not null;comment:角色id"`
+	UserID uint32 `json:"user_id" gorm:"not null;comment:菜单id"`
+	Role   *Role  `json:"role" gorm:"constraint:OnDelete:cascade"`
 }
 
-func (ur *UserRole) OneByUserAndRole(ctx kratosx.Context, userId, roleId uint32) error {
+func (ur *UserRole) FindByUserAndRole(ctx kratosx.Context, userId, roleId uint32) error {
 	return ctx.DB().First(ur, "user_id=? and role_id=?", userId, roleId).Error
 }
 

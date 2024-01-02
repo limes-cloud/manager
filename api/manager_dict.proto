@@ -1,0 +1,48 @@
+ syntax = "proto3";
+
+package manager;
+
+option go_package = "./v1;v1";
+
+import "validate/validate.proto";
+
+
+message Dict {
+  uint32 id = 1;
+  string keyword = 2;
+  string name = 3;
+  string description = 5;
+  optional uint32 weight = 6;
+  optional uint32 created_at = 7;
+  optional uint32 updated_at = 8;
+}
+
+message PageDictRequest{
+  uint32 page = 1[(validate.rules).uint32 = {gt: 0}];
+  uint32 page_size = 2[(validate.rules).uint32 = {gt: 0,lte:50}];
+  optional string keyword = 3;
+  optional string name = 4;
+}
+
+message PageDictReply{
+  uint32 total = 1;
+  repeated Dict list = 2;
+}
+
+message AddDictRequest{
+  string keyword = 1[(validate.rules).string = {min_len:1}];
+  string name = 2[(validate.rules).string = {min_len:1}];
+  string description = 3[(validate.rules).string = {min_len:1}];
+  optional uint32 weight = 4;
+}
+
+message UpdateDictRequest{
+  uint32 id = 1[(validate.rules).uint32 = {gt:0}];
+  string name = 2[(validate.rules).string = {min_len:1}];
+  string description = 3[(validate.rules).string = {min_len:1}];
+  optional uint32 weight = 4[(validate.rules).uint32 = {gt:0}];
+}
+
+message DeleteDictRequest{
+  uint32 id = 1[(validate.rules).uint32 = {gt:0}];
+}

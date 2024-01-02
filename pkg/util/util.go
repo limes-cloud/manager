@@ -4,14 +4,14 @@ import (
 	"crypto/md5"
 	"encoding/hex"
 	"regexp"
+	"strconv"
 	"strings"
 
-	"golang.org/x/crypto/bcrypt"
-
 	json "github.com/json-iterator/go"
+	"golang.org/x/crypto/bcrypt"
 )
 
-func Transform(in interface{}, dst interface{}) error {
+func Transform(in any, dst any) error {
 	b, err := json.Marshal(in)
 	if err != nil {
 		return err
@@ -58,4 +58,9 @@ func IsEmail(email string) bool {
 func IsPhone(phone string) bool {
 	reg := regexp.MustCompile(`^1[3456789]\d{9}$`)
 	return reg.MatchString(phone)
+}
+
+func ToUint32(in string) uint32 {
+	uint32Value, _ := strconv.ParseUint(in, 10, 32)
+	return uint32(uint32Value)
 }

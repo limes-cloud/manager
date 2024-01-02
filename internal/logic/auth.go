@@ -3,17 +3,17 @@ package logic
 import (
 	"encoding/base64"
 	"encoding/json"
-	v1 "github.com/limes-cloud/manager/api/v1"
-	"github.com/limes-cloud/manager/config"
-	"github.com/limes-cloud/manager/internal/model"
-	"github.com/limes-cloud/manager/internal/types"
-	"github.com/limes-cloud/manager/pkg/md"
-	"github.com/limes-cloud/manager/pkg/util"
 	"time"
 
 	"github.com/forgoer/openssl"
 	"github.com/limes-cloud/kratosx"
 	"google.golang.org/protobuf/types/known/emptypb"
+
+	v1 "github.com/limes-cloud/manager/api/v1"
+	"github.com/limes-cloud/manager/config"
+	"github.com/limes-cloud/manager/internal/model"
+	"github.com/limes-cloud/manager/pkg/md"
+	"github.com/limes-cloud/manager/pkg/util"
 )
 
 type Auth struct {
@@ -31,12 +31,17 @@ const (
 	passwordCert   = "login"
 )
 
+type Password struct {
+	Password string `json:"password"`
+	Time     int64  `json:"time"`
+}
+
 // Auth 退出登录
 func (a *Auth) Auth(ctx kratosx.Context, in *v1.AuthRequest) (*emptypb.Empty, error) {
 	author := ctx.Authentication().Enforce()
 	role := md.RoleKeyword(ctx)
 
-	skipRoles := []string{}
+	var skipRoles []string
 	_ = ctx.Config().Value("authentication.skipRole").Scan(&skipRoles)
 
 	if util.InList(skipRoles, role) {
@@ -52,7 +57,6 @@ func (a *Auth) Auth(ctx kratosx.Context, in *v1.AuthRequest) (*emptypb.Empty, er
 
 // LoginCaptcha 登录验证码
 func (a *Auth) LoginCaptcha(ctx kratosx.Context, in *emptypb.Empty) (*v1.LoginCaptchaReply, error) {
-	ctx.Logger().Errorf("captcha ip:", ctx.ClientIP())
 	res, err := ctx.Captcha().Image(imageCaptchaTp, ctx.ClientIP())
 	if err != nil {
 		return nil, v1.NewCaptchaErrorFormat(err.Error())
@@ -81,7 +85,7 @@ func (a *Auth) Login(ctx kratosx.Context, in *v1.LoginRequest) (*v1.LoginReply, 
 	}
 
 	// 序列化密码
-	var pw types.Password
+	var pw Password
 	if json.Unmarshal(decryptData, &pw) != nil {
 		return nil, v1.PasswordFormatError()
 	}
@@ -94,9 +98,9 @@ func (a *Auth) Login(ctx kratosx.Context, in *v1.LoginRequest) (*v1.LoginReply, 
 	// 获取用户信息
 	user := model.User{}
 	if util.IsPhone(in.Username) {
-		err = user.OneByPhone(ctx, in.Username)
+		err = user.FindByPhone(ctx, in.Username)
 	} else if util.IsEmail(in.Username) {
-		err = user.OneByEmail(ctx, in.Username)
+		err = user.FindByEmail(ctx, in.Username)
 	} else {
 		return nil, v1.UsernameFormatError()
 	}
@@ -112,9 +116,14 @@ func (a *Auth) Login(ctx kratosx.Context, in *v1.LoginRequest) (*v1.LoginReply, 
 	}
 
 	// 角色被禁用则拒绝登录
-	role := model.Role{}
-	if !role.RoleStatus(ctx, user.RoleID) {
-		return nil, v1.RoleDisableError()
+	if user.Role.Status != nil {
+		if !*user.Role.Status {
+			return nil, v1.RoleDisableError()
+		}
+		// 上级被禁用下级也不允许登录
+		if !user.Role.ParentStatus(ctx) {
+			return nil, v1.RoleDisableError()
+		}
 	}
 
 	// 对比用户密码，错误则拒绝登陆
@@ -132,7 +141,7 @@ func (a *Auth) Login(ctx kratosx.Context, in *v1.LoginRequest) (*v1.LoginReply, 
 	nu := model.User{}
 	nu.ID = user.ID
 	nu.Token = token
-	nu.LastLogin = uint32(time.Now().Unix())
+	nu.LastLogin = time.Now().Unix()
 	if err = nu.Update(ctx); err != nil {
 		return nil, v1.DatabaseErrorFormat(err.Error())
 	}

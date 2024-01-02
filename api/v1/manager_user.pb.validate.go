@@ -170,6 +170,40 @@ func (m *User) validate(all bool) error {
 
 	}
 
+	for idx, item := range m.GetJobs() {
+		_, _ = idx, item
+
+		if all {
+			switch v := interface{}(item).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, UserValidationError{
+						field:  fmt.Sprintf("Jobs[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, UserValidationError{
+						field:  fmt.Sprintf("Jobs[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return UserValidationError{
+					field:  fmt.Sprintf("Jobs[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
 	if m.Status != nil {
 		// no validation rules for Status
 	}
@@ -828,6 +862,17 @@ func (m *AddUserRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
+	if len(m.GetJobIds()) < 1 {
+		err := AddUserRequestValidationError{
+			field:  "JobIds",
+			reason: "value must contain at least 1 item(s)",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
 	if utf8.RuneCountInString(m.GetName()) < 1 {
 		err := AddUserRequestValidationError{
 			field:  "Name",
@@ -1047,6 +1092,17 @@ func (m *UpdateUserRequest) validate(all bool) error {
 		err := UpdateUserRequestValidationError{
 			field:  "DepartmentId",
 			reason: "value must be greater than 0",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if len(m.GetJobIds()) < 1 {
+		err := UpdateUserRequestValidationError{
+			field:  "JobIds",
+			reason: "value must contain at least 1 item(s)",
 		}
 		if !all {
 			return err

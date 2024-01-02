@@ -1,17 +1,16 @@
 package logic
 
 import (
+	"github.com/limes-cloud/kratosx"
+	"google.golang.org/protobuf/types/known/emptypb"
+	"gorm.io/gorm"
+
 	v1 "github.com/limes-cloud/manager/api/v1"
 	"github.com/limes-cloud/manager/config"
 	"github.com/limes-cloud/manager/consts"
 	"github.com/limes-cloud/manager/internal/model"
 	"github.com/limes-cloud/manager/pkg/tree"
 	"github.com/limes-cloud/manager/pkg/util"
-
-	"github.com/limes-cloud/kratosx"
-	"gorm.io/gorm"
-
-	"google.golang.org/protobuf/types/known/emptypb"
 )
 
 type Menu struct {
@@ -75,7 +74,7 @@ func (r *Menu) Add(ctx kratosx.Context, in *v1.AddMenuRequest) (*emptypb.Empty, 
 	}
 
 	// 如果是基础api，则添加到白名单中
-	if in.Type == consts.MENU_BASIC {
+	if in.Type == consts.MenuBasic {
 		ctx.Authentication().AddWhitelist(*in.Api, *in.Method)
 	}
 
@@ -84,7 +83,7 @@ func (r *Menu) Add(ctx kratosx.Context, in *v1.AddMenuRequest) (*emptypb.Empty, 
 
 func (r *Menu) Update(ctx kratosx.Context, in *v1.UpdateMenuRequest) (*emptypb.Empty, error) {
 	oldMenu := model.Menu{}
-	if err := oldMenu.OneByID(ctx, in.Id); err != nil {
+	if err := oldMenu.FindByID(ctx, in.Id); err != nil {
 		return nil, v1.NotFoundErrorFormat(err.Error())
 	}
 
@@ -138,12 +137,12 @@ func (r *Menu) Update(ctx kratosx.Context, in *v1.UpdateMenuRequest) (*emptypb.E
 	}
 
 	// 如果之前是基础api，则删除白名单
-	if oldMenu.Type == consts.MENU_BASIC {
+	if oldMenu.Type == consts.MenuBasic {
 		ctx.Authentication().RemoveWhitelist(*oldMenu.Api, *oldMenu.Method)
 	}
 
 	// 如果现在是基础api，则添加白名单
-	if in.Type == consts.MENU_BASIC {
+	if in.Type == consts.MenuBasic {
 		ctx.Authentication().AddWhitelist(*in.Api, *in.Method)
 	}
 
@@ -171,7 +170,7 @@ func (r *Menu) Delete(ctx kratosx.Context, in *v1.DeleteMenuRequest) (*emptypb.E
 	}
 	menu := model.Menu{}
 	// 查询当前菜单
-	if err := menu.OneByID(ctx, in.Id); err != nil {
+	if err := menu.FindByID(ctx, in.Id); err != nil {
 		return nil, v1.DatabaseErrorFormat(err.Error())
 	}
 
@@ -211,7 +210,7 @@ func (r *Menu) Delete(ctx kratosx.Context, in *v1.DeleteMenuRequest) (*emptypb.E
 	// 删除api的rbac权限表
 	auth := ctx.Authentication()
 	for _, item := range apis {
-		if item.Type == consts.MENU_BASIC {
+		if item.Type == consts.MenuBasic {
 			auth.RemoveWhitelist(*item.Api, *item.Method)
 		}
 		_, _ = auth.Enforce().RemoveFilteredPolicy(1, *item.Api, *item.Method)

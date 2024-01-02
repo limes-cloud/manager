@@ -2,6 +2,12 @@ package logic
 
 import (
 	"fmt"
+
+	"github.com/limes-cloud/kratosx"
+	"github.com/limes-cloud/kratosx/types"
+	"google.golang.org/protobuf/types/known/emptypb"
+	"gorm.io/gorm"
+
 	v1 "github.com/limes-cloud/manager/api/v1"
 	"github.com/limes-cloud/manager/config"
 	"github.com/limes-cloud/manager/consts"
@@ -9,11 +15,6 @@ import (
 	"github.com/limes-cloud/manager/pkg/md"
 	"github.com/limes-cloud/manager/pkg/tree"
 	"github.com/limes-cloud/manager/pkg/util"
-
-	"github.com/limes-cloud/kratosx"
-	"google.golang.org/protobuf/types/known/emptypb"
-
-	"gorm.io/gorm"
 )
 
 type RoleMenu struct {
@@ -30,7 +31,7 @@ func NewRoleMenu(conf *config.Config) *RoleMenu {
 func (r *RoleMenu) CurrenMenuTree(ctx kratosx.Context) (*v1.CurrentRoleMenuTreeReply, error) {
 	menu := model.Menu{}
 	list, err := menu.All(ctx, func(db *gorm.DB) *gorm.DB {
-		db = db.Where("type!=? ", consts.MENU_BASIC)
+		db = db.Where("type!=? ", consts.MenuBasic)
 		if md.RoleId(ctx) == consts.SuperAdmin {
 			return db
 		}
@@ -70,9 +71,9 @@ func (r *RoleMenu) CurrenMenuTree(ctx kratosx.Context) (*v1.CurrentRoleMenuTreeR
 // GetMenuIds 获取指定角色的菜单ID
 func (r *RoleMenu) GetMenuIds(ctx kratosx.Context, in *v1.GetRoleMenuIdsRequest) (*v1.GetRoleMenuIdsReply, error) {
 	// 判断是否具有此角色的权限
-	user := model.User{}
-	roleIds, _ := user.RoleScope(ctx, md.UserId(ctx))
-	if !util.InList(roleIds, in.RoleId) {
+	role := model.Role{BaseModel: types.BaseModel{ID: md.RoleId(ctx)}}
+	rids, _ := role.FindManagerIds(ctx)
+	if !util.InList(rids, in.RoleId) {
 		return nil, v1.DepartmentPermissionsError()
 	}
 
@@ -100,9 +101,9 @@ func (r *RoleMenu) Update(ctx kratosx.Context, in *v1.UpdateRoleMenuRequest) (*e
 	}
 
 	// 判断是否具有此角色的权限
-	user := model.User{}
-	roleIds, _ := user.RoleScope(ctx, md.UserId(ctx))
-	if !util.InList(roleIds, in.RoleId) {
+	role := model.Role{BaseModel: types.BaseModel{ID: md.RoleId(ctx)}}
+	rids, _ := role.FindManagerIds(ctx)
+	if !util.InList(rids, in.RoleId) {
 		return nil, v1.DepartmentPermissionsError()
 	}
 
@@ -112,7 +113,7 @@ func (r *RoleMenu) Update(ctx kratosx.Context, in *v1.UpdateRoleMenuRequest) (*e
 		return nil, err
 	}
 
-	//不晒超级管理员添加，则需要判断菜单是否都合法
+	// 不晒超级管理员添加，则需要判断菜单是否都合法
 	if md.RoleId(ctx) != consts.SuperAdmin {
 		for _, id := range in.MenuIds {
 			if !util.InList(reply.List, id) {
@@ -122,8 +123,8 @@ func (r *RoleMenu) Update(ctx kratosx.Context, in *v1.UpdateRoleMenuRequest) (*e
 	}
 
 	// 获取当前role的数据
-	role := model.Role{}
-	if err := role.OneByID(ctx, in.RoleId); err != nil {
+	role = model.Role{}
+	if err := role.FindByID(ctx, in.RoleId); err != nil {
 		return nil, v1.DatabaseErrorFormat(err.Error())
 	}
 

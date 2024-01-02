@@ -2,18 +2,15 @@ package handler
 
 import (
 	"context"
-	v1 "github.com/limes-cloud/manager/api/v1"
 
 	"github.com/limes-cloud/kratosx"
 	"google.golang.org/protobuf/types/known/emptypb"
+
+	v1 "github.com/limes-cloud/manager/api/v1"
 )
 
 func (s *Service) GetDepartment(ctx context.Context, in *v1.GetDepartmentRequest) (*v1.GetDepartmentReply, error) {
 	return s.department.Get(kratosx.MustContext(ctx), in)
-}
-
-func (s *Service) GetUserDepartmentTree(ctx context.Context, in *emptypb.Empty) (*v1.GetUserDepartmentTreeReply, error) {
-	return s.department.UserTree(kratosx.MustContext(ctx))
 }
 
 func (s *Service) GetDepartmentTree(ctx context.Context, in *emptypb.Empty) (*v1.GetDepartmentTreeReply, error) {

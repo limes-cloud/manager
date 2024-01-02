@@ -13,4 +13,5 @@ message GetSettingReply {
   string desc = 4;
   string copyright = 5;
   string logo = 6;
+  int64 id = 7;
 }

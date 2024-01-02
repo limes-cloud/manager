@@ -13,8 +13,49 @@ import "manager_user_role.proto";
 import "manager_role_menu.proto";
 import "manager_auth.proto";
 import "manager_setting.proto";
+import "manager_job.proto";
+import "manager_dict.proto";
+import "manager_dict_value.proto";
 
 service Service {
+
+  rpc Auth(AuthRequest) returns(google.protobuf.Empty){
+    option (google.api.http) = {
+      post: "/manager/v1/auth",
+      body: "*"
+    };
+  }
+
+  rpc Login(LoginRequest) returns(LoginReply){
+    option (google.api.http) = {
+      post: "/manager/v1/login",
+      body: "*"
+    };
+  }
+
+  rpc LoginCaptcha(google.protobuf.Empty) returns(LoginCaptchaReply){
+    option (google.api.http) = {
+      post: "/manager/v1/login/captcha"
+    };
+  }
+
+  rpc Logout(google.protobuf.Empty) returns(google.protobuf.Empty){
+    option (google.api.http) = {
+      post: "/manager/v1/logout",
+    };
+  }
+
+  rpc ParseToken(google.protobuf.Empty) returns(ParseTokenReply){
+    option (google.api.http) = {
+      post: "/manager/v1/token/parse",
+    };
+  }
+
+  rpc RefreshToken(google.protobuf.Empty) returns(RefreshTokenReply){
+    option (google.api.http) = {
+      post: "/manager/v1/token/refresh",
+    };
+  }
 
   // GetSetting 获取当前系统的配置
   rpc GetSetting (google.protobuf.Empty) returns (GetSettingReply) {
@@ -112,19 +153,16 @@ service Service {
     };
   }
 
-  // GetDepartmentTree 获取指定部门，不开放http，只允许内部grpc调用
-  rpc GetDepartment (GetDepartmentRequest) returns (GetDepartmentReply) {}
-
   // GetDepartmentTree 获取部门树
-  rpc GetDepartmentTree (google.protobuf.Empty) returns (GetDepartmentTreeReply) {}
-
-  // GetDepartmentTree 获取部门树
-  rpc GetUserDepartmentTree (google.protobuf.Empty) returns (GetUserDepartmentTreeReply) {
+  rpc GetDepartmentTree (google.protobuf.Empty) returns (GetDepartmentTreeReply) {
     option (google.api.http) = {
       get: "/manager/v1/department/tree",
       response_body: "list",
     };
   }
+
+  // GetDepartmentTree 获取指定部门
+  rpc GetDepartment (GetDepartmentRequest) returns (GetDepartmentReply) {}
 
   // AddDepartment 删除部门信息
   rpc AddDepartment (AddDepartmentRequest) returns (google.protobuf.Empty) {
@@ -238,7 +276,6 @@ service Service {
     };
   }
 
-
   // DeleteUser 删除用户信息
   rpc DeleteUser (DeleteUserRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
@@ -270,43 +307,107 @@ service Service {
     };
   }
 
-  rpc Auth(AuthRequest) returns(google.protobuf.Empty){
+  // GetJob 获取指定职位
+  rpc GetJob (GetJobRequest) returns (GetJobReply) {}
+
+  // GetJob 获取用户职位
+  rpc GetUserJob (GetUserJobRequest) returns (GetUserJobReply) {
     option (google.api.http) = {
-      post: "/manager/v1/auth",
-      body: "*"
+      get: "/manager/v1/user/jobs",
+      response_body: "jobs"
     };
   }
 
-  rpc Login(LoginRequest) returns(LoginReply){
+  // PageJob 分页获取职位信息
+  rpc PageJob (PageJobRequest) returns (PageJobReply) {
     option (google.api.http) = {
-      post: "/manager/v1/login",
-      body: "*"
+      get: "/manager/v1/jobs",
     };
   }
 
-  rpc LoginCaptcha(google.protobuf.Empty) returns(LoginCaptchaReply){
+  // AddJob 删除职位信息
+  rpc AddJob (AddJobRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
-      post: "/manager/v1/login/captcha"
+      post: "/manager/v1/job",
+      body: "*",
     };
   }
 
-  rpc Logout(google.protobuf.Empty) returns(google.protobuf.Empty){
+  // UpdateJob 更新职位信息
+  rpc UpdateJob (UpdateJobRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
-      post: "/manager/v1/logout",
+      put: "/manager/v1/job",
+      body: "*",
     };
   }
 
-  rpc ParseToken(google.protobuf.Empty) returns(ParseTokenReply){
+  // DeleteJob 删除职位信息
+  rpc DeleteJob (DeleteJobRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
-      post: "/manager/v1/token/parse",
+      delete: "/manager/v1/job",
     };
   }
 
-  rpc RefreshToken(google.protobuf.Empty) returns(RefreshTokenReply){
+  // PageDict 分页获取字典信息
+  rpc PageDict (PageDictRequest) returns (PageDictReply) {
     option (google.api.http) = {
-      post: "/manager/v1/token/refresh",
+      get: "/manager/v1/dicts",
     };
   }
+
+  // AddDict 删除字典信息
+  rpc AddDict (AddDictRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/manager/v1/dict",
+      body: "*",
+    };
+  }
+
+  // UpdateDict 更新字典信息
+  rpc UpdateDict (UpdateDictRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      put: "/manager/v1/dict",
+      body: "*",
+    };
+  }
+
+  // DeleteDict 删除字典信息
+  rpc DeleteDict (DeleteDictRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      delete: "/manager/v1/dict",
+    };
+  }
+
+  // PageDictValue 分页获取字典信息
+  rpc PageDictValue (PageDictValueRequest) returns (PageDictValueReply) {
+    option (google.api.http) = {
+      get: "/manager/v1/dict/values",
+    };
+  }
+
+  // AddDictValue 删除字典信息
+  rpc AddDictValue (AddDictValueRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/manager/v1/dict/value",
+      body: "*",
+    };
+  }
+
+  // UpdateDictValue 更新字典信息
+  rpc UpdateDictValue (UpdateDictValueRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      put: "/manager/v1/dict/value",
+      body: "*",
+    };
+  }
+
+  // DeleteDictValue 删除字典信息
+  rpc DeleteDictValue (DeleteDictValueRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      delete: "/manager/v1/dict/value",
+    };
+  }
+
 }
 
 

@@ -20,6 +20,12 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
+	Service_Auth_FullMethodName                      = "/manager.Service/Auth"
+	Service_Login_FullMethodName                     = "/manager.Service/Login"
+	Service_LoginCaptcha_FullMethodName              = "/manager.Service/LoginCaptcha"
+	Service_Logout_FullMethodName                    = "/manager.Service/Logout"
+	Service_ParseToken_FullMethodName                = "/manager.Service/ParseToken"
+	Service_RefreshToken_FullMethodName              = "/manager.Service/RefreshToken"
 	Service_GetSetting_FullMethodName                = "/manager.Service/GetSetting"
 	Service_GetRole_FullMethodName                   = "/manager.Service/GetRole"
 	Service_CurrentRoleMenuTree_FullMethodName       = "/manager.Service/CurrentRoleMenuTree"
@@ -33,9 +39,8 @@ const (
 	Service_AddMenu_FullMethodName                   = "/manager.Service/AddMenu"
 	Service_UpdateMenu_FullMethodName                = "/manager.Service/UpdateMenu"
 	Service_DeleteMenu_FullMethodName                = "/manager.Service/DeleteMenu"
-	Service_GetDepartment_FullMethodName             = "/manager.Service/GetDepartment"
 	Service_GetDepartmentTree_FullMethodName         = "/manager.Service/GetDepartmentTree"
-	Service_GetUserDepartmentTree_FullMethodName     = "/manager.Service/GetUserDepartmentTree"
+	Service_GetDepartment_FullMethodName             = "/manager.Service/GetDepartment"
 	Service_AddDepartment_FullMethodName             = "/manager.Service/AddDepartment"
 	Service_UpdateDepartment_FullMethodName          = "/manager.Service/UpdateDepartment"
 	Service_DeleteDepartment_FullMethodName          = "/manager.Service/DeleteDepartment"
@@ -55,18 +60,32 @@ const (
 	Service_CurrentUserRoles_FullMethodName          = "/manager.Service/CurrentUserRoles"
 	Service_SwitchCurrentUserRole_FullMethodName     = "/manager.Service/SwitchCurrentUserRole"
 	Service_GetUserRoles_FullMethodName              = "/manager.Service/GetUserRoles"
-	Service_Auth_FullMethodName                      = "/manager.Service/Auth"
-	Service_Login_FullMethodName                     = "/manager.Service/Login"
-	Service_LoginCaptcha_FullMethodName              = "/manager.Service/LoginCaptcha"
-	Service_Logout_FullMethodName                    = "/manager.Service/Logout"
-	Service_ParseToken_FullMethodName                = "/manager.Service/ParseToken"
-	Service_RefreshToken_FullMethodName              = "/manager.Service/RefreshToken"
+	Service_GetJob_FullMethodName                    = "/manager.Service/GetJob"
+	Service_GetUserJob_FullMethodName                = "/manager.Service/GetUserJob"
+	Service_PageJob_FullMethodName                   = "/manager.Service/PageJob"
+	Service_AddJob_FullMethodName                    = "/manager.Service/AddJob"
+	Service_UpdateJob_FullMethodName                 = "/manager.Service/UpdateJob"
+	Service_DeleteJob_FullMethodName                 = "/manager.Service/DeleteJob"
+	Service_PageDict_FullMethodName                  = "/manager.Service/PageDict"
+	Service_AddDict_FullMethodName                   = "/manager.Service/AddDict"
+	Service_UpdateDict_FullMethodName                = "/manager.Service/UpdateDict"
+	Service_DeleteDict_FullMethodName                = "/manager.Service/DeleteDict"
+	Service_PageDictValue_FullMethodName             = "/manager.Service/PageDictValue"
+	Service_AddDictValue_FullMethodName              = "/manager.Service/AddDictValue"
+	Service_UpdateDictValue_FullMethodName           = "/manager.Service/UpdateDictValue"
+	Service_DeleteDictValue_FullMethodName           = "/manager.Service/DeleteDictValue"
 )
 
 // ServiceClient is the client API for Service service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ServiceClient interface {
+	Auth(ctx context.Context, in *AuthRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginReply, error)
+	LoginCaptcha(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*LoginCaptchaReply, error)
+	Logout(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	ParseToken(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ParseTokenReply, error)
+	RefreshToken(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*RefreshTokenReply, error)
 	// GetSetting 获取当前系统的配置
 	GetSetting(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetSettingReply, error)
 	// GetRole 获取指定角色，不开放http，只允许内部grpc调用
@@ -93,12 +112,10 @@ type ServiceClient interface {
 	UpdateMenu(ctx context.Context, in *UpdateMenuRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	// DeleteMenu 删除菜单
 	DeleteMenu(ctx context.Context, in *DeleteMenuRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	// GetDepartmentTree 获取指定部门，不开放http，只允许内部grpc调用
-	GetDepartment(ctx context.Context, in *GetDepartmentRequest, opts ...grpc.CallOption) (*GetDepartmentReply, error)
 	// GetDepartmentTree 获取部门树
 	GetDepartmentTree(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetDepartmentTreeReply, error)
-	// GetDepartmentTree 获取部门树
-	GetUserDepartmentTree(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetUserDepartmentTreeReply, error)
+	// GetDepartmentTree 获取指定部门
+	GetDepartment(ctx context.Context, in *GetDepartmentRequest, opts ...grpc.CallOption) (*GetDepartmentReply, error)
 	// AddDepartment 删除部门信息
 	AddDepartment(ctx context.Context, in *AddDepartmentRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	// UpdateDepartment 更新部门信息
@@ -137,12 +154,34 @@ type ServiceClient interface {
 	SwitchCurrentUserRole(ctx context.Context, in *SwitchCurrentUserRoleRequest, opts ...grpc.CallOption) (*SwitchCurrentUserRoleReply, error)
 	// CurrentUserRoles 获取当前用户的角色列表
 	GetUserRoles(ctx context.Context, in *GetUserRolesRequest, opts ...grpc.CallOption) (*GetUserRolesReply, error)
-	Auth(ctx context.Context, in *AuthRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginReply, error)
-	LoginCaptcha(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*LoginCaptchaReply, error)
-	Logout(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	ParseToken(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ParseTokenReply, error)
-	RefreshToken(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*RefreshTokenReply, error)
+	// GetJob 获取指定职位
+	GetJob(ctx context.Context, in *GetJobRequest, opts ...grpc.CallOption) (*GetJobReply, error)
+	// GetJob 获取用户职位
+	GetUserJob(ctx context.Context, in *GetUserJobRequest, opts ...grpc.CallOption) (*GetUserJobReply, error)
+	// PageJob 分页获取职位信息
+	PageJob(ctx context.Context, in *PageJobRequest, opts ...grpc.CallOption) (*PageJobReply, error)
+	// AddJob 删除职位信息
+	AddJob(ctx context.Context, in *AddJobRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	// UpdateJob 更新职位信息
+	UpdateJob(ctx context.Context, in *UpdateJobRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	// DeleteJob 删除职位信息
+	DeleteJob(ctx context.Context, in *DeleteJobRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	// PageDict 分页获取字典信息
+	PageDict(ctx context.Context, in *PageDictRequest, opts ...grpc.CallOption) (*PageDictReply, error)
+	// AddDict 删除字典信息
+	AddDict(ctx context.Context, in *AddDictRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	// UpdateDict 更新字典信息
+	UpdateDict(ctx context.Context, in *UpdateDictRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	// DeleteDict 删除字典信息
+	DeleteDict(ctx context.Context, in *DeleteDictRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	// PageDictValue 分页获取字典信息
+	PageDictValue(ctx context.Context, in *PageDictValueRequest, opts ...grpc.CallOption) (*PageDictValueReply, error)
+	// AddDictValue 删除字典信息
+	AddDictValue(ctx context.Context, in *AddDictValueRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	// UpdateDictValue 更新字典信息
+	UpdateDictValue(ctx context.Context, in *UpdateDictValueRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	// DeleteDictValue 删除字典信息
+	DeleteDictValue(ctx context.Context, in *DeleteDictValueRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type serviceClient struct {
@@ -151,6 +190,60 @@ type serviceClient struct {
 
 func NewServiceClient(cc grpc.ClientConnInterface) ServiceClient {
 	return &serviceClient{cc}
+}
+
+func (c *serviceClient) Auth(ctx context.Context, in *AuthRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, Service_Auth_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *serviceClient) Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginReply, error) {
+	out := new(LoginReply)
+	err := c.cc.Invoke(ctx, Service_Login_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *serviceClient) LoginCaptcha(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*LoginCaptchaReply, error) {
+	out := new(LoginCaptchaReply)
+	err := c.cc.Invoke(ctx, Service_LoginCaptcha_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *serviceClient) Logout(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, Service_Logout_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *serviceClient) ParseToken(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ParseTokenReply, error) {
+	out := new(ParseTokenReply)
+	err := c.cc.Invoke(ctx, Service_ParseToken_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *serviceClient) RefreshToken(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*RefreshTokenReply, error) {
+	out := new(RefreshTokenReply)
+	err := c.cc.Invoke(ctx, Service_RefreshToken_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *serviceClient) GetSetting(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetSettingReply, error) {
@@ -270,15 +363,6 @@ func (c *serviceClient) DeleteMenu(ctx context.Context, in *DeleteMenuRequest, o
 	return out, nil
 }
 
-func (c *serviceClient) GetDepartment(ctx context.Context, in *GetDepartmentRequest, opts ...grpc.CallOption) (*GetDepartmentReply, error) {
-	out := new(GetDepartmentReply)
-	err := c.cc.Invoke(ctx, Service_GetDepartment_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *serviceClient) GetDepartmentTree(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetDepartmentTreeReply, error) {
 	out := new(GetDepartmentTreeReply)
 	err := c.cc.Invoke(ctx, Service_GetDepartmentTree_FullMethodName, in, out, opts...)
@@ -288,9 +372,9 @@ func (c *serviceClient) GetDepartmentTree(ctx context.Context, in *emptypb.Empty
 	return out, nil
 }
 
-func (c *serviceClient) GetUserDepartmentTree(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetUserDepartmentTreeReply, error) {
-	out := new(GetUserDepartmentTreeReply)
-	err := c.cc.Invoke(ctx, Service_GetUserDepartmentTree_FullMethodName, in, out, opts...)
+func (c *serviceClient) GetDepartment(ctx context.Context, in *GetDepartmentRequest, opts ...grpc.CallOption) (*GetDepartmentReply, error) {
+	out := new(GetDepartmentReply)
+	err := c.cc.Invoke(ctx, Service_GetDepartment_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -468,54 +552,126 @@ func (c *serviceClient) GetUserRoles(ctx context.Context, in *GetUserRolesReques
 	return out, nil
 }
 
-func (c *serviceClient) Auth(ctx context.Context, in *AuthRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *serviceClient) GetJob(ctx context.Context, in *GetJobRequest, opts ...grpc.CallOption) (*GetJobReply, error) {
+	out := new(GetJobReply)
+	err := c.cc.Invoke(ctx, Service_GetJob_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *serviceClient) GetUserJob(ctx context.Context, in *GetUserJobRequest, opts ...grpc.CallOption) (*GetUserJobReply, error) {
+	out := new(GetUserJobReply)
+	err := c.cc.Invoke(ctx, Service_GetUserJob_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *serviceClient) PageJob(ctx context.Context, in *PageJobRequest, opts ...grpc.CallOption) (*PageJobReply, error) {
+	out := new(PageJobReply)
+	err := c.cc.Invoke(ctx, Service_PageJob_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *serviceClient) AddJob(ctx context.Context, in *AddJobRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, Service_Auth_FullMethodName, in, out, opts...)
+	err := c.cc.Invoke(ctx, Service_AddJob_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *serviceClient) Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginReply, error) {
-	out := new(LoginReply)
-	err := c.cc.Invoke(ctx, Service_Login_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *serviceClient) LoginCaptcha(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*LoginCaptchaReply, error) {
-	out := new(LoginCaptchaReply)
-	err := c.cc.Invoke(ctx, Service_LoginCaptcha_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *serviceClient) Logout(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *serviceClient) UpdateJob(ctx context.Context, in *UpdateJobRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, Service_Logout_FullMethodName, in, out, opts...)
+	err := c.cc.Invoke(ctx, Service_UpdateJob_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *serviceClient) ParseToken(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*ParseTokenReply, error) {
-	out := new(ParseTokenReply)
-	err := c.cc.Invoke(ctx, Service_ParseToken_FullMethodName, in, out, opts...)
+func (c *serviceClient) DeleteJob(ctx context.Context, in *DeleteJobRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, Service_DeleteJob_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *serviceClient) RefreshToken(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*RefreshTokenReply, error) {
-	out := new(RefreshTokenReply)
-	err := c.cc.Invoke(ctx, Service_RefreshToken_FullMethodName, in, out, opts...)
+func (c *serviceClient) PageDict(ctx context.Context, in *PageDictRequest, opts ...grpc.CallOption) (*PageDictReply, error) {
+	out := new(PageDictReply)
+	err := c.cc.Invoke(ctx, Service_PageDict_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *serviceClient) AddDict(ctx context.Context, in *AddDictRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, Service_AddDict_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *serviceClient) UpdateDict(ctx context.Context, in *UpdateDictRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, Service_UpdateDict_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *serviceClient) DeleteDict(ctx context.Context, in *DeleteDictRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, Service_DeleteDict_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *serviceClient) PageDictValue(ctx context.Context, in *PageDictValueRequest, opts ...grpc.CallOption) (*PageDictValueReply, error) {
+	out := new(PageDictValueReply)
+	err := c.cc.Invoke(ctx, Service_PageDictValue_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *serviceClient) AddDictValue(ctx context.Context, in *AddDictValueRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, Service_AddDictValue_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *serviceClient) UpdateDictValue(ctx context.Context, in *UpdateDictValueRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, Service_UpdateDictValue_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *serviceClient) DeleteDictValue(ctx context.Context, in *DeleteDictValueRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, Service_DeleteDictValue_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -526,6 +682,12 @@ func (c *serviceClient) RefreshToken(ctx context.Context, in *emptypb.Empty, opt
 // All implementations must embed UnimplementedServiceServer
 // for forward compatibility
 type ServiceServer interface {
+	Auth(context.Context, *AuthRequest) (*emptypb.Empty, error)
+	Login(context.Context, *LoginRequest) (*LoginReply, error)
+	LoginCaptcha(context.Context, *emptypb.Empty) (*LoginCaptchaReply, error)
+	Logout(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
+	ParseToken(context.Context, *emptypb.Empty) (*ParseTokenReply, error)
+	RefreshToken(context.Context, *emptypb.Empty) (*RefreshTokenReply, error)
 	// GetSetting 获取当前系统的配置
 	GetSetting(context.Context, *emptypb.Empty) (*GetSettingReply, error)
 	// GetRole 获取指定角色，不开放http，只允许内部grpc调用
@@ -552,12 +714,10 @@ type ServiceServer interface {
 	UpdateMenu(context.Context, *UpdateMenuRequest) (*emptypb.Empty, error)
 	// DeleteMenu 删除菜单
 	DeleteMenu(context.Context, *DeleteMenuRequest) (*emptypb.Empty, error)
-	// GetDepartmentTree 获取指定部门，不开放http，只允许内部grpc调用
-	GetDepartment(context.Context, *GetDepartmentRequest) (*GetDepartmentReply, error)
 	// GetDepartmentTree 获取部门树
 	GetDepartmentTree(context.Context, *emptypb.Empty) (*GetDepartmentTreeReply, error)
-	// GetDepartmentTree 获取部门树
-	GetUserDepartmentTree(context.Context, *emptypb.Empty) (*GetUserDepartmentTreeReply, error)
+	// GetDepartmentTree 获取指定部门
+	GetDepartment(context.Context, *GetDepartmentRequest) (*GetDepartmentReply, error)
 	// AddDepartment 删除部门信息
 	AddDepartment(context.Context, *AddDepartmentRequest) (*emptypb.Empty, error)
 	// UpdateDepartment 更新部门信息
@@ -596,12 +756,34 @@ type ServiceServer interface {
 	SwitchCurrentUserRole(context.Context, *SwitchCurrentUserRoleRequest) (*SwitchCurrentUserRoleReply, error)
 	// CurrentUserRoles 获取当前用户的角色列表
 	GetUserRoles(context.Context, *GetUserRolesRequest) (*GetUserRolesReply, error)
-	Auth(context.Context, *AuthRequest) (*emptypb.Empty, error)
-	Login(context.Context, *LoginRequest) (*LoginReply, error)
-	LoginCaptcha(context.Context, *emptypb.Empty) (*LoginCaptchaReply, error)
-	Logout(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
-	ParseToken(context.Context, *emptypb.Empty) (*ParseTokenReply, error)
-	RefreshToken(context.Context, *emptypb.Empty) (*RefreshTokenReply, error)
+	// GetJob 获取指定职位
+	GetJob(context.Context, *GetJobRequest) (*GetJobReply, error)
+	// GetJob 获取用户职位
+	GetUserJob(context.Context, *GetUserJobRequest) (*GetUserJobReply, error)
+	// PageJob 分页获取职位信息
+	PageJob(context.Context, *PageJobRequest) (*PageJobReply, error)
+	// AddJob 删除职位信息
+	AddJob(context.Context, *AddJobRequest) (*emptypb.Empty, error)
+	// UpdateJob 更新职位信息
+	UpdateJob(context.Context, *UpdateJobRequest) (*emptypb.Empty, error)
+	// DeleteJob 删除职位信息
+	DeleteJob(context.Context, *DeleteJobRequest) (*emptypb.Empty, error)
+	// PageDict 分页获取字典信息
+	PageDict(context.Context, *PageDictRequest) (*PageDictReply, error)
+	// AddDict 删除字典信息
+	AddDict(context.Context, *AddDictRequest) (*emptypb.Empty, error)
+	// UpdateDict 更新字典信息
+	UpdateDict(context.Context, *UpdateDictRequest) (*emptypb.Empty, error)
+	// DeleteDict 删除字典信息
+	DeleteDict(context.Context, *DeleteDictRequest) (*emptypb.Empty, error)
+	// PageDictValue 分页获取字典信息
+	PageDictValue(context.Context, *PageDictValueRequest) (*PageDictValueReply, error)
+	// AddDictValue 删除字典信息
+	AddDictValue(context.Context, *AddDictValueRequest) (*emptypb.Empty, error)
+	// UpdateDictValue 更新字典信息
+	UpdateDictValue(context.Context, *UpdateDictValueRequest) (*emptypb.Empty, error)
+	// DeleteDictValue 删除字典信息
+	DeleteDictValue(context.Context, *DeleteDictValueRequest) (*emptypb.Empty, error)
 	mustEmbedUnimplementedServiceServer()
 }
 
@@ -609,6 +791,24 @@ type ServiceServer interface {
 type UnimplementedServiceServer struct {
 }
 
+func (UnimplementedServiceServer) Auth(context.Context, *AuthRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Auth not implemented")
+}
+func (UnimplementedServiceServer) Login(context.Context, *LoginRequest) (*LoginReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Login not implemented")
+}
+func (UnimplementedServiceServer) LoginCaptcha(context.Context, *emptypb.Empty) (*LoginCaptchaReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method LoginCaptcha not implemented")
+}
+func (UnimplementedServiceServer) Logout(context.Context, *emptypb.Empty) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Logout not implemented")
+}
+func (UnimplementedServiceServer) ParseToken(context.Context, *emptypb.Empty) (*ParseTokenReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ParseToken not implemented")
+}
+func (UnimplementedServiceServer) RefreshToken(context.Context, *emptypb.Empty) (*RefreshTokenReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RefreshToken not implemented")
+}
 func (UnimplementedServiceServer) GetSetting(context.Context, *emptypb.Empty) (*GetSettingReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetSetting not implemented")
 }
@@ -648,14 +848,11 @@ func (UnimplementedServiceServer) UpdateMenu(context.Context, *UpdateMenuRequest
 func (UnimplementedServiceServer) DeleteMenu(context.Context, *DeleteMenuRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteMenu not implemented")
 }
-func (UnimplementedServiceServer) GetDepartment(context.Context, *GetDepartmentRequest) (*GetDepartmentReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetDepartment not implemented")
-}
 func (UnimplementedServiceServer) GetDepartmentTree(context.Context, *emptypb.Empty) (*GetDepartmentTreeReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetDepartmentTree not implemented")
 }
-func (UnimplementedServiceServer) GetUserDepartmentTree(context.Context, *emptypb.Empty) (*GetUserDepartmentTreeReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetUserDepartmentTree not implemented")
+func (UnimplementedServiceServer) GetDepartment(context.Context, *GetDepartmentRequest) (*GetDepartmentReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetDepartment not implemented")
 }
 func (UnimplementedServiceServer) AddDepartment(context.Context, *AddDepartmentRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddDepartment not implemented")
@@ -714,23 +911,47 @@ func (UnimplementedServiceServer) SwitchCurrentUserRole(context.Context, *Switch
 func (UnimplementedServiceServer) GetUserRoles(context.Context, *GetUserRolesRequest) (*GetUserRolesReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetUserRoles not implemented")
 }
-func (UnimplementedServiceServer) Auth(context.Context, *AuthRequest) (*emptypb.Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Auth not implemented")
+func (UnimplementedServiceServer) GetJob(context.Context, *GetJobRequest) (*GetJobReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetJob not implemented")
 }
-func (UnimplementedServiceServer) Login(context.Context, *LoginRequest) (*LoginReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Login not implemented")
+func (UnimplementedServiceServer) GetUserJob(context.Context, *GetUserJobRequest) (*GetUserJobReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetUserJob not implemented")
 }
-func (UnimplementedServiceServer) LoginCaptcha(context.Context, *emptypb.Empty) (*LoginCaptchaReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method LoginCaptcha not implemented")
+func (UnimplementedServiceServer) PageJob(context.Context, *PageJobRequest) (*PageJobReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method PageJob not implemented")
 }
-func (UnimplementedServiceServer) Logout(context.Context, *emptypb.Empty) (*emptypb.Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Logout not implemented")
+func (UnimplementedServiceServer) AddJob(context.Context, *AddJobRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddJob not implemented")
 }
-func (UnimplementedServiceServer) ParseToken(context.Context, *emptypb.Empty) (*ParseTokenReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ParseToken not implemented")
+func (UnimplementedServiceServer) UpdateJob(context.Context, *UpdateJobRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateJob not implemented")
 }
-func (UnimplementedServiceServer) RefreshToken(context.Context, *emptypb.Empty) (*RefreshTokenReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method RefreshToken not implemented")
+func (UnimplementedServiceServer) DeleteJob(context.Context, *DeleteJobRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteJob not implemented")
+}
+func (UnimplementedServiceServer) PageDict(context.Context, *PageDictRequest) (*PageDictReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method PageDict not implemented")
+}
+func (UnimplementedServiceServer) AddDict(context.Context, *AddDictRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddDict not implemented")
+}
+func (UnimplementedServiceServer) UpdateDict(context.Context, *UpdateDictRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateDict not implemented")
+}
+func (UnimplementedServiceServer) DeleteDict(context.Context, *DeleteDictRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteDict not implemented")
+}
+func (UnimplementedServiceServer) PageDictValue(context.Context, *PageDictValueRequest) (*PageDictValueReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method PageDictValue not implemented")
+}
+func (UnimplementedServiceServer) AddDictValue(context.Context, *AddDictValueRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddDictValue not implemented")
+}
+func (UnimplementedServiceServer) UpdateDictValue(context.Context, *UpdateDictValueRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateDictValue not implemented")
+}
+func (UnimplementedServiceServer) DeleteDictValue(context.Context, *DeleteDictValueRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteDictValue not implemented")
 }
 func (UnimplementedServiceServer) mustEmbedUnimplementedServiceServer() {}
 
@@ -743,6 +964,114 @@ type UnsafeServiceServer interface {
 
 func RegisterServiceServer(s grpc.ServiceRegistrar, srv ServiceServer) {
 	s.RegisterService(&Service_ServiceDesc, srv)
+}
+
+func _Service_Auth_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AuthRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ServiceServer).Auth(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Service_Auth_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ServiceServer).Auth(ctx, req.(*AuthRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Service_Login_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(LoginRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ServiceServer).Login(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Service_Login_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ServiceServer).Login(ctx, req.(*LoginRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Service_LoginCaptcha_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ServiceServer).LoginCaptcha(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Service_LoginCaptcha_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ServiceServer).LoginCaptcha(ctx, req.(*emptypb.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Service_Logout_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ServiceServer).Logout(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Service_Logout_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ServiceServer).Logout(ctx, req.(*emptypb.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Service_ParseToken_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ServiceServer).ParseToken(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Service_ParseToken_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ServiceServer).ParseToken(ctx, req.(*emptypb.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Service_RefreshToken_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ServiceServer).RefreshToken(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Service_RefreshToken_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ServiceServer).RefreshToken(ctx, req.(*emptypb.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _Service_GetSetting_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -979,24 +1308,6 @@ func _Service_DeleteMenu_Handler(srv interface{}, ctx context.Context, dec func(
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Service_GetDepartment_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetDepartmentRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ServiceServer).GetDepartment(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Service_GetDepartment_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ServiceServer).GetDepartment(ctx, req.(*GetDepartmentRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _Service_GetDepartmentTree_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(emptypb.Empty)
 	if err := dec(in); err != nil {
@@ -1015,20 +1326,20 @@ func _Service_GetDepartmentTree_Handler(srv interface{}, ctx context.Context, de
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Service_GetUserDepartmentTree_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(emptypb.Empty)
+func _Service_GetDepartment_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetDepartmentRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ServiceServer).GetUserDepartmentTree(ctx, in)
+		return srv.(ServiceServer).GetDepartment(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Service_GetUserDepartmentTree_FullMethodName,
+		FullMethod: Service_GetDepartment_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ServiceServer).GetUserDepartmentTree(ctx, req.(*emptypb.Empty))
+		return srv.(ServiceServer).GetDepartment(ctx, req.(*GetDepartmentRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1375,110 +1686,254 @@ func _Service_GetUserRoles_Handler(srv interface{}, ctx context.Context, dec fun
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Service_Auth_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(AuthRequest)
+func _Service_GetJob_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetJobRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ServiceServer).Auth(ctx, in)
+		return srv.(ServiceServer).GetJob(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Service_Auth_FullMethodName,
+		FullMethod: Service_GetJob_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ServiceServer).Auth(ctx, req.(*AuthRequest))
+		return srv.(ServiceServer).GetJob(ctx, req.(*GetJobRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Service_Login_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(LoginRequest)
+func _Service_GetUserJob_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetUserJobRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ServiceServer).Login(ctx, in)
+		return srv.(ServiceServer).GetUserJob(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Service_Login_FullMethodName,
+		FullMethod: Service_GetUserJob_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ServiceServer).Login(ctx, req.(*LoginRequest))
+		return srv.(ServiceServer).GetUserJob(ctx, req.(*GetUserJobRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Service_LoginCaptcha_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(emptypb.Empty)
+func _Service_PageJob_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PageJobRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ServiceServer).LoginCaptcha(ctx, in)
+		return srv.(ServiceServer).PageJob(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Service_LoginCaptcha_FullMethodName,
+		FullMethod: Service_PageJob_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ServiceServer).LoginCaptcha(ctx, req.(*emptypb.Empty))
+		return srv.(ServiceServer).PageJob(ctx, req.(*PageJobRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Service_Logout_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(emptypb.Empty)
+func _Service_AddJob_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddJobRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ServiceServer).Logout(ctx, in)
+		return srv.(ServiceServer).AddJob(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Service_Logout_FullMethodName,
+		FullMethod: Service_AddJob_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ServiceServer).Logout(ctx, req.(*emptypb.Empty))
+		return srv.(ServiceServer).AddJob(ctx, req.(*AddJobRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Service_ParseToken_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(emptypb.Empty)
+func _Service_UpdateJob_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateJobRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ServiceServer).ParseToken(ctx, in)
+		return srv.(ServiceServer).UpdateJob(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Service_ParseToken_FullMethodName,
+		FullMethod: Service_UpdateJob_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ServiceServer).ParseToken(ctx, req.(*emptypb.Empty))
+		return srv.(ServiceServer).UpdateJob(ctx, req.(*UpdateJobRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Service_RefreshToken_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(emptypb.Empty)
+func _Service_DeleteJob_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteJobRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ServiceServer).RefreshToken(ctx, in)
+		return srv.(ServiceServer).DeleteJob(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Service_RefreshToken_FullMethodName,
+		FullMethod: Service_DeleteJob_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ServiceServer).RefreshToken(ctx, req.(*emptypb.Empty))
+		return srv.(ServiceServer).DeleteJob(ctx, req.(*DeleteJobRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Service_PageDict_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PageDictRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ServiceServer).PageDict(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Service_PageDict_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ServiceServer).PageDict(ctx, req.(*PageDictRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Service_AddDict_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddDictRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ServiceServer).AddDict(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Service_AddDict_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ServiceServer).AddDict(ctx, req.(*AddDictRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Service_UpdateDict_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateDictRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ServiceServer).UpdateDict(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Service_UpdateDict_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ServiceServer).UpdateDict(ctx, req.(*UpdateDictRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Service_DeleteDict_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteDictRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ServiceServer).DeleteDict(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Service_DeleteDict_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ServiceServer).DeleteDict(ctx, req.(*DeleteDictRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Service_PageDictValue_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PageDictValueRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ServiceServer).PageDictValue(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Service_PageDictValue_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ServiceServer).PageDictValue(ctx, req.(*PageDictValueRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Service_AddDictValue_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddDictValueRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ServiceServer).AddDictValue(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Service_AddDictValue_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ServiceServer).AddDictValue(ctx, req.(*AddDictValueRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Service_UpdateDictValue_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateDictValueRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ServiceServer).UpdateDictValue(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Service_UpdateDictValue_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ServiceServer).UpdateDictValue(ctx, req.(*UpdateDictValueRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Service_DeleteDictValue_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteDictValueRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ServiceServer).DeleteDictValue(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Service_DeleteDictValue_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ServiceServer).DeleteDictValue(ctx, req.(*DeleteDictValueRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1490,6 +1945,30 @@ var Service_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "manager.Service",
 	HandlerType: (*ServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "Auth",
+			Handler:    _Service_Auth_Handler,
+		},
+		{
+			MethodName: "Login",
+			Handler:    _Service_Login_Handler,
+		},
+		{
+			MethodName: "LoginCaptcha",
+			Handler:    _Service_LoginCaptcha_Handler,
+		},
+		{
+			MethodName: "Logout",
+			Handler:    _Service_Logout_Handler,
+		},
+		{
+			MethodName: "ParseToken",
+			Handler:    _Service_ParseToken_Handler,
+		},
+		{
+			MethodName: "RefreshToken",
+			Handler:    _Service_RefreshToken_Handler,
+		},
 		{
 			MethodName: "GetSetting",
 			Handler:    _Service_GetSetting_Handler,
@@ -1543,16 +2022,12 @@ var Service_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Service_DeleteMenu_Handler,
 		},
 		{
-			MethodName: "GetDepartment",
-			Handler:    _Service_GetDepartment_Handler,
-		},
-		{
 			MethodName: "GetDepartmentTree",
 			Handler:    _Service_GetDepartmentTree_Handler,
 		},
 		{
-			MethodName: "GetUserDepartmentTree",
-			Handler:    _Service_GetUserDepartmentTree_Handler,
+			MethodName: "GetDepartment",
+			Handler:    _Service_GetDepartment_Handler,
 		},
 		{
 			MethodName: "AddDepartment",
@@ -1631,28 +2106,60 @@ var Service_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Service_GetUserRoles_Handler,
 		},
 		{
-			MethodName: "Auth",
-			Handler:    _Service_Auth_Handler,
+			MethodName: "GetJob",
+			Handler:    _Service_GetJob_Handler,
 		},
 		{
-			MethodName: "Login",
-			Handler:    _Service_Login_Handler,
+			MethodName: "GetUserJob",
+			Handler:    _Service_GetUserJob_Handler,
 		},
 		{
-			MethodName: "LoginCaptcha",
-			Handler:    _Service_LoginCaptcha_Handler,
+			MethodName: "PageJob",
+			Handler:    _Service_PageJob_Handler,
 		},
 		{
-			MethodName: "Logout",
-			Handler:    _Service_Logout_Handler,
+			MethodName: "AddJob",
+			Handler:    _Service_AddJob_Handler,
 		},
 		{
-			MethodName: "ParseToken",
-			Handler:    _Service_ParseToken_Handler,
+			MethodName: "UpdateJob",
+			Handler:    _Service_UpdateJob_Handler,
 		},
 		{
-			MethodName: "RefreshToken",
-			Handler:    _Service_RefreshToken_Handler,
+			MethodName: "DeleteJob",
+			Handler:    _Service_DeleteJob_Handler,
+		},
+		{
+			MethodName: "PageDict",
+			Handler:    _Service_PageDict_Handler,
+		},
+		{
+			MethodName: "AddDict",
+			Handler:    _Service_AddDict_Handler,
+		},
+		{
+			MethodName: "UpdateDict",
+			Handler:    _Service_UpdateDict_Handler,
+		},
+		{
+			MethodName: "DeleteDict",
+			Handler:    _Service_DeleteDict_Handler,
+		},
+		{
+			MethodName: "PageDictValue",
+			Handler:    _Service_PageDictValue_Handler,
+		},
+		{
+			MethodName: "AddDictValue",
+			Handler:    _Service_AddDictValue_Handler,
+		},
+		{
+			MethodName: "UpdateDictValue",
+			Handler:    _Service_UpdateDictValue_Handler,
+		},
+		{
+			MethodName: "DeleteDictValue",
+			Handler:    _Service_DeleteDictValue_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

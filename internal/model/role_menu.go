@@ -2,20 +2,20 @@ package model
 
 import (
 	"github.com/limes-cloud/kratosx"
+	"github.com/limes-cloud/kratosx/types"
 	"gorm.io/gorm"
 )
 
 type RoleMenu struct {
-	CreateModel
-	RoleID uint32 `json:"role_id"`
-	MenuID uint32 `json:"menu_id"`
-	Role   Role   `json:"role" gorm:"->;constraint:OnDelete:cascade"`
-	Menu   Menu   `json:"menu" gorm:"->;constraint:OnDelete:cascade"`
+	types.CreateModel
+	RoleID uint32 `json:"role_id" gorm:"not null;comment:角色id"`
+	MenuID uint32 `json:"menu_id" gorm:"not null;comment:菜单id"`
+	Role   Role   `json:"role" gorm:"constraint:onDelete:cascade"`
+	Menu   Menu   `json:"menu" gorm:"constraint:onDelete:cascade"`
 }
 
 // Update 批量更新角色所属菜单
 func (rm *RoleMenu) Update(ctx kratosx.Context, roleId uint32, menuIds []uint32) error {
-
 	// 组装新的菜单数据
 	list := make([]RoleMenu, 0)
 	for _, menuId := range menuIds {

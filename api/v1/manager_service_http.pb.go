@@ -21,6 +21,9 @@ var _ = binding.EncodeURL
 const _ = http.SupportPackageIsVersion1
 
 const OperationServiceAddDepartment = "/manager.Service/AddDepartment"
+const OperationServiceAddDict = "/manager.Service/AddDict"
+const OperationServiceAddDictValue = "/manager.Service/AddDictValue"
+const OperationServiceAddJob = "/manager.Service/AddJob"
 const OperationServiceAddMenu = "/manager.Service/AddMenu"
 const OperationServiceAddRole = "/manager.Service/AddRole"
 const OperationServiceAddUser = "/manager.Service/AddUser"
@@ -31,27 +34,37 @@ const OperationServiceCurrentRoleMenuTree = "/manager.Service/CurrentRoleMenuTre
 const OperationServiceCurrentUser = "/manager.Service/CurrentUser"
 const OperationServiceCurrentUserRoles = "/manager.Service/CurrentUserRoles"
 const OperationServiceDeleteDepartment = "/manager.Service/DeleteDepartment"
+const OperationServiceDeleteDict = "/manager.Service/DeleteDict"
+const OperationServiceDeleteDictValue = "/manager.Service/DeleteDictValue"
+const OperationServiceDeleteJob = "/manager.Service/DeleteJob"
 const OperationServiceDeleteMenu = "/manager.Service/DeleteMenu"
 const OperationServiceDeleteRole = "/manager.Service/DeleteRole"
 const OperationServiceDeleteUser = "/manager.Service/DeleteUser"
 const OperationServiceDisableUser = "/manager.Service/DisableUser"
 const OperationServiceEnableUser = "/manager.Service/EnableUser"
+const OperationServiceGetDepartmentTree = "/manager.Service/GetDepartmentTree"
 const OperationServiceGetMenuTree = "/manager.Service/GetMenuTree"
 const OperationServiceGetRoleMenuIds = "/manager.Service/GetRoleMenuIds"
 const OperationServiceGetRoleTree = "/manager.Service/GetRoleTree"
 const OperationServiceGetSetting = "/manager.Service/GetSetting"
-const OperationServiceGetUserDepartmentTree = "/manager.Service/GetUserDepartmentTree"
+const OperationServiceGetUserJob = "/manager.Service/GetUserJob"
 const OperationServiceGetUserRoles = "/manager.Service/GetUserRoles"
 const OperationServiceLogin = "/manager.Service/Login"
 const OperationServiceLoginCaptcha = "/manager.Service/LoginCaptcha"
 const OperationServiceLogout = "/manager.Service/Logout"
 const OperationServiceOfflineUser = "/manager.Service/OfflineUser"
+const OperationServicePageDict = "/manager.Service/PageDict"
+const OperationServicePageDictValue = "/manager.Service/PageDictValue"
+const OperationServicePageJob = "/manager.Service/PageJob"
 const OperationServicePageUser = "/manager.Service/PageUser"
 const OperationServiceParseToken = "/manager.Service/ParseToken"
 const OperationServiceRefreshToken = "/manager.Service/RefreshToken"
 const OperationServiceResetUserPassword = "/manager.Service/ResetUserPassword"
 const OperationServiceSwitchCurrentUserRole = "/manager.Service/SwitchCurrentUserRole"
 const OperationServiceUpdateDepartment = "/manager.Service/UpdateDepartment"
+const OperationServiceUpdateDict = "/manager.Service/UpdateDict"
+const OperationServiceUpdateDictValue = "/manager.Service/UpdateDictValue"
+const OperationServiceUpdateJob = "/manager.Service/UpdateJob"
 const OperationServiceUpdateMenu = "/manager.Service/UpdateMenu"
 const OperationServiceUpdateRole = "/manager.Service/UpdateRole"
 const OperationServiceUpdateRoleMenus = "/manager.Service/UpdateRoleMenus"
@@ -61,6 +74,12 @@ const OperationServiceUpdateUserBasic = "/manager.Service/UpdateUserBasic"
 type ServiceHTTPServer interface {
 	// AddDepartment AddDepartment 删除部门信息
 	AddDepartment(context.Context, *AddDepartmentRequest) (*emptypb.Empty, error)
+	// AddDict AddDict 删除字典信息
+	AddDict(context.Context, *AddDictRequest) (*emptypb.Empty, error)
+	// AddDictValue AddDictValue 删除字典信息
+	AddDictValue(context.Context, *AddDictValueRequest) (*emptypb.Empty, error)
+	// AddJob AddJob 删除职位信息
+	AddJob(context.Context, *AddJobRequest) (*emptypb.Empty, error)
 	// AddMenu AddMenu 新增菜单
 	AddMenu(context.Context, *AddMenuRequest) (*emptypb.Empty, error)
 	// AddRole AddRole 新增角色
@@ -80,6 +99,12 @@ type ServiceHTTPServer interface {
 	CurrentUserRoles(context.Context, *emptypb.Empty) (*GetUserRolesReply, error)
 	// DeleteDepartment DeleteDepartment 删除部门信息
 	DeleteDepartment(context.Context, *DeleteDepartmentRequest) (*emptypb.Empty, error)
+	// DeleteDict DeleteDict 删除字典信息
+	DeleteDict(context.Context, *DeleteDictRequest) (*emptypb.Empty, error)
+	// DeleteDictValue DeleteDictValue 删除字典信息
+	DeleteDictValue(context.Context, *DeleteDictValueRequest) (*emptypb.Empty, error)
+	// DeleteJob DeleteJob 删除职位信息
+	DeleteJob(context.Context, *DeleteJobRequest) (*emptypb.Empty, error)
 	// DeleteMenu DeleteMenu 删除菜单
 	DeleteMenu(context.Context, *DeleteMenuRequest) (*emptypb.Empty, error)
 	// DeleteRole DeleteRole 删除角色
@@ -90,6 +115,8 @@ type ServiceHTTPServer interface {
 	DisableUser(context.Context, *DisableUserRequest) (*emptypb.Empty, error)
 	// EnableUser DisableUser 禁用用户
 	EnableUser(context.Context, *EnableUserRequest) (*emptypb.Empty, error)
+	// GetDepartmentTree GetDepartmentTree 获取部门树
+	GetDepartmentTree(context.Context, *emptypb.Empty) (*GetDepartmentTreeReply, error)
 	// GetMenuTree GetMenuTree 获取菜单树
 	GetMenuTree(context.Context, *emptypb.Empty) (*GetMenuTreeReply, error)
 	// GetRoleMenuIds CurrentRoleMenus 获取当前用户的角色列表
@@ -98,8 +125,8 @@ type ServiceHTTPServer interface {
 	GetRoleTree(context.Context, *emptypb.Empty) (*GetRoleTreeReply, error)
 	// GetSetting GetSetting 获取当前系统的配置
 	GetSetting(context.Context, *emptypb.Empty) (*GetSettingReply, error)
-	// GetUserDepartmentTree GetDepartmentTree 获取部门树
-	GetUserDepartmentTree(context.Context, *emptypb.Empty) (*GetUserDepartmentTreeReply, error)
+	// GetUserJob GetJob 获取用户职位
+	GetUserJob(context.Context, *GetUserJobRequest) (*GetUserJobReply, error)
 	// GetUserRoles CurrentUserRoles 获取当前用户的角色列表
 	GetUserRoles(context.Context, *GetUserRolesRequest) (*GetUserRolesReply, error)
 	Login(context.Context, *LoginRequest) (*LoginReply, error)
@@ -107,6 +134,12 @@ type ServiceHTTPServer interface {
 	Logout(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
 	// OfflineUser DisableUser 禁用用户
 	OfflineUser(context.Context, *OfflineUserRequest) (*emptypb.Empty, error)
+	// PageDict PageDict 分页获取字典信息
+	PageDict(context.Context, *PageDictRequest) (*PageDictReply, error)
+	// PageDictValue PageDictValue 分页获取字典信息
+	PageDictValue(context.Context, *PageDictValueRequest) (*PageDictValueReply, error)
+	// PageJob PageJob 分页获取职位信息
+	PageJob(context.Context, *PageJobRequest) (*PageJobReply, error)
 	// PageUser PageUser 新增用户信息
 	PageUser(context.Context, *PageUserRequest) (*PageUserReply, error)
 	ParseToken(context.Context, *emptypb.Empty) (*ParseTokenReply, error)
@@ -117,6 +150,12 @@ type ServiceHTTPServer interface {
 	SwitchCurrentUserRole(context.Context, *SwitchCurrentUserRoleRequest) (*SwitchCurrentUserRoleReply, error)
 	// UpdateDepartment UpdateDepartment 更新部门信息
 	UpdateDepartment(context.Context, *UpdateDepartmentRequest) (*emptypb.Empty, error)
+	// UpdateDict UpdateDict 更新字典信息
+	UpdateDict(context.Context, *UpdateDictRequest) (*emptypb.Empty, error)
+	// UpdateDictValue UpdateDictValue 更新字典信息
+	UpdateDictValue(context.Context, *UpdateDictValueRequest) (*emptypb.Empty, error)
+	// UpdateJob UpdateJob 更新职位信息
+	UpdateJob(context.Context, *UpdateJobRequest) (*emptypb.Empty, error)
 	// UpdateMenu UpdateMenu 更新菜单
 	UpdateMenu(context.Context, *UpdateMenuRequest) (*emptypb.Empty, error)
 	// UpdateRole UpdateRole 更新角色
@@ -131,6 +170,12 @@ type ServiceHTTPServer interface {
 
 func RegisterServiceHTTPServer(s *http.Server, srv ServiceHTTPServer) {
 	r := s.Route("/")
+	r.POST("/manager/v1/auth", _Service_Auth0_HTTP_Handler(srv))
+	r.POST("/manager/v1/login", _Service_Login0_HTTP_Handler(srv))
+	r.POST("/manager/v1/login/captcha", _Service_LoginCaptcha0_HTTP_Handler(srv))
+	r.POST("/manager/v1/logout", _Service_Logout0_HTTP_Handler(srv))
+	r.POST("/manager/v1/token/parse", _Service_ParseToken0_HTTP_Handler(srv))
+	r.POST("/manager/v1/token/refresh", _Service_RefreshToken0_HTTP_Handler(srv))
 	r.GET("/manager/v1/setting", _Service_GetSetting0_HTTP_Handler(srv))
 	r.GET("/manager/v1/role/menu/tree", _Service_CurrentRoleMenuTree0_HTTP_Handler(srv))
 	r.GET("/manager/v1/role/menu/ids", _Service_GetRoleMenuIds0_HTTP_Handler(srv))
@@ -143,7 +188,7 @@ func RegisterServiceHTTPServer(s *http.Server, srv ServiceHTTPServer) {
 	r.POST("/manager/v1/menu", _Service_AddMenu0_HTTP_Handler(srv))
 	r.PUT("/manager/v1/menu", _Service_UpdateMenu0_HTTP_Handler(srv))
 	r.DELETE("/manager/v1/menu", _Service_DeleteMenu0_HTTP_Handler(srv))
-	r.GET("/manager/v1/department/tree", _Service_GetUserDepartmentTree0_HTTP_Handler(srv))
+	r.GET("/manager/v1/department/tree", _Service_GetDepartmentTree0_HTTP_Handler(srv))
 	r.POST("/manager/v1/department", _Service_AddDepartment0_HTTP_Handler(srv))
 	r.PUT("/manager/v1/department", _Service_UpdateDepartment0_HTTP_Handler(srv))
 	r.DELETE("/manager/v1/department", _Service_DeleteDepartment0_HTTP_Handler(srv))
@@ -162,12 +207,139 @@ func RegisterServiceHTTPServer(s *http.Server, srv ServiceHTTPServer) {
 	r.GET("/manager/v1/user/current/roles", _Service_CurrentUserRoles0_HTTP_Handler(srv))
 	r.POST("/manager/v1/user/role/switch", _Service_SwitchCurrentUserRole0_HTTP_Handler(srv))
 	r.GET("/manager/v1/user/roles", _Service_GetUserRoles0_HTTP_Handler(srv))
-	r.POST("/manager/v1/auth", _Service_Auth0_HTTP_Handler(srv))
-	r.POST("/manager/v1/login", _Service_Login0_HTTP_Handler(srv))
-	r.POST("/manager/v1/login/captcha", _Service_LoginCaptcha0_HTTP_Handler(srv))
-	r.POST("/manager/v1/logout", _Service_Logout0_HTTP_Handler(srv))
-	r.POST("/manager/v1/token/parse", _Service_ParseToken0_HTTP_Handler(srv))
-	r.POST("/manager/v1/token/refresh", _Service_RefreshToken0_HTTP_Handler(srv))
+	r.GET("/manager/v1/user/jobs", _Service_GetUserJob0_HTTP_Handler(srv))
+	r.GET("/manager/v1/jobs", _Service_PageJob0_HTTP_Handler(srv))
+	r.POST("/manager/v1/job", _Service_AddJob0_HTTP_Handler(srv))
+	r.PUT("/manager/v1/job", _Service_UpdateJob0_HTTP_Handler(srv))
+	r.DELETE("/manager/v1/job", _Service_DeleteJob0_HTTP_Handler(srv))
+	r.GET("/manager/v1/dicts", _Service_PageDict0_HTTP_Handler(srv))
+	r.POST("/manager/v1/dict", _Service_AddDict0_HTTP_Handler(srv))
+	r.PUT("/manager/v1/dict", _Service_UpdateDict0_HTTP_Handler(srv))
+	r.DELETE("/manager/v1/dict", _Service_DeleteDict0_HTTP_Handler(srv))
+	r.GET("/manager/v1/dict/values", _Service_PageDictValue0_HTTP_Handler(srv))
+	r.POST("/manager/v1/dict/value", _Service_AddDictValue0_HTTP_Handler(srv))
+	r.PUT("/manager/v1/dict/value", _Service_UpdateDictValue0_HTTP_Handler(srv))
+	r.DELETE("/manager/v1/dict/value", _Service_DeleteDictValue0_HTTP_Handler(srv))
+}
+
+func _Service_Auth0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in AuthRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationServiceAuth)
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
+			return srv.Auth(ctx, req.(*AuthRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*emptypb.Empty)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Service_Login0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in LoginRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationServiceLogin)
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
+			return srv.Login(ctx, req.(*LoginRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*LoginReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Service_LoginCaptcha0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in emptypb.Empty
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationServiceLoginCaptcha)
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
+			return srv.LoginCaptcha(ctx, req.(*emptypb.Empty))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*LoginCaptchaReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Service_Logout0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in emptypb.Empty
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationServiceLogout)
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
+			return srv.Logout(ctx, req.(*emptypb.Empty))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*emptypb.Empty)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Service_ParseToken0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in emptypb.Empty
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationServiceParseToken)
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
+			return srv.ParseToken(ctx, req.(*emptypb.Empty))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*ParseTokenReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Service_RefreshToken0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in emptypb.Empty
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationServiceRefreshToken)
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
+			return srv.RefreshToken(ctx, req.(*emptypb.Empty))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*RefreshTokenReply)
+		return ctx.Result(200, reply)
+	}
 }
 
 func _Service_GetSetting0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Context) error {
@@ -413,21 +585,21 @@ func _Service_DeleteMenu0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Cont
 	}
 }
 
-func _Service_GetUserDepartmentTree0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Context) error {
+func _Service_GetDepartmentTree0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in emptypb.Empty
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationServiceGetUserDepartmentTree)
+		http.SetOperation(ctx, OperationServiceGetDepartmentTree)
 		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
-			return srv.GetUserDepartmentTree(ctx, req.(*emptypb.Empty))
+			return srv.GetDepartmentTree(ctx, req.(*emptypb.Empty))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		reply := out.(*GetUserDepartmentTreeReply)
+		reply := out.(*GetDepartmentTreeReply)
 		return ctx.Result(200, reply.List)
 	}
 }
@@ -807,18 +979,56 @@ func _Service_GetUserRoles0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Co
 	}
 }
 
-func _Service_Auth0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Context) error {
+func _Service_GetUserJob0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in AuthRequest
+		var in GetUserJobRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationServiceGetUserJob)
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
+			return srv.GetUserJob(ctx, req.(*GetUserJobRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*GetUserJobReply)
+		return ctx.Result(200, reply.Jobs)
+	}
+}
+
+func _Service_PageJob0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in PageJobRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationServicePageJob)
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
+			return srv.PageJob(ctx, req.(*PageJobRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*PageJobReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Service_AddJob0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in AddJobRequest
 		if err := ctx.Bind(&in); err != nil {
 			return err
 		}
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationServiceAuth)
+		http.SetOperation(ctx, OperationServiceAddJob)
 		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
-			return srv.Auth(ctx, req.(*AuthRequest))
+			return srv.AddJob(ctx, req.(*AddJobRequest))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
@@ -829,56 +1039,18 @@ func _Service_Auth0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Context) e
 	}
 }
 
-func _Service_Login0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Context) error {
+func _Service_UpdateJob0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in LoginRequest
+		var in UpdateJobRequest
 		if err := ctx.Bind(&in); err != nil {
 			return err
 		}
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationServiceLogin)
+		http.SetOperation(ctx, OperationServiceUpdateJob)
 		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
-			return srv.Login(ctx, req.(*LoginRequest))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*LoginReply)
-		return ctx.Result(200, reply)
-	}
-}
-
-func _Service_LoginCaptcha0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in emptypb.Empty
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationServiceLoginCaptcha)
-		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
-			return srv.LoginCaptcha(ctx, req.(*emptypb.Empty))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*LoginCaptchaReply)
-		return ctx.Result(200, reply)
-	}
-}
-
-func _Service_Logout0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in emptypb.Empty
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationServiceLogout)
-		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
-			return srv.Logout(ctx, req.(*emptypb.Empty))
+			return srv.UpdateJob(ctx, req.(*UpdateJobRequest))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
@@ -889,46 +1061,194 @@ func _Service_Logout0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Context)
 	}
 }
 
-func _Service_ParseToken0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Context) error {
+func _Service_DeleteJob0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in emptypb.Empty
+		var in DeleteJobRequest
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationServiceParseToken)
+		http.SetOperation(ctx, OperationServiceDeleteJob)
 		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
-			return srv.ParseToken(ctx, req.(*emptypb.Empty))
+			return srv.DeleteJob(ctx, req.(*DeleteJobRequest))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		reply := out.(*ParseTokenReply)
+		reply := out.(*emptypb.Empty)
 		return ctx.Result(200, reply)
 	}
 }
 
-func _Service_RefreshToken0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Context) error {
+func _Service_PageDict0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in emptypb.Empty
+		var in PageDictRequest
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationServiceRefreshToken)
+		http.SetOperation(ctx, OperationServicePageDict)
 		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
-			return srv.RefreshToken(ctx, req.(*emptypb.Empty))
+			return srv.PageDict(ctx, req.(*PageDictRequest))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		reply := out.(*RefreshTokenReply)
+		reply := out.(*PageDictReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Service_AddDict0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in AddDictRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationServiceAddDict)
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
+			return srv.AddDict(ctx, req.(*AddDictRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*emptypb.Empty)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Service_UpdateDict0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in UpdateDictRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationServiceUpdateDict)
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
+			return srv.UpdateDict(ctx, req.(*UpdateDictRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*emptypb.Empty)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Service_DeleteDict0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in DeleteDictRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationServiceDeleteDict)
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
+			return srv.DeleteDict(ctx, req.(*DeleteDictRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*emptypb.Empty)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Service_PageDictValue0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in PageDictValueRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationServicePageDictValue)
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
+			return srv.PageDictValue(ctx, req.(*PageDictValueRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*PageDictValueReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Service_AddDictValue0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in AddDictValueRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationServiceAddDictValue)
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
+			return srv.AddDictValue(ctx, req.(*AddDictValueRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*emptypb.Empty)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Service_UpdateDictValue0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in UpdateDictValueRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationServiceUpdateDictValue)
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
+			return srv.UpdateDictValue(ctx, req.(*UpdateDictValueRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*emptypb.Empty)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Service_DeleteDictValue0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in DeleteDictValueRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationServiceDeleteDictValue)
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
+			return srv.DeleteDictValue(ctx, req.(*DeleteDictValueRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*emptypb.Empty)
 		return ctx.Result(200, reply)
 	}
 }
 
 type ServiceHTTPClient interface {
 	AddDepartment(ctx context.Context, req *AddDepartmentRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
+	AddDict(ctx context.Context, req *AddDictRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
+	AddDictValue(ctx context.Context, req *AddDictValueRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
+	AddJob(ctx context.Context, req *AddJobRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	AddMenu(ctx context.Context, req *AddMenuRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	AddRole(ctx context.Context, req *AddRoleRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	AddUser(ctx context.Context, req *AddUserRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
@@ -939,27 +1259,37 @@ type ServiceHTTPClient interface {
 	CurrentUser(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *GetUserReply, err error)
 	CurrentUserRoles(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *GetUserRolesReply, err error)
 	DeleteDepartment(ctx context.Context, req *DeleteDepartmentRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
+	DeleteDict(ctx context.Context, req *DeleteDictRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
+	DeleteDictValue(ctx context.Context, req *DeleteDictValueRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
+	DeleteJob(ctx context.Context, req *DeleteJobRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	DeleteMenu(ctx context.Context, req *DeleteMenuRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	DeleteRole(ctx context.Context, req *DeleteRoleRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	DeleteUser(ctx context.Context, req *DeleteUserRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	DisableUser(ctx context.Context, req *DisableUserRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	EnableUser(ctx context.Context, req *EnableUserRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
+	GetDepartmentTree(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *GetDepartmentTreeReply, err error)
 	GetMenuTree(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *GetMenuTreeReply, err error)
 	GetRoleMenuIds(ctx context.Context, req *GetRoleMenuIdsRequest, opts ...http.CallOption) (rsp *GetRoleMenuIdsReply, err error)
 	GetRoleTree(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *GetRoleTreeReply, err error)
 	GetSetting(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *GetSettingReply, err error)
-	GetUserDepartmentTree(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *GetUserDepartmentTreeReply, err error)
+	GetUserJob(ctx context.Context, req *GetUserJobRequest, opts ...http.CallOption) (rsp *GetUserJobReply, err error)
 	GetUserRoles(ctx context.Context, req *GetUserRolesRequest, opts ...http.CallOption) (rsp *GetUserRolesReply, err error)
 	Login(ctx context.Context, req *LoginRequest, opts ...http.CallOption) (rsp *LoginReply, err error)
 	LoginCaptcha(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *LoginCaptchaReply, err error)
 	Logout(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	OfflineUser(ctx context.Context, req *OfflineUserRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
+	PageDict(ctx context.Context, req *PageDictRequest, opts ...http.CallOption) (rsp *PageDictReply, err error)
+	PageDictValue(ctx context.Context, req *PageDictValueRequest, opts ...http.CallOption) (rsp *PageDictValueReply, err error)
+	PageJob(ctx context.Context, req *PageJobRequest, opts ...http.CallOption) (rsp *PageJobReply, err error)
 	PageUser(ctx context.Context, req *PageUserRequest, opts ...http.CallOption) (rsp *PageUserReply, err error)
 	ParseToken(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *ParseTokenReply, err error)
 	RefreshToken(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *RefreshTokenReply, err error)
 	ResetUserPassword(ctx context.Context, req *ResetUserPasswordRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	SwitchCurrentUserRole(ctx context.Context, req *SwitchCurrentUserRoleRequest, opts ...http.CallOption) (rsp *SwitchCurrentUserRoleReply, err error)
 	UpdateDepartment(ctx context.Context, req *UpdateDepartmentRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
+	UpdateDict(ctx context.Context, req *UpdateDictRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
+	UpdateDictValue(ctx context.Context, req *UpdateDictValueRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
+	UpdateJob(ctx context.Context, req *UpdateJobRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	UpdateMenu(ctx context.Context, req *UpdateMenuRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	UpdateRole(ctx context.Context, req *UpdateRoleRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	UpdateRoleMenus(ctx context.Context, req *UpdateRoleMenuRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
@@ -980,6 +1310,45 @@ func (c *ServiceHTTPClientImpl) AddDepartment(ctx context.Context, in *AddDepart
 	pattern := "/manager/v1/department"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationServiceAddDepartment))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *ServiceHTTPClientImpl) AddDict(ctx context.Context, in *AddDictRequest, opts ...http.CallOption) (*emptypb.Empty, error) {
+	var out emptypb.Empty
+	pattern := "/manager/v1/dict"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationServiceAddDict))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *ServiceHTTPClientImpl) AddDictValue(ctx context.Context, in *AddDictValueRequest, opts ...http.CallOption) (*emptypb.Empty, error) {
+	var out emptypb.Empty
+	pattern := "/manager/v1/dict/value"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationServiceAddDictValue))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *ServiceHTTPClientImpl) AddJob(ctx context.Context, in *AddJobRequest, opts ...http.CallOption) (*emptypb.Empty, error) {
+	var out emptypb.Empty
+	pattern := "/manager/v1/job"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationServiceAddJob))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
 	if err != nil {
@@ -1118,6 +1487,45 @@ func (c *ServiceHTTPClientImpl) DeleteDepartment(ctx context.Context, in *Delete
 	return &out, err
 }
 
+func (c *ServiceHTTPClientImpl) DeleteDict(ctx context.Context, in *DeleteDictRequest, opts ...http.CallOption) (*emptypb.Empty, error) {
+	var out emptypb.Empty
+	pattern := "/manager/v1/dict"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationServiceDeleteDict))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "DELETE", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *ServiceHTTPClientImpl) DeleteDictValue(ctx context.Context, in *DeleteDictValueRequest, opts ...http.CallOption) (*emptypb.Empty, error) {
+	var out emptypb.Empty
+	pattern := "/manager/v1/dict/value"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationServiceDeleteDictValue))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "DELETE", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *ServiceHTTPClientImpl) DeleteJob(ctx context.Context, in *DeleteJobRequest, opts ...http.CallOption) (*emptypb.Empty, error) {
+	var out emptypb.Empty
+	pattern := "/manager/v1/job"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationServiceDeleteJob))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "DELETE", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
 func (c *ServiceHTTPClientImpl) DeleteMenu(ctx context.Context, in *DeleteMenuRequest, opts ...http.CallOption) (*emptypb.Empty, error) {
 	var out emptypb.Empty
 	pattern := "/manager/v1/menu"
@@ -1183,6 +1591,19 @@ func (c *ServiceHTTPClientImpl) EnableUser(ctx context.Context, in *EnableUserRe
 	return &out, err
 }
 
+func (c *ServiceHTTPClientImpl) GetDepartmentTree(ctx context.Context, in *emptypb.Empty, opts ...http.CallOption) (*GetDepartmentTreeReply, error) {
+	var out GetDepartmentTreeReply
+	pattern := "/manager/v1/department/tree"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationServiceGetDepartmentTree))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out.List, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
 func (c *ServiceHTTPClientImpl) GetMenuTree(ctx context.Context, in *emptypb.Empty, opts ...http.CallOption) (*GetMenuTreeReply, error) {
 	var out GetMenuTreeReply
 	pattern := "/manager/v1/menu/tree"
@@ -1235,13 +1656,13 @@ func (c *ServiceHTTPClientImpl) GetSetting(ctx context.Context, in *emptypb.Empt
 	return &out, err
 }
 
-func (c *ServiceHTTPClientImpl) GetUserDepartmentTree(ctx context.Context, in *emptypb.Empty, opts ...http.CallOption) (*GetUserDepartmentTreeReply, error) {
-	var out GetUserDepartmentTreeReply
-	pattern := "/manager/v1/department/tree"
+func (c *ServiceHTTPClientImpl) GetUserJob(ctx context.Context, in *GetUserJobRequest, opts ...http.CallOption) (*GetUserJobReply, error) {
+	var out GetUserJobReply
+	pattern := "/manager/v1/user/jobs"
 	path := binding.EncodeURL(pattern, in, true)
-	opts = append(opts, http.Operation(OperationServiceGetUserDepartmentTree))
+	opts = append(opts, http.Operation(OperationServiceGetUserJob))
 	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "GET", path, nil, &out.List, opts...)
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out.Jobs, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1307,6 +1728,45 @@ func (c *ServiceHTTPClientImpl) OfflineUser(ctx context.Context, in *OfflineUser
 	opts = append(opts, http.Operation(OperationServiceOfflineUser))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *ServiceHTTPClientImpl) PageDict(ctx context.Context, in *PageDictRequest, opts ...http.CallOption) (*PageDictReply, error) {
+	var out PageDictReply
+	pattern := "/manager/v1/dicts"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationServicePageDict))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *ServiceHTTPClientImpl) PageDictValue(ctx context.Context, in *PageDictValueRequest, opts ...http.CallOption) (*PageDictValueReply, error) {
+	var out PageDictValueReply
+	pattern := "/manager/v1/dict/values"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationServicePageDictValue))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *ServiceHTTPClientImpl) PageJob(ctx context.Context, in *PageJobRequest, opts ...http.CallOption) (*PageJobReply, error) {
+	var out PageJobReply
+	pattern := "/manager/v1/jobs"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationServicePageJob))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1383,6 +1843,45 @@ func (c *ServiceHTTPClientImpl) UpdateDepartment(ctx context.Context, in *Update
 	pattern := "/manager/v1/department"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationServiceUpdateDepartment))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "PUT", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *ServiceHTTPClientImpl) UpdateDict(ctx context.Context, in *UpdateDictRequest, opts ...http.CallOption) (*emptypb.Empty, error) {
+	var out emptypb.Empty
+	pattern := "/manager/v1/dict"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationServiceUpdateDict))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "PUT", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *ServiceHTTPClientImpl) UpdateDictValue(ctx context.Context, in *UpdateDictValueRequest, opts ...http.CallOption) (*emptypb.Empty, error) {
+	var out emptypb.Empty
+	pattern := "/manager/v1/dict/value"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationServiceUpdateDictValue))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "PUT", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *ServiceHTTPClientImpl) UpdateJob(ctx context.Context, in *UpdateJobRequest, opts ...http.CallOption) (*emptypb.Empty, error) {
+	var out emptypb.Empty
+	pattern := "/manager/v1/job"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationServiceUpdateJob))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "PUT", path, in, &out, opts...)
 	if err != nil {

@@ -17,11 +17,8 @@ message Department {
   repeated Department children = 8;
 }
 
-message GetDepartmentTreeReply{
-   Department department = 1;
-}
 
-message GetUserDepartmentTreeReply{
+message GetDepartmentTreeReply{
   repeated Department list = 1;
 }
 

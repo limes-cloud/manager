@@ -1,9 +1,9 @@
 package md
 
 import (
-	"github.com/limes-cloud/manager/internal/model"
-
 	"github.com/limes-cloud/kratosx"
+
+	"github.com/limes-cloud/manager/internal/model"
 )
 
 const (
