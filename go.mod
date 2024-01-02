@@ -7,6 +7,7 @@ require (
 	github.com/forgoer/openssl v1.6.0
 	github.com/go-kratos/kratos/v2 v2.7.1
 	github.com/json-iterator/go v1.1.12
+	github.com/limes-cloud/configure v1.0.14
 	github.com/limes-cloud/kratosx v1.0.5
 	go.uber.org/automaxprocs v1.5.1
 	golang.org/x/crypto v0.14.0
@@ -74,7 +75,6 @@ require (
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/power-devops/perfstat v0.0.0-20221212215047-62379fc7944b // indirect
 	github.com/remyoudompheng/bigfft v0.0.0-20230129092748-24d4a6f8daec // indirect
-	github.com/rogpeppe/go-internal v1.11.0 // indirect
 	github.com/segmentio/asm v1.2.0 // indirect
 	github.com/shirou/gopsutil/v3 v3.23.8 // indirect
 	github.com/shoenig/go-m1cpu v0.1.6 // indirect
