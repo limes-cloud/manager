@@ -8,6 +8,21 @@ import (
 	"github.com/limes-cloud/manager/internal/model"
 )
 
+func IsInit(ctx kratosx.Context) bool {
+	db := ctx.DB().Migrator()
+	return db.HasTable(model.Menu{}) &&
+		db.HasTable(model.Role{}) &&
+		db.HasTable(model.RoleClosure{}) &&
+		db.HasTable(model.Department{}) &&
+		db.HasTable(model.DepartmentClosure{}) &&
+		db.HasTable(model.Job{}) &&
+		db.HasTable(model.User{}) &&
+		db.HasTable(model.UserRole{}) &&
+		db.HasTable(model.UserJob{}) &&
+		db.HasTable(model.Dict{}) &&
+		db.HasTable(model.DictValue{})
+}
+
 func Init(ctx kratosx.Context, config *config.Config) {
 	db := ctx.DB().Set("gorm:table_options", "ENGINE=InnoDB CHARSET=utf8mb4")
 	_ = db.Set("gorm:table_options", "COMMENT='菜单信息' ENGINE=InnoDB CHARSET=utf8mb4").AutoMigrate(model.Menu{})

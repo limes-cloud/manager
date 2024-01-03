@@ -14,6 +14,7 @@ import (
 	"github.com/limes-cloud/manager/internal/initiator/migrate"
 	"github.com/limes-cloud/manager/internal/initiator/role"
 	"github.com/limes-cloud/manager/internal/initiator/user"
+	"github.com/limes-cloud/manager/pkg/pt"
 )
 
 type Initiator struct {
@@ -29,6 +30,11 @@ func New(conf *config.Config) *Initiator {
 // Run 执行系统初始化
 func (a *Initiator) Run() error {
 	ctx := kratosx.MustContext(context.Background())
+
+	if migrate.IsInit(ctx) {
+		pt.Cyan("already init server")
+		return nil
+	}
 
 	// 自动迁移
 	migrate.Init(ctx, a.conf)

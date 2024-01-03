@@ -1,8 +1,11 @@
 package main
 
 import (
+	"context"
+	"fmt"
 	"log"
 
+	"github.com/go-kratos/kratos/v2"
 	"github.com/go-kratos/kratos/v2/transport/grpc"
 	"github.com/go-kratos/kratos/v2/transport/http"
 	"github.com/limes-cloud/configure/client"
@@ -14,12 +17,18 @@ import (
 	srcConf "github.com/limes-cloud/manager/config"
 	"github.com/limes-cloud/manager/internal/handler"
 	"github.com/limes-cloud/manager/internal/initiator"
+	"github.com/limes-cloud/manager/pkg/pt"
 )
 
 func main() {
 	app := kratosx.New(
 		kratosx.Config(client.NewFromEnv()),
 		kratosx.RegistrarServer(RegisterServer),
+		kratosx.Options(kratos.AfterStart(func(ctx context.Context) error {
+			kt := kratosx.MustContext(ctx)
+			pt.ArtFont(fmt.Sprintf("Hello %s !", kt.Name()))
+			return nil
+		})),
 	)
 
 	if err := app.Run(); err != nil {
