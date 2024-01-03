@@ -36,7 +36,7 @@ func (u *Job) Page(ctx kratosx.Context, options *types.PageOptions) ([]*Job, uin
 		return nil, uint32(total), err
 	}
 
-	db = db.Offset(int((options.Page - 1) * options.PageSize)).Limit(int(options.PageSize))
+	db = db.Offset(int((options.Page - 1) * options.PageSize)).Order("weight desc").Limit(int(options.PageSize))
 
 	return list, uint32(total), db.Find(&list).Error
 }

@@ -19,7 +19,7 @@ const (
 const (
 	MenuRoot  = "R"
 	MenuApi   = "A"
-	MenuMenu  = "M"
+	MenuPage  = "M"
 	MenuGroup = "G"
 	MenuBasic = "BA"
 )

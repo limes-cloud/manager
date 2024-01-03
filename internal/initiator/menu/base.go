@@ -28,8 +28,27 @@ var menus = []*model.Menu{
 		Children: []*model.Menu{
 			{
 				App:        "SystemPlatform",
+				Title:      "首页面板",
+				Type:       consts.MenuPage,
+				Keyword:    proto.String("Dashboard"),
+				Icon:       proto.String("dashboard"),
+				Api:        nil,
+				Method:     nil,
+				Path:       proto.String("/dashboard"),
+				Permission: nil,
+				Component:  proto.String("dashboard/index"),
+				Redirect:   nil,
+				Weight:     proto.Uint32(0),
+				IsHidden:   proto.Bool(false),
+				IsCache:    proto.Bool(true),
+				IsHome:     proto.Bool(true),
+				IsAffix:    proto.Bool(true),
+				Children:   nil,
+			},
+			{
+				App:        "SystemPlatform",
 				Title:      "系统管理",
-				Type:       consts.MenuMenu,
+				Type:       consts.MenuPage,
 				Keyword:    proto.String("SystemPlatformManager"),
 				Icon:       proto.String("apps"),
 				Api:        nil,
@@ -38,7 +57,7 @@ var menus = []*model.Menu{
 				Permission: nil,
 				Component:  nil,
 				Redirect:   nil,
-				Weight:     proto.Uint32(2),
+				Weight:     proto.Uint32(0),
 				IsHidden:   proto.Bool(false),
 				IsCache:    nil,
 				IsHome:     nil,
@@ -276,7 +295,7 @@ var menus = []*model.Menu{
 					{
 						App:        "SystemPlatform",
 						Title:      "字典管理",
-						Type:       consts.MenuMenu,
+						Type:       consts.MenuPage,
 						Keyword:    proto.String("Dict"),
 						Icon:       proto.String("storage"),
 						Api:        nil,
@@ -372,7 +391,7 @@ var menus = []*model.Menu{
 					{
 						App:        "SystemPlatform",
 						Title:      "字典值管理",
-						Type:       consts.MenuMenu,
+						Type:       consts.MenuPage,
 						Keyword:    proto.String("DictValue"),
 						Icon:       proto.String("storage"),
 						Api:        nil,
@@ -467,7 +486,7 @@ var menus = []*model.Menu{
 					{
 						App:        "SystemPlatform",
 						Title:      "菜单管理",
-						Type:       consts.MenuMenu,
+						Type:       consts.MenuPage,
 						Keyword:    proto.String("ManagerMenu"),
 						Icon:       proto.String("menu"),
 						Api:        nil,
@@ -563,7 +582,7 @@ var menus = []*model.Menu{
 					{
 						App:        "SystemPlatform",
 						Title:      "职位管理",
-						Type:       consts.MenuMenu,
+						Type:       consts.MenuPage,
 						Keyword:    proto.String("JobUser"),
 						Icon:       proto.String("tag"),
 						Api:        nil,
@@ -658,7 +677,7 @@ var menus = []*model.Menu{
 					{
 						App:        "SystemPlatform",
 						Title:      "部门管理",
-						Type:       consts.MenuMenu,
+						Type:       consts.MenuPage,
 						Keyword:    proto.String("ManagerDepartment"),
 						Icon:       proto.String("user-group"),
 						Api:        nil,
@@ -753,7 +772,7 @@ var menus = []*model.Menu{
 					{
 						App:        "SystemPlatform",
 						Title:      "角色管理",
-						Type:       consts.MenuMenu,
+						Type:       consts.MenuPage,
 						Keyword:    proto.String("ManagerRole"),
 						Icon:       proto.String("safe"),
 						Api:        nil,
@@ -905,7 +924,7 @@ var menus = []*model.Menu{
 					{
 						App:        "SystemPlatform",
 						Title:      "用户管理",
-						Type:       consts.MenuMenu,
+						Type:       consts.MenuPage,
 						Keyword:    proto.String("ManagerUser"),
 						Icon:       proto.String("user"),
 						Api:        nil,
@@ -1117,7 +1136,7 @@ var menus = []*model.Menu{
 			{
 				App:        "SystemPlatform",
 				Title:      "配置中心",
-				Type:       consts.MenuMenu,
+				Type:       consts.MenuPage,
 				Keyword:    proto.String("SystemPlatformConfigure"),
 				Icon:       proto.String("code-block"),
 				Api:        nil,
@@ -1135,7 +1154,7 @@ var menus = []*model.Menu{
 					{
 						App:        "SystemPlatform",
 						Title:      "环境管理",
-						Type:       consts.MenuMenu,
+						Type:       consts.MenuPage,
 						Keyword:    proto.String("ConfigureEnv"),
 						Icon:       proto.String("common"),
 						Api:        nil,
@@ -1269,7 +1288,7 @@ var menus = []*model.Menu{
 					{
 						App:        "SystemPlatform",
 						Title:      "服务管理",
-						Type:       consts.MenuMenu,
+						Type:       consts.MenuPage,
 						Keyword:    proto.String("ConfigureServer"),
 						Icon:       proto.String("apps"),
 						Api:        nil,
@@ -1365,7 +1384,7 @@ var menus = []*model.Menu{
 					{
 						App:        "SystemPlatform",
 						Title:      "资源变量",
-						Type:       consts.MenuMenu,
+						Type:       consts.MenuPage,
 						Keyword:    proto.String("ConfigureResource"),
 						Icon:       proto.String("unordered-list"),
 						Api:        nil,
@@ -1480,7 +1499,7 @@ var menus = []*model.Menu{
 					{
 						App:        "SystemPlatform",
 						Title:      "业务变量",
-						Type:       consts.MenuMenu,
+						Type:       consts.MenuPage,
 						Keyword:    proto.String("ConfigureBusiness"),
 						Icon:       proto.String("code"),
 						Api:        nil,
@@ -1595,7 +1614,7 @@ var menus = []*model.Menu{
 					{
 						App:        "SystemPlatform",
 						Title:      "配置模板",
-						Type:       consts.MenuMenu,
+						Type:       consts.MenuPage,
 						Keyword:    proto.String("ConfgureTemplate"),
 						Icon:       proto.String("file"),
 						Api:        nil,
@@ -1826,7 +1845,7 @@ var menus = []*model.Menu{
 			{
 				App:        "SystemPlatform",
 				Title:      "资源中心",
-				Type:       consts.MenuMenu,
+				Type:       consts.MenuPage,
 				Keyword:    proto.String("SystemPlatformResource"),
 				Icon:       proto.String("file"),
 				Api:        nil,
@@ -1844,7 +1863,7 @@ var menus = []*model.Menu{
 					{
 						App:        "SystemPlatform",
 						Title:      "文件管理",
-						Type:       consts.MenuMenu,
+						Type:       consts.MenuPage,
 						Keyword:    proto.String("File"),
 						Icon:       proto.String("file"),
 						Api:        nil,
