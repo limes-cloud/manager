@@ -30,8 +30,8 @@ type RoleClosure struct {
 	ID           uint32 `json:"id" gorm:"primaryKey;autoIncrement;comment:主键ID"`
 	Parent       uint32 `json:"parent" gorm:"not null;comment:用户id"`
 	Children     uint32 `json:"children" gorm:"not null;comment:用户id"`
-	ParentRole   *Role  `json:"parent_role" gorm:"->;foreignKey:parent;references:id"`
-	ChildrenRole *Role  `json:"children_role" gorm:"->;foreignKey:children;references:id"`
+	ParentRole   *Role  `json:"parent_role" gorm:"constraint:onDelete:cascade;foreignKey:parent;references:id"`
+	ChildrenRole *Role  `json:"children_role" gorm:"constraint:onDelete:cascade;foreignKey:children;references:id"`
 }
 
 // ID 获取ID

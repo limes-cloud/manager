@@ -27,8 +27,8 @@ type DepartmentClosure struct {
 	ID                 uint32      `json:"id" gorm:"primaryKey;autoIncrement;comment:主键ID"`
 	Parent             uint32      `json:"parent" gorm:"not null;comment:部门id"`
 	Children           uint32      `json:"children" gorm:"not null;comment:部门id"`
-	ParentDepartment   *Department `json:"parent_department" gorm:"foreignKey:parent;references:id"`
-	ChildrenDepartment *Department `json:"children_department" gorm:"foreignKey:children;references:id"`
+	ParentDepartment   *Department `json:"parent_department" gorm:"constraint:onDelete:cascade;foreignKey:parent;references:id"`
+	ChildrenDepartment *Department `json:"children_department" gorm:"constraint:onDelete:cascade;foreignKey:children;references:id"`
 }
 
 func (t *Department) ID() uint32 {
