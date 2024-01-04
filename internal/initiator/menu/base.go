@@ -47,7 +47,7 @@ var menus = []*model.Menu{
 			},
 			{
 				App:        "SystemPlatform",
-				Title:      "系统管理",
+				Title:      "管理中心",
 				Type:       consts.MenuPage,
 				Keyword:    proto.String("SystemPlatformManager"),
 				Icon:       proto.String("apps"),
