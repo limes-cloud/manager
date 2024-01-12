@@ -9,6 +9,8 @@ type Dict struct {
 	types.BaseModel
 	Keyword     string `json:"keyword" gorm:"not null;size:32;unique;comment:关键字"`
 	Name        string `json:"name" gorm:"not null;size:32;unique;comment:名称"`
+	Type        string `json:"type" gorm:"not null;size:32;comment:类型"`
+	Extra       string `json:"extra" gorm:"size:text;comment:类型"`
 	Description string `json:"description" gorm:"not null;size:256;comment:描述"`
 }
 

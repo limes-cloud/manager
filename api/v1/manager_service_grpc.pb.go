@@ -66,12 +66,14 @@ const (
 	Service_AddJob_FullMethodName                    = "/manager.Service/AddJob"
 	Service_UpdateJob_FullMethodName                 = "/manager.Service/UpdateJob"
 	Service_DeleteJob_FullMethodName                 = "/manager.Service/DeleteJob"
+	Service_GetDict_FullMethodName                   = "/manager.Service/GetDict"
 	Service_PageDict_FullMethodName                  = "/manager.Service/PageDict"
 	Service_AddDict_FullMethodName                   = "/manager.Service/AddDict"
 	Service_UpdateDict_FullMethodName                = "/manager.Service/UpdateDict"
 	Service_DeleteDict_FullMethodName                = "/manager.Service/DeleteDict"
 	Service_PageDictValue_FullMethodName             = "/manager.Service/PageDictValue"
 	Service_AddDictValue_FullMethodName              = "/manager.Service/AddDictValue"
+	Service_ImportDictValue_FullMethodName           = "/manager.Service/ImportDictValue"
 	Service_UpdateDictValue_FullMethodName           = "/manager.Service/UpdateDictValue"
 	Service_DeleteDictValue_FullMethodName           = "/manager.Service/DeleteDictValue"
 )
@@ -166,6 +168,8 @@ type ServiceClient interface {
 	UpdateJob(ctx context.Context, in *UpdateJobRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	// DeleteJob 删除职位信息
 	DeleteJob(ctx context.Context, in *DeleteJobRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	// GetDict 获取指定字典信息
+	GetDict(ctx context.Context, in *GetDictRequest, opts ...grpc.CallOption) (*Dict, error)
 	// PageDict 分页获取字典信息
 	PageDict(ctx context.Context, in *PageDictRequest, opts ...grpc.CallOption) (*PageDictReply, error)
 	// AddDict 删除字典信息
@@ -178,6 +182,8 @@ type ServiceClient interface {
 	PageDictValue(ctx context.Context, in *PageDictValueRequest, opts ...grpc.CallOption) (*PageDictValueReply, error)
 	// AddDictValue 删除字典信息
 	AddDictValue(ctx context.Context, in *AddDictValueRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	// ImportDictValue 导入字典信息
+	ImportDictValue(ctx context.Context, in *ImportDictValueRequest, opts ...grpc.CallOption) (*ImportDictValueReply, error)
 	// UpdateDictValue 更新字典信息
 	UpdateDictValue(ctx context.Context, in *UpdateDictValueRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	// DeleteDictValue 删除字典信息
@@ -606,6 +612,15 @@ func (c *serviceClient) DeleteJob(ctx context.Context, in *DeleteJobRequest, opt
 	return out, nil
 }
 
+func (c *serviceClient) GetDict(ctx context.Context, in *GetDictRequest, opts ...grpc.CallOption) (*Dict, error) {
+	out := new(Dict)
+	err := c.cc.Invoke(ctx, Service_GetDict_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *serviceClient) PageDict(ctx context.Context, in *PageDictRequest, opts ...grpc.CallOption) (*PageDictReply, error) {
 	out := new(PageDictReply)
 	err := c.cc.Invoke(ctx, Service_PageDict_FullMethodName, in, out, opts...)
@@ -654,6 +669,15 @@ func (c *serviceClient) PageDictValue(ctx context.Context, in *PageDictValueRequ
 func (c *serviceClient) AddDictValue(ctx context.Context, in *AddDictValueRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	out := new(emptypb.Empty)
 	err := c.cc.Invoke(ctx, Service_AddDictValue_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *serviceClient) ImportDictValue(ctx context.Context, in *ImportDictValueRequest, opts ...grpc.CallOption) (*ImportDictValueReply, error) {
+	out := new(ImportDictValueReply)
+	err := c.cc.Invoke(ctx, Service_ImportDictValue_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -768,6 +792,8 @@ type ServiceServer interface {
 	UpdateJob(context.Context, *UpdateJobRequest) (*emptypb.Empty, error)
 	// DeleteJob 删除职位信息
 	DeleteJob(context.Context, *DeleteJobRequest) (*emptypb.Empty, error)
+	// GetDict 获取指定字典信息
+	GetDict(context.Context, *GetDictRequest) (*Dict, error)
 	// PageDict 分页获取字典信息
 	PageDict(context.Context, *PageDictRequest) (*PageDictReply, error)
 	// AddDict 删除字典信息
@@ -780,6 +806,8 @@ type ServiceServer interface {
 	PageDictValue(context.Context, *PageDictValueRequest) (*PageDictValueReply, error)
 	// AddDictValue 删除字典信息
 	AddDictValue(context.Context, *AddDictValueRequest) (*emptypb.Empty, error)
+	// ImportDictValue 导入字典信息
+	ImportDictValue(context.Context, *ImportDictValueRequest) (*ImportDictValueReply, error)
 	// UpdateDictValue 更新字典信息
 	UpdateDictValue(context.Context, *UpdateDictValueRequest) (*emptypb.Empty, error)
 	// DeleteDictValue 删除字典信息
@@ -929,6 +957,9 @@ func (UnimplementedServiceServer) UpdateJob(context.Context, *UpdateJobRequest) 
 func (UnimplementedServiceServer) DeleteJob(context.Context, *DeleteJobRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteJob not implemented")
 }
+func (UnimplementedServiceServer) GetDict(context.Context, *GetDictRequest) (*Dict, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetDict not implemented")
+}
 func (UnimplementedServiceServer) PageDict(context.Context, *PageDictRequest) (*PageDictReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method PageDict not implemented")
 }
@@ -946,6 +977,9 @@ func (UnimplementedServiceServer) PageDictValue(context.Context, *PageDictValueR
 }
 func (UnimplementedServiceServer) AddDictValue(context.Context, *AddDictValueRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddDictValue not implemented")
+}
+func (UnimplementedServiceServer) ImportDictValue(context.Context, *ImportDictValueRequest) (*ImportDictValueReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ImportDictValue not implemented")
 }
 func (UnimplementedServiceServer) UpdateDictValue(context.Context, *UpdateDictValueRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateDictValue not implemented")
@@ -1794,6 +1828,24 @@ func _Service_DeleteJob_Handler(srv interface{}, ctx context.Context, dec func(i
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Service_GetDict_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetDictRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ServiceServer).GetDict(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Service_GetDict_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ServiceServer).GetDict(ctx, req.(*GetDictRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Service_PageDict_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(PageDictRequest)
 	if err := dec(in); err != nil {
@@ -1898,6 +1950,24 @@ func _Service_AddDictValue_Handler(srv interface{}, ctx context.Context, dec fun
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ServiceServer).AddDictValue(ctx, req.(*AddDictValueRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Service_ImportDictValue_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ImportDictValueRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ServiceServer).ImportDictValue(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Service_ImportDictValue_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ServiceServer).ImportDictValue(ctx, req.(*ImportDictValueRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -2130,6 +2200,10 @@ var Service_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Service_DeleteJob_Handler,
 		},
 		{
+			MethodName: "GetDict",
+			Handler:    _Service_GetDict_Handler,
+		},
+		{
 			MethodName: "PageDict",
 			Handler:    _Service_PageDict_Handler,
 		},
@@ -2152,6 +2226,10 @@ var Service_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "AddDictValue",
 			Handler:    _Service_AddDictValue_Handler,
+		},
+		{
+			MethodName: "ImportDictValue",
+			Handler:    _Service_ImportDictValue_Handler,
 		},
 		{
 			MethodName: "UpdateDictValue",

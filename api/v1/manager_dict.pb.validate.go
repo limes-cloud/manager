@@ -62,6 +62,10 @@ func (m *Dict) validate(all bool) error {
 
 	// no validation rules for Name
 
+	// no validation rules for Type
+
+	// no validation rules for Extra
+
 	// no validation rules for Description
 
 	if m.Weight != nil {
@@ -152,6 +156,117 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = DictValidationError{}
+
+// Validate checks the field values on GetDictRequest with the rules defined in
+// the proto definition for this message. If any rules are violated, the first
+// error encountered is returned, or nil if there are no violations.
+func (m *GetDictRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on GetDictRequest with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// result is a list of violation errors wrapped in GetDictRequestMultiError,
+// or nil if none found.
+func (m *GetDictRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *GetDictRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if m.GetId() <= 0 {
+		err := GetDictRequestValidationError{
+			field:  "Id",
+			reason: "value must be greater than 0",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if len(errors) > 0 {
+		return GetDictRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// GetDictRequestMultiError is an error wrapping multiple validation errors
+// returned by GetDictRequest.ValidateAll() if the designated constraints
+// aren't met.
+type GetDictRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m GetDictRequestMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m GetDictRequestMultiError) AllErrors() []error { return m }
+
+// GetDictRequestValidationError is the validation error returned by
+// GetDictRequest.Validate if the designated constraints aren't met.
+type GetDictRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e GetDictRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e GetDictRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e GetDictRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e GetDictRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e GetDictRequestValidationError) ErrorName() string { return "GetDictRequestValidationError" }
+
+// Error satisfies the builtin error interface
+func (e GetDictRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sGetDictRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = GetDictRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = GetDictRequestValidationError{}
 
 // Validate checks the field values on PageDictRequest with the rules defined
 // in the proto definition for this message. If any rules are violated, the
@@ -463,6 +578,17 @@ func (m *AddDictRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
+	if utf8.RuneCountInString(m.GetType()) < 1 {
+		err := AddDictRequestValidationError{
+			field:  "Type",
+			reason: "value length must be at least 1 runes",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
 	if utf8.RuneCountInString(m.GetDescription()) < 1 {
 		err := AddDictRequestValidationError{
 			field:  "Description",
@@ -472,6 +598,21 @@ func (m *AddDictRequest) validate(all bool) error {
 			return err
 		}
 		errors = append(errors, err)
+	}
+
+	if m.Extra != nil {
+
+		if utf8.RuneCountInString(m.GetExtra()) < 1 {
+			err := AddDictRequestValidationError{
+				field:  "Extra",
+				reason: "value length must be at least 1 runes",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
 	}
 
 	if m.Weight != nil {
@@ -600,6 +741,17 @@ func (m *UpdateDictRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
+	if utf8.RuneCountInString(m.GetType()) < 1 {
+		err := UpdateDictRequestValidationError{
+			field:  "Type",
+			reason: "value length must be at least 1 runes",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
 	if utf8.RuneCountInString(m.GetDescription()) < 1 {
 		err := UpdateDictRequestValidationError{
 			field:  "Description",
@@ -609,6 +761,21 @@ func (m *UpdateDictRequest) validate(all bool) error {
 			return err
 		}
 		errors = append(errors, err)
+	}
+
+	if m.Extra != nil {
+
+		if utf8.RuneCountInString(m.GetExtra()) < 1 {
+			err := UpdateDictRequestValidationError{
+				field:  "Extra",
+				reason: "value length must be at least 1 runes",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
 	}
 
 	if m.Weight != nil {

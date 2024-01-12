@@ -3,6 +3,7 @@ package logic
 import (
 	"github.com/limes-cloud/kratosx"
 	"github.com/limes-cloud/kratosx/types"
+	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/types/known/emptypb"
 	"gorm.io/gorm"
 
@@ -23,11 +24,12 @@ func NewDictValue(conf *config.Config) *DictValue {
 }
 
 func (r *DictValue) Page(ctx kratosx.Context, in *v1.PageDictValueRequest) (*v1.PageDictValueReply, error) {
-	job := model.DictValue{}
-	list, total, err := job.Page(ctx, &types.PageOptions{
+	dv := model.DictValue{}
+	list, total, err := dv.Page(ctx, &types.PageOptions{
 		Page:     in.Page,
 		PageSize: in.PageSize,
 		Scopes: func(db *gorm.DB) *gorm.DB {
+			db = db.Where("dict_id=?", in.DictId)
 			if in.Label != nil {
 				db = db.Where("label like ?", "%"+*in.Label+"%")
 			}
@@ -50,45 +52,63 @@ func (r *DictValue) Page(ctx kratosx.Context, in *v1.PageDictValueRequest) (*v1.
 	return &reply, nil
 }
 
-// Add 添加职位信息
+// Add 添加字典值信息
 func (r *DictValue) Add(ctx kratosx.Context, in *v1.AddDictValueRequest) (*emptypb.Empty, error) {
-	job := model.DictValue{}
+	dv := model.DictValue{}
 
 	// 进行数据转换
-	if err := util.Transform(in, &job); err != nil {
+	if err := util.Transform(in, &dv); err != nil {
 		return nil, v1.TransformErrorFormat(err.Error())
 	}
 
-	// 创建职位
-	if err := job.Create(ctx); err != nil {
+	// 创建字典值
+	if err := dv.Create(ctx); err != nil {
 		return nil, v1.DatabaseErrorFormat(err.Error())
 	}
 
 	return nil, nil
 }
 
-// Update 更新职位信息
+// Import 导入字典值信息
+func (r *DictValue) Import(ctx kratosx.Context, in *v1.ImportDictValueRequest) (*v1.ImportDictValueReply, error) {
+	count := 0
+	for _, item := range in.List {
+		dv := model.DictValue{
+			DictID:      in.DictId,
+			Label:       item.Label,
+			Value:       item.Value,
+			Weight:      proto.Uint32(0),
+			Description: item.Description,
+		}
+		if dv.Create(ctx) == nil {
+			count++
+		}
+	}
+	return &v1.ImportDictValueReply{Count: uint32(count)}, nil
+}
+
+// Update 更新字典值信息
 func (r *DictValue) Update(ctx kratosx.Context, in *v1.UpdateDictValueRequest) (*emptypb.Empty, error) {
-	job := model.DictValue{}
+	dv := model.DictValue{}
 
 	// 转换数据格式
-	if err := util.Transform(in, &job); err != nil {
+	if err := util.Transform(in, &dv); err != nil {
 		return nil, v1.TransformErrorFormat(err.Error())
 	}
 
-	// 更新职位信息
-	if err := job.Update(ctx); err != nil {
+	// 更新字典值信息
+	if err := dv.Update(ctx); err != nil {
 		return nil, v1.DatabaseErrorFormat(err.Error())
 	}
 
 	return nil, nil
 }
 
-// Delete 删除职位
+// Delete 删除字典值
 func (r *DictValue) Delete(ctx kratosx.Context, in *v1.DeleteDictValueRequest) (*emptypb.Empty, error) {
-	job := model.DictValue{}
+	dv := model.DictValue{}
 
-	if err := job.DeleteByID(ctx, in.Id); err != nil {
+	if err := dv.DeleteByID(ctx, in.Id); err != nil {
 		return nil, v1.DatabaseErrorFormat(err.Error())
 	}
 

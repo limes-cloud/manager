@@ -17,6 +17,10 @@ func (s *Service) AddDictValue(ctx context.Context, in *v1.AddDictValueRequest) 
 	return s.dictValue.Add(kratosx.MustContext(ctx), in)
 }
 
+func (s *Service) ImportDictValue(ctx context.Context, in *v1.ImportDictValueRequest) (*v1.ImportDictValueReply, error) {
+	return s.dictValue.Import(kratosx.MustContext(ctx), in)
+}
+
 func (s *Service) UpdateDictValue(ctx context.Context, in *v1.UpdateDictValueRequest) (*emptypb.Empty, error) {
 	return s.dictValue.Update(kratosx.MustContext(ctx), in)
 }

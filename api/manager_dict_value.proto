@@ -24,8 +24,9 @@ message DictValue {
 message PageDictValueRequest{
   uint32 page = 1[(validate.rules).uint32 = {gt: 0}];
   uint32 page_size = 2[(validate.rules).uint32 = {gt: 0,lte:50}];
-  optional string label = 3;
-  optional string value = 4;
+  uint32 dict_id = 3[(validate.rules).uint32 = {gt: 0}];
+  optional string label = 4;
+  optional string value = 5;
 }
 
 message PageDictValueReply{
@@ -43,6 +44,20 @@ message AddDictValueRequest{
   optional uint32 weight = 8;
   optional bool status = 9;
 }
+
+ message  ImportDictValueRequest{
+   uint32 dict_id = 1[(validate.rules).uint32 = {gt:0}];
+   message ImportDictValueData {
+     string label = 1[(validate.rules).string = {min_len:1}];
+     string value = 2[(validate.rules).string = {min_len:1}];
+     string description = 3;
+   }
+   repeated  ImportDictValueData list = 2;
+ }
+
+ message  ImportDictValueReply{
+   uint32 count = 1;
+ }
 
 message UpdateDictValueRequest{
   uint32 id = 1[(validate.rules).uint32 = {gt:0}];

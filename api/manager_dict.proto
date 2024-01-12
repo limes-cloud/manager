@@ -11,11 +11,17 @@ message Dict {
   uint32 id = 1;
   string keyword = 2;
   string name = 3;
-  string description = 5;
-  optional uint32 weight = 6;
-  optional uint32 created_at = 7;
-  optional uint32 updated_at = 8;
+  string type = 4;
+  string extra = 5;
+  string description = 6;
+  optional uint32 weight = 7;
+  optional uint32 created_at = 8;
+  optional uint32 updated_at = 9;
 }
+
+ message GetDictRequest{
+   uint32 id = 1[(validate.rules).uint32 = {gt: 0}];
+ }
 
 message PageDictRequest{
   uint32 page = 1[(validate.rules).uint32 = {gt: 0}];
@@ -32,15 +38,19 @@ message PageDictReply{
 message AddDictRequest{
   string keyword = 1[(validate.rules).string = {min_len:1}];
   string name = 2[(validate.rules).string = {min_len:1}];
-  string description = 3[(validate.rules).string = {min_len:1}];
-  optional uint32 weight = 4;
+  string type = 3[(validate.rules).string = {min_len:1}];
+  optional string extra = 4[(validate.rules).string = {min_len:1}];
+  string description = 5[(validate.rules).string = {min_len:1}];
+  optional uint32 weight = 6;
 }
 
 message UpdateDictRequest{
   uint32 id = 1[(validate.rules).uint32 = {gt:0}];
   string name = 2[(validate.rules).string = {min_len:1}];
-  string description = 3[(validate.rules).string = {min_len:1}];
-  optional uint32 weight = 4[(validate.rules).uint32 = {gt:0}];
+  string type = 3[(validate.rules).string = {min_len:1}];
+  optional string extra = 4[(validate.rules).string = {min_len:1}];
+  string description = 5[(validate.rules).string = {min_len:1}];
+  optional uint32 weight = 6[(validate.rules).uint32 = {gt:0}];
 }
 
 message DeleteDictRequest{

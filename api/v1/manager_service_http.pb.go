@@ -43,12 +43,14 @@ const OperationServiceDeleteUser = "/manager.Service/DeleteUser"
 const OperationServiceDisableUser = "/manager.Service/DisableUser"
 const OperationServiceEnableUser = "/manager.Service/EnableUser"
 const OperationServiceGetDepartmentTree = "/manager.Service/GetDepartmentTree"
+const OperationServiceGetDict = "/manager.Service/GetDict"
 const OperationServiceGetMenuTree = "/manager.Service/GetMenuTree"
 const OperationServiceGetRoleMenuIds = "/manager.Service/GetRoleMenuIds"
 const OperationServiceGetRoleTree = "/manager.Service/GetRoleTree"
 const OperationServiceGetSetting = "/manager.Service/GetSetting"
 const OperationServiceGetUserJob = "/manager.Service/GetUserJob"
 const OperationServiceGetUserRoles = "/manager.Service/GetUserRoles"
+const OperationServiceImportDictValue = "/manager.Service/ImportDictValue"
 const OperationServiceLogin = "/manager.Service/Login"
 const OperationServiceLoginCaptcha = "/manager.Service/LoginCaptcha"
 const OperationServiceLogout = "/manager.Service/Logout"
@@ -117,6 +119,8 @@ type ServiceHTTPServer interface {
 	EnableUser(context.Context, *EnableUserRequest) (*emptypb.Empty, error)
 	// GetDepartmentTree GetDepartmentTree 获取部门树
 	GetDepartmentTree(context.Context, *emptypb.Empty) (*GetDepartmentTreeReply, error)
+	// GetDict GetDict 获取指定字典信息
+	GetDict(context.Context, *GetDictRequest) (*Dict, error)
 	// GetMenuTree GetMenuTree 获取菜单树
 	GetMenuTree(context.Context, *emptypb.Empty) (*GetMenuTreeReply, error)
 	// GetRoleMenuIds CurrentRoleMenus 获取当前用户的角色列表
@@ -129,6 +133,8 @@ type ServiceHTTPServer interface {
 	GetUserJob(context.Context, *GetUserJobRequest) (*GetUserJobReply, error)
 	// GetUserRoles CurrentUserRoles 获取当前用户的角色列表
 	GetUserRoles(context.Context, *GetUserRolesRequest) (*GetUserRolesReply, error)
+	// ImportDictValue ImportDictValue 导入字典信息
+	ImportDictValue(context.Context, *ImportDictValueRequest) (*ImportDictValueReply, error)
 	Login(context.Context, *LoginRequest) (*LoginReply, error)
 	LoginCaptcha(context.Context, *emptypb.Empty) (*LoginCaptchaReply, error)
 	Logout(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
@@ -212,12 +218,14 @@ func RegisterServiceHTTPServer(s *http.Server, srv ServiceHTTPServer) {
 	r.POST("/manager/v1/job", _Service_AddJob0_HTTP_Handler(srv))
 	r.PUT("/manager/v1/job", _Service_UpdateJob0_HTTP_Handler(srv))
 	r.DELETE("/manager/v1/job", _Service_DeleteJob0_HTTP_Handler(srv))
+	r.GET("/manager/v1/dict", _Service_GetDict0_HTTP_Handler(srv))
 	r.GET("/manager/v1/dicts", _Service_PageDict0_HTTP_Handler(srv))
 	r.POST("/manager/v1/dict", _Service_AddDict0_HTTP_Handler(srv))
 	r.PUT("/manager/v1/dict", _Service_UpdateDict0_HTTP_Handler(srv))
 	r.DELETE("/manager/v1/dict", _Service_DeleteDict0_HTTP_Handler(srv))
 	r.GET("/manager/v1/dict/values", _Service_PageDictValue0_HTTP_Handler(srv))
 	r.POST("/manager/v1/dict/value", _Service_AddDictValue0_HTTP_Handler(srv))
+	r.POST("/manager/v1/dict/values", _Service_ImportDictValue0_HTTP_Handler(srv))
 	r.PUT("/manager/v1/dict/value", _Service_UpdateDictValue0_HTTP_Handler(srv))
 	r.DELETE("/manager/v1/dict/value", _Service_DeleteDictValue0_HTTP_Handler(srv))
 }
@@ -1080,6 +1088,25 @@ func _Service_DeleteJob0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Conte
 	}
 }
 
+func _Service_GetDict0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in GetDictRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationServiceGetDict)
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
+			return srv.GetDict(ctx, req.(*GetDictRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*Dict)
+		return ctx.Result(200, reply)
+	}
+}
+
 func _Service_PageDict0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in PageDictRequest
@@ -1203,6 +1230,28 @@ func _Service_AddDictValue0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Co
 	}
 }
 
+func _Service_ImportDictValue0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in ImportDictValueRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationServiceImportDictValue)
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
+			return srv.ImportDictValue(ctx, req.(*ImportDictValueRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*ImportDictValueReply)
+		return ctx.Result(200, reply)
+	}
+}
+
 func _Service_UpdateDictValue0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in UpdateDictValueRequest
@@ -1268,12 +1317,14 @@ type ServiceHTTPClient interface {
 	DisableUser(ctx context.Context, req *DisableUserRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	EnableUser(ctx context.Context, req *EnableUserRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	GetDepartmentTree(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *GetDepartmentTreeReply, err error)
+	GetDict(ctx context.Context, req *GetDictRequest, opts ...http.CallOption) (rsp *Dict, err error)
 	GetMenuTree(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *GetMenuTreeReply, err error)
 	GetRoleMenuIds(ctx context.Context, req *GetRoleMenuIdsRequest, opts ...http.CallOption) (rsp *GetRoleMenuIdsReply, err error)
 	GetRoleTree(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *GetRoleTreeReply, err error)
 	GetSetting(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *GetSettingReply, err error)
 	GetUserJob(ctx context.Context, req *GetUserJobRequest, opts ...http.CallOption) (rsp *GetUserJobReply, err error)
 	GetUserRoles(ctx context.Context, req *GetUserRolesRequest, opts ...http.CallOption) (rsp *GetUserRolesReply, err error)
+	ImportDictValue(ctx context.Context, req *ImportDictValueRequest, opts ...http.CallOption) (rsp *ImportDictValueReply, err error)
 	Login(ctx context.Context, req *LoginRequest, opts ...http.CallOption) (rsp *LoginReply, err error)
 	LoginCaptcha(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *LoginCaptchaReply, err error)
 	Logout(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
@@ -1604,6 +1655,19 @@ func (c *ServiceHTTPClientImpl) GetDepartmentTree(ctx context.Context, in *empty
 	return &out, err
 }
 
+func (c *ServiceHTTPClientImpl) GetDict(ctx context.Context, in *GetDictRequest, opts ...http.CallOption) (*Dict, error) {
+	var out Dict
+	pattern := "/manager/v1/dict"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationServiceGetDict))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
 func (c *ServiceHTTPClientImpl) GetMenuTree(ctx context.Context, in *emptypb.Empty, opts ...http.CallOption) (*GetMenuTreeReply, error) {
 	var out GetMenuTreeReply
 	pattern := "/manager/v1/menu/tree"
@@ -1676,6 +1740,19 @@ func (c *ServiceHTTPClientImpl) GetUserRoles(ctx context.Context, in *GetUserRol
 	opts = append(opts, http.Operation(OperationServiceGetUserRoles))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out.UserRole, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *ServiceHTTPClientImpl) ImportDictValue(ctx context.Context, in *ImportDictValueRequest, opts ...http.CallOption) (*ImportDictValueReply, error) {
+	var out ImportDictValueReply
+	pattern := "/manager/v1/dict/values"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationServiceImportDictValue))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
 	if err != nil {
 		return nil, err
 	}

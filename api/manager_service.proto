@@ -348,6 +348,13 @@ service Service {
     };
   }
 
+  // GetDict 获取指定字典信息
+  rpc GetDict (GetDictRequest) returns (Dict) {
+    option (google.api.http) = {
+      get: "/manager/v1/dict",
+    };
+  }
+
   // PageDict 分页获取字典信息
   rpc PageDict (PageDictRequest) returns (PageDictReply) {
     option (google.api.http) = {
@@ -389,6 +396,14 @@ service Service {
   rpc AddDictValue (AddDictValueRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
       post: "/manager/v1/dict/value",
+      body: "*",
+    };
+  }
+
+  // ImportDictValue 导入字典信息
+  rpc ImportDictValue (ImportDictValueRequest) returns (ImportDictValueReply) {
+    option (google.api.http) = {
+      post: "/manager/v1/dict/values",
       body: "*",
     };
   }
