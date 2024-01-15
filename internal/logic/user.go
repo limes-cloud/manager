@@ -240,7 +240,7 @@ func (r *User) Page(ctx kratosx.Context, in *v1.PageUserRequest) (*v1.PageUserRe
 		PageSize: in.PageSize,
 		Scopes: func(db *gorm.DB) *gorm.DB {
 			if in.Username != nil {
-				db = db.Where("email=? or phFind=?", *in.Username, *in.Username)
+				db = db.Where("email=? or phone=?", *in.Username, *in.Username)
 			}
 			if in.Status != nil {
 				db = db.Where("status=?", *in.Status)
