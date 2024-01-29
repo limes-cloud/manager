@@ -92,7 +92,6 @@ authentication:
   skipRole:
     - superAdmin
   whitelist: {}
-ratelimit: false
 business:
   defaultUserPassword: '12345678'
   setting:

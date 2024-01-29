@@ -71,7 +71,6 @@ func (a *Auth) LoginCaptcha(ctx kratosx.Context, in *emptypb.Empty) (*v1.LoginCa
 
 // Login 用户登录
 func (a *Auth) Login(ctx kratosx.Context, in *v1.LoginRequest) (*v1.LoginReply, error) {
-	ctx.Logger().Errorf("login ip:", ctx.ClientIP())
 	// 判断验证码是否正确
 	if err := ctx.Captcha().VerifyImage(imageCaptchaTp, ctx.ClientIP(), in.CaptchaId, in.Captcha); err != nil {
 		return nil, v1.VerifyCaptchaError()
