@@ -91,6 +91,7 @@ func (a *Auth) Login(ctx kratosx.Context, in *v1.LoginRequest) (*v1.LoginReply, 
 
 	// 判断当前时间戳是否过期,超过10s则拒绝
 	if time.Now().UnixMilli()-pw.Time > 10*1000 {
+		ctx.Logger().Infow("system", time.Now().UnixMilli(), "submit", pw.Time, "dt", time.Now().UnixMilli()-pw.Time)
 		return nil, v1.PasswordExpireError()
 	}
 
