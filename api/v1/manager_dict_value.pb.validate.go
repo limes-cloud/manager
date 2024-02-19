@@ -162,6 +162,257 @@ var _ interface {
 	ErrorName() string
 } = DictValueValidationError{}
 
+// Validate checks the field values on GetDictValueRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *GetDictValueRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on GetDictValueRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// GetDictValueRequestMultiError, or nil if none found.
+func (m *GetDictValueRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *GetDictValueRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if utf8.RuneCountInString(m.GetKeyword()) < 1 {
+		err := GetDictValueRequestValidationError{
+			field:  "Keyword",
+			reason: "value length must be at least 1 runes",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if len(errors) > 0 {
+		return GetDictValueRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// GetDictValueRequestMultiError is an error wrapping multiple validation
+// errors returned by GetDictValueRequest.ValidateAll() if the designated
+// constraints aren't met.
+type GetDictValueRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m GetDictValueRequestMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m GetDictValueRequestMultiError) AllErrors() []error { return m }
+
+// GetDictValueRequestValidationError is the validation error returned by
+// GetDictValueRequest.Validate if the designated constraints aren't met.
+type GetDictValueRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e GetDictValueRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e GetDictValueRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e GetDictValueRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e GetDictValueRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e GetDictValueRequestValidationError) ErrorName() string {
+	return "GetDictValueRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e GetDictValueRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sGetDictValueRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = GetDictValueRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = GetDictValueRequestValidationError{}
+
+// Validate checks the field values on GetDictValueReply with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// first error encountered is returned, or nil if there are no violations.
+func (m *GetDictValueReply) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on GetDictValueReply with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// GetDictValueReplyMultiError, or nil if none found.
+func (m *GetDictValueReply) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *GetDictValueReply) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	for idx, item := range m.GetList() {
+		_, _ = idx, item
+
+		if all {
+			switch v := interface{}(item).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, GetDictValueReplyValidationError{
+						field:  fmt.Sprintf("List[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, GetDictValueReplyValidationError{
+						field:  fmt.Sprintf("List[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return GetDictValueReplyValidationError{
+					field:  fmt.Sprintf("List[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	// no validation rules for Dict
+
+	if len(errors) > 0 {
+		return GetDictValueReplyMultiError(errors)
+	}
+
+	return nil
+}
+
+// GetDictValueReplyMultiError is an error wrapping multiple validation errors
+// returned by GetDictValueReply.ValidateAll() if the designated constraints
+// aren't met.
+type GetDictValueReplyMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m GetDictValueReplyMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m GetDictValueReplyMultiError) AllErrors() []error { return m }
+
+// GetDictValueReplyValidationError is the validation error returned by
+// GetDictValueReply.Validate if the designated constraints aren't met.
+type GetDictValueReplyValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e GetDictValueReplyValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e GetDictValueReplyValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e GetDictValueReplyValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e GetDictValueReplyValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e GetDictValueReplyValidationError) ErrorName() string {
+	return "GetDictValueReplyValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e GetDictValueReplyValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sGetDictValueReply.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = GetDictValueReplyValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = GetDictValueReplyValidationError{}
+
 // Validate checks the field values on PageDictValueRequest with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.

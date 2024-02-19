@@ -44,6 +44,7 @@ const OperationServiceDisableUser = "/manager.Service/DisableUser"
 const OperationServiceEnableUser = "/manager.Service/EnableUser"
 const OperationServiceGetDepartmentTree = "/manager.Service/GetDepartmentTree"
 const OperationServiceGetDict = "/manager.Service/GetDict"
+const OperationServiceGetDictValue = "/manager.Service/GetDictValue"
 const OperationServiceGetMenuTree = "/manager.Service/GetMenuTree"
 const OperationServiceGetRoleMenuIds = "/manager.Service/GetRoleMenuIds"
 const OperationServiceGetRoleTree = "/manager.Service/GetRoleTree"
@@ -121,6 +122,8 @@ type ServiceHTTPServer interface {
 	GetDepartmentTree(context.Context, *emptypb.Empty) (*GetDepartmentTreeReply, error)
 	// GetDict GetDict 获取指定字典信息
 	GetDict(context.Context, *GetDictRequest) (*Dict, error)
+	// GetDictValue GetDictValue 获取字典信息
+	GetDictValue(context.Context, *GetDictValueRequest) (*GetDictValueReply, error)
 	// GetMenuTree GetMenuTree 获取菜单树
 	GetMenuTree(context.Context, *emptypb.Empty) (*GetMenuTreeReply, error)
 	// GetRoleMenuIds CurrentRoleMenus 获取当前用户的角色列表
@@ -224,6 +227,8 @@ func RegisterServiceHTTPServer(s *http.Server, srv ServiceHTTPServer) {
 	r.PUT("/manager/v1/dict", _Service_UpdateDict0_HTTP_Handler(srv))
 	r.DELETE("/manager/v1/dict", _Service_DeleteDict0_HTTP_Handler(srv))
 	r.GET("/manager/v1/dict/values", _Service_PageDictValue0_HTTP_Handler(srv))
+	r.GET("/manager/client/v1/dict/value", _Service_GetDictValue0_HTTP_Handler(srv))
+	r.GET("/manager/v1/dict/value", _Service_GetDictValue1_HTTP_Handler(srv))
 	r.POST("/manager/v1/dict/value", _Service_AddDictValue0_HTTP_Handler(srv))
 	r.POST("/manager/v1/dict/values", _Service_ImportDictValue0_HTTP_Handler(srv))
 	r.PUT("/manager/v1/dict/value", _Service_UpdateDictValue0_HTTP_Handler(srv))
@@ -1208,6 +1213,44 @@ func _Service_PageDictValue0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.C
 	}
 }
 
+func _Service_GetDictValue0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in GetDictValueRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationServiceGetDictValue)
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
+			return srv.GetDictValue(ctx, req.(*GetDictValueRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*GetDictValueReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Service_GetDictValue1_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in GetDictValueRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationServiceGetDictValue)
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
+			return srv.GetDictValue(ctx, req.(*GetDictValueRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*GetDictValueReply)
+		return ctx.Result(200, reply)
+	}
+}
+
 func _Service_AddDictValue0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in AddDictValueRequest
@@ -1318,6 +1361,7 @@ type ServiceHTTPClient interface {
 	EnableUser(ctx context.Context, req *EnableUserRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	GetDepartmentTree(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *GetDepartmentTreeReply, err error)
 	GetDict(ctx context.Context, req *GetDictRequest, opts ...http.CallOption) (rsp *Dict, err error)
+	GetDictValue(ctx context.Context, req *GetDictValueRequest, opts ...http.CallOption) (rsp *GetDictValueReply, err error)
 	GetMenuTree(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *GetMenuTreeReply, err error)
 	GetRoleMenuIds(ctx context.Context, req *GetRoleMenuIdsRequest, opts ...http.CallOption) (rsp *GetRoleMenuIdsReply, err error)
 	GetRoleTree(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *GetRoleTreeReply, err error)
@@ -1660,6 +1704,19 @@ func (c *ServiceHTTPClientImpl) GetDict(ctx context.Context, in *GetDictRequest,
 	pattern := "/manager/v1/dict"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationServiceGetDict))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *ServiceHTTPClientImpl) GetDictValue(ctx context.Context, in *GetDictValueRequest, opts ...http.CallOption) (*GetDictValueReply, error) {
+	var out GetDictValueReply
+	pattern := "/manager/v1/dict/value"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationServiceGetDictValue))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {

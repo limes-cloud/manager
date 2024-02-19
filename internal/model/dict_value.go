@@ -21,7 +21,7 @@ type DictValue struct {
 // AllByDictId 通过dict_id查询所有字典值信息
 func (u *DictValue) AllByDictId(ctx kratosx.Context, id uint32) ([]*DictValue, error) {
 	var list []*DictValue
-	return list, ctx.DB().Model(DictValue{}).Find(&list, "dict=?", id).Error
+	return list, ctx.DB().Model(DictValue{}).Find(&list, "dict_id=?", id).Error
 }
 
 // Page 查询分页数据

@@ -23,6 +23,30 @@ func NewDictValue(conf *config.Config) *DictValue {
 	}
 }
 
+func (r *DictValue) GetValue(ctx kratosx.Context, in *v1.GetDictValueRequest) (*v1.GetDictValueReply, error) {
+	dict := model.Dict{}
+	if err := dict.FindByKeyword(ctx, in.Keyword); err != nil {
+		return nil, v1.NotFoundError()
+	}
+
+	dv := model.DictValue{}
+	list, err := dv.AllByDictId(ctx, dict.ID)
+	if err != nil {
+		return nil, v1.DatabaseError()
+	}
+
+	reply := &v1.GetDictValueReply{Dict: make(map[string]string)}
+	for _, value := range list {
+		reply.Dict[value.Value] = value.Label
+	}
+
+	if err = util.Transform(list, &reply.List); err != nil {
+		return nil, v1.TransformErrorFormat(err.Error())
+	}
+
+	return reply, nil
+}
+
 func (r *DictValue) Page(ctx kratosx.Context, in *v1.PageDictValueRequest) (*v1.PageDictValueReply, error) {
 	dv := model.DictValue{}
 	list, total, err := dv.Page(ctx, &types.PageOptions{

@@ -72,6 +72,7 @@ const (
 	Service_UpdateDict_FullMethodName                = "/manager.Service/UpdateDict"
 	Service_DeleteDict_FullMethodName                = "/manager.Service/DeleteDict"
 	Service_PageDictValue_FullMethodName             = "/manager.Service/PageDictValue"
+	Service_GetDictValue_FullMethodName              = "/manager.Service/GetDictValue"
 	Service_AddDictValue_FullMethodName              = "/manager.Service/AddDictValue"
 	Service_ImportDictValue_FullMethodName           = "/manager.Service/ImportDictValue"
 	Service_UpdateDictValue_FullMethodName           = "/manager.Service/UpdateDictValue"
@@ -180,6 +181,8 @@ type ServiceClient interface {
 	DeleteDict(ctx context.Context, in *DeleteDictRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	// PageDictValue 分页获取字典信息
 	PageDictValue(ctx context.Context, in *PageDictValueRequest, opts ...grpc.CallOption) (*PageDictValueReply, error)
+	// GetDictValue 获取字典信息
+	GetDictValue(ctx context.Context, in *GetDictValueRequest, opts ...grpc.CallOption) (*GetDictValueReply, error)
 	// AddDictValue 删除字典信息
 	AddDictValue(ctx context.Context, in *AddDictValueRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	// ImportDictValue 导入字典信息
@@ -666,6 +669,15 @@ func (c *serviceClient) PageDictValue(ctx context.Context, in *PageDictValueRequ
 	return out, nil
 }
 
+func (c *serviceClient) GetDictValue(ctx context.Context, in *GetDictValueRequest, opts ...grpc.CallOption) (*GetDictValueReply, error) {
+	out := new(GetDictValueReply)
+	err := c.cc.Invoke(ctx, Service_GetDictValue_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *serviceClient) AddDictValue(ctx context.Context, in *AddDictValueRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	out := new(emptypb.Empty)
 	err := c.cc.Invoke(ctx, Service_AddDictValue_FullMethodName, in, out, opts...)
@@ -804,6 +816,8 @@ type ServiceServer interface {
 	DeleteDict(context.Context, *DeleteDictRequest) (*emptypb.Empty, error)
 	// PageDictValue 分页获取字典信息
 	PageDictValue(context.Context, *PageDictValueRequest) (*PageDictValueReply, error)
+	// GetDictValue 获取字典信息
+	GetDictValue(context.Context, *GetDictValueRequest) (*GetDictValueReply, error)
 	// AddDictValue 删除字典信息
 	AddDictValue(context.Context, *AddDictValueRequest) (*emptypb.Empty, error)
 	// ImportDictValue 导入字典信息
@@ -974,6 +988,9 @@ func (UnimplementedServiceServer) DeleteDict(context.Context, *DeleteDictRequest
 }
 func (UnimplementedServiceServer) PageDictValue(context.Context, *PageDictValueRequest) (*PageDictValueReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method PageDictValue not implemented")
+}
+func (UnimplementedServiceServer) GetDictValue(context.Context, *GetDictValueRequest) (*GetDictValueReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetDictValue not implemented")
 }
 func (UnimplementedServiceServer) AddDictValue(context.Context, *AddDictValueRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddDictValue not implemented")
@@ -1936,6 +1953,24 @@ func _Service_PageDictValue_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Service_GetDictValue_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetDictValueRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ServiceServer).GetDictValue(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Service_GetDictValue_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ServiceServer).GetDictValue(ctx, req.(*GetDictValueRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Service_AddDictValue_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(AddDictValueRequest)
 	if err := dec(in); err != nil {
@@ -2222,6 +2257,10 @@ var Service_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "PageDictValue",
 			Handler:    _Service_PageDictValue_Handler,
+		},
+		{
+			MethodName: "GetDictValue",
+			Handler:    _Service_GetDictValue_Handler,
 		},
 		{
 			MethodName: "AddDictValue",

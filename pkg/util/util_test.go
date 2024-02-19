@@ -5,11 +5,11 @@ import (
 )
 
 func TestParsePwd(t *testing.T) {
-	res := ParsePwd("123456")
+	res := ParsePwd("12345678")
 	t.Log(res, len(res))
 }
 
-//func TestCompareValue(t *testing.T) {
+// func TestCompareValue(t *testing.T) {
 //	tp := new(string)
 //	CompareValue(tp, "a")
-//}
+// }

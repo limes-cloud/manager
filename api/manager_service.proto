@@ -392,6 +392,16 @@ service Service {
     };
   }
 
+  // GetDictValue 获取字典信息
+  rpc GetDictValue (GetDictValueRequest) returns (GetDictValueReply) {
+    option (google.api.http) = {
+      get: "/manager/v1/dict/value",
+      additional_bindings:{
+        get: "/manager/client/v1/dict/value",
+      }
+    };
+  }
+
   // AddDictValue 删除字典信息
   rpc AddDictValue (AddDictValueRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {

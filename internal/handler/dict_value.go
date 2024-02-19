@@ -9,6 +9,10 @@ import (
 	v1 "github.com/limes-cloud/manager/api/v1"
 )
 
+func (s *Service) GetDictValue(ctx context.Context, in *v1.GetDictValueRequest) (*v1.GetDictValueReply, error) {
+	return s.dictValue.GetValue(kratosx.MustContext(ctx), in)
+}
+
 func (s *Service) PageDictValue(ctx context.Context, in *v1.PageDictValueRequest) (*v1.PageDictValueReply, error) {
 	return s.dictValue.Page(kratosx.MustContext(ctx), in)
 }

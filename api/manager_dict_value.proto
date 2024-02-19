@@ -5,7 +5,7 @@ package manager;
 option go_package = "./v1;v1";
 
 import "validate/validate.proto";
-
+ import "google/protobuf/struct.proto";
 
 message DictValue {
   uint32 id = 1;
@@ -19,6 +19,15 @@ message DictValue {
   string description = 9;
   optional uint32 created_at = 10;
   optional uint32 updated_at = 11;
+}
+
+message GetDictValueRequest{
+  string keyword = 1[(validate.rules).string = {min_len:1}];
+}
+
+message GetDictValueReply{
+  repeated DictValue list = 1;
+  map<string,string> dict = 2;
 }
 
 message PageDictValueRequest{
