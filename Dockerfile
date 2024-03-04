@@ -25,7 +25,6 @@ ENV APP_VERSION=$APP_VERSION
 RUN echo ${APP_NAME} $CONF_HOST
 
 COPY ./static/ /go/build/static/
-COPY ./tmp/ /go/build/tmp/
 
 COPY --from=build /go/build/manager /go/build/manager
 CMD ["./manager"]
