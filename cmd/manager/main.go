@@ -24,11 +24,13 @@ func main() {
 	app := kratosx.New(
 		kratosx.Config(client.NewFromEnv()),
 		kratosx.RegistrarServer(RegisterServer),
-		kratosx.Options(kratos.AfterStart(func(ctx context.Context) error {
-			kt := kratosx.MustContext(ctx)
-			pt.ArtFont(fmt.Sprintf("Hello %s !", kt.Name()))
-			return nil
-		})),
+		kratosx.Options(
+			kratos.AfterStart(func(ctx context.Context) error {
+				kt := kratosx.MustContext(ctx)
+				pt.ArtFont(fmt.Sprintf("Hello %s !", kt.Name()))
+				return nil
+			}),
+		),
 	)
 
 	if err := app.Run(); err != nil {
