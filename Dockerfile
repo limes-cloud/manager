@@ -12,8 +12,8 @@ RUN GOOS=linux CGO_ENABLED=0 go build -ldflags="-s -w" -installsuffix cgo -o man
 
 # 构建执行镜像
 FROM alpine
-WORKDIR /go/build
 
+# 打包的时候定义环境变量，提供给pipeline使用
 ARG APP_VERSION
 ARG APP_NAME
 ARG CONF_HOST
@@ -22,9 +22,8 @@ ENV CONF_HOST=$CONF_HOST
 ENV CONF_TOKEN=$CONF_TOKEN
 ENV APP_NAME=$APP_NAME
 ENV APP_VERSION=$APP_VERSION
-RUN echo ${APP_NAME} $CONF_HOST
 
+WORKDIR /go/build
 COPY ./static/ /go/build/static/
-
 COPY --from=build /go/build/manager /go/build/manager
 CMD ["./manager"]
