@@ -107,7 +107,7 @@ func (r *Role) All(ctx kratosx.Context, scopes types.Scopes) ([]*Role, error) {
 	var list []*Role
 	db := ctx.DB()
 	if scopes != nil {
-		db.Scopes(scopes)
+		db = db.Scopes(scopes)
 	}
 	return list, db.Find(&list).Error
 }

@@ -72,7 +72,7 @@ func (m *Menu) All(ctx kratosx.Context, scopes types.Scopes) ([]*Menu, error) {
 	if scopes != nil {
 		db = db.Scopes(scopes)
 	}
-	return list, db.Order("weight desc").Find(&list).Error
+	return list, db.Order("weight desc,id asc").Find(&list).Error
 }
 
 // Tree 获取菜单树

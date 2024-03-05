@@ -303,7 +303,7 @@ func (r *User) Add(ctx kratosx.Context, in *v1.AddUserRequest) (*emptypb.Empty, 
 	// 设置默认值
 	user.Nickname = user.Name
 	user.Avatar = r.conf.DefaultUserAvatar
-	user.Password = util.ParsePwd(r.conf.DefaultUserPassword)
+	user.Password = r.conf.DefaultUserPassword
 	user.RoleID = in.RoleIds[0]
 	user.Status = proto.Bool(true)
 

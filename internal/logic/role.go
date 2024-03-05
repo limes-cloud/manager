@@ -70,6 +70,9 @@ func (r *Role) Tree(ctx kratosx.Context) (*v1.GetRoleTreeReply, error) {
 	// 构造角色树
 	var tl []tree.Tree
 	for _, item := range list {
+		if item.ID() == role.ID() {
+			item.ParentID = 0
+		}
 		tl = append(tl, item)
 	}
 	trs := tree.BuildTree(tl)

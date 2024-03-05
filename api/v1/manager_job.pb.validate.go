@@ -1093,18 +1093,7 @@ func (m *UpdateJobRequest) validate(all bool) error {
 	}
 
 	if m.Weight != nil {
-
-		if m.GetWeight() <= 0 {
-			err := UpdateJobRequestValidationError{
-				field:  "Weight",
-				reason: "value must be greater than 0",
-			}
-			if !all {
-				return err
-			}
-			errors = append(errors, err)
-		}
-
+		// no validation rules for Weight
 	}
 
 	if len(errors) > 0 {
