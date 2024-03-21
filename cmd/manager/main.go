@@ -11,13 +11,11 @@ import (
 	"github.com/limes-cloud/configure/client"
 	"github.com/limes-cloud/kratosx"
 	"github.com/limes-cloud/kratosx/config"
+	"github.com/limes-cloud/kratosx/pkg/print"
 	_ "go.uber.org/automaxprocs"
 
-	v1 "github.com/limes-cloud/manager/api/v1"
-	srcConf "github.com/limes-cloud/manager/config"
-	"github.com/limes-cloud/manager/internal/handler"
-	"github.com/limes-cloud/manager/internal/initiator"
-	"github.com/limes-cloud/manager/pkg/pt"
+	conf "github.com/limes-cloud/manager/internal/config"
+	"github.com/limes-cloud/manager/internal/service"
 )
 
 func main() {
@@ -27,7 +25,7 @@ func main() {
 		kratosx.Options(
 			kratos.AfterStart(func(ctx context.Context) error {
 				kt := kratosx.MustContext(ctx)
-				pt.ArtFont(fmt.Sprintf("Hello %s !", kt.Name()))
+				print.ArtFont(fmt.Sprintf("Hello %s !", kt.Name()))
 				return nil
 			}),
 		),
@@ -39,26 +37,13 @@ func main() {
 }
 
 func RegisterServer(c config.Config, hs *http.Server, gs *grpc.Server) {
-	conf := &srcConf.Config{}
-	// 配置初始化
-	if err := c.Value("business").Scan(conf); err != nil {
-		panic("business配置初始化失败：" + err.Error())
-	}
-
-	// 监听服务
-	c.Watch("business", func(value config.Value) {
+	conf := &conf.Config{}
+	c.ScanWatch("business", func(value config.Value) {
 		if err := value.Scan(conf); err != nil {
 			log.Printf("business配置变更失败：%s", err.Error())
 		}
 	})
 
-	// 初始化逻辑
-	ior := initiator.New(conf)
-	if err := ior.Run(); err != nil {
-		panic("initiator error:" + err.Error())
-	}
-
-	srv := handler.New(conf)
-	v1.RegisterServiceHTTPServer(hs, srv)
-	v1.RegisterServiceServer(gs, srv)
+	// 注册服务
+	service.New(conf, hs, gs)
 }

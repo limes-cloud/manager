@@ -1,0 +1,74 @@
+ syntax = "proto3";
+
+package manager_dictionary;
+option go_package = "./v1;v1";
+
+import "validate/validate.proto";
+import "google/protobuf/struct.proto";
+
+message DictionaryValue {
+  uint32 id = 1;
+  uint32 dictionary_id = 2;
+  string label = 3;
+  string value = 4;
+  bool status = 5;
+  optional uint32 weight = 6;
+  string type = 7;
+  string extra = 8;
+  string description = 9;
+  optional uint32 created_at = 10;
+  optional uint32 updated_at = 11;
+}
+
+message GetDictionaryValueRequest{
+  string keyword = 1[(validate.rules).string = {min_len:1}];
+}
+
+message GetDictionaryValueReply{
+  repeated DictionaryValue list = 1;
+  map<string,string> dict = 2;
+}
+
+message PageDictionaryValueRequest{
+  uint32 page = 1[(validate.rules).uint32 = {gt: 0}];
+  uint32 page_size = 2[(validate.rules).uint32 = {gt: 0,lte:50}];
+  uint32 dictionary_id = 3[(validate.rules).uint32 = {gt: 0}];
+  optional string label = 4;
+  optional string value = 5;
+}
+
+message PageDictionaryValueReply{
+  uint32 total = 1;
+  repeated DictionaryValue list = 2;
+}
+
+message AddDictionaryValueRequest{
+  uint32 dict_id = 2[(validate.rules).uint32 = {gt:0}];
+  string label = 3[(validate.rules).string = {min_len:1}];
+  string value = 4[(validate.rules).string = {min_len:1}];
+  optional string type = 5;
+  optional string extra = 6;
+  optional string description = 7;
+  optional uint32 weight = 8;
+  optional bool status = 9;
+}
+
+ message AddDictionaryValueReply{
+  uint32 id = 1;
+ }
+
+message UpdateDictionaryValueRequest{
+  uint32 id = 1[(validate.rules).uint32 = {gt:0}];
+  uint32 dict_id = 2[(validate.rules).uint32 = {gt:0}];
+  string label = 3[(validate.rules).string = {min_len:1}];
+  string value = 4[(validate.rules).string = {min_len:1}];
+  optional string type = 5;
+  optional string extra = 6;
+  optional string description = 7;
+  optional uint32 weight = 8;
+  optional bool status = 9;
+}
+
+message DeleteDictionaryValueRequest{
+  uint32 id = 1[(validate.rules).uint32 = {gt:0}];
+}

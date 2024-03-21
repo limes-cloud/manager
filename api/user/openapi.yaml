@@ -1,0 +1,667 @@
+# Generated with protoc-gen-openapi
+# https://github.com/google/gnostic/tree/master/cmd/protoc-gen-openapi
+
+openapi: 3.0.3
+info:
+    title: Service API
+    version: 0.0.1
+paths:
+    /manager/v1/user:
+        put:
+            tags:
+                - Service
+            description: UpdateUser 更新用户信息
+            operationId: Service_UpdateUser
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/UpdateUserRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        post:
+            tags:
+                - Service
+            description: AddUser 新增用户信息
+            operationId: Service_AddUser
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/AddUserRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/AddUserReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        delete:
+            tags:
+                - Service
+            description: DeleteUser 删除用户信息
+            operationId: Service_DeleteUser
+            parameters:
+                - name: id
+                  in: query
+                  schema:
+                    type: integer
+                    format: uint32
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /manager/v1/user/current:
+        get:
+            tags:
+                - Service
+            description: CurrentUser 获取当前用户信息
+            operationId: Service_CurrentUser
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/User'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        put:
+            tags:
+                - Service
+            description: UpdateCurrentUser 更新用户基础信息
+            operationId: Service_UpdateCurrentUser
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/UpdateCurrentUserRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /manager/v1/user/disable:
+        post:
+            tags:
+                - Service
+            description: DisableUser 禁用用户
+            operationId: Service_DisableUser
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/DisableUserRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /manager/v1/user/enable:
+        post:
+            tags:
+                - Service
+            description: DisableUser 禁用用户
+            operationId: Service_EnableUser
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/EnableUserRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /manager/v1/user/login:
+        post:
+            tags:
+                - Service
+            operationId: Service_UserLogin
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/UserLoginRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/UserLoginReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /manager/v1/user/login/captcha:
+        post:
+            tags:
+                - Service
+            operationId: Service_UserLoginCaptcha
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/CaptchaReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /manager/v1/user/logout:
+        post:
+            tags:
+                - Service
+            operationId: Service_UserLogout
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /manager/v1/user/offline:
+        post:
+            tags:
+                - Service
+            description: DisableUser 禁用用户
+            operationId: Service_OfflineUser
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/OfflineUserRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /manager/v1/user/password/captcha:
+        post:
+            tags:
+                - Service
+            description: ChangeUserPasswordCaptcha 用户修改密码验证码
+            operationId: Service_ChangeUserPasswordCaptcha
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/CaptchaReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /manager/v1/user/password/change:
+        post:
+            tags:
+                - Service
+            description: ChangeUserPassword 用户修改密码
+            operationId: Service_ChangeUserPassword
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/ChangeUserPasswordRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /manager/v1/user/password/reset:
+        post:
+            tags:
+                - Service
+            description: ResetUserPassword 重置用户密码
+            operationId: Service_ResetUserPassword
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/ResetUserPasswordRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /manager/v1/user/role/switch:
+        post:
+            tags:
+                - Service
+            description: SwitchCurrentUserRole 切换用户当前角色
+            operationId: Service_SwitchCurrentUserRole
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/SwitchCurrentUserRoleRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/SwitchCurrentUserRoleReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /manager/v1/user/token/refresh:
+        post:
+            tags:
+                - Service
+            operationId: Service_UserRefreshToken
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/UserRefreshTokenReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /manager/v1/users:
+        get:
+            tags:
+                - Service
+            description: PageUser 新增用户信息
+            operationId: Service_PageUser
+            parameters:
+                - name: page
+                  in: query
+                  schema:
+                    type: integer
+                    format: uint32
+                - name: pageSize
+                  in: query
+                  schema:
+                    type: integer
+                    format: uint32
+                - name: username
+                  in: query
+                  schema:
+                    type: string
+                - name: status
+                  in: query
+                  schema:
+                    type: boolean
+                - name: roleId
+                  in: query
+                  schema:
+                    type: integer
+                    format: uint32
+                - name: departmentId
+                  in: query
+                  schema:
+                    type: integer
+                    format: uint32
+                - name: startTime
+                  in: query
+                  schema:
+                    type: integer
+                    format: uint32
+                - name: endTime
+                  in: query
+                  schema:
+                    type: integer
+                    format: uint32
+                - name: name
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/PageUserReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+components:
+    schemas:
+        AddUserReply:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: uint32
+        AddUserRequest:
+            type: object
+            properties:
+                departmentId:
+                    type: integer
+                    format: uint32
+                roleIds:
+                    type: array
+                    items:
+                        type: integer
+                        format: uint32
+                jobIds:
+                    type: array
+                    items:
+                        type: integer
+                        format: uint32
+                name:
+                    type: string
+                gender:
+                    type: string
+                phone:
+                    type: string
+                email:
+                    type: string
+                status:
+                    type: boolean
+        CaptchaReply:
+            type: object
+            properties:
+                uuid:
+                    type: string
+                captcha:
+                    type: string
+                expire:
+                    type: integer
+                    format: uint32
+        ChangeUserPasswordRequest:
+            type: object
+            properties:
+                password:
+                    type: string
+                captchaId:
+                    type: string
+                captcha:
+                    type: string
+        DisableUserRequest:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: uint32
+                desc:
+                    type: string
+        EnableUserRequest:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: uint32
+        GoogleProtobufAny:
+            type: object
+            properties:
+                '@type':
+                    type: string
+                    description: The type of the serialized message.
+            additionalProperties: true
+            description: Contains an arbitrary serialized message along with a @type that describes the type of the serialized message.
+        OfflineUserRequest:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: uint32
+        PageUserReply:
+            type: object
+            properties:
+                total:
+                    type: integer
+                    format: uint32
+                list:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/User'
+        ResetUserPasswordRequest:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: uint32
+        Status:
+            type: object
+            properties:
+                code:
+                    type: integer
+                    description: The status code, which should be an enum value of [google.rpc.Code][google.rpc.Code].
+                    format: int32
+                message:
+                    type: string
+                    description: A developer-facing error message, which should be in English. Any user-facing error message should be localized and sent in the [google.rpc.Status.details][google.rpc.Status.details] field, or localized by the client.
+                details:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/GoogleProtobufAny'
+                    description: A list of messages that carry the error details.  There is a common set of message types for APIs to use.
+            description: 'The `Status` type defines a logical error model that is suitable for different programming environments, including REST APIs and RPC APIs. It is used by [gRPC](https://github.com/grpc). Each `Status` message contains three pieces of data: error code, error message, and error details. You can find out more about this error model and how to work with it in the [API Design Guide](https://cloud.google.com/apis/design/errors).'
+        SwitchCurrentUserRoleReply:
+            type: object
+            properties:
+                token:
+                    type: string
+        SwitchCurrentUserRoleRequest:
+            type: object
+            properties:
+                roleId:
+                    type: integer
+                    format: uint32
+        UpdateCurrentUserRequest:
+            type: object
+            properties:
+                nickname:
+                    type: string
+                gender:
+                    type: string
+        UpdateUserRequest:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: uint32
+                departmentId:
+                    type: integer
+                    format: uint32
+                jobIds:
+                    type: array
+                    items:
+                        type: integer
+                        format: uint32
+                roleIds:
+                    type: array
+                    items:
+                        type: integer
+                        format: uint32
+                name:
+                    type: string
+                gender:
+                    type: string
+                phone:
+                    type: string
+                email:
+                    type: string
+        User:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: uint32
+                departmentId:
+                    type: integer
+                    format: uint32
+                roleId:
+                    type: integer
+                    format: uint32
+                name:
+                    type: string
+                nickname:
+                    type: string
+                gender:
+                    type: string
+                phone:
+                    type: string
+                avatar:
+                    type: string
+                email:
+                    type: string
+                status:
+                    type: boolean
+                disabled:
+                    type: string
+                lastLogin:
+                    type: integer
+                    format: uint32
+                createdAt:
+                    type: integer
+                    format: uint32
+                updatedAt:
+                    type: integer
+                    format: uint32
+                department:
+                    $ref: '#/components/schemas/User_Department'
+                role:
+                    $ref: '#/components/schemas/User_Role'
+                roles:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/User_Role'
+                jobs:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/User_Job'
+        UserLoginReply:
+            type: object
+            properties:
+                token:
+                    type: string
+        UserLoginRequest:
+            type: object
+            properties:
+                username:
+                    type: string
+                password:
+                    type: string
+                captchaId:
+                    type: string
+                captcha:
+                    type: string
+            description: UserLoginRequest 用户登录
+        UserRefreshTokenReply:
+            type: object
+            properties:
+                token:
+                    type: string
+        User_Department:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: uint32
+                keyword:
+                    type: string
+                name:
+                    type: string
+        User_Job:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: uint32
+                keyword:
+                    type: string
+                name:
+                    type: string
+        User_Role:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: uint32
+                keyword:
+                    type: string
+                name:
+                    type: string
+tags:
+    - name: Service

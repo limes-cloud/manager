@@ -1,0 +1,88 @@
+syntax = "proto3";
+
+package manager_menu;
+option go_package = "./v1;v1";
+
+import "validate/validate.proto";
+
+message Menu {
+  uint32 id = 1;
+  uint32 parent_id = 2;
+  string app = 3;
+  string title = 4;
+  string type = 5;
+  string icon = 6;
+  string keyword = 7;
+  optional string path = 8;
+  optional string permission = 9;
+  optional string component = 10;
+  optional string api = 11;
+  optional string method = 12;
+  bool check_object = 13;
+  optional string check_object_rule = 14;
+  optional string redirect = 15;
+  int32 weight = 16;
+  bool is_hidden = 17;
+  bool is_cache = 18;
+  bool is_home = 19;
+  bool is_affix = 20;
+  repeated Menu children = 21;
+  uint32 created_at = 22;
+  uint32 updated_at = 23;
+}
+
+message GetMenuTreeReply{
+  repeated Menu list = 1;
+}
+
+message AddMenuRequest{
+  uint32 parent_id = 1;
+  string app = 2[(validate.rules).string = {min_len:1}];
+  string title = 3[(validate.rules).string = {min_len:1}];
+  string type = 4[(validate.rules).string = {in:["R","A","M","G","BA"]}];
+  optional string icon = 5;
+  optional string path = 6;
+  optional string keyword = 7;
+  optional string permission = 8;
+  optional string component = 9;
+  optional string api = 10;
+  optional string method = 11;
+  optional string redirect = 12;
+  optional int32 weight = 13;
+  optional bool is_hidden = 14;
+  optional bool is_cache = 15;
+  optional bool is_home = 16;
+  optional bool is_affix = 17;
+  optional bool check_object = 18;
+  optional string check_object_rule = 19;
+}
+
+message AddMenuReply{
+  uint32 id =1;
+}
+
+message UpdateMenuRequest{
+  uint32 id = 1[(validate.rules).uint32 = {gt:0}];
+  uint32 parent_id = 2;
+  string title = 3[(validate.rules).string = {min_len:1}];
+  string type = 4[(validate.rules).string = {in:["R","A","M","G","BA"]}];
+  optional string icon = 5;
+  optional string path = 6;
+  optional string keyword = 7;
+  optional string permission = 8;
+  optional string component = 9;
+  optional string api = 10;
+  optional string method = 11;
+  optional string redirect = 12;
+  optional int32 weight = 13;
+  optional bool is_hidden = 14;
+  optional bool is_cache = 15;
+  optional bool is_home = 16;
+  optional bool is_affix = 17;
+  optional bool check_object = 18;
+  optional string check_object_rule = 19;
+}
+
+message DeleteMenuRequest{
+  uint32 id = 1[(validate.rules).uint32 = {gt:0}];
+}

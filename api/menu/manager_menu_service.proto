@@ -1,0 +1,48 @@
+syntax = "proto3";
+
+package manager_menu;
+option go_package = "./v1;v1";
+
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+import "manager_menu.proto";
+
+
+service Service {
+  // GetMenuTree 获取菜单树
+  rpc GetMenuTree (google.protobuf.Empty) returns (GetMenuTreeReply) {
+    option (google.api.http) = {
+      get: "/manager/v1/menu/tree",
+    };
+  }
+
+  // AllMenuFromRole 获取角色的全部菜单树
+  rpc GetMenuTreeFromRole (google.protobuf.Empty) returns (GetMenuTreeReply) {
+    option (google.api.http) = {
+      get: "/manager/v1/menu/tree/from/role",
+    };
+  }
+
+  // AddMenu 添加菜单
+  rpc AddMenu (AddMenuRequest) returns (AddMenuReply) {
+    option (google.api.http) = {
+      post: "/manager/v1/menu",
+      body: "*",
+    };
+  }
+
+  // UpdateMenu 更新菜单
+  rpc UpdateMenu (UpdateMenuRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      put: "/manager/v1/menu",
+      body: "*",
+    };
+  }
+
+  // DeleteMenu 删除菜单
+  rpc DeleteMenu (DeleteMenuRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      delete: "/manager/v1/menu",
+    };
+  }
+}

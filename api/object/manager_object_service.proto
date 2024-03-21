@@ -1,0 +1,48 @@
+syntax = "proto3";
+
+package manager_object;
+option go_package = "./v1;v1";
+
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+import "manager_object.proto";
+
+
+service Service {
+  // GetObject 获取指定资源对象信息
+  rpc GetObject (GetObjectRequest) returns (Object) {
+    option (google.api.http) = {
+      get: "/manager/v1/object",
+    };
+  }
+
+  // PageObject 分页获取资源对象信息
+  rpc PageObject (PageObjectRequest) returns (PageObjectReply) {
+    option (google.api.http) = {
+      get: "/manager/v1/objects",
+    };
+  }
+
+  // AddObject 删除资源对象信息
+  rpc AddObject (AddObjectRequest) returns (AddObjectReply) {
+    option (google.api.http) = {
+      post: "/manager/v1/object",
+      body: "*",
+    };
+  }
+
+  // UpdateObject 更新资源对象信息
+  rpc UpdateObject (UpdateObjectRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      put: "/manager/v1/object",
+      body: "*",
+    };
+  }
+
+  // DeleteObject 删除资源对象信息
+  rpc DeleteObject (DeleteObjectRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      delete: "/manager/v1/object",
+    };
+  }
+}

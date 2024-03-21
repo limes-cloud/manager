@@ -1,0 +1,57 @@
+syntax = "proto3";
+
+package manager_role;
+option go_package = "./v1;v1";
+
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+import "manager_role.proto";
+
+
+service Service {
+   // CurrentRoleMenus 获取当前用户的角色列表
+  rpc GetRoleMenuIds (GetRoleMenuIdsRequest) returns (GetRoleMenuIdsReply) {
+    option (google.api.http) = {
+      get: "/manager/v1/role/menu/ids",
+      response_body:"list",
+    };
+  }
+
+  // AddRoleMenus 更新角色菜单
+  rpc UpdateRoleMenus(UpdateRoleMenuRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      put: "/manager/v1/role/menu",
+      body: "*"
+    };
+  }
+
+  // GetRoleTree 获取能管理的角色树
+  rpc GetRoleTree (google.protobuf.Empty) returns (Role) {
+    option (google.api.http) = {
+      get: "/manager/v1/role/tree",
+    };
+  }
+
+  // AddRole 新增角色
+  rpc AddRole (AddRoleRequest) returns (AddRoleReply) {
+    option (google.api.http) = {
+      post: "/manager/v1/role",
+      body: "*",
+    };
+  }
+
+  // UpdateRole 更新角色
+  rpc UpdateRole (UpdateRoleRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      put: "/manager/v1/role",
+      body: "*",
+    };
+  }
+
+  // DeleteRole 删除角色
+  rpc DeleteRole (DeleteRoleRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      delete: "/manager/v1/role",
+    };
+  }
+}

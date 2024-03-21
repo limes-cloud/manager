@@ -1,0 +1,45 @@
+syntax = "proto3";
+
+package manager_error;
+
+import "errors/errors.proto";
+option go_package = "./;errors";
+
+enum ErrorReason {
+  // 设置缺省错误码
+  option (errors.default_code) = 200;
+  NotFound = 0[(errors.message)="数据不存在"];
+  Database = 1[(errors.message)="数据库错误"];
+  Metadata = 2[(errors.message)="元数据异常"];
+  Transform = 3[(errors.message)="数据转换失败"];
+  DepartmentPermissions = 4[(errors.message)="无此部门权限"];
+  RolePermissions= 5[(errors.message)="无此角色权限"];
+  UserPermissions= 6[(errors.message)="无此用户权限"];
+  MenuPermissions= 7[(errors.message)="无此菜单权限"];
+  EditSystemData = 8[(errors.message)="系统数据，不允许修改"];
+  DeleteSystemData = 9[(errors.message)="系统数据，不允许删除"];
+  NewCaptcha = 10[(errors.message)="二维码生成失败"];
+  VerifyCaptcha = 11[(errors.message)="验证码验证失败"];
+  RsaDecode = 12[(errors.message)="rsa解密失败"];
+  PasswordFormat = 13[(errors.message)="密码格式错误"];
+  PasswordExpire = 14[(errors.message)="密码已过期"];
+  UserDisable = 15[(errors.message)="用户已被禁用"];
+  RoleDisable = 16[(errors.message)="角色已被禁用"];
+  UserPassword = 17[(errors.message)="用户密码错误"];
+  NewToken = 18[(errors.message)="token生成失败"];
+  ParseToken = 19[(errors.message)="token解析失败"];
+  RefreshToken = 20 [(errors.code)=401,(errors.message)="刷新token失败"];
+  EmptyToken = 21[(errors.message)="token不能为空"];
+  DeleteSelfRole = 22[(errors.message)="不能删除自己的当前所属角色"];
+  DeleteSelfDepartment = 23[(errors.message)="不能删除自己的当前所属部门"];
+  ParentMenu = 24[(errors.message)="当前菜单的父菜单不能为自己"];
+  SendEmailCaptcha = 25[(errors.message)="发送邮箱验证码失败"];
+  UsernameFormat = 26[(errors.message)="用户名格式错误"];
+  UsernameNotExist = 27[(errors.message)="用户不存在"];
+  DisableSelfUser = 28[(errors.message)="不能禁用当前用户"];
+  Forbidden = 29[(errors.code)=403,(errors.message)="无接口权限"];
+  DeleteSelfUser = 30[(errors.message)="不能删除当前账号"];
+  ResetSelfUserPassword = 31[(errors.message)="不能重置当前账号密码"];
+}
+
+
