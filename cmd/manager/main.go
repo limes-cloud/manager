@@ -8,7 +8,7 @@ import (
 	"github.com/go-kratos/kratos/v2"
 	"github.com/go-kratos/kratos/v2/transport/grpc"
 	"github.com/go-kratos/kratos/v2/transport/http"
-	"github.com/limes-cloud/configure/client"
+	configure "github.com/limes-cloud/configure/api/client"
 	"github.com/limes-cloud/kratosx"
 	"github.com/limes-cloud/kratosx/config"
 	"github.com/limes-cloud/kratosx/pkg/print"
@@ -20,7 +20,7 @@ import (
 
 func main() {
 	app := kratosx.New(
-		kratosx.Config(client.NewFromEnv()),
+		kratosx.Config(configure.NewFromEnv()),
 		kratosx.RegistrarServer(RegisterServer),
 		kratosx.Options(
 			kratos.AfterStart(func(ctx context.Context) error {

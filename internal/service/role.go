@@ -3,8 +3,8 @@ package service
 import (
 	"context"
 
-	"github.com/limes-cloud/configure/pkg/util"
 	"github.com/limes-cloud/kratosx"
+	"github.com/limes-cloud/kratosx/pkg/util"
 	"google.golang.org/protobuf/types/known/emptypb"
 
 	"github.com/limes-cloud/manager/api/errors"
