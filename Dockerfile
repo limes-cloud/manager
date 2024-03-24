@@ -25,5 +25,7 @@ ENV APP_VERSION=$APP_VERSION
 
 WORKDIR /go/build
 COPY ./static/ /go/build/static/
+COPY ./deploy/ /go/build/deploy/
+
 COPY --from=build /go/build/manager /go/build/manager
 CMD ["./manager"]
