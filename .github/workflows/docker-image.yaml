@@ -44,4 +44,4 @@ jobs:  # workflow中的job
             docker rm manager
             # docker login -u 你的github名称 -p 你的github token https://ghcr.io 
             docker pull ${{ secrets.DOCKERHUB_USERNAME }}/manager
-            docker run -d --network host --restart=always --name manager ${{ secrets.DOCKERHUB_USERNAME }}/manager
+            docker run -d --network host --restart=always  --env APP_NAME=Manager --env CONF_HOST=127.0.0.1:6082 --env CONF_TOKEN=5B655B7D4A51BF79C974C9F27C27D992 --name manager ${{ secrets.DOCKERHUB_USERNAME }}/manager
