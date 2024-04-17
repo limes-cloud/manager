@@ -32,7 +32,7 @@ CREATE TABLE `casbin_rule` (
   `v5` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `idx_casbin_rule` (`ptype`,`v0`,`v1`,`v2`,`v3`,`v4`,`v5`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ;
 
 -- ----------------------------
 -- Records of casbin_rule
@@ -57,7 +57,7 @@ CREATE TABLE `department` (
   UNIQUE KEY `name` (`name`),
   KEY `idx_department_created_at` (`created_at`),
   KEY `idx_department_updated_at` (`updated_at`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='部门信息';
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4  COMMENT='部门信息';
 
 -- ----------------------------
 -- Records of department
@@ -79,7 +79,7 @@ CREATE TABLE `department_closure` (
   KEY `fk_department_closure_children_department` (`children`),
   CONSTRAINT `fk_department_closure_children_department` FOREIGN KEY (`children`) REFERENCES `department` (`id`) ON DELETE CASCADE,
   CONSTRAINT `fk_department_closure_parent_department` FOREIGN KEY (`parent`) REFERENCES `department` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='部门层级信息';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4  COMMENT='部门层级信息';
 
 -- ----------------------------
 -- Records of department_closure
@@ -97,7 +97,7 @@ CREATE TABLE `department_object` (
   `object_id` int unsigned NOT NULL COMMENT '资源对象id',
   `value` varchar(64) NOT NULL COMMENT '资源对象值',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='部门资源';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4  COMMENT='部门资源';
 
 -- ----------------------------
 -- Records of department_object
@@ -121,7 +121,7 @@ CREATE TABLE `dictionary` (
   UNIQUE KEY `name` (`name`),
   KEY `idx_dictionary_updated_at` (`updated_at`),
   KEY `idx_dictionary_created_at` (`created_at`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='字典信息';
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4  COMMENT='字典信息';
 
 -- ----------------------------
 -- Records of dictionary
@@ -153,7 +153,7 @@ CREATE TABLE `dictionary_value` (
   KEY `idx_dictionary_value_created_at` (`created_at`),
   KEY `idx_dictionary_value_updated_at` (`updated_at`),
   CONSTRAINT `fk_dictionary_value_dict` FOREIGN KEY (`dictionary_id`) REFERENCES `dictionary` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='字典值信息';
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4  COMMENT='字典值信息';
 
 -- ----------------------------
 -- Records of dictionary_value
@@ -181,7 +181,7 @@ CREATE TABLE `job` (
   UNIQUE KEY `name` (`name`),
   KEY `idx_job_created_at` (`created_at`),
   KEY `idx_job_updated_at` (`updated_at`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='职位信息';
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4  COMMENT='职位信息';
 
 -- ----------------------------
 -- Records of job
@@ -222,7 +222,7 @@ CREATE TABLE `menu` (
   UNIQUE KEY `path` (`path`),
   KEY `idx_menu_created_at` (`created_at`),
   KEY `idx_menu_updated_at` (`updated_at`)
-) ENGINE=InnoDB AUTO_INCREMENT=264 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='菜单信息';
+) ENGINE=InnoDB AUTO_INCREMENT=264 DEFAULT CHARSET=utf8mb4  COMMENT='菜单信息';
 
 -- ----------------------------
 -- Records of menu
@@ -512,7 +512,7 @@ CREATE TABLE `object` (
   PRIMARY KEY (`id`),
   KEY `idx_object_created_at` (`created_at`),
   KEY `idx_object_updated_at` (`updated_at`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='资源对象';
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4  COMMENT='资源对象';
 
 -- ----------------------------
 -- Records of object
@@ -541,7 +541,7 @@ CREATE TABLE `role` (
   PRIMARY KEY (`id`),
   KEY `idx_role_created_at` (`created_at`),
   KEY `idx_role_updated_at` (`updated_at`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='角色信息';
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4  COMMENT='角色信息';
 
 -- ----------------------------
 -- Records of role
@@ -563,7 +563,7 @@ CREATE TABLE `role_closure` (
   KEY `fk_role_closure_children_role` (`children`),
   CONSTRAINT `fk_role_closure_children_role` FOREIGN KEY (`children`) REFERENCES `role` (`id`) ON DELETE CASCADE,
   CONSTRAINT `fk_role_closure_parent_role` FOREIGN KEY (`parent`) REFERENCES `role` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='角色层级信息';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4  COMMENT='角色层级信息';
 
 -- ----------------------------
 -- Records of role_closure
@@ -586,7 +586,7 @@ CREATE TABLE `role_menu` (
   KEY `fk_role_menu_menu` (`menu_id`),
   CONSTRAINT `fk_role_menu_menu` FOREIGN KEY (`menu_id`) REFERENCES `menu` (`id`) ON DELETE CASCADE,
   CONSTRAINT `fk_role_menu_role` FOREIGN KEY (`role_id`) REFERENCES `role` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='角色菜单信息';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4  COMMENT='角色菜单信息';
 
 -- ----------------------------
 -- Records of role_menu
@@ -622,7 +622,7 @@ CREATE TABLE `user` (
   KEY `fk_user_department` (`department_id`),
   CONSTRAINT `fk_user_department` FOREIGN KEY (`department_id`) REFERENCES `department` (`id`),
   CONSTRAINT `fk_user_role` FOREIGN KEY (`role_id`) REFERENCES `role` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='用户信息';
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4  COMMENT='用户信息';
 
 -- ----------------------------
 -- Records of user
@@ -644,7 +644,7 @@ CREATE TABLE `user_job` (
   KEY `idx_user_job_created_at` (`created_at`),
   KEY `fk_user_job_job` (`job_id`),
   CONSTRAINT `fk_user_job_job` FOREIGN KEY (`job_id`) REFERENCES `job` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='用户职位信息';
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4  COMMENT='用户职位信息';
 
 -- ----------------------------
 -- Records of user_job
@@ -666,7 +666,7 @@ CREATE TABLE `user_role` (
   KEY `idx_user_role_created_at` (`created_at`),
   KEY `fk_user_role_role` (`role_id`),
   CONSTRAINT `fk_user_role_role` FOREIGN KEY (`role_id`) REFERENCES `role` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='用户角色信息';
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4  COMMENT='用户角色信息';
 
 -- ----------------------------
 -- Records of user_role
