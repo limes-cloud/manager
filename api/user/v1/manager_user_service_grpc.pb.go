@@ -20,6 +20,7 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
+	Service_GetUserScope_FullMethodName              = "/manager_user.Service/GetUserScope"
 	Service_CurrentUser_FullMethodName               = "/manager_user.Service/CurrentUser"
 	Service_PageUser_FullMethodName                  = "/manager_user.Service/PageUser"
 	Service_AddUser_FullMethodName                   = "/manager_user.Service/AddUser"
@@ -43,6 +44,8 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ServiceClient interface {
+	// GetUserScope 获取指定的用户的数据权限域
+	GetUserScope(ctx context.Context, in *GetUserScopeRequest, opts ...grpc.CallOption) (*GetUserScopeReply, error)
 	// CurrentUser 获取当前用户信息
 	CurrentUser(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*User, error)
 	// PageUser 新增用户信息
@@ -81,6 +84,15 @@ type serviceClient struct {
 
 func NewServiceClient(cc grpc.ClientConnInterface) ServiceClient {
 	return &serviceClient{cc}
+}
+
+func (c *serviceClient) GetUserScope(ctx context.Context, in *GetUserScopeRequest, opts ...grpc.CallOption) (*GetUserScopeReply, error) {
+	out := new(GetUserScopeReply)
+	err := c.cc.Invoke(ctx, Service_GetUserScope_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *serviceClient) CurrentUser(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*User, error) {
@@ -240,6 +252,8 @@ func (c *serviceClient) UserRefreshToken(ctx context.Context, in *emptypb.Empty,
 // All implementations must embed UnimplementedServiceServer
 // for forward compatibility
 type ServiceServer interface {
+	// GetUserScope 获取指定的用户的数据权限域
+	GetUserScope(context.Context, *GetUserScopeRequest) (*GetUserScopeReply, error)
 	// CurrentUser 获取当前用户信息
 	CurrentUser(context.Context, *emptypb.Empty) (*User, error)
 	// PageUser 新增用户信息
@@ -277,6 +291,9 @@ type ServiceServer interface {
 type UnimplementedServiceServer struct {
 }
 
+func (UnimplementedServiceServer) GetUserScope(context.Context, *GetUserScopeRequest) (*GetUserScopeReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetUserScope not implemented")
+}
 func (UnimplementedServiceServer) CurrentUser(context.Context, *emptypb.Empty) (*User, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CurrentUser not implemented")
 }
@@ -339,6 +356,24 @@ type UnsafeServiceServer interface {
 
 func RegisterServiceServer(s grpc.ServiceRegistrar, srv ServiceServer) {
 	s.RegisterService(&Service_ServiceDesc, srv)
+}
+
+func _Service_GetUserScope_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetUserScopeRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ServiceServer).GetUserScope(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Service_GetUserScope_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ServiceServer).GetUserScope(ctx, req.(*GetUserScopeRequest))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _Service_CurrentUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -654,6 +689,10 @@ var Service_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "manager_user.Service",
 	HandlerType: (*ServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "GetUserScope",
+			Handler:    _Service_GetUserScope_Handler,
+		},
 		{
 			MethodName: "CurrentUser",
 			Handler:    _Service_CurrentUser_Handler,

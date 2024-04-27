@@ -3,6 +3,7 @@ package user
 import "github.com/limes-cloud/kratosx"
 
 type Repo interface {
+	GetUserIdsByDepartmentIds(ctx kratosx.Context, ids []uint32) ([]uint32, error)
 	GetUser(ctx kratosx.Context, id uint32) (*User, error)
 	GetUserByPhone(ctx kratosx.Context, phone string) (*User, error)
 	GetUserByEmail(ctx kratosx.Context, email string) (*User, error)

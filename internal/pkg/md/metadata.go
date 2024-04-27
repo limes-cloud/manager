@@ -27,6 +27,11 @@ func New(info *Auth) map[string]any {
 	return res
 }
 
+func Get(ctx kratosx.Context) (*Auth, error) {
+	var auth Auth
+	return &auth, ctx.JWT().Parse(ctx, &auth)
+}
+
 func UserId(ctx kratosx.Context) uint32 {
 	m, err := ctx.JWT().ParseMapClaims(ctx)
 	if err != nil {

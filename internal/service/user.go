@@ -30,6 +30,17 @@ func NewUserService(conf *config.Config) *UserService {
 	}
 }
 
+func (u UserService) GetUserScope(ctx context.Context, in *v1.GetUserScopeRequest) (*v1.GetUserScopeReply, error) {
+	isAll, list, err := u.uc.GetUserScope(kratosx.MustContext(ctx), in.UserId)
+	if err != nil {
+		return nil, err
+	}
+	return &v1.GetUserScopeReply{
+		IsAll: isAll,
+		Scope: list,
+	}, nil
+}
+
 func (u UserService) PageUser(ctx context.Context, request *v1.PageUserRequest) (*v1.PageUserReply, error) {
 	var req biz.PageUserRequest
 	if err := util.Transform(request, &req); err != nil {

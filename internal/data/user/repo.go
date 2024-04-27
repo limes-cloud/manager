@@ -14,6 +14,14 @@ func NewRepo() biz.Repo {
 type repo struct {
 }
 
+func (r repo) GetUserIdsByDepartmentIds(ctx kratosx.Context, ids []uint32) ([]uint32, error) {
+	var list []uint32
+	return list, ctx.DB().Model(biz.User{}).
+		Select("id").
+		Where("department_id in ?", ids).
+		Scan(&list).Error
+}
+
 func (r repo) HasRole(ctx kratosx.Context, uid, rid uint32) bool {
 	return ctx.DB().Where("user_id=? and role_id=?", uid, rid).First(&biz.UserRole{}).RowsAffected != 0
 }

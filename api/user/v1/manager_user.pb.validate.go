@@ -35,6 +35,223 @@ var (
 	_ = sort.Sort
 )
 
+// Validate checks the field values on GetUserScopeRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *GetUserScopeRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on GetUserScopeRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// GetUserScopeRequestMultiError, or nil if none found.
+func (m *GetUserScopeRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *GetUserScopeRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if m.GetUserId() <= 0 {
+		err := GetUserScopeRequestValidationError{
+			field:  "UserId",
+			reason: "value must be greater than 0",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if len(errors) > 0 {
+		return GetUserScopeRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// GetUserScopeRequestMultiError is an error wrapping multiple validation
+// errors returned by GetUserScopeRequest.ValidateAll() if the designated
+// constraints aren't met.
+type GetUserScopeRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m GetUserScopeRequestMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m GetUserScopeRequestMultiError) AllErrors() []error { return m }
+
+// GetUserScopeRequestValidationError is the validation error returned by
+// GetUserScopeRequest.Validate if the designated constraints aren't met.
+type GetUserScopeRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e GetUserScopeRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e GetUserScopeRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e GetUserScopeRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e GetUserScopeRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e GetUserScopeRequestValidationError) ErrorName() string {
+	return "GetUserScopeRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e GetUserScopeRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sGetUserScopeRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = GetUserScopeRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = GetUserScopeRequestValidationError{}
+
+// Validate checks the field values on GetUserScopeReply with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// first error encountered is returned, or nil if there are no violations.
+func (m *GetUserScopeReply) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on GetUserScopeReply with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// GetUserScopeReplyMultiError, or nil if none found.
+func (m *GetUserScopeReply) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *GetUserScopeReply) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for IsAll
+
+	if len(errors) > 0 {
+		return GetUserScopeReplyMultiError(errors)
+	}
+
+	return nil
+}
+
+// GetUserScopeReplyMultiError is an error wrapping multiple validation errors
+// returned by GetUserScopeReply.ValidateAll() if the designated constraints
+// aren't met.
+type GetUserScopeReplyMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m GetUserScopeReplyMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m GetUserScopeReplyMultiError) AllErrors() []error { return m }
+
+// GetUserScopeReplyValidationError is the validation error returned by
+// GetUserScopeReply.Validate if the designated constraints aren't met.
+type GetUserScopeReplyValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e GetUserScopeReplyValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e GetUserScopeReplyValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e GetUserScopeReplyValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e GetUserScopeReplyValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e GetUserScopeReplyValidationError) ErrorName() string {
+	return "GetUserScopeReplyValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e GetUserScopeReplyValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sGetUserScopeReply.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = GetUserScopeReplyValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = GetUserScopeReplyValidationError{}
+
 // Validate checks the field values on User with the rules defined in the proto
 // definition for this message. If any rules are violated, the first error
 // encountered is returned, or nil if there are no violations.

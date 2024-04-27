@@ -18,6 +18,14 @@ func NewRepo() biz.Repo {
 type repo struct {
 }
 
+func (r repo) IsManagerAllDepartment(ctx kratosx.Context, uid uint32) (bool, error) {
+	user := userBiz.User{}
+	if err := ctx.DB().Preload("Role").First(&user, uid).Error; err != nil {
+		return false, err
+	}
+	return user.Role.DataScope == biz.DataScopeAll || user.DepartmentId == 1, nil
+}
+
 func (r repo) AllManagerDepartmentIds(ctx kratosx.Context, uid uint32) ([]uint32, error) {
 	// 查询用户信息
 	user := userBiz.User{}

@@ -38,17 +38,29 @@ func NewUseCase(conf *config.Config, depRepo depbiz.Repo, menuRepo menubiz.Repo)
 // Auth 接口鉴权
 // 后期计划，在这里增加鉴权资源的缓存，避免频繁查询。
 func (u *UseCase) Auth(ctx kratosx.Context, in *v1.AuthRequest) (*v1.AuthReply, error) {
+	info, err := md.Get(ctx)
+	if err != nil {
+		return nil, errors.Forbidden()
+	}
+	reply := &v1.AuthReply{
+		Scope:             make(map[string]*v1.AuthReply_Scope),
+		UserId:            info.UserId,
+		RoleId:            info.RoleId,
+		RoleKeyword:       info.RoleKeyword,
+		DepartmentId:      info.DepartmentId,
+		DepartmentKeyword: info.DepartmentKeyword,
+	}
+
 	author := ctx.Authentication().Enforce()
-	role := md.RoleKeyword(ctx)
 
 	var skipRoles []string
 	_ = ctx.Config().Value("authentication.skipRole").Scan(&skipRoles)
 
-	if util.InList(skipRoles, role) {
-		return nil, nil
+	if util.InList(skipRoles, info.RoleKeyword) {
+		return reply, nil
 	}
 
-	isAuth, _ := author.Enforce(role, in.Path, in.Method)
+	isAuth, _ := author.Enforce(info.RoleKeyword, in.Path, in.Method)
 	if !isAuth {
 		return nil, errors.Forbidden()
 	}
@@ -56,19 +68,17 @@ func (u *UseCase) Auth(ctx kratosx.Context, in *v1.AuthRequest) (*v1.AuthReply, 
 	// 获取资源对象权限
 	menu, _ := u.menuRepo.GetMenuByApi(ctx, in.Path, in.Method)
 	if menu.CheckObject == nil || !*menu.CheckObject || menu.CheckObjectRule == nil {
-		return nil, nil
+		return reply, nil
 	}
 
 	var rule []objectbiz.ObjectRule
 	if err := json.Unmarshal([]byte(*menu.CheckObjectRule), &rule); err != nil {
 		ctx.Logger().Errorf("parse object rule error %v", err.Error())
-		return nil, nil
+		return reply, nil
 	}
 
-	reply := &v1.AuthReply{Scope: make(map[string]*v1.AuthReply_Scope)}
-	uid := md.UserId(ctx)
 	for _, item := range rule {
-		values, _ := u.depRepo.GetScope(ctx, uid, item.Object)
+		values, _ := u.depRepo.GetScope(ctx, info.UserId, item.Object)
 		switch item.Operate {
 		case Add:
 			reply.Scope[item.Field] = &v1.AuthReply_Scope{

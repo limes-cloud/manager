@@ -293,6 +293,16 @@ func (m *AuthReply) validate(all bool) error {
 
 	var errors []error
 
+	// no validation rules for UserId
+
+	// no validation rules for RoleId
+
+	// no validation rules for RoleKeyword
+
+	// no validation rules for DepartmentId
+
+	// no validation rules for DepartmentKeyword
+
 	{
 		sorted_keys := make([]string, len(m.GetScope()))
 		i := 0

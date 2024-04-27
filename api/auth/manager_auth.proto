@@ -22,5 +22,10 @@ message AuthReply{
   message Scope{
     repeated string list = 1;
   }
-  map<string,Scope> scope = 3;
+  uint32 user_id = 1;
+  uint32 role_id = 2;
+  string role_keyword = 3;
+  uint32 department_id = 4;
+  string department_keyword = 5;
+  map<string,Scope> scope = 6;
 }

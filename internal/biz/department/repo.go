@@ -4,6 +4,7 @@ import "github.com/limes-cloud/kratosx"
 
 type Repo interface {
 	GetDepartment(ctx kratosx.Context, id uint32) (*Department, error)
+	IsManagerAllDepartment(ctx kratosx.Context, uid uint32) (bool, error)
 	AllManagerDepartment(ctx kratosx.Context, uid uint32) ([]*Department, error)
 	AllManagerDepartmentIds(ctx kratosx.Context, uid uint32) ([]uint32, error)
 	AllDepartment(ctx kratosx.Context, in *AllDepartmentRequest) ([]*Department, error)

@@ -27,6 +27,7 @@ const OperationServiceCurrentUser = "/manager_user.Service/CurrentUser"
 const OperationServiceDeleteUser = "/manager_user.Service/DeleteUser"
 const OperationServiceDisableUser = "/manager_user.Service/DisableUser"
 const OperationServiceEnableUser = "/manager_user.Service/EnableUser"
+const OperationServiceGetUserScope = "/manager_user.Service/GetUserScope"
 const OperationServiceOfflineUser = "/manager_user.Service/OfflineUser"
 const OperationServicePageUser = "/manager_user.Service/PageUser"
 const OperationServiceResetUserPassword = "/manager_user.Service/ResetUserPassword"
@@ -53,6 +54,8 @@ type ServiceHTTPServer interface {
 	DisableUser(context.Context, *DisableUserRequest) (*emptypb.Empty, error)
 	// EnableUser DisableUser 禁用用户
 	EnableUser(context.Context, *EnableUserRequest) (*emptypb.Empty, error)
+	// GetUserScope GetUserScope 获取指定的用户的数据权限域
+	GetUserScope(context.Context, *GetUserScopeRequest) (*GetUserScopeReply, error)
 	// OfflineUser DisableUser 禁用用户
 	OfflineUser(context.Context, *OfflineUserRequest) (*emptypb.Empty, error)
 	// PageUser PageUser 新增用户信息
@@ -73,6 +76,7 @@ type ServiceHTTPServer interface {
 
 func RegisterServiceHTTPServer(s *http.Server, srv ServiceHTTPServer) {
 	r := s.Route("/")
+	r.GET("/manager/v1/user/scope", _Service_GetUserScope0_HTTP_Handler(srv))
 	r.GET("/manager/v1/user/current", _Service_CurrentUser0_HTTP_Handler(srv))
 	r.GET("/manager/v1/users", _Service_PageUser0_HTTP_Handler(srv))
 	r.POST("/manager/v1/user", _Service_AddUser0_HTTP_Handler(srv))
@@ -90,6 +94,25 @@ func RegisterServiceHTTPServer(s *http.Server, srv ServiceHTTPServer) {
 	r.POST("/manager/v1/user/login/captcha", _Service_UserLoginCaptcha0_HTTP_Handler(srv))
 	r.POST("/manager/v1/user/logout", _Service_UserLogout0_HTTP_Handler(srv))
 	r.POST("/manager/v1/user/token/refresh", _Service_UserRefreshToken0_HTTP_Handler(srv))
+}
+
+func _Service_GetUserScope0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in GetUserScopeRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationServiceGetUserScope)
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
+			return srv.GetUserScope(ctx, req.(*GetUserScopeRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*GetUserScopeReply)
+		return ctx.Result(200, reply)
+	}
 }
 
 func _Service_CurrentUser0_HTTP_Handler(srv ServiceHTTPServer) func(ctx http.Context) error {
@@ -453,6 +476,7 @@ type ServiceHTTPClient interface {
 	DeleteUser(ctx context.Context, req *DeleteUserRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	DisableUser(ctx context.Context, req *DisableUserRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	EnableUser(ctx context.Context, req *EnableUserRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
+	GetUserScope(ctx context.Context, req *GetUserScopeRequest, opts ...http.CallOption) (rsp *GetUserScopeReply, err error)
 	OfflineUser(ctx context.Context, req *OfflineUserRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	PageUser(ctx context.Context, req *PageUserRequest, opts ...http.CallOption) (rsp *PageUserReply, err error)
 	ResetUserPassword(ctx context.Context, req *ResetUserPasswordRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
@@ -558,6 +582,19 @@ func (c *ServiceHTTPClientImpl) EnableUser(ctx context.Context, in *EnableUserRe
 	opts = append(opts, http.Operation(OperationServiceEnableUser))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *ServiceHTTPClientImpl) GetUserScope(ctx context.Context, in *GetUserScopeRequest, opts ...http.CallOption) (*GetUserScopeReply, error) {
+	var out GetUserScopeReply
+	pattern := "/manager/v1/user/scope"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationServiceGetUserScope))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {
 		return nil, err
 	}

@@ -43,7 +43,6 @@ func RegisterServer(c config.Config, hs *http.Server, gs *grpc.Server) {
 			log.Printf("business配置变更失败：%s", err.Error())
 		}
 	})
-
 	// 注册服务
 	service.New(conf, hs, gs)
 }

@@ -5,6 +5,14 @@ option go_package = "./v1;v1";
 
 import "validate/validate.proto";
 
+message GetUserScopeRequest{
+   uint32 user_id = 1[(validate.rules).uint32 = {gt:0}];
+}
+
+ message GetUserScopeReply{
+   bool is_all = 1;
+   repeated uint32 scope = 2;;
+ }
 
 message User {
   message Department{

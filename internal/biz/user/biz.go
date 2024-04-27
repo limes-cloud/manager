@@ -42,6 +42,30 @@ const (
 	passwordCert = "login"
 )
 
+// GetUserScope 查询指定用户的权限域
+func (u *UseCase) GetUserScope(ctx kratosx.Context, userId uint32) (bool, []uint32, error) {
+	// 是否拥有全部部门权限
+	is, err := u.depRepo.IsManagerAllDepartment(ctx, userId)
+	if err != nil {
+		return false, nil, errors.DatabaseFormat(err.Error())
+	}
+	if is {
+		return true, nil, nil
+	}
+
+	// 获取有权限的部门
+	ids, err := u.depRepo.AllManagerDepartmentIds(ctx, userId)
+	if err != nil {
+		return false, nil, errors.DatabaseFormat(err.Error())
+	}
+	// 获取有权限的部门下的用户id
+	list, err := u.repo.GetUserIdsByDepartmentIds(ctx, ids)
+	if err != nil {
+		return false, nil, errors.DatabaseFormat(err.Error())
+	}
+	return false, list, nil
+}
+
 // CurrentUser 查询当前用户信息
 func (u *UseCase) CurrentUser(ctx kratosx.Context) (*User, error) {
 	user, err := u.repo.GetUser(ctx, md.UserId(ctx))

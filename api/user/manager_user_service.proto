@@ -9,6 +9,13 @@ import "manager_user.proto";
 
 
 service Service {
+  // GetUserScope 获取指定的用户的数据权限域
+  rpc GetUserScope (GetUserScopeRequest) returns (GetUserScopeReply) {
+    option (google.api.http) = {
+      get: "/manager/v1/user/scope",
+    };
+  }
+
   // CurrentUser 获取当前用户信息
   rpc CurrentUser (google.protobuf.Empty) returns (User) {
     option (google.api.http) = {
