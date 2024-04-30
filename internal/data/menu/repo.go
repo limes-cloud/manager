@@ -46,9 +46,6 @@ func (r repo) AllMenu(ctx kratosx.Context, in *biz.AllMenuRequest) ([]*biz.Menu,
 
 	db := ctx.DB().Model(biz.Menu{})
 	if in != nil {
-		if in.App != nil {
-			db = db.Where("app=?", *in.App)
-		}
 		if in.NotType != nil {
 			db = db.Where("type!=?", in.NotType)
 		}

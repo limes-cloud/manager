@@ -211,8 +211,10 @@ func (u *UseCase) UpdateRoleMenus(ctx kratosx.Context, roleId uint32, menuIds []
 	enforce := ctx.Authentication().Enforce()
 	_, _ = enforce.RemoveFilteredPolicy(0, role.Keyword)
 
-	// 添加新的rbac权限信息
-	_, _ = enforce.AddPolicies(policies)
-
+	// // 添加新的rbac权限信息
+	_, err = enforce.AddPolicies(policies)
+	if err != nil {
+		ctx.Logger().Error(err.Error())
+	}
 	return nil
 }

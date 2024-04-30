@@ -8,7 +8,6 @@ import (
 type Menu struct {
 	types.BaseModel
 	ParentId        uint32  `json:"parent_id"`
-	App             string  `json:"app"`
 	Title           string  `json:"title"`
 	Type            string  `json:"type"`
 	Keyword         *string `json:"keyword"`
@@ -52,4 +51,10 @@ func (m *Menu) ChildrenNode() []tree.Tree {
 		list = append(list, item)
 	}
 	return list
+}
+
+type MenuClosure struct {
+	ID       uint32 `json:"id"`
+	Parent   uint32 `json:"parent"`
+	Children uint32 `json:"children"`
 }

@@ -2,6 +2,7 @@ package menu
 
 import (
 	"context"
+	"sync"
 
 	"github.com/limes-cloud/kratosx"
 	"github.com/limes-cloud/kratosx/pkg/tree"
@@ -15,14 +16,18 @@ import (
 type UseCase struct {
 	repo Repo
 	conf *config.Config
+	once sync.Once
 }
 
 func NewUseCase(conf *config.Config, repo Repo) *UseCase {
-	repo.InitBasicMenu(kratosx.MustContext(context.Background()))
-	return &UseCase{
+	u := &UseCase{
 		repo: repo,
 		conf: conf,
 	}
+	u.once.Do(func() {
+		repo.InitBasicMenu(kratosx.MustContext(context.Background()))
+	})
+	return u
 }
 
 // MenuTree 查询系统菜单树
@@ -32,29 +37,46 @@ func (u *UseCase) MenuTree(ctx kratosx.Context, in *AllMenuRequest) ([]tree.Tree
 		return nil, errors.Database()
 	}
 
-	var (
-		group = make(map[string][]tree.Tree)
-		roots []tree.Tree
-		apps  []*Menu
-	)
+	var trees []tree.Tree
 
 	// 构建树枝，并选取根节点
 	for _, item := range list {
-		group[item.App] = append(group[item.App], item)
-		if item.ParentId == 0 {
-			apps = append(apps, item)
-		}
+		trees = append(trees, item)
 	}
 
-	// 通过根节点构造树
-	for _, app := range apps {
-		root := tree.BuildTreeByID(group[app.App], app.ID())
-		roots = append(roots, root)
-	}
-
-	return roots, nil
+	return tree.BuildArrayTree(trees), nil
 }
 
+// // MenuTree 查询系统菜单树
+//
+//	func (u *UseCase) MenuTree(ctx kratosx.Context, in *AllMenuRequest) ([]tree.Tree, error) {
+//		list, err := u.repo.AllMenu(ctx, in)
+//		if err != nil {
+//			return nil, errors.Database()
+//		}
+//
+//		var (
+//			group = make(map[string][]tree.Tree)
+//			roots []tree.Tree
+//			apps  []*Menu
+//		)
+//
+//		// 构建树枝，并选取根节点
+//		for _, item := range list {
+//			group[item.App] = append(group[item.App], item)
+//			if item.ParentId == 0 {
+//				apps = append(apps, item)
+//			}
+//		}
+//
+//		// 通过根节点构造树
+//		for _, app := range apps {
+//			root := tree.BuildTreeByID(group[app.App], app.ID())
+//			roots = append(roots, root)
+//		}
+//
+//		return roots, nil
+//	}
 func (u *UseCase) MenuTreeFromRole(ctx kratosx.Context) ([]tree.Tree, error) {
 	req := &AllMenuRequest{NotType: proto.String(MenuBasic)}
 	if md.RoleId(ctx) != 1 {
@@ -75,7 +97,7 @@ func (u *UseCase) AddMenu(ctx kratosx.Context, in *Menu) (uint32, error) {
 
 	// 更新菜单首页
 	if in.IsHome != nil && *in.IsHome {
-		_ = u.repo.UseHome(ctx, in.App, id)
+		_ = u.repo.UseHome(ctx, *in.Keyword, id)
 	}
 
 	// 如果是基础api，则添加到白名单中
@@ -144,7 +166,7 @@ func (u *UseCase) UpdateMenu(ctx kratosx.Context, in *Menu) error {
 
 	// 更新为菜单首页
 	if in.IsHome != nil && *in.IsHome {
-		_ = u.repo.UseHome(ctx, old.App, in.ID())
+		_ = u.repo.UseHome(ctx, *old.Keyword, in.ID())
 	}
 
 	return nil
@@ -155,12 +177,7 @@ func (u *UseCase) DeleteMenu(ctx kratosx.Context, id uint32) error {
 		return errors.DeleteSystemData()
 	}
 
-	menu, err := u.repo.GetMenu(ctx, id)
-	if err != nil {
-		return errors.DatabaseFormat(err.Error())
-	}
-
-	list, _ := u.repo.AllMenu(ctx, &AllMenuRequest{App: proto.String(menu.App)})
+	list, err := u.repo.AllMenu(ctx, &AllMenuRequest{})
 	if err != nil {
 		return errors.DatabaseFormat(err.Error())
 	}
