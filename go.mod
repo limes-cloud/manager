@@ -5,15 +5,15 @@ go 1.21.1
 require (
 	github.com/envoyproxy/protoc-gen-validate v1.0.2
 	github.com/forgoer/openssl v1.6.0
-	github.com/go-kratos/kratos/v2 v2.7.2
+	github.com/go-kratos/kratos/v2 v2.7.3
 	github.com/golang/protobuf v1.5.3
 	github.com/json-iterator/go v1.1.12
 	github.com/limes-cloud/configure v1.0.22
-	github.com/limes-cloud/kratosx v1.0.26
+	github.com/limes-cloud/kratosx v1.0.31
 	go.uber.org/automaxprocs v1.5.3
 	google.golang.org/genproto/googleapis/api v0.0.0-20240102182953-50ed04b92917
 	google.golang.org/grpc v1.60.1
-	google.golang.org/protobuf v1.32.0
+	google.golang.org/protobuf v1.34.0
 	gorm.io/gorm v1.25.5
 )
 
@@ -49,13 +49,13 @@ require (
 	github.com/go-redis/redis/v8 v8.11.5 // indirect
 	github.com/go-resty/resty/v2 v2.11.0 // indirect
 	github.com/go-sql-driver/mysql v1.7.1 // indirect
-	github.com/golang-jwt/jwt/v4 v4.5.0 // indirect
+	github.com/golang-jwt/jwt/v5 v5.1.0 // indirect
 	github.com/golang-sql/civil v0.0.0-20220223132316-b832511892a9 // indirect
 	github.com/golang-sql/sqlexp v0.1.0 // indirect
 	github.com/golang/freetype v0.0.0-20170609003504-e2365dfdc4a0 // indirect
-	github.com/google/uuid v1.5.0 // indirect
+	github.com/google/uuid v1.6.0 // indirect
 	github.com/gorilla/handlers v1.5.2 // indirect
-	github.com/gorilla/mux v1.8.0 // indirect
+	github.com/gorilla/mux v1.8.1 // indirect
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.16.0 // indirect
 	github.com/hashicorp/consul/api v1.26.1 // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
@@ -110,13 +110,13 @@ require (
 	go.opentelemetry.io/proto/otlp v1.0.0 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
 	go.uber.org/zap v1.26.0 // indirect
-	golang.org/x/crypto v0.14.0 // indirect
+	golang.org/x/crypto v0.22.0 // indirect
 	golang.org/x/exp v0.0.0-20230817173708-d852ddb80c63 // indirect
-	golang.org/x/image v0.13.0 // indirect
-	golang.org/x/net v0.17.0 // indirect
-	golang.org/x/sync v0.4.0 // indirect
-	golang.org/x/sys v0.15.0 // indirect
-	golang.org/x/text v0.13.0 // indirect
+	golang.org/x/image v0.14.0 // indirect
+	golang.org/x/net v0.24.0 // indirect
+	golang.org/x/sync v0.7.0 // indirect
+	golang.org/x/sys v0.19.0 // indirect
+	golang.org/x/text v0.14.0 // indirect
 	google.golang.org/genproto v0.0.0-20231212172506-995d672761c0 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20231212172506-995d672761c0 // indirect
 	gopkg.in/natefinch/lumberjack.v2 v2.2.1 // indirect
