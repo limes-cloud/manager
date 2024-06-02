@@ -3,106 +3,131 @@ package service
 import (
 	"context"
 
+	"github.com/go-kratos/kratos/v2/transport/grpc"
+	"github.com/go-kratos/kratos/v2/transport/http"
 	"github.com/limes-cloud/kratosx"
-	"github.com/limes-cloud/kratosx/pkg/util"
-	"google.golang.org/protobuf/types/known/emptypb"
-
-	v1 "github.com/limes-cloud/manager/api/department/v1"
-	"github.com/limes-cloud/manager/api/errors"
-	biz "github.com/limes-cloud/manager/internal/biz/department"
-	"github.com/limes-cloud/manager/internal/config"
-	data "github.com/limes-cloud/manager/internal/data/department"
-	objectData "github.com/limes-cloud/manager/internal/data/object"
+	"github.com/limes-cloud/kratosx/pkg/valx"
+	pb "github.com/limes-cloud/manager/api/manager/department/v1"
+	"github.com/limes-cloud/manager/api/manager/errors"
+	"github.com/limes-cloud/manager/internal/biz/department"
+	"github.com/limes-cloud/manager/internal/conf"
+	"github.com/limes-cloud/manager/internal/data"
 )
 
 type DepartmentService struct {
-	v1.UnimplementedServiceServer
-	uc *biz.UseCase
-
-	conf *config.Config
+	pb.UnimplementedDepartmentServer
+	uc *department.UseCase
 }
 
-func NewDepartmentService(conf *config.Config) *DepartmentService {
+func NewDepartmentService(conf *conf.Config) *DepartmentService {
 	return &DepartmentService{
-		conf: conf,
-		uc:   biz.NewUseCase(conf, data.NewRepo(), objectData.NewRepo()),
+		uc: department.NewUseCase(conf, data.NewDepartmentRepo()),
 	}
 }
 
-func (d DepartmentService) GetDepartmentTree(ctx context.Context, empty *emptypb.Empty) (*v1.GetDepartmentTreeReply, error) {
-	tree, err := d.uc.DepartmentTree(kratosx.MustContext(ctx))
+func init() {
+	register(func(c *conf.Config, hs *http.Server, gs *grpc.Server) {
+		srv := NewDepartmentService(c)
+		pb.RegisterDepartmentHTTPServer(hs, srv)
+		pb.RegisterDepartmentServer(gs, srv)
+	})
+}
+
+// GetDepartment 获取指定的部门信息
+func (s *DepartmentService) GetDepartment(c context.Context, req *pb.GetDepartmentRequest) (*pb.GetDepartmentReply, error) {
+	var (
+		in  = department.GetDepartmentRequest{}
+		ctx = kratosx.MustContext(c)
+	)
+
+	if err := valx.Transform(req, &in); err != nil {
+		ctx.Logger().Warnw("msg", "request transform err", "err", err.Error())
+		return nil, errors.TransformError()
+	}
+
+	result, err := s.uc.GetDepartment(ctx, &in)
 	if err != nil {
 		return nil, err
 	}
 
-	reply := v1.GetDepartmentTreeReply{}
-	if err := util.Transform(tree, &reply.List); err != nil {
-		return nil, errors.Transform()
+	reply := pb.GetDepartmentReply{}
+	if err := valx.Transform(result, &reply); err != nil {
+		ctx.Logger().Warnw("msg", "reply transform err", "err", err.Error())
+		return nil, errors.TransformError()
+	}
+	return &reply, nil
+}
+
+// ListDepartment 获取部门信息列表
+func (s *DepartmentService) ListDepartment(c context.Context, req *pb.ListDepartmentRequest) (*pb.ListDepartmentReply, error) {
+	var (
+		in  = department.ListDepartmentRequest{}
+		ctx = kratosx.MustContext(c)
+	)
+
+	if err := valx.Transform(req, &in); err != nil {
+		ctx.Logger().Warnw("msg", "req transform err", "err", err.Error())
+		return nil, errors.TransformError()
+	}
+
+	result, total, err := s.uc.ListDepartment(ctx, &in)
+	if err != nil {
+		return nil, err
+	}
+
+	reply := pb.ListDepartmentReply{Total: total}
+	if err := valx.Transform(result, &reply.List); err != nil {
+		ctx.Logger().Warnw("msg", "reply transform err", "err", err.Error())
+		return nil, errors.TransformError()
 	}
 
 	return &reply, nil
 }
 
-func (d DepartmentService) AddDepartment(ctx context.Context, request *v1.AddDepartmentRequest) (*v1.AddDepartmentReply, error) {
-	var dep biz.Department
-	if err := util.Transform(request, &dep); err != nil {
-		return nil, errors.Transform()
+// CreateDepartment 创建部门信息
+func (s *DepartmentService) CreateDepartment(c context.Context, req *pb.CreateDepartmentRequest) (*pb.CreateDepartmentReply, error) {
+	var (
+		in  = department.Department{}
+		ctx = kratosx.MustContext(c)
+	)
+
+	if err := valx.Transform(req, &in); err != nil {
+		ctx.Logger().Warnw("msg", "req transform err", "err", err.Error())
+		return nil, errors.TransformError()
 	}
 
-	id, err := d.uc.AddDepartment(kratosx.MustContext(ctx), &dep)
+	id, err := s.uc.CreateDepartment(ctx, &in)
 	if err != nil {
 		return nil, err
 	}
 
-	return &v1.AddDepartmentReply{Id: id}, nil
+	return &pb.CreateDepartmentReply{Id: id}, nil
 }
 
-func (d DepartmentService) UpdateDepartment(ctx context.Context, request *v1.UpdateDepartmentRequest) (*emptypb.Empty, error) {
-	var dep biz.Department
-	if err := util.Transform(request, &dep); err != nil {
-		return nil, errors.Transform()
+// UpdateDepartment 更新部门信息
+func (s *DepartmentService) UpdateDepartment(c context.Context, req *pb.UpdateDepartmentRequest) (*pb.UpdateDepartmentReply, error) {
+	var (
+		in  = department.Department{}
+		ctx = kratosx.MustContext(c)
+	)
+
+	if err := valx.Transform(req, &in); err != nil {
+		ctx.Logger().Warnw("msg", "req transform err", "err", err.Error())
+		return nil, errors.TransformError()
 	}
 
-	return nil, d.uc.UpdateDepartment(kratosx.MustContext(ctx), &dep)
-}
-
-func (d DepartmentService) DeleteDepartment(ctx context.Context, request *v1.DeleteDepartmentRequest) (*emptypb.Empty, error) {
-	return nil, d.uc.DeleteDepartment(kratosx.MustContext(ctx), request.Id)
-}
-
-func (d DepartmentService) AllDepartmentObjectValue(ctx context.Context, request *v1.AllDepartmentObjectValueRequest) (*v1.AllDepartmentObjectValueReply, error) {
-	var dep biz.AllDepartmentObjectValueRequest
-	if err := util.Transform(request, &dep); err != nil {
-		return nil, errors.Transform()
+	if err := s.uc.UpdateDepartment(ctx, &in); err != nil {
+		return nil, err
 	}
-	list, err := d.uc.AllDepartmentObjectValue(kratosx.MustContext(ctx), &dep)
-	return &v1.AllDepartmentObjectValueReply{
-		Values: list,
-	}, err
+
+	return &pb.UpdateDepartmentReply{}, nil
 }
 
-func (d DepartmentService) ImportDepartmentObject(ctx context.Context, request *v1.ImportDepartmentObjectRequest) (*emptypb.Empty, error) {
-	var bucket = make(map[string]bool)
-	var list []*biz.DepartmentObject
-	for _, value := range request.Values {
-		if bucket[value] {
-			continue
-		}
-		bucket[value] = true
-		list = append(list, &biz.DepartmentObject{
-			DepartmentId: request.DepartmentId,
-			ObjectId:     request.ObjectId,
-			Value:        value,
-		})
+// DeleteDepartment 删除部门信息
+func (s *DepartmentService) DeleteDepartment(c context.Context, req *pb.DeleteDepartmentRequest) (*pb.DeleteDepartmentReply, error) {
+	total, err := s.uc.DeleteDepartment(kratosx.MustContext(c), req.Ids)
+	if err != nil {
+		return nil, err
 	}
-	return nil, d.uc.ImportDepartmentObject(kratosx.MustContext(ctx), list)
-}
-
-func (d DepartmentService) AddDepartmentObject(ctx context.Context, request *v1.AddDepartmentObjectRequest) (*v1.AddDepartmentObjectReply, error) {
-	id, err := d.uc.AddDepartmentObject(kratosx.MustContext(ctx), request.ObjectKeyword, request.Value)
-	return &v1.AddDepartmentObjectReply{Id: id}, err
-}
-
-func (d DepartmentService) DeleteDepartmentObject(ctx context.Context, request *v1.DeleteDepartmentObjectRequest) (*emptypb.Empty, error) {
-	return nil, d.uc.DeleteDepartmentObject(kratosx.MustContext(ctx), request.ObjectKeyword, request.Value)
+	return &pb.DeleteDepartmentReply{Total: total}, nil
 }

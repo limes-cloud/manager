@@ -1,38 +1,55 @@
 package user
 
-type PageUserRequest struct {
+type GetUserRequest struct {
+	Id    *uint32 `json:"id"`
+	Phone *string `json:"phone"`
+	Email *string `json:"email"`
+}
+
+type ListUserRequest struct {
 	Page          uint32   `json:"page"`
-	PageSize      uint32   `json:"page_size"`
-	DepartmentIds []uint32 `json:"department_ids"`
-	Username      *string  `json:"username"`
-	Status        *bool    `json:"status"`
-	RoleId        *uint32  `json:"role_id"`
-	DepartmentId  *uint32  `json:"department_id"`
-	StartTime     *uint32  `json:"start_time"`
-	EndTime       *uint32  `json:"end_time"`
+	PageSize      uint32   `json:"pageSize"`
+	Order         *string  `json:"order"`
+	OrderBy       *string  `json:"orderBy"`
+	DepartmentId  *uint32  `json:"departmentId"`
+	RoleId        *uint32  `json:"roleId"`
 	Name          *string  `json:"name"`
+	Phone         *string  `json:"phone"`
+	Email         *string  `json:"email"`
+	Status        *bool    `json:"status"`
+	LoggedAts     []int64  `json:"loggedAts"`
+	CreatedAts    []int64  `json:"createdAts"`
+	DepartmentIds []uint32 `json:"departmentIds"` // fixed code
 }
 
 type UpdateCurrentUserRequest struct {
-	Nickname string `json:"nickname"`
-	Gender   string `json:"gender"`
+	Avatar   *string `json:"avatar"`
+	Nickname string  `json:"nickname"`
+	Gender   string  `json:"gender"`
 }
 
-type CaptchaReply struct {
+type UpdateCurrentUserPasswordRequest struct {
+	Password    string  `json:"password"`
+	OldPassword *string `json:"oldPassword"`
+	CaptchaId   *string `json:"captchaId"`
+	Captcha     *string `json:"captcha"`
+}
+
+type SendCurrentUserCaptchaReply struct {
 	Uuid    string `json:"uuid"`
 	Captcha string `json:"captcha"`
 	Expire  uint32 `json:"expire"`
 }
 
-type ChangeUserPasswordRequest struct {
-	Password  string `json:"password"`
-	CaptchaId string `json:"captcha_id"`
-	Captcha   string `json:"captcha"`
+type GetUserLoginCaptchaReply struct {
+	Uuid    string `json:"uuid"`
+	Captcha string `json:"captcha"`
+	Expire  uint32 `json:"expire"`
 }
 
 type UserLoginRequest struct {
 	Username  string `json:"username"`
 	Password  string `json:"password"`
-	CaptchaId string `json:"captcha_id"`
+	CaptchaId string `json:"captchaId"`
 	Captcha   string `json:"captcha"`
 }

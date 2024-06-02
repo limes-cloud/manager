@@ -3,206 +3,273 @@ package service
 import (
 	"context"
 
+	"github.com/go-kratos/kratos/v2/transport/grpc"
+	"github.com/go-kratos/kratos/v2/transport/http"
 	"github.com/limes-cloud/kratosx"
-	"github.com/limes-cloud/kratosx/pkg/util"
+	"github.com/limes-cloud/kratosx/pkg/valx"
+	"github.com/limes-cloud/manager/api/manager/errors"
+	pb "github.com/limes-cloud/manager/api/manager/user/v1"
+	"github.com/limes-cloud/manager/internal/biz/user"
+	"github.com/limes-cloud/manager/internal/conf"
+	"github.com/limes-cloud/manager/internal/data"
 	"google.golang.org/protobuf/types/known/emptypb"
-
-	"github.com/limes-cloud/manager/api/errors"
-	v1 "github.com/limes-cloud/manager/api/user/v1"
-	biz "github.com/limes-cloud/manager/internal/biz/user"
-	"github.com/limes-cloud/manager/internal/config"
-	depdata "github.com/limes-cloud/manager/internal/data/department"
-	roledata "github.com/limes-cloud/manager/internal/data/role"
-	data "github.com/limes-cloud/manager/internal/data/user"
 )
 
 type UserService struct {
-	v1.UnimplementedServiceServer
-	uc *biz.UseCase
-
-	conf *config.Config
+	pb.UnimplementedUserServer
+	uc *user.UseCase
 }
 
-func NewUserService(conf *config.Config) *UserService {
+func NewUserService(conf *conf.Config) *UserService {
 	return &UserService{
-		conf: conf,
-		uc:   biz.NewUseCase(conf, data.NewRepo(), depdata.NewRepo(), roledata.NewRepo()),
+		uc: user.NewUseCase(conf, data.NewUserRepo()),
 	}
 }
 
-func (u UserService) GetUserScope(ctx context.Context, in *v1.GetUserScopeRequest) (*v1.GetUserScopeReply, error) {
-	isAll, list, err := u.uc.GetUserScope(kratosx.MustContext(ctx), in.UserId)
+func init() {
+	register(func(c *conf.Config, hs *http.Server, gs *grpc.Server) {
+		srv := NewUserService(c)
+		pb.RegisterUserHTTPServer(hs, srv)
+		pb.RegisterUserServer(gs, srv)
+	})
+}
+
+// ListUser 获取用户信息列表
+func (s *UserService) ListUser(c context.Context, req *pb.ListUserRequest) (*pb.ListUserReply, error) {
+	var (
+		in  = user.ListUserRequest{}
+		ctx = kratosx.MustContext(c)
+	)
+
+	if err := valx.Transform(req, &in); err != nil {
+		ctx.Logger().Warnw("msg", "req transform err", "err", err.Error())
+		return nil, errors.TransformError()
+	}
+
+	result, total, err := s.uc.ListUser(ctx, &in)
 	if err != nil {
 		return nil, err
 	}
-	return &v1.GetUserScopeReply{
-		IsAll: isAll,
-		Scope: list,
+
+	reply := pb.ListUserReply{Total: total}
+	if err := valx.Transform(result, &reply.List); err != nil {
+		ctx.Logger().Warnw("msg", "reply transform err", "err", err.Error())
+		return nil, errors.TransformError()
+	}
+
+	return &reply, nil
+}
+
+// CreateUser 创建用户信息 fixed code
+func (s *UserService) CreateUser(c context.Context, req *pb.CreateUserRequest) (*pb.CreateUserReply, error) {
+	var (
+		in  = user.User{}
+		ctx = kratosx.MustContext(c)
+	)
+
+	if err := valx.Transform(req, &in); err != nil {
+		ctx.Logger().Warnw("msg", "req transform err", "err", err.Error())
+		return nil, errors.TransformError()
+	}
+
+	for _, id := range req.RoleIds {
+		in.UserRoles = append(in.UserRoles, &user.UserRole{
+			RoleId: id,
+		})
+	}
+
+	for _, id := range req.JobIds {
+		in.UserJobs = append(in.UserJobs, &user.UserJob{
+			JobId: id,
+		})
+	}
+
+	id, err := s.uc.CreateUser(ctx, &in)
+	if err != nil {
+		return nil, err
+	}
+
+	return &pb.CreateUserReply{Id: id}, nil
+}
+
+// UpdateUser 更新用户信息 fixed code
+func (s *UserService) UpdateUser(c context.Context, req *pb.UpdateUserRequest) (*pb.UpdateUserReply, error) {
+	var (
+		in  = user.User{}
+		ctx = kratosx.MustContext(c)
+	)
+
+	if err := valx.Transform(req, &in); err != nil {
+		ctx.Logger().Warnw("msg", "req transform err", "err", err.Error())
+		return nil, errors.TransformError()
+	}
+
+	for _, id := range req.RoleIds {
+		in.UserRoles = append(in.UserRoles, &user.UserRole{
+			RoleId: id,
+		})
+	}
+
+	for _, id := range req.JobIds {
+		in.UserJobs = append(in.UserJobs, &user.UserJob{
+			JobId: id,
+		})
+	}
+
+	if err := s.uc.UpdateUser(ctx, &in); err != nil {
+		return nil, err
+	}
+
+	return &pb.UpdateUserReply{}, nil
+}
+
+// DeleteUser 删除用户信息
+func (s *UserService) DeleteUser(c context.Context, req *pb.DeleteUserRequest) (*pb.DeleteUserReply, error) {
+	total, err := s.uc.DeleteUser(kratosx.MustContext(c), req.Ids)
+	if err != nil {
+		return nil, err
+	}
+	return &pb.DeleteUserReply{Total: total}, nil
+}
+
+// UpdateUserStatus 更新用户信息状态
+func (s *UserService) UpdateUserStatus(c context.Context, req *pb.UpdateUserStatusRequest) (*pb.UpdateUserStatusReply, error) {
+	return &pb.UpdateUserStatusReply{}, s.uc.UpdateUserStatus(kratosx.MustContext(c), req.Id, req.Status)
+}
+
+// GetUser 获取指定的用户信息
+func (s *UserService) GetUser(c context.Context, req *pb.GetUserRequest) (*pb.GetUserReply, error) {
+	var (
+		in  = user.GetUserRequest{}
+		ctx = kratosx.MustContext(c)
+	)
+
+	if err := valx.Transform(req, &in); err != nil {
+		ctx.Logger().Warnw("msg", "request transform err", "err", err.Error())
+		return nil, errors.TransformError()
+	}
+
+	result, err := s.uc.GetUser(ctx, &in)
+	if err != nil {
+		return nil, err
+	}
+
+	reply := pb.GetUserReply{}
+	if err := valx.Transform(result, &reply); err != nil {
+		ctx.Logger().Warnw("msg", "reply transform err", "err", err.Error())
+		return nil, errors.TransformError()
+	}
+	return &reply, nil
+}
+
+func (s *UserService) GetCurrentUser(c context.Context, _ *emptypb.Empty) (*pb.GetUserReply, error) {
+	var (
+		ctx = kratosx.MustContext(c)
+	)
+
+	result, err := s.uc.GetCurrentUser(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	reply := pb.GetUserReply{}
+	if err = valx.Transform(result, &reply); err != nil {
+		ctx.Logger().Warnw("msg", "reply transform err", "err", err.Error())
+		return nil, errors.TransformError()
+	}
+	return &reply, nil
+}
+
+func (s *UserService) ResetUserPassword(c context.Context, req *pb.ResetUserPasswordRequest) (*pb.ResetUserPasswordReply, error) {
+	return &pb.ResetUserPasswordReply{}, s.uc.ResetUserPassword(kratosx.MustContext(c), req.Id)
+}
+
+func (s *UserService) UpdateCurrentUser(c context.Context, req *pb.UpdateCurrentUserRequest) (*pb.UpdateCurrentUserReply, error) {
+	var (
+		in  user.UpdateCurrentUserRequest
+		ctx = kratosx.MustContext(c)
+	)
+
+	if err := valx.Transform(req, &in); err != nil {
+		ctx.Logger().Warnw("msg", "request transform err", "err", err.Error())
+		return nil, errors.TransformError()
+	}
+
+	return &pb.UpdateCurrentUserReply{}, s.uc.UpdateCurrentUser(kratosx.MustContext(c), &in)
+}
+
+func (s *UserService) UpdateCurrentUserRole(c context.Context, req *pb.UpdateCurrentUserRoleRequest) (*pb.UpdateCurrentUserRoleReply, error) {
+	return &pb.UpdateCurrentUserRoleReply{}, s.uc.UpdateCurrentUserRole(kratosx.MustContext(c), req.RoleId)
+}
+
+func (s *UserService) UpdateCurrentUserPassword(c context.Context, req *pb.UpdateCurrentUserPasswordRequest) (*pb.UpdateCurrentUserPasswordReply, error) {
+	var (
+		in  user.UpdateCurrentUserPasswordRequest
+		ctx = kratosx.MustContext(c)
+	)
+
+	if err := valx.Transform(req, &in); err != nil {
+		ctx.Logger().Warnw("msg", "request transform err", "err", err.Error())
+		return nil, errors.TransformError()
+	}
+
+	return &pb.UpdateCurrentUserPasswordReply{}, s.uc.UpdateCurrentUserPassword(ctx, &in)
+}
+
+func (s *UserService) UpdateCurrentUserSetting(c context.Context, req *pb.UpdateCurrentUserSettingRequest) (*pb.UpdateCurrentUserSettingReply, error) {
+	return &pb.UpdateCurrentUserSettingReply{}, s.uc.UpdateCurrentUserSetting(kratosx.MustContext(c), req.Setting)
+}
+
+func (s *UserService) UserLogin(c context.Context, req *pb.UserLoginRequest) (*pb.UserLoginReply, error) {
+	var (
+		in  user.UserLoginRequest
+		ctx = kratosx.MustContext(c)
+	)
+
+	if err := valx.Transform(req, &in); err != nil {
+		ctx.Logger().Warnw("msg", "request transform err", "err", err.Error())
+		return nil, errors.TransformError()
+	}
+
+	token, err := s.uc.UserLogin(ctx, &in)
+	if err != nil {
+		return nil, err
+	}
+	return &pb.UserLoginReply{Token: token}, nil
+}
+
+func (s *UserService) UserLogout(c context.Context, _ *emptypb.Empty) (*emptypb.Empty, error) {
+	return &emptypb.Empty{}, s.uc.UserLogout(kratosx.MustContext(c))
+}
+
+func (s *UserService) UserRefreshToken(c context.Context, _ *emptypb.Empty) (*pb.UserRefreshTokenReply, error) {
+	token, err := s.uc.UserRefreshToken(kratosx.MustContext(c))
+	if err != nil {
+		return nil, err
+	}
+	return &pb.UserRefreshTokenReply{Token: token}, nil
+}
+
+func (s *UserService) SendCurrentUserCaptcha(c context.Context, req *pb.SendCurrentUserCaptchaRequest) (*pb.SendCurrentUserCaptchaReply, error) {
+	reply, err := s.uc.SendCurrentUserCaptcha(kratosx.MustContext(c), req.Type)
+	if err != nil {
+		return nil, err
+	}
+	return &pb.SendCurrentUserCaptchaReply{
+		Uuid:    reply.Uuid,
+		Captcha: reply.Captcha,
+		Expire:  reply.Expire,
 	}, nil
 }
 
-func (u UserService) PageUser(ctx context.Context, request *v1.PageUserRequest) (*v1.PageUserReply, error) {
-	var req biz.PageUserRequest
-	if err := util.Transform(request, &req); err != nil {
-		return nil, errors.Transform()
-	}
-
-	list, total, err := u.uc.PageUser(kratosx.MustContext(ctx), &req)
+func (s *UserService) GetUserLoginCaptcha(c context.Context, _ *emptypb.Empty) (*pb.GetUserLoginCaptchaReply, error) {
+	reply, err := s.uc.GetUserLoginCaptcha(kratosx.MustContext(c))
 	if err != nil {
 		return nil, err
 	}
-
-	reply := v1.PageUserReply{Total: total}
-	if err := util.Transform(list, &reply.List); err != nil {
-		return nil, errors.Transform()
-	}
-
-	return &reply, nil
-}
-
-func (u UserService) AddUser(ctx context.Context, request *v1.AddUserRequest) (*v1.AddUserReply, error) {
-	var user biz.User
-	if err := util.Transform(request, &user); err != nil {
-		return nil, errors.Transform()
-	}
-
-	for _, id := range request.RoleIds {
-		user.UserRoles = append(user.UserRoles, &biz.UserRole{
-			RoleID: id,
-		})
-	}
-
-	for _, id := range request.JobIds {
-		user.UserJobs = append(user.UserJobs, &biz.UserJob{
-			JobID: id,
-		})
-	}
-
-	id, err := u.uc.AddUser(kratosx.MustContext(ctx), &user)
-	if err != nil {
-		return nil, err
-	}
-
-	return &v1.AddUserReply{Id: id}, nil
-}
-
-func (u UserService) ChangeUserPassword(ctx context.Context, request *v1.ChangeUserPasswordRequest) (*emptypb.Empty, error) {
-	var req biz.ChangeUserPasswordRequest
-	if err := util.Transform(request, &req); err != nil {
-		return nil, errors.Transform()
-	}
-	return nil, u.uc.ChangeUserPassword(kratosx.MustContext(ctx), &req)
-}
-
-func (u UserService) ChangeUserPasswordCaptcha(ctx context.Context, _ *emptypb.Empty) (*v1.CaptchaReply, error) {
-	res, err := u.uc.ChangePasswordCaptcha(kratosx.MustContext(ctx))
-	if err != nil {
-		return nil, err
-	}
-
-	reply := v1.CaptchaReply{}
-	if err := util.Transform(res, &reply); err != nil {
-		return nil, errors.Transform()
-	}
-	return &reply, nil
-}
-
-func (u UserService) CurrentUser(ctx context.Context, _ *emptypb.Empty) (*v1.User, error) {
-	res, err := u.uc.CurrentUser(kratosx.MustContext(ctx))
-	if err != nil {
-		return nil, err
-	}
-
-	reply := v1.User{}
-	if err := util.Transform(res, &reply); err != nil {
-		return nil, errors.Transform()
-	}
-	return &reply, nil
-}
-
-func (u UserService) DeleteUser(ctx context.Context, request *v1.DeleteUserRequest) (*emptypb.Empty, error) {
-	return nil, u.uc.DeleteUser(kratosx.MustContext(ctx), request.Id)
-}
-
-func (u UserService) DisableUser(ctx context.Context, request *v1.DisableUserRequest) (*emptypb.Empty, error) {
-	return nil, u.uc.DisableUser(kratosx.MustContext(ctx), request.Id, request.Desc)
-}
-
-func (u UserService) EnableUser(ctx context.Context, request *v1.EnableUserRequest) (*emptypb.Empty, error) {
-	return nil, u.uc.EnableUser(kratosx.MustContext(ctx), request.Id)
-}
-
-func (u UserService) OfflineUser(ctx context.Context, request *v1.OfflineUserRequest) (*emptypb.Empty, error) {
-	return nil, u.uc.OfflineUser(kratosx.MustContext(ctx), request.Id)
-}
-
-func (u UserService) ResetUserPassword(ctx context.Context, request *v1.ResetUserPasswordRequest) (*emptypb.Empty, error) {
-	return nil, u.uc.ResetUserPassword(kratosx.MustContext(ctx), request.Id)
-}
-
-func (u UserService) SwitchCurrentUserRole(ctx context.Context, request *v1.SwitchCurrentUserRoleRequest) (*v1.SwitchCurrentUserRoleReply, error) {
-	return nil, u.uc.SwitchCurrentUserRole(kratosx.MustContext(ctx), request.RoleId)
-}
-
-func (u UserService) UpdateUser(ctx context.Context, request *v1.UpdateUserRequest) (*emptypb.Empty, error) {
-	var user biz.User
-	if err := util.Transform(request, &user); err != nil {
-		return nil, errors.Transform()
-	}
-
-	for _, id := range request.RoleIds {
-		user.UserRoles = append(user.UserRoles, &biz.UserRole{
-			RoleID: id,
-		})
-	}
-
-	for _, id := range request.JobIds {
-		user.UserJobs = append(user.UserJobs, &biz.UserJob{
-			JobID: id,
-		})
-	}
-	return nil, u.uc.UpdateUser(kratosx.MustContext(ctx), &user)
-}
-
-func (u UserService) UpdateCurrentUser(ctx context.Context, request *v1.UpdateCurrentUserRequest) (*emptypb.Empty, error) {
-	var req biz.UpdateCurrentUserRequest
-	if err := util.Transform(request, &req); err != nil {
-		return nil, errors.Transform()
-	}
-
-	return nil, u.uc.UpdateCurrentUser(kratosx.MustContext(ctx), &req)
-}
-
-func (u UserService) UserLogin(ctx context.Context, request *v1.UserLoginRequest) (*v1.UserLoginReply, error) {
-	var req biz.UserLoginRequest
-	if err := util.Transform(request, &req); err != nil {
-		return nil, errors.Transform()
-	}
-
-	token, err := u.uc.UserLogin(kratosx.MustContext(ctx), &req)
-	return &v1.UserLoginReply{
-		Token: token,
-	}, err
-}
-
-func (u UserService) UserLoginCaptcha(ctx context.Context, _ *emptypb.Empty) (*v1.CaptchaReply, error) {
-	res, err := u.uc.UserLoginCaptcha(kratosx.MustContext(ctx))
-	if err != nil {
-		return nil, err
-	}
-
-	reply := v1.CaptchaReply{}
-	if err := util.Transform(res, &reply); err != nil {
-		return nil, errors.Transform()
-	}
-	return &reply, nil
-}
-
-func (u UserService) UserLogout(ctx context.Context, _ *emptypb.Empty) (*emptypb.Empty, error) {
-	return nil, u.uc.UserLogout(kratosx.MustContext(ctx))
-}
-
-func (u UserService) UserRefreshToken(ctx context.Context, _ *emptypb.Empty) (*v1.UserRefreshTokenReply, error) {
-	token, err := u.uc.UserRefreshToken(kratosx.MustContext(ctx))
-	return &v1.UserRefreshTokenReply{Token: token}, err
+	return &pb.GetUserLoginCaptchaReply{
+		Uuid:    reply.Uuid,
+		Captcha: reply.Captcha,
+		Expire:  reply.Expire,
+	}, nil
 }

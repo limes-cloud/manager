@@ -32,7 +32,7 @@ Thumbs.db
 *.key
 *.log
 bin/
-
+web_ts/
 # Develop tools
 .vscode/
 .idea/

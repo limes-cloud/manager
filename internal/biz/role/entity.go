@@ -2,59 +2,43 @@ package role
 
 import (
 	"github.com/limes-cloud/kratosx/pkg/tree"
-	"github.com/limes-cloud/kratosx/types"
 )
 
 type Role struct {
-	types.BaseModel
-	ParentId      uint32  `json:"parent_id"`
+	Id            uint32  `json:"id"`
+	ParentId      uint32  `json:"parentId"`
 	Name          string  `json:"name"`
 	Keyword       string  `json:"keyword"`
 	Status        *bool   `json:"status"`
+	DataScope     string  `json:"dataScope"`
+	DepartmentIds *string `json:"departmentIds"`
 	Description   *string `json:"description"`
-	DepartmentIds *string `json:"department_ids"`
-	DataScope     string  `json:"data_scope"`
-	Children      []*Role `json:"children" gorm:"-"`
+	CreatedAt     int64   `json:"createdAt"`
+	UpdatedAt     int64   `json:"updatedAt"`
+	Children      []*Role `json:"Children"`
 }
 
-// ID 获取ID
-func (r *Role) ID() uint32 {
-	return r.BaseModel.ID
+// ID 获取菜单树ID
+func (m *Role) ID() uint32 {
+	return m.Id
 }
 
 // Parent 获取父ID
-func (r *Role) Parent() uint32 {
-	return r.ParentId
+func (m *Role) Parent() uint32 {
+	return m.ParentId
 }
 
-// AppendChildren 添加子树
-func (r *Role) AppendChildren(child any) {
+// AppendChildren 添加子节点
+func (m *Role) AppendChildren(child any) {
 	menu := child.(*Role)
-	r.Children = append(r.Children, menu)
+	m.Children = append(m.Children, menu)
 }
 
-// ChildrenNode 获取子树列表
-func (r *Role) ChildrenNode() []tree.Tree {
+// ChildrenNode 获取子节点
+func (m *Role) ChildrenNode() []tree.Tree {
 	var list []tree.Tree
-	for _, item := range r.Children {
+	for _, item := range m.Children {
 		list = append(list, item)
 	}
 	return list
-}
-
-type RoleClosure struct {
-	ID       uint32 `json:"id"`
-	Parent   uint32 `json:"parent"`
-	Children uint32 `json:"children"`
-}
-
-type RoleMenu struct {
-	types.CreateModel
-	MenuId uint32 `json:"menu_id"`
-	RoleId uint32 `json:"role_id"`
-}
-
-type MenuApi struct {
-	Api    string `json:"api"`
-	Method string `json:"method"`
 }

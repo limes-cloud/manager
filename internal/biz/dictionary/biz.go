@@ -2,96 +2,114 @@ package dictionary
 
 import (
 	"github.com/limes-cloud/kratosx"
-
-	"github.com/limes-cloud/manager/api/errors"
-	"github.com/limes-cloud/manager/internal/config"
+	"github.com/limes-cloud/manager/api/manager/errors"
+	"github.com/limes-cloud/manager/internal/conf"
 )
 
 type UseCase struct {
+	conf *conf.Config
 	repo Repo
-	conf *config.Config
 }
 
-func NewUseCase(conf *config.Config, repo Repo) *UseCase {
-	return &UseCase{
-		repo: repo,
-		conf: conf,
-	}
+func NewUseCase(config *conf.Config, repo Repo) *UseCase {
+	return &UseCase{conf: config, repo: repo}
 }
 
-// PageDictionary 获取分页字典信息
-func (u *UseCase) PageDictionary(ctx kratosx.Context, in *PageDictionaryRequest) ([]*Dictionary, uint32, error) {
-	list, total, err := u.repo.PageDictionary(ctx, in)
+// ListDictionary 获取字典目录列表
+func (u *UseCase) ListDictionary(ctx kratosx.Context, req *ListDictionaryRequest) ([]*Dictionary, uint32, error) {
+	list, total, err := u.repo.ListDictionary(ctx, req)
 	if err != nil {
-		return nil, 0, errors.DatabaseFormat(err.Error())
+		return nil, 0, errors.ListError(err.Error())
 	}
 	return list, total, nil
 }
 
-// AddDictionary 添加字典信息
-func (u *UseCase) AddDictionary(ctx kratosx.Context, in *Dictionary) (uint32, error) {
-	id, err := u.repo.AddDictionary(ctx, in)
+// CreateDictionary 创建字典目录
+func (u *UseCase) CreateDictionary(ctx kratosx.Context, req *Dictionary) (uint32, error) {
+	id, err := u.repo.CreateDictionary(ctx, req)
 	if err != nil {
-		return 0, errors.DatabaseFormat(err.Error())
+		return 0, errors.CreateError(err.Error())
 	}
 	return id, nil
 }
 
-// UpdateDictionary 更新字典信息
-func (u *UseCase) UpdateDictionary(ctx kratosx.Context, in *Dictionary) error {
-	if err := u.repo.UpdateDictionary(ctx, in); err != nil {
-		return errors.DatabaseFormat(err.Error())
+// UpdateDictionary 更新字典目录
+func (u *UseCase) UpdateDictionary(ctx kratosx.Context, req *Dictionary) error {
+	if err := u.repo.UpdateDictionary(ctx, req); err != nil {
+		return errors.UpdateError(err.Error())
 	}
 	return nil
 }
 
-// DeleteDictionary 删除字典信息
-func (u *UseCase) DeleteDictionary(ctx kratosx.Context, id uint32) error {
-	if err := u.repo.DeleteDictionary(ctx, id); err != nil {
-		return errors.Database()
+// DeleteDictionary 删除字典目录
+func (u *UseCase) DeleteDictionary(ctx kratosx.Context, ids []uint32) (uint32, error) {
+	total, err := u.repo.DeleteDictionary(ctx, ids)
+	if err != nil {
+		return 0, errors.DeleteError(err.Error())
 	}
-	return nil
+	return total, nil
 }
 
-// GetDictionaryValue 获取指定字典值
-func (u *UseCase) GetDictionaryValue(ctx kratosx.Context, keyword string) ([]*DictionaryValue, error) {
-	list, err := u.repo.GetDictionaryValue(ctx, keyword)
+// ListDictionaryValue 获取字典值目录列表
+func (u *UseCase) ListDictionaryValue(ctx kratosx.Context, req *ListDictionaryValueRequest) ([]*DictionaryValue, uint32, error) {
+	list, total, err := u.repo.ListDictionaryValue(ctx, req)
 	if err != nil {
-		return nil, errors.DatabaseFormat(err.Error())
-	}
-	return list, nil
-}
-
-// PageDictionaryValue 获取分页字典值
-func (u *UseCase) PageDictionaryValue(ctx kratosx.Context, in *PageDictionaryValueRequest) ([]*DictionaryValue, uint32, error) {
-	list, total, err := u.repo.PageDictionaryValue(ctx, in)
-	if err != nil {
-		return nil, 0, errors.DatabaseFormat(err.Error())
+		return nil, 0, errors.ListError(err.Error())
 	}
 	return list, total, nil
 }
 
-// AddDictionaryValue 删除字典值
-func (u *UseCase) AddDictionaryValue(ctx kratosx.Context, in *DictionaryValue) (uint32, error) {
-	id, err := u.repo.AddDictionaryValue(ctx, in)
+// CreateDictionaryValue 创建字典值目录
+func (u *UseCase) CreateDictionaryValue(ctx kratosx.Context, req *DictionaryValue) (uint32, error) {
+	id, err := u.repo.CreateDictionaryValue(ctx, req)
 	if err != nil {
-		return 0, errors.DatabaseFormat(err.Error())
+		return 0, errors.CreateError(err.Error())
 	}
 	return id, nil
 }
 
-// UpdateDictionaryValue 更新字典值
-func (u *UseCase) UpdateDictionaryValue(ctx kratosx.Context, in *DictionaryValue) error {
-	if err := u.repo.UpdateDictionaryValue(ctx, in); err != nil {
-		return errors.DatabaseFormat(err.Error())
+// UpdateDictionaryValue 更新字典值目录
+func (u *UseCase) UpdateDictionaryValue(ctx kratosx.Context, req *DictionaryValue) error {
+	if err := u.repo.UpdateDictionaryValue(ctx, req); err != nil {
+		return errors.UpdateError(err.Error())
 	}
 	return nil
 }
 
-// DeleteDictionaryValue 删除字典值
-func (u *UseCase) DeleteDictionaryValue(ctx kratosx.Context, id uint32) error {
-	if err := u.repo.DeleteDictionaryValue(ctx, id); err != nil {
-		return errors.Database()
+// UpdateDictionaryValueStatus 更新字典值目录状态
+func (u *UseCase) UpdateDictionaryValueStatus(ctx kratosx.Context, id uint32, status bool) error {
+	if err := u.repo.UpdateDictionaryValueStatus(ctx, id, status); err != nil {
+		return errors.UpdateError(err.Error())
 	}
 	return nil
+}
+
+// DeleteDictionaryValue 删除字典值目录
+func (u *UseCase) DeleteDictionaryValue(ctx kratosx.Context, ids []uint32) (uint32, error) {
+	total, err := u.repo.DeleteDictionaryValue(ctx, ids)
+	if err != nil {
+		return 0, errors.DeleteError(err.Error())
+	}
+	return total, nil
+}
+
+// GetDictionary 获取指定的字典目录
+func (u *UseCase) GetDictionary(ctx kratosx.Context, req *GetDictionaryRequest) (*Dictionary, error) {
+	var (
+		res *Dictionary
+		err error
+	)
+
+	if req.Id != nil {
+		res, err = u.repo.GetDictionary(ctx, *req.Id)
+	} else if req.Keyword != nil {
+		res, err = u.repo.GetDictionaryByKeyword(ctx, *req.Keyword)
+	} else {
+		return nil, errors.ParamsError()
+	}
+
+	if err != nil {
+		return nil, errors.GetError(err.Error())
+	}
+	return res, nil
 }

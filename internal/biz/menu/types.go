@@ -1,6 +1,7 @@
 package menu
 
-type AllMenuRequest struct {
-	NotType *string `json:"not_type"`
-	RoleId  *uint32 `json:"role_id"`
+type ListMenuRequest struct {
+	Order   *string `json:"order"`
+	OrderBy *string `json:"orderBy"`
+	Title   *string `json:"title"`
 }

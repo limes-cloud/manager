@@ -2,28 +2,28 @@ package md
 
 import (
 	"github.com/limes-cloud/kratosx"
-	"github.com/limes-cloud/kratosx/pkg/util"
+	"github.com/limes-cloud/kratosx/pkg/valx"
 )
 
 const (
-	uid  = "user_id"
-	rid  = "role_id"
-	rkey = "role_keyword"
-	did  = "department_id"
-	dkey = "department_keyword"
+	uid  = "userId"
+	rid  = "roleId"
+	rkey = "roleKeyword"
+	did  = "departmentId"
+	dkey = "departmentKeyword"
 )
 
 type Auth struct {
-	UserId            uint32 `json:"user_id"`
-	RoleId            uint32 `json:"role_id"`
-	RoleKeyword       string `json:"role_keyword"`
-	DepartmentId      uint32 `json:"department_id"`
-	DepartmentKeyword string `json:"department_keyword"`
+	UserId            uint32 `json:"userId"`
+	RoleId            uint32 `json:"roleId"`
+	RoleKeyword       string `json:"roleKeyword"`
+	DepartmentId      uint32 `json:"departmentId"`
+	DepartmentKeyword string `json:"departmentKeyword"`
 }
 
 func New(info *Auth) map[string]any {
 	var res map[string]any
-	_ = util.Transform(info, &res)
+	_ = valx.Transform(info, &res)
 	return res
 }
 

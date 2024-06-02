@@ -1,11 +1,11 @@
 package job
 
-import "github.com/limes-cloud/kratosx/types"
-
 type Job struct {
-	types.BaseModel
+	Id          uint32  `json:"id"`
 	Keyword     string  `json:"keyword"`
 	Name        string  `json:"name"`
-	Weight      *uint32 `json:"weight"`
-	Description string  `json:"description"`
+	Weight      *int32  `json:"weight"`
+	Description *string `json:"description"`
+	CreatedAt   int64   `json:"createdAt"`
+	UpdatedAt   int64   `json:"updatedAt"`
 }

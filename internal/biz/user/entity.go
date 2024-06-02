@@ -1,44 +1,53 @@
 package user
 
-import (
-	"github.com/limes-cloud/kratosx/types"
-
-	"github.com/limes-cloud/manager/internal/biz/department"
-	"github.com/limes-cloud/manager/internal/biz/job"
-	"github.com/limes-cloud/manager/internal/biz/role"
-)
-
 type User struct {
-	types.BaseModel
-	DepartmentId uint32                 `json:"department_id"`
-	RoleId       uint32                 `json:"role_id"`
-	Name         string                 `json:"name"`
-	Nickname     string                 `json:"nickname"`
-	Gender       string                 `json:"gender"`
-	Phone        string                 `json:"phone"`
-	Password     string                 `json:"password"`
-	Avatar       string                 `json:"avatar"`
-	Email        string                 `json:"email"`
-	Status       *bool                  `json:"status"`
-	Disabled     *string                `json:"disabled"`
-	LastLogin    int64                  `json:"last_login"`
-	Token        string                 `json:"token"`
-	Role         *role.Role             `json:"role"`
-	Department   *department.Department `json:"department"`
-	Roles        []*role.Role           `json:"roles" gorm:"many2many:user_role"`
-	Jobs         []*job.Job             `json:"jobs" gorm:"many2many:user_job"`
-	UserRoles    []*UserRole            `json:"user_roles"`
-	UserJobs     []*UserJob             `json:"user_jobs"`
+	Id           uint32      `json:"id"`
+	DepartmentId uint32      `json:"departmentId"`
+	RoleId       uint32      `json:"roleId"`
+	Name         string      `json:"name"`
+	Nickname     string      `json:"nickname"`
+	Gender       string      `json:"gender"`
+	Avatar       *string     `json:"avatar"`
+	Phone        string      `json:"phone"`
+	Email        string      `json:"email"`
+	Password     string      `json:"password"`
+	Status       *bool       `json:"status"`
+	Setting      *string     `json:"setting"`
+	Token        *string     `json:"token"`
+	LoggedAt     int64       `json:"loggedAt"`
+	CreatedAt    int64       `json:"createdAt"`
+	UpdatedAt    int64       `json:"updatedAt"`
+	UserJobs     []*UserJob  `json:"userJobs"`
+	UserRoles    []*UserRole `json:"userRoles"`
+	Roles        []*Role     `json:"roles"`
+	Jobs         []*Job      `json:"jobs"`
+	Department   *Department `json:"department"`
+	Role         *Role       `json:"role"`
 }
 
-type UserRole struct {
-	types.CreateModel
-	RoleID uint32 `json:"role_id"`
-	UserID uint32 `json:"user_id"`
+type Department struct {
+	Id      uint32 `json:"id"`
+	Name    string `json:"name"`
+	Keyword string `json:"keyword"`
+}
+
+type Job struct {
+	Id      uint32 `json:"id"`
+	Name    string `json:"name"`
+	Keyword string `json:"keyword"`
+}
+
+type Role struct {
+	Id      uint32 `json:"id"`
+	Name    string `json:"name"`
+	Keyword string `json:"keyword"`
+	Status  *bool  `json:"status"`
 }
 
 type UserJob struct {
-	types.CreateModel
-	JobID  uint32 `json:"job_id"`
-	UserID uint32 `json:"user_id"`
+	JobId uint32 `json:"jobId"`
+}
+
+type UserRole struct {
+	RoleId uint32 `json:"roleId"`
 }

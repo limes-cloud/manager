@@ -2,35 +2,34 @@ package menu
 
 import (
 	"github.com/limes-cloud/kratosx/pkg/tree"
-	"github.com/limes-cloud/kratosx/types"
 )
 
 type Menu struct {
-	types.BaseModel
-	ParentId        uint32  `json:"parent_id"`
-	Title           string  `json:"title"`
-	Type            string  `json:"type"`
-	Keyword         *string `json:"keyword"`
-	Icon            *string `json:"icon"`
-	Api             *string `json:"api"`
-	Method          *string `json:"method"`
-	Path            *string `json:"path"`
-	Permission      *string `json:"permission"`
-	CheckObject     *bool   `json:"check_object"`
-	CheckObjectRule *string `json:"check_object_rule"`
-	Component       *string `json:"component"`
-	Redirect        *string `json:"redirect"`
-	Weight          *uint32 `json:"weight"`
-	IsHidden        *bool   `json:"is_hidden"`
-	IsCache         *bool   `json:"is_cache"`
-	IsHome          *bool   `json:"is_home"`
-	IsAffix         *bool   `json:"is_affix"`
-	Children        []*Menu `json:"children"  gorm:"-"`
+	Id         uint32  `json:"id"`
+	ParentId   uint32  `json:"parentId"`
+	Title      string  `json:"title"`
+	Type       string  `json:"type"`
+	Keyword    *string `json:"keyword"`
+	Icon       *string `json:"icon"`
+	Api        *string `json:"api"`
+	Method     *string `json:"method"`
+	Path       *string `json:"path"`
+	Permission *string `json:"permission"`
+	Component  *string `json:"component"`
+	Redirect   *string `json:"redirect"`
+	Weight     *int32  `json:"weight"`
+	IsHidden   *bool   `json:"isHidden"`
+	IsCache    *bool   `json:"isCache"`
+	IsHome     *bool   `json:"isHome"`
+	IsAffix    *bool   `json:"isAffix"`
+	CreatedAt  int64   `json:"createdAt"`
+	UpdatedAt  int64   `json:"updatedAt"`
+	Children   []*Menu `json:"Children"`
 }
 
 // ID 获取菜单树ID
 func (m *Menu) ID() uint32 {
-	return m.BaseModel.ID
+	return m.Id
 }
 
 // Parent 获取父ID
@@ -51,10 +50,4 @@ func (m *Menu) ChildrenNode() []tree.Tree {
 		list = append(list, item)
 	}
 	return list
-}
-
-type MenuClosure struct {
-	ID       uint32 `json:"id"`
-	Parent   uint32 `json:"parent"`
-	Children uint32 `json:"children"`
 }

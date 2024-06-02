@@ -2,83 +2,126 @@ package service
 
 import (
 	"context"
-
+	"github.com/go-kratos/kratos/v2/transport/grpc"
+	"github.com/go-kratos/kratos/v2/transport/http"
 	"github.com/limes-cloud/kratosx"
-	"github.com/limes-cloud/kratosx/pkg/util"
-	"google.golang.org/protobuf/types/known/emptypb"
-
-	"github.com/limes-cloud/manager/api/errors"
-	v1 "github.com/limes-cloud/manager/api/menu/v1"
-	biz "github.com/limes-cloud/manager/internal/biz/menu"
-	"github.com/limes-cloud/manager/internal/config"
-	data "github.com/limes-cloud/manager/internal/data/menu"
+	"github.com/limes-cloud/kratosx/pkg/valx"
+	"github.com/limes-cloud/manager/api/manager/errors"
+	pb "github.com/limes-cloud/manager/api/manager/menu/v1"
+	"github.com/limes-cloud/manager/internal/biz/menu"
+	"github.com/limes-cloud/manager/internal/conf"
+	"github.com/limes-cloud/manager/internal/data"
 )
 
 type MenuService struct {
-	v1.UnimplementedServiceServer
-	uc *biz.UseCase
-
-	conf *config.Config
+	pb.UnimplementedMenuServer
+	uc *menu.UseCase
 }
 
-func NewMenuService(conf *config.Config) *MenuService {
+func NewMenuService(conf *conf.Config) *MenuService {
 	return &MenuService{
-		conf: conf,
-		uc:   biz.NewUseCase(conf, data.NewRepo()),
+		uc: menu.NewUseCase(conf, data.NewMenuRepo()),
 	}
 }
 
-func (m MenuService) AddMenu(ctx context.Context, request *v1.AddMenuRequest) (*v1.AddMenuReply, error) {
-	var menu biz.Menu
-	if err := util.Transform(request, &menu); err != nil {
-		return nil, errors.Transform()
+func init() {
+	register(func(c *conf.Config, hs *http.Server, gs *grpc.Server) {
+		srv := NewMenuService(c)
+		pb.RegisterMenuHTTPServer(hs, srv)
+		pb.RegisterMenuServer(gs, srv)
+	})
+}
+
+// ListMenu 获取菜单信息列表
+func (s *MenuService) ListMenu(c context.Context, req *pb.ListMenuRequest) (*pb.ListMenuReply, error) {
+	var (
+		in  = menu.ListMenuRequest{}
+		ctx = kratosx.MustContext(c)
+	)
+
+	if err := valx.Transform(req, &in); err != nil {
+		ctx.Logger().Warnw("msg", "req transform err", "err", err.Error())
+		return nil, errors.TransformError()
 	}
 
-	id, err := m.uc.AddMenu(kratosx.MustContext(ctx), &menu)
+	result, total, err := s.uc.ListMenu(ctx, &in)
 	if err != nil {
 		return nil, err
 	}
 
-	return &v1.AddMenuReply{Id: id}, nil
-}
-
-func (m MenuService) GetMenuTree(ctx context.Context, _ *emptypb.Empty) (*v1.GetMenuTreeReply, error) {
-	tree, err := m.uc.MenuTree(kratosx.MustContext(ctx), nil)
-	if err != nil {
-		return nil, err
-	}
-
-	reply := v1.GetMenuTreeReply{}
-	if err := util.Transform(tree, &reply.List); err != nil {
-		return nil, errors.Transform()
+	reply := pb.ListMenuReply{Total: total}
+	if err := valx.Transform(result, &reply.List); err != nil {
+		ctx.Logger().Warnw("msg", "reply transform err", "err", err.Error())
+		return nil, errors.TransformError()
 	}
 
 	return &reply, nil
 }
 
-func (m MenuService) GetMenuTreeFromRole(ctx context.Context, _ *emptypb.Empty) (*v1.GetMenuTreeReply, error) {
-	tree, err := m.uc.MenuTreeFromRole(kratosx.MustContext(ctx))
+// ListMenuByCurRole 获取当前角色的菜单信息列表
+func (s *MenuService) ListMenuByCurRole(c context.Context, _ *pb.ListMenuByCurRoleRequest) (*pb.ListMenuByCurRoleReply, error) {
+	var (
+		ctx = kratosx.MustContext(c)
+	)
+
+	result, total, err := s.uc.ListMenuByCurRole(ctx)
 	if err != nil {
 		return nil, err
 	}
 
-	reply := v1.GetMenuTreeReply{}
-	if err := util.Transform(tree, &reply.List); err != nil {
-		return nil, errors.Transform()
+	reply := pb.ListMenuByCurRoleReply{Total: total}
+	if err := valx.Transform(result, &reply.List); err != nil {
+		ctx.Logger().Warnw("msg", "reply transform err", "err", err.Error())
+		return nil, errors.TransformError()
 	}
 
 	return &reply, nil
 }
 
-func (m MenuService) DeleteMenu(ctx context.Context, request *v1.DeleteMenuRequest) (*emptypb.Empty, error) {
-	return nil, m.uc.DeleteMenu(kratosx.MustContext(ctx), request.Id)
-}
+// CreateMenu 创建菜单信息
+func (s *MenuService) CreateMenu(c context.Context, req *pb.CreateMenuRequest) (*pb.CreateMenuReply, error) {
+	var (
+		in  = menu.Menu{}
+		ctx = kratosx.MustContext(c)
+	)
 
-func (m MenuService) UpdateMenu(ctx context.Context, request *v1.UpdateMenuRequest) (*emptypb.Empty, error) {
-	var menu biz.Menu
-	if err := util.Transform(request, &menu); err != nil {
-		return nil, errors.Transform()
+	if err := valx.Transform(req, &in); err != nil {
+		ctx.Logger().Warnw("msg", "req transform err", "err", err.Error())
+		return nil, errors.TransformError()
 	}
 
-	return nil, m.uc.UpdateMenu(kratosx.MustContext(ctx), &menu)
+	id, err := s.uc.CreateMenu(ctx, &in)
+	if err != nil {
+		return nil, err
+	}
+
+	return &pb.CreateMenuReply{Id: id}, nil
+}
+
+// UpdateMenu 更新菜单信息
+func (s *MenuService) UpdateMenu(c context.Context, req *pb.UpdateMenuRequest) (*pb.UpdateMenuReply, error) {
+	var (
+		in  = menu.Menu{}
+		ctx = kratosx.MustContext(c)
+	)
+
+	if err := valx.Transform(req, &in); err != nil {
+		ctx.Logger().Warnw("msg", "req transform err", "err", err.Error())
+		return nil, errors.TransformError()
+	}
+
+	if err := s.uc.UpdateMenu(ctx, &in); err != nil {
+		return nil, err
+	}
+
+	return &pb.UpdateMenuReply{}, nil
+}
+
+// DeleteMenu 删除菜单信息
+func (s *MenuService) DeleteMenu(c context.Context, req *pb.DeleteMenuRequest) (*pb.DeleteMenuReply, error) {
+	total, err := s.uc.DeleteMenu(kratosx.MustContext(c), req.Ids)
+	if err != nil {
+		return nil, err
+	}
+	return &pb.DeleteMenuReply{Total: total}, nil
 }

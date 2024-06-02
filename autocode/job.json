@@ -1,0 +1,110 @@
+{
+  "table":"job",
+  "keyword": "job",
+  "module": "job",
+  "comment": "职位信息",
+  "description": "职位信息",
+  "type": "list",
+  "fields": [
+    {
+      "keyword": "id",
+      "title": "主键",
+      "type": "primaryKey",
+      "required": true,
+      "default": "",
+      "operation": {
+        "create": false,
+        "update": true,
+        "list": true,
+        "get": true
+      }
+    },
+    {
+      "keyword": "keyword",
+      "title": "职位标识",
+      "type": "char",
+      "required": true,
+      "default": "",
+      "operation": {
+        "create": true,
+        "update": true,
+        "list": true,
+        "get": true
+      },
+      "queryType": "="
+    },
+    {
+      "keyword": "name",
+      "title": "职位名称",
+      "type": "varchar64",
+      "required": true,
+      "default": "",
+      "operation": {
+        "create": true,
+        "update": true,
+        "list": true,
+        "get": true
+      },
+      "queryType": "like"
+    },
+    {
+      "keyword": "weight",
+      "title": "职位权重",
+      "type": "integer",
+      "required": false,
+      "default": "",
+      "operation": {
+        "create": true,
+        "update": true,
+        "list": true,
+        "get": true
+      }
+    },
+    {
+      "keyword": "description",
+      "title": "职位描述",
+      "type": "varchar256",
+      "required": false,
+      "default": "",
+      "operation": {
+        "create": true,
+        "update": true,
+        "list": true,
+        "get": true
+      }
+    },
+    {
+      "keyword": "created_at",
+      "title": "创建时间",
+      "type": "time",
+      "required": true,
+      "default": "",
+      "operation": {
+        "create": false,
+        "update": false,
+        "list": true,
+        "get": true
+      }
+    },
+    {
+      "keyword": "updated_at",
+      "title": "更新时间",
+      "type": "time",
+      "required": true,
+      "default": "",
+      "operation": {
+        "create": false,
+        "update": false,
+        "list": true,
+        "get": true
+      }
+    }
+  ],
+  "unique": [
+    ["keyword"]
+  ],
+  "index": [
+    ["weight"],["created_at"]
+  ],
+  "methods": ["Get","List", "Create", "Update", "Delete"]
+}

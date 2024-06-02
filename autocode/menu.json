@@ -1,0 +1,268 @@
+{
+  "table":"menu",
+  "keyword": "menu",
+  "module": "menu",
+  "comment": "菜单信息",
+  "description": "菜单信息",
+  "type": "tree",
+  "fields": [
+    {
+      "keyword": "id",
+      "title": "主键",
+      "type": "primaryKey",
+      "required": true,
+      "default": "",
+      "operation": {
+        "create": false,
+        "update": true,
+        "list": true,
+        "get": true
+      }
+    },
+    {
+      "keyword": "parent_id",
+      "title": "父id",
+      "type": "unsignedInteger",
+      "required": true,
+      "default": "",
+      "operation": {
+        "create": true,
+        "update": true,
+        "list": true,
+        "get": true
+      }
+    },
+    {
+      "keyword": "title",
+      "title": "标题",
+      "type": "varchar128",
+      "required": true,
+      "default": "",
+      "operation": {
+        "create": true,
+        "update": true,
+        "list": true,
+        "get": true
+      },
+      "queryType": "like"
+    },
+    {
+      "keyword": "type",
+      "title": "类型",
+      "type": "char",
+      "required": true,
+      "default": "",
+      "operation": {
+        "create": true,
+        "update": true,
+        "list": true,
+        "get": true
+      }
+    },
+    {
+      "keyword": "keyword",
+      "title": "标识",
+      "type": "char",
+      "required": false,
+      "default": "",
+      "operation": {
+        "create": true,
+        "update": true,
+        "list": true,
+        "get": true
+      }
+    },
+    {
+      "keyword": "icon",
+      "title": "图标",
+      "type": "char",
+      "required": false,
+      "default": "",
+      "operation": {
+        "create": true,
+        "update": true,
+        "list": true,
+        "get": true
+      }
+    },
+    {
+      "keyword": "api",
+      "title": "接口",
+      "type": "varchar128",
+      "required": false,
+      "default": "",
+      "operation": {
+        "create": true,
+        "update": true,
+        "list": true,
+        "get": true
+      }
+    },
+    {
+      "keyword": "method",
+      "title": "方法",
+      "type": "char",
+      "required": false,
+      "default": "",
+      "operation": {
+        "create": true,
+        "update": true,
+        "list": true,
+        "get": true
+      }
+    },
+    {
+      "keyword": "path",
+      "title": "路径",
+      "type": "varchar128",
+      "required": false,
+      "default": "",
+      "operation": {
+        "create": true,
+        "update": true,
+        "list": true,
+        "get": true
+      }
+    },
+    {
+      "keyword": "permission",
+      "title": "指令",
+      "type": "varchar128",
+      "required": false,
+      "default": "",
+      "operation": {
+        "create": true,
+        "update": true,
+        "list": true,
+        "get": true
+      }
+    },
+    {
+      "keyword": "component",
+      "title": "组件",
+      "type": "varchar128",
+      "required": false,
+      "default": "",
+      "operation": {
+        "create": true,
+        "update": true,
+        "list": true,
+        "get": true
+      }
+    },
+    {
+      "keyword": "redirect",
+      "title": "重定向",
+      "type": "varchar128",
+      "required": false,
+      "default": "",
+      "operation": {
+        "create": true,
+        "update": true,
+        "list": true,
+        "get": true
+      }
+    },
+    {
+      "keyword": "weight",
+      "title": "职位权重",
+      "type": "integer",
+      "required": false,
+      "default": "",
+      "operation": {
+        "create": true,
+        "update": true,
+        "list": true,
+        "get": true
+      }
+    },
+    {
+      "keyword": "is_hidden",
+      "title": "是否隐藏",
+      "type": "bool",
+      "required": false,
+      "default": "",
+      "operation": {
+        "create": true,
+        "update": true,
+        "list": true,
+        "get": true
+      }
+    },
+    {
+      "keyword": "is_cache",
+      "title": "是否缓存",
+      "type": "bool",
+      "required": false,
+      "default": "",
+      "operation": {
+        "create": true,
+        "update": true,
+        "list": true,
+        "get": true
+      }
+    },
+    {
+      "keyword": "is_home",
+      "title": "是否首页",
+      "type": "bool",
+      "required": false,
+      "default": "",
+      "operation": {
+        "create": true,
+        "update": true,
+        "list": true,
+        "get": true
+      }
+    },
+    {
+      "keyword": "is_affix",
+      "title": "是否标签",
+      "type": "bool",
+      "required": false,
+      "default": "",
+      "operation": {
+        "create": true,
+        "update": true,
+        "list": true,
+        "get": true
+      }
+    },
+    {
+      "keyword": "created_at",
+      "title": "创建时间",
+      "type": "time",
+      "required": true,
+      "default": "",
+      "operation": {
+        "create": false,
+        "update": false,
+        "list": true,
+        "get": true
+      }
+    },
+    {
+      "keyword": "updated_at",
+      "title": "更新时间",
+      "type": "time",
+      "required": true,
+      "default": "",
+      "operation": {
+        "create": false,
+        "update": false,
+        "list": true,
+        "get": true
+      }
+    }
+  ],
+  "unique": [
+    ["keyword"],
+    ["path"]
+  ],
+  "index": [
+    ["weight"],
+    ["created_at"],
+    ["updated_at"]
+  ],
+  "methods": [ "List", "Create", "Update", "Delete"]
+}

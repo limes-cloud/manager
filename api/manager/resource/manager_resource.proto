@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+package manager_resource;
+
+option go_package = "./v1;v1";
+
+import "validate/validate.proto";
+import "google/protobuf/struct.proto";
+
+message GetResourceScopesRequest{
+  string keyword = 1;
+}
+
+message GetResourceScopesReply{
+  bool all = 1;
+  repeated uint32 scopes = 2;
+}
+
+message UpdateResourceScopesRequest{
+  string keyword = 1;
+  uint32 resourceId = 2;
+  repeated uint32 scopes = 3;
+}
+
+message UpdateResourceScopesReply{
+}

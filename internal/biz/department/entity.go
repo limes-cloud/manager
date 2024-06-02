@@ -2,48 +2,40 @@ package department
 
 import (
 	"github.com/limes-cloud/kratosx/pkg/tree"
-	"github.com/limes-cloud/kratosx/types"
 )
 
 type Department struct {
-	types.BaseModel
-	ParentId    uint32        `json:"parent_id"`
-	Keyword     string        `json:"keyword"`
+	Id          uint32        `json:"id"`
+	ParentId    uint32        `json:"parentId"`
 	Name        string        `json:"name"`
-	Description string        `json:"description"`
-	Children    []*Department `json:"children" gorm:"-"`
+	Keyword     string        `json:"keyword"`
+	Description *string       `json:"description"`
+	CreatedAt   int64         `json:"createdAt"`
+	UpdatedAt   int64         `json:"updatedAt"`
+	Children    []*Department `json:"Children"`
 }
 
-func (t *Department) ID() uint32 {
-	return t.BaseModel.ID
+// ID 获取菜单树ID
+func (m *Department) ID() uint32 {
+	return m.Id
 }
 
-func (t *Department) Parent() uint32 {
-	return t.ParentId
+// Parent 获取父ID
+func (m *Department) Parent() uint32 {
+	return m.ParentId
 }
 
-func (t *Department) AppendChildren(child any) {
-	team := child.(*Department)
-	t.Children = append(t.Children, team)
+// AppendChildren 添加子节点
+func (m *Department) AppendChildren(child any) {
+	menu := child.(*Department)
+	m.Children = append(m.Children, menu)
 }
 
-func (t *Department) ChildrenNode() []tree.Tree {
+// ChildrenNode 获取子节点
+func (m *Department) ChildrenNode() []tree.Tree {
 	var list []tree.Tree
-	for _, item := range t.Children {
+	for _, item := range m.Children {
 		list = append(list, item)
 	}
 	return list
-}
-
-type DepartmentClosure struct {
-	ID       uint32 `json:"id"`
-	Parent   uint32 `json:"parent"`
-	Children uint32 `json:"children"`
-}
-
-type DepartmentObject struct {
-	ID           uint32 `json:"id"`
-	DepartmentId uint32 `json:"department_id"`
-	ObjectId     uint32 `json:"object_id"`
-	Value        string `json:"value"`
 }

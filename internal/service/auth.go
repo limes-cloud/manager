@@ -5,26 +5,46 @@ import (
 
 	"github.com/limes-cloud/kratosx"
 
-	v1 "github.com/limes-cloud/manager/api/auth/v1"
-	biz "github.com/limes-cloud/manager/internal/biz/auth"
-	"github.com/limes-cloud/manager/internal/config"
-	"github.com/limes-cloud/manager/internal/data/department"
-	"github.com/limes-cloud/manager/internal/data/menu"
+	"github.com/go-kratos/kratos/v2/transport/grpc"
+	"github.com/go-kratos/kratos/v2/transport/http"
+	pb "github.com/limes-cloud/manager/api/manager/auth/v1"
+	"github.com/limes-cloud/manager/internal/biz/auth"
+	"github.com/limes-cloud/manager/internal/conf"
 )
 
 type AuthService struct {
-	v1.UnimplementedServiceServer
-	uc   *biz.UseCase
-	conf *config.Config
+	pb.UnimplementedAuthServer
+	uc *auth.UseCase
 }
 
-func NewAuthService(conf *config.Config) *AuthService {
+func NewAuthService(conf *conf.Config) *AuthService {
 	return &AuthService{
-		conf: conf,
-		uc:   biz.NewUseCase(conf, department.NewRepo(), menu.NewRepo()),
+		uc: auth.NewUseCase(conf),
 	}
 }
 
-func (s AuthService) Auth(ctx context.Context, in *v1.AuthRequest) (*v1.AuthReply, error) {
-	return s.uc.Auth(kratosx.MustContext(ctx), in)
+func init() {
+	register(func(c *conf.Config, hs *http.Server, gs *grpc.Server) {
+		srv := NewAuthService(c)
+		pb.RegisterAuthHTTPServer(hs, srv)
+		pb.RegisterAuthServer(gs, srv)
+	})
+}
+
+// Auth 接口鉴权
+func (s *AuthService) Auth(c context.Context, req *pb.AuthRequest) (*pb.AuthReply, error) {
+	res, err := s.uc.Auth(kratosx.MustContext(c), &auth.AuthRequest{
+		Path:   req.Path,
+		Method: req.Method,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return &pb.AuthReply{
+		UserId:            res.UserId,
+		RoleId:            res.RoleId,
+		RoleKeyword:       res.RoleKeyword,
+		DepartmentId:      res.DepartmentId,
+		DepartmentKeyword: res.DepartmentKeyword,
+	}, nil
 }

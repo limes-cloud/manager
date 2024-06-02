@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+package manager_resource;
+option go_package = "./v1;v1";
+
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+import "api/manager/resource/manager_resource.proto";
+
+
+service Resource {
+  // GetResourceScopes 获取资源权限
+  rpc GetResourceScopes(GetResourceScopesRequest) returns(GetResourceScopesReply){
+    option (google.api.http) = {
+      post: "/manager/api/v1/resource/scopes",
+      body: "*"
+    };
+  }
+
+  // UpdateResourceScopes 更新资源权限
+  rpc UpdateResourceScopes(UpdateResourceScopesRequest) returns(UpdateResourceScopesReply){
+    option (google.api.http) = {
+      put: "/manager/api/v1/resource/scopes",
+      body: "*"
+    };
+  }
+}

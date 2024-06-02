@@ -1,220 +1,198 @@
 package role
 
 import (
-	"fmt"
-
 	"github.com/limes-cloud/kratosx"
 	"github.com/limes-cloud/kratosx/pkg/tree"
-	"github.com/limes-cloud/kratosx/pkg/util"
-	"google.golang.org/protobuf/proto"
-
-	"github.com/limes-cloud/manager/api/errors"
-	"github.com/limes-cloud/manager/internal/config"
+	"github.com/limes-cloud/kratosx/pkg/valx"
+	"github.com/limes-cloud/manager/api/manager/errors"
+	"github.com/limes-cloud/manager/internal/conf"
 	"github.com/limes-cloud/manager/internal/pkg/md"
 )
 
 type UseCase struct {
+	conf *conf.Config
 	repo Repo
-	conf *config.Config
 }
 
-func NewUseCase(conf *config.Config, repo Repo) *UseCase {
-	return &UseCase{
-		repo: repo,
-		conf: conf,
-	}
+func NewUseCase(config *conf.Config, repo Repo) *UseCase {
+	return &UseCase{conf: config, repo: repo}
 }
 
-// RoleTree 查询当前用户的角色树
-func (u *UseCase) RoleTree(ctx kratosx.Context) (tree.Tree, error) {
-	// 查询子角色id列表信息
-	roleId := md.RoleId(ctx)
-	list, err := u.repo.AllRole(ctx, &AllRoleRequest{ParentId: proto.Uint32(roleId)})
+// ListRole 获取角色信息列表树 fixed code
+func (u *UseCase) ListRole(ctx kratosx.Context, req *ListRoleRequest) ([]tree.Tree, uint32, error) {
+	all, scopes, err := u.repo.GetRoleDataScope(ctx, md.RoleId(ctx))
 	if err != nil {
-		return nil, err
+		return nil, 0, err
+	}
+	if !all {
+		req.Ids = scopes
 	}
 
-	// 构造角色树
-	var tl []tree.Tree
+	list, total, err := u.repo.ListRole(ctx, req)
+	if err != nil {
+		return nil, 0, errors.ListError(err.Error())
+	}
+	var ts []tree.Tree
 	for _, item := range list {
-		if item.ID() == roleId {
-			item.ParentId = 0
-		}
-		tl = append(tl, item)
+		ts = append(ts, item)
 	}
-	return tree.BuildTree(tl), nil
+	return tree.BuildArrayTree(ts), total, nil
 }
 
-func (u *UseCase) AddRole(ctx kratosx.Context, in *Role) (uint32, error) {
-	roleId := md.RoleId(ctx)
-
-	ids, err := u.repo.GetChildrenIds(ctx, roleId)
+// CreateRole 创建角色信息 fixed code
+func (u *UseCase) CreateRole(ctx kratosx.Context, req *Role) (uint32, error) {
+	all, scopes, err := u.repo.GetRoleDataScope(ctx, md.RoleId(ctx))
 	if err != nil {
-		return 0, errors.Database()
+		return 0, err
 	}
-	if !util.InList(ids, in.ParentId) {
-		return 0, errors.RolePermissions()
+	if !all && !valx.InList(scopes, req.ParentId) {
+		return 0, errors.RolePermissionsError()
 	}
 
-	// 创建角色信息
-	id, err := u.repo.AddRole(ctx, in)
+	id, err := u.repo.CreateRole(ctx, req)
 	if err != nil {
-		return 0, errors.DatabaseFormat(err.Error())
+		return 0, errors.CreateError(err.Error())
 	}
-
 	return id, nil
 }
 
-func (u *UseCase) UpdateRole(ctx kratosx.Context, in *Role) error {
-	// 超级管理员不允许修改
-	if in.ID() == 1 {
-		return errors.EditSystemData()
+// UpdateRole 更新角色信息 fixed code
+func (u *UseCase) UpdateRole(ctx kratosx.Context, req *Role) error {
+	if req.Id == 1 {
+		return errors.EditSystemDataError()
 	}
 
-	//  不能修改当前角色
-	roleId := md.RoleId(ctx)
-	if in.ID() == md.RoleId(ctx) {
-		return errors.RolePermissions()
-	}
-
-	// 判断当前部门是否具有权限
-	ids, err := u.repo.GetChildrenIds(ctx, roleId)
+	all, scopes, err := u.repo.GetRoleDataScope(ctx, md.RoleId(ctx))
 	if err != nil {
-		return errors.DatabaseFormat(err.Error())
+		return err
 	}
-	if !util.InList(ids, in.ID()) {
-		return errors.RolePermissions()
-	}
-
-	// 查询历史角色信息
-	oldRole, err := u.repo.GetRole(ctx, roleId)
-	if err != nil {
-		return errors.NotFound()
+	if !all && (!valx.InList(scopes, req.Id) || !valx.InList(scopes, req.ParentId)) {
+		return errors.RolePermissionsError()
 	}
 
-	// 如果存在移动角色，判断是否有父级部门的权限
-	if oldRole.ParentId != in.ParentId && !util.InList(ids, in.ParentId) {
-		return errors.RolePermissions()
+	if err := u.repo.UpdateRole(ctx, req); err != nil {
+		return errors.UpdateError(err.Error())
 	}
-
-	// 更新角色信息
-	if err := u.repo.UpdateRole(ctx, in); err != nil {
-		return errors.DatabaseFormat(err.Error())
-	}
-
 	return nil
 }
 
-func (u *UseCase) DeleteRole(ctx kratosx.Context, id uint32) error {
-	// 超级管理员不允许删除
+// UpdateRoleStatus 更新角色信息状态 fixed code
+func (u *UseCase) UpdateRoleStatus(ctx kratosx.Context, id uint32, status bool) error {
 	if id == 1 {
-		return errors.DeleteSystemData()
+		return errors.EditSystemDataError()
 	}
 
-	// 不能删除当前角色
-	roleId := md.RoleId(ctx)
-	if id == roleId {
-		return errors.DeleteSelfRole()
-	}
-
-	// 获取角色信息
-	role, err := u.repo.GetRole(ctx, id)
+	all, scopes, err := u.repo.GetRoleDataScope(ctx, md.RoleId(ctx))
 	if err != nil {
-		return errors.NotFound()
+		return err
+	}
+	if !all && (!valx.InList(scopes, id)) {
+		return errors.RolePermissionsError()
 	}
 
-	// 是否具有角色管理权限
-	ids, err := u.repo.GetChildrenIds(ctx, roleId)
-	if err != nil {
-		return errors.Database()
+	if err := u.repo.UpdateRoleStatus(ctx, id, status); err != nil {
+		return errors.UpdateError(err.Error())
 	}
-	if !util.InList(ids, id) {
-		return errors.RolePermissions()
-	}
-
-	// 删除角色
-	if err := u.repo.DeleteRole(ctx, id); err != nil {
-		return errors.DatabaseFormat(err.Error())
-	}
-
-	// 删除rbac
-	_, _ = ctx.Authentication().Enforce().RemoveFilteredPolicy(0, role.Keyword)
 	return nil
 }
 
-// GetRoleMenuIds 获取指定角色的菜单ID
-func (u *UseCase) GetRoleMenuIds(ctx kratosx.Context, id uint32) ([]uint32, error) {
-	// 判断是否具有此角色的权限
-	roleId := md.RoleId(ctx)
-	rids, err := u.repo.GetChildrenIds(ctx, roleId)
+// DeleteRole 删除角色信息 fixed code
+func (u *UseCase) DeleteRole(ctx kratosx.Context, ids []uint32) (uint32, error) {
+	curRoleId := md.RoleId(ctx)
+	all, scopes, err := u.repo.GetRoleDataScope(ctx, curRoleId)
 	if err != nil {
-		return nil, errors.DatabaseFormat(err.Error())
-	}
-	if !util.InList(rids, id) {
-		return nil, errors.RolePermissions()
+		return 0, err
 	}
 
-	ids, err := u.repo.GetRoleMenuIds(ctx, id)
-	if err != nil {
-		return nil, errors.DatabaseFormat(err.Error())
+	for _, id := range scopes {
+		if id == 1 {
+			return 0, errors.DeleteSystemDataError()
+		}
+		if curRoleId == id {
+			return 0, errors.RolePermissionsError()
+		}
+		if !all && (!valx.InList(scopes, id)) {
+			return 0, errors.RolePermissionsError()
+		}
 	}
 
-	return ids, nil
+	total, err := u.repo.DeleteRole(ctx, ids)
+	if err != nil {
+		return 0, errors.DeleteError(err.Error())
+	}
+	return total, nil
 }
 
-func (u *UseCase) UpdateRoleMenus(ctx kratosx.Context, roleId uint32, menuIds []uint32) error {
-	// 超级管理员不存在菜单权限，自动获取全部菜单，所以禁止修改
+// GetRoleMenuIds 获取指定角色的菜单id列表
+func (u *UseCase) GetRoleMenuIds(ctx kratosx.Context, id uint32) ([]uint32, error) {
+	list, err := u.repo.GetRoleMenuIds(ctx, id)
+	if err != nil {
+		return nil, errors.ListError(err.Error())
+	}
+	return list, err
+}
+
+// UpdateRoleMenu 更新角色的菜单列表
+func (u *UseCase) UpdateRoleMenu(ctx kratosx.Context, roleId uint32, menuIds []uint32) error {
 	if roleId == 1 {
-		return errors.EditSystemData()
+		return errors.EditSystemDataError()
 	}
-
-	// 判断是否具有此角色的权限
 	curRoleId := md.RoleId(ctx)
-	rids, _ := u.repo.GetChildrenIds(ctx, curRoleId)
-	if !util.InList(rids, roleId) {
-		return errors.RolePermissions()
+	if roleId == curRoleId {
+		return errors.RolePermissionsError()
 	}
 
-	// 不是超级管理员，则需要判断菜单是否都合法
+	all, scopes, err := u.repo.GetRoleDataScope(ctx, curRoleId)
+	if err != nil {
+		return err
+	}
+	if !all && !valx.InList(scopes, roleId) {
+		return errors.RolePermissionsError()
+	}
+
+	rids, err := u.repo.GetRoleChildrenIds(ctx, curRoleId)
+	if err != nil {
+		return errors.DatabaseError(err.Error())
+	}
+	if !valx.InList(rids, roleId) {
+		return errors.RolePermissionsError()
+	}
+
 	if curRoleId != 1 {
-		// 获取当前用户的菜单id
-		ids, err := u.repo.GetRoleMenuIds(ctx, curRoleId)
+		curMenuIds, err := u.repo.GetRoleMenuIds(ctx, curRoleId)
 		if err != nil {
-			return errors.DatabaseFormat(err.Error())
+			return errors.DatabaseError(err.Error())
 		}
 		for _, id := range menuIds {
-			if !util.InList(ids, id) {
-				return errors.MenuPermissionsFormat(fmt.Sprintf("menu_id=%d", id))
+			if !valx.InList(curMenuIds, id) {
+				return errors.MenuPermissionsError()
 			}
 		}
 	}
 
-	// 获取当前role的数据
-	role, err := u.repo.GetRole(ctx, roleId)
-	if err != nil {
-		return errors.DatabaseFormat(err.Error())
-	}
-
-	// 获取新的菜单信息
-	var policies [][]string
-	apiList, _ := u.repo.AllMenuApiByIds(ctx, menuIds)
-	for _, item := range apiList {
-		policies = append(policies, []string{role.Keyword, item.Api, item.Method})
-	}
-
-	// 进行菜单变更
-	if err = u.repo.UpdateRoleMenus(ctx, roleId, menuIds); err != nil {
-		return errors.DatabaseFormat(err.Error())
-	}
-
-	// 删除当前用户的全部rbac权限
-	enforce := ctx.Authentication().Enforce()
-	_, _ = enforce.RemoveFilteredPolicy(0, role.Keyword)
-
-	// // 添加新的rbac权限信息
-	_, err = enforce.AddPolicies(policies)
-	if err != nil {
-		ctx.Logger().Error(err.Error())
+	if err := u.repo.UpdateRoleMenu(ctx, roleId, menuIds); err != nil {
+		return errors.DatabaseError(err.Error())
 	}
 	return nil
+}
+
+// GetRole 获取指定的角色信息
+func (u *UseCase) GetRole(ctx kratosx.Context, req *GetRoleRequest) (*Role, error) {
+	var (
+		res *Role
+		err error
+	)
+
+	if req.Id != nil {
+		res, err = u.repo.GetRole(ctx, *req.Id)
+	} else if req.Keyword != nil {
+		res, err = u.repo.GetRoleByKeyword(ctx, *req.Keyword)
+	} else {
+		return nil, errors.ParamsError()
+	}
+
+	if err != nil {
+		return nil, errors.GetError(err.Error())
+	}
+	return res, nil
 }

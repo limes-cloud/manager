@@ -2,71 +2,71 @@ package job
 
 import (
 	"github.com/limes-cloud/kratosx"
-
-	"github.com/limes-cloud/manager/api/errors"
-	"github.com/limes-cloud/manager/internal/config"
+	"github.com/limes-cloud/manager/api/manager/errors"
+	"github.com/limes-cloud/manager/internal/conf"
 )
 
 type UseCase struct {
+	conf *conf.Config
 	repo Repo
-	conf *config.Config
 }
 
-func NewUseCase(conf *config.Config, repo Repo) *UseCase {
-	return &UseCase{
-		repo: repo,
-		conf: conf,
-	}
+func NewUseCase(config *conf.Config, repo Repo) *UseCase {
+	return &UseCase{conf: config, repo: repo}
 }
 
-// GetJobById 获取指定资源对象
-func (u *UseCase) GetJobById(ctx kratosx.Context, id uint32) (*Job, error) {
-	object, err := u.repo.GetJobById(ctx, id)
+// ListJob 获取职位信息列表
+func (u *UseCase) ListJob(ctx kratosx.Context, req *ListJobRequest) ([]*Job, uint32, error) {
+	list, total, err := u.repo.ListJob(ctx, req)
 	if err != nil {
-		return nil, errors.NotFound()
+		return nil, 0, errors.ListError(err.Error())
 	}
-	return object, nil
+	return list, total, nil
 }
 
-// GetJobByKeyword 获取指定资源对象
-func (u *UseCase) GetJobByKeyword(ctx kratosx.Context, keyword string) (*Job, error) {
-	object, err := u.repo.GetJobByKeyword(ctx, keyword)
+// CreateJob 创建职位信息
+func (u *UseCase) CreateJob(ctx kratosx.Context, req *Job) (uint32, error) {
+	id, err := u.repo.CreateJob(ctx, req)
 	if err != nil {
-		return nil, errors.NotFound()
-	}
-	return object, nil
-}
-
-// PageJob 获取全部登录资源对象
-func (u *UseCase) PageJob(ctx kratosx.Context, req *PageJobRequest) ([]*Job, uint32, error) {
-	object, total, err := u.repo.PageJob(ctx, req)
-	if err != nil {
-		return nil, 0, errors.NotFound()
-	}
-	return object, total, nil
-}
-
-// AddJob 添加登录资源对象信息
-func (u *UseCase) AddJob(ctx kratosx.Context, object *Job) (uint32, error) {
-	id, err := u.repo.AddJob(ctx, object)
-	if err != nil {
-		return 0, errors.DatabaseFormat(err.Error())
+		return 0, errors.CreateError(err.Error())
 	}
 	return id, nil
 }
 
-// UpdateJob 更新登录资源对象信息
-func (u *UseCase) UpdateJob(ctx kratosx.Context, object *Job) error {
-	if err := u.repo.UpdateJob(ctx, object); err != nil {
-		return errors.DatabaseFormat(err.Error())
+// UpdateJob 更新职位信息
+func (u *UseCase) UpdateJob(ctx kratosx.Context, req *Job) error {
+	if err := u.repo.UpdateJob(ctx, req); err != nil {
+		return errors.UpdateError(err.Error())
 	}
 	return nil
 }
 
-// DeleteJob 删除登录资源对象信息
-func (u *UseCase) DeleteJob(ctx kratosx.Context, id uint32) error {
-	if err := u.repo.DeleteJob(ctx, id); err != nil {
-		return errors.DatabaseFormat(err.Error())
+// DeleteJob 删除职位信息
+func (u *UseCase) DeleteJob(ctx kratosx.Context, ids []uint32) (uint32, error) {
+	total, err := u.repo.DeleteJob(ctx, ids)
+	if err != nil {
+		return 0, errors.DeleteError(err.Error())
 	}
-	return nil
+	return total, nil
+}
+
+// GetJob 获取指定的职位信息
+func (u *UseCase) GetJob(ctx kratosx.Context, req *GetJobRequest) (*Job, error) {
+	var (
+		res *Job
+		err error
+	)
+
+	if req.Id != nil {
+		res, err = u.repo.GetJob(ctx, *req.Id)
+	} else if req.Keyword != nil {
+		res, err = u.repo.GetJobByKeyword(ctx, *req.Keyword)
+	} else {
+		return nil, errors.ParamsError()
+	}
+
+	if err != nil {
+		return nil, errors.GetError(err.Error())
+	}
+	return res, nil
 }

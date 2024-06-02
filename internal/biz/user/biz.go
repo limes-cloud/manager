@@ -2,402 +2,470 @@ package user
 
 import (
 	"encoding/base64"
-	"fmt"
+	"encoding/json"
 	"time"
 
 	"github.com/forgoer/openssl"
-	json "github.com/json-iterator/go"
 	"github.com/limes-cloud/kratosx"
-	"github.com/limes-cloud/kratosx/pkg/util"
-	"github.com/limes-cloud/kratosx/types"
-	"google.golang.org/protobuf/proto"
-
-	"github.com/limes-cloud/manager/api/errors"
-	"github.com/limes-cloud/manager/internal/biz/department"
-	"github.com/limes-cloud/manager/internal/biz/role"
-	"github.com/limes-cloud/manager/internal/config"
+	"github.com/limes-cloud/kratosx/pkg/crypto"
+	"github.com/limes-cloud/kratosx/pkg/valx"
+	"github.com/limes-cloud/manager/api/manager/errors"
+	"github.com/limes-cloud/manager/internal/conf"
 	"github.com/limes-cloud/manager/internal/pkg/md"
+	"google.golang.org/protobuf/proto"
 )
 
 type UseCase struct {
-	repo     Repo
-	depRepo  department.Repo
-	roleRepo role.Repo
-	conf     *config.Config
+	conf *conf.Config
+	repo Repo
 }
 
-func NewUseCase(conf *config.Config, repo Repo, depRepo department.Repo, roleRepo role.Repo) *UseCase {
-	return &UseCase{
-		repo:     repo,
-		depRepo:  depRepo,
-		roleRepo: roleRepo,
-		conf:     conf,
-	}
+func NewUseCase(config *conf.Config, repo Repo) *UseCase {
+	return &UseCase{conf: config, repo: repo}
 }
 
-const (
-	captcha        = "changePassword"
-	imageCaptchaTp = "login"
+// GetUser 获取指定的用户信息 fixed code
+func (u *UseCase) GetUser(ctx kratosx.Context, req *GetUserRequest) (*User, error) {
+	var (
+		res *User
+		err error
+	)
 
-	passwordCert = "login"
-)
-
-// GetUserScope 查询指定用户的权限域
-func (u *UseCase) GetUserScope(ctx kratosx.Context, userId uint32) (bool, []uint32, error) {
-	// 是否拥有全部部门权限
-	is, err := u.depRepo.IsManagerAllDepartment(ctx, userId)
-	if err != nil {
-		return false, nil, errors.DatabaseFormat(err.Error())
-	}
-	if is {
-		return true, nil, nil
+	if req.Id != nil {
+		res, err = u.repo.GetUser(ctx, *req.Id)
+	} else if req.Phone != nil {
+		res, err = u.repo.GetUserByPhone(ctx, *req.Phone)
+	} else if req.Email != nil {
+		res, err = u.repo.GetUserByEmail(ctx, *req.Email)
+	} else {
+		return nil, errors.ParamsError()
 	}
 
-	// 获取有权限的部门
-	ids, err := u.depRepo.AllManagerDepartmentIds(ctx, userId)
 	if err != nil {
-		return false, nil, errors.DatabaseFormat(err.Error())
+		return nil, errors.GetError(err.Error())
 	}
-	// 获取有权限的部门下的用户id
-	list, err := u.repo.GetUserIdsByDepartmentIds(ctx, ids)
-	if err != nil {
-		return false, nil, errors.DatabaseFormat(err.Error())
+
+	for _, role := range res.Roles {
+		if role.Id == res.RoleId {
+			res.Role = role
+		}
 	}
-	return false, list, nil
+
+	return res, nil
 }
 
-// CurrentUser 查询当前用户信息
-func (u *UseCase) CurrentUser(ctx kratosx.Context) (*User, error) {
-	user, err := u.repo.GetUser(ctx, md.UserId(ctx))
+// ListUser 获取用户信息列表 fixed code
+func (u *UseCase) ListUser(ctx kratosx.Context, req *ListUserRequest) ([]*User, uint32, error) {
+	all, scopes, err := u.repo.GetDepartmentDataScope(ctx, md.UserId(ctx))
 	if err != nil {
-		return nil, errors.DatabaseFormat(err.Error())
+		return nil, 0, errors.DatabaseError(err.Error())
 	}
-	return user, nil
-}
-
-func (u *UseCase) PageUser(ctx kratosx.Context, in *PageUserRequest) ([]*User, uint32, error) {
-	ids, err := u.depRepo.AllManagerDepartmentIds(ctx, md.UserId(ctx))
-	if err != nil {
-		return nil, 0, errors.DatabaseFormat(err.Error())
+	if !all {
+		req.DepartmentIds = scopes
 	}
 
-	in.DepartmentIds = ids
-	list, total, err := u.repo.PageUser(ctx, in)
+	list, total, err := u.repo.ListUser(ctx, req)
 	if err != nil {
-		return nil, 0, errors.DatabaseFormat(err.Error())
+		return nil, 0, errors.ListError(err.Error())
 	}
 	return list, total, nil
 }
 
-func (u *UseCase) AddUser(ctx kratosx.Context, user *User) (uint32, error) {
-	// 判读是否具有部门权限
-	depIds, err := u.depRepo.AllManagerDepartmentIds(ctx, md.UserId(ctx))
+// CreateUser 创建用户信息  fixed code
+func (u *UseCase) CreateUser(ctx kratosx.Context, req *User) (uint32, error) {
+	all, scopes, err := u.repo.GetDepartmentDataScope(ctx, md.UserId(ctx))
 	if err != nil {
-		return 0, errors.DatabaseFormat(err.Error())
+		return 0, errors.DatabaseError(err.Error())
 	}
-	if !util.InList(depIds, user.DepartmentId) {
-		return 0, errors.DepartmentPermissions()
+	if !all && !valx.InList(scopes, req.DepartmentId) {
+		return 0, errors.DepartmentPermissionsError()
 	}
 
-	// 判断当前用户是否具有角色的权限
-	rids, err := u.roleRepo.GetChildrenIds(ctx, md.RoleId(ctx))
+	all, scopes, err = u.repo.GetRoleDataScope(ctx, md.RoleId(ctx))
 	if err != nil {
-		return 0, errors.DatabaseFormat(err.Error())
+		return 0, errors.DatabaseError(err.Error())
 	}
-	for _, item := range user.UserRoles {
-		if !util.InList(rids, item.RoleID) {
-			return 0, errors.RolePermissionsFormat(fmt.Sprintf("role_id:%d", item.RoleID))
+	if !all {
+		for _, ur := range req.UserRoles {
+			if !valx.InList(scopes, ur.RoleId) {
+				return 0, errors.RolePermissionsError()
+			}
 		}
 	}
 
-	// 设置默认值
-	user.Nickname = user.Name
-	user.Avatar = u.conf.DefaultUserAvatar
-	user.Password = util.ParsePwd(u.conf.DefaultUserPassword)
-	user.RoleId = user.UserRoles[0].RoleID
-	user.Status = proto.Bool(true)
+	req.Nickname = req.Name
+	req.Avatar = &u.conf.DefaultUserAvatar
+	req.Password = crypto.EncodePwd(u.conf.DefaultUserPassword)
+	req.RoleId = req.UserRoles[0].RoleId
+	req.Status = proto.Bool(true)
 
-	id, err := u.repo.AddUser(ctx, user)
+	id, err := u.repo.CreateUser(ctx, req)
 	if err != nil {
-		return 0, errors.DatabaseFormat(err.Error())
+		return 0, errors.CreateError(err.Error())
 	}
 	return id, nil
 }
 
-func (u *UseCase) UpdateUser(ctx kratosx.Context, user *User) error {
-	// 超级管理员不允许修改
-	if user.ID == 1 {
-		return errors.EditSystemData()
+// UpdateUser 更新用户信息 fixed code
+func (u *UseCase) UpdateUser(ctx kratosx.Context, req *User) error {
+	if req.Id == 1 {
+		return errors.EditSystemDataError()
 	}
 
-	// 查询用户信息
-	old, err := u.repo.GetUser(ctx, user.ID)
+	curUserId := md.UserId(ctx)
+	is, err := u.repo.HasUserDataScope(ctx, curUserId, req.Id)
 	if err != nil {
-		return errors.NotFound()
+		return errors.DatabaseError(err.Error())
+	}
+	if !is {
+		return errors.UserPermissionsError()
 	}
 
-	// 判读是否具有用户修改权限
-	depIds, err := u.depRepo.AllManagerDepartmentIds(ctx, md.UserId(ctx))
+	all, scopes, err := u.repo.GetDepartmentDataScope(ctx, curUserId)
 	if err != nil {
-		return errors.DatabaseFormat(err.Error())
+		return errors.DatabaseError(err.Error())
 	}
-	if !util.InList(depIds, old.DepartmentId) {
-		return errors.UserPermissions()
-	}
-
-	// 存在修改部门
-	if user.DepartmentId != 0 && !util.InList(depIds, user.DepartmentId) {
-		return errors.DepartmentPermissions()
+	if !all && valx.InList(scopes, req.DepartmentId) {
+		return errors.DepartmentPermissionsError()
 	}
 
-	// 存在修改角色
-	if len(user.UserRoles) != 0 {
-		rids, err := u.roleRepo.GetChildrenIds(ctx, md.RoleId(ctx))
+	if len(req.UserRoles) != 0 {
+		all, scopes, err = u.repo.GetRoleDataScope(ctx, curUserId)
 		if err != nil {
-			return errors.DatabaseFormat(err.Error())
+			return errors.DatabaseError(err.Error())
 		}
-		for _, item := range user.UserRoles {
-			if !util.InList(rids, item.RoleID) {
-				return errors.RolePermissionsFormat(fmt.Sprintf("role_id:%d", item.RoleID))
+		if !all {
+			for _, ur := range req.UserRoles {
+				if !all && valx.InList(scopes, ur.RoleId) {
+					return errors.DepartmentPermissionsError()
+				}
 			}
 		}
-		user.RoleId = user.UserRoles[0].RoleID
 	}
 
-	if user.Password != "" {
-		user.Password = util.ParsePwd(user.Password)
-	}
-
-	if err := u.repo.UpdateUser(ctx, user); err != nil {
-		return errors.DatabaseFormat(err.Error())
+	if err := u.repo.UpdateUser(ctx, req); err != nil {
+		return errors.UpdateError(err.Error())
 	}
 	return nil
 }
 
-func (u *UseCase) UpdateCurrentUser(ctx kratosx.Context, in *UpdateCurrentUserRequest) error {
-	return u.repo.UpdateUser(ctx, &User{
-		BaseModel: types.BaseModel{ID: md.UserId(ctx)},
-		Nickname:  in.Nickname,
-		Gender:    in.Gender,
-	})
-}
-
-func (u *UseCase) DeleteUser(ctx kratosx.Context, id uint32) error {
+// UpdateUserStatus 更新用户信息状态 fixed code
+func (u *UseCase) UpdateUserStatus(ctx kratosx.Context, id uint32, status bool) error {
 	if id == 1 {
-		return errors.DeleteSystemData()
+		return errors.DeleteSystemDataError()
 	}
-	if id == md.UserId(ctx) {
-		return errors.DeleteSelfUser()
-	}
-
-	// 查询用户信息
-	old, err := u.repo.GetUser(ctx, id)
+	is, err := u.repo.HasUserDataScope(ctx, md.UserId(ctx), id)
 	if err != nil {
-		return errors.NotFound()
+		return errors.DatabaseError(err.Error())
+	}
+	if !is {
+		return errors.UserPermissionsError()
 	}
 
-	// 判读是否具有用户修改权限
-	depIds, err := u.depRepo.AllManagerDepartmentIds(ctx, md.UserId(ctx))
+	if err := u.repo.UpdateUserStatus(ctx, id, status); err != nil {
+		return errors.UpdateError(err.Error())
+	}
+
+	if status == false {
+		token, logged, err := u.repo.GetUserToken(ctx, id)
+		if err != nil {
+			return errors.DatabaseError(err.Error())
+		}
+		if token == nil {
+			return nil
+		}
+		expire := ctx.Config().App().JWT.Expire
+		if logged > time.Now().Unix()-int64(expire.Seconds()) {
+			return nil
+		}
+		ctx.JWT().AddBlacklist(*token)
+	}
+
+	return nil
+}
+
+// DeleteUser 删除用户信息 fixed code
+func (u *UseCase) DeleteUser(ctx kratosx.Context, ids []uint32) (uint32, error) {
+	for _, id := range ids {
+		if id == 1 {
+			return 0, errors.DeleteSystemDataError()
+		}
+
+		is, err := u.repo.HasUserDataScope(ctx, md.UserId(ctx), id)
+		if err != nil {
+			return 0, errors.DatabaseError(err.Error())
+		}
+		if !is {
+			return 0, errors.UserPermissionsError()
+		}
+	}
+
+	total, err := u.repo.DeleteUser(ctx, ids)
 	if err != nil {
-		return errors.DatabaseFormat(err.Error())
+		return 0, errors.DeleteError(err.Error())
 	}
-	if !util.InList(depIds, old.DepartmentId) {
-		return errors.UserPermissions()
+	return total, nil
+}
+
+// ResetUserPassword 重置用户密码
+func (u *UseCase) ResetUserPassword(ctx kratosx.Context, id uint32) error {
+	if id == 1 {
+		return errors.DeleteSystemDataError()
 	}
 
-	if err := u.repo.DeleteUser(ctx, id); err != nil {
-		return errors.DatabaseFormat(err.Error())
+	is, err := u.repo.HasUserDataScope(ctx, md.UserId(ctx), id)
+	if err != nil {
+		return errors.DatabaseError(err.Error())
+	}
+	if !is {
+		return errors.UserPermissionsError()
+	}
+
+	if err = u.repo.UpdateUser(ctx, &User{
+		Id:       id,
+		Password: crypto.EncodePwd(u.conf.DefaultUserPassword),
+	}); err != nil {
+		return errors.DatabaseError(err.Error())
+	}
+
+	return nil
+}
+
+// GetCurrentUser 获取当前的用户信息
+func (u *UseCase) GetCurrentUser(ctx kratosx.Context) (*User, error) {
+	res, err := u.repo.GetUser(ctx, md.UserId(ctx))
+	if err != nil {
+		return nil, errors.GetError(err.Error())
+	}
+	for _, role := range res.Roles {
+		if role.Id == res.RoleId {
+			res.Role = role
+		}
+	}
+	return res, nil
+}
+
+// UpdateCurrentUser 更新当前的基础信息
+func (u *UseCase) UpdateCurrentUser(ctx kratosx.Context, req *UpdateCurrentUserRequest) error {
+	if err := u.repo.UpdateUser(ctx, &User{
+		Id:       md.UserId(ctx),
+		Avatar:   req.Avatar,
+		Nickname: req.Nickname,
+		Gender:   req.Gender,
+	}); err != nil {
+		return errors.DatabaseError(err.Error())
+	}
+
+	return nil
+}
+
+// UpdateCurrentUserRole 切换当前用户角色
+func (u *UseCase) UpdateCurrentUserRole(ctx kratosx.Context, rid uint32) error {
+	curUserId := md.UserId(ctx)
+	all, scopes, err := u.repo.GetRoleDataScope(ctx, curUserId)
+	if err != nil {
+		return errors.DatabaseError(err.Error())
+	}
+	if !all && valx.InList(scopes, rid) {
+		return errors.DepartmentPermissionsError()
+	}
+
+	if err = u.repo.UpdateUser(ctx, &User{
+		Id:     curUserId,
+		RoleId: rid,
+	}); err != nil {
+		return errors.DatabaseError(err.Error())
 	}
 	return nil
 }
 
-func (u *UseCase) OfflineUser(ctx kratosx.Context, id uint32) error {
-	user, err := u.repo.GetUser(ctx, id)
-	if err != nil {
-		return errors.NotFound()
+// UpdateCurrentUserSetting 保存当前用户设置
+func (u *UseCase) UpdateCurrentUserSetting(ctx kratosx.Context, setting string) error {
+	if err := u.repo.UpdateUser(ctx, &User{
+		Id:      md.UserId(ctx),
+		Setting: &setting,
+	}); err != nil {
+		return errors.DatabaseError(err.Error())
 	}
-
-	ctx.JWT().AddBlacklist(user.Token)
 	return nil
 }
 
-func (u *UseCase) ChangePasswordCaptcha(ctx kratosx.Context) (*CaptchaReply, error) {
+// SendCurrentUserCaptcha 发送当前用户验证吗
+func (u *UseCase) SendCurrentUserCaptcha(ctx kratosx.Context, tp string) (*SendCurrentUserCaptchaReply, error) {
+	tps := []string{pwdCaptchaKey, loginCaptchaKey}
+	if !valx.InList(tps, tp) {
+		return nil, errors.ParamsError()
+	}
+
 	user, err := u.repo.GetUser(ctx, md.UserId(ctx))
 	if err != nil {
-		return nil, errors.NotFound()
+		return nil, errors.GetError(err.Error())
 	}
 
-	resp, err := ctx.Captcha().Email(captcha, ctx.ClientIP(), user.Email)
+	resp, err := ctx.Captcha().Email(tp, ctx.ClientIP(), user.Email)
 	if err != nil {
-		return nil, errors.SendEmailCaptchaFormat(err.Error())
+		return nil, errors.SendCaptchaError(err.Error())
 	}
 
-	return &CaptchaReply{
+	return &SendCurrentUserCaptchaReply{
 		Uuid:   resp.ID(),
 		Expire: uint32(resp.Expire().Seconds()),
 	}, nil
 }
 
-func (u *UseCase) ChangeUserPassword(ctx kratosx.Context, in *ChangeUserPasswordRequest) error {
-	if err := ctx.Captcha().VerifyEmail(captcha, ctx.ClientIP(), in.CaptchaId, in.Captcha); err != nil {
-		return errors.VerifyCaptcha()
-	}
-
-	old, err := u.repo.GetUser(ctx, md.UserId(ctx))
-	if err != nil {
-		return errors.NotFound()
+// UpdateCurrentUserPassword 修改当前用户密码
+func (u *UseCase) UpdateCurrentUserPassword(ctx kratosx.Context, req *UpdateCurrentUserPasswordRequest) error {
+	switch u.conf.ChangePasswordType {
+	case ChangePwCaptchaType:
+		if req.CaptchaId == nil || req.Captcha == nil {
+			return errors.ParamsError()
+		}
+		if err := ctx.Captcha().VerifyEmail(pwdCaptchaKey, ctx.ClientIP(), *req.CaptchaId, *req.Captcha); err != nil {
+			return errors.VerifyCaptchaError()
+		}
+	case ChangePwPasswordType:
+		if req.OldPassword == nil {
+			return errors.ParamsError()
+		}
+		password, err := u.repo.GetUserPassword(ctx, md.UserId(ctx))
+		if err != nil {
+			return errors.DatabaseError(err.Error())
+		}
+		if !crypto.CompareHashPwd(password, *req.OldPassword) {
+			return errors.PasswordError()
+		}
+	default:
+		return errors.SystemError("验证方式配置错误")
 	}
 
 	user := User{
-		BaseModel: types.BaseModel{ID: old.ID},
-		Password:  in.Password,
+		Id:       md.UserId(ctx),
+		Password: crypto.EncodePwd(req.Password),
 	}
 	if err := u.repo.UpdateUser(ctx, &user); err != nil {
-		return errors.DatabaseFormat(err.Error())
+		return errors.DatabaseError(err.Error())
 	}
 	return nil
 }
 
-func (u *UseCase) EnableUser(ctx kratosx.Context, id uint32) error {
-	return u.UpdateUser(ctx, &User{
-		BaseModel: types.BaseModel{ID: id},
-		Status:    proto.Bool(true),
-		Disabled:  proto.String(""),
-	})
-}
-
-func (u *UseCase) DisableUser(ctx kratosx.Context, id uint32, desc string) error {
-	return u.UpdateUser(ctx, &User{
-		BaseModel: types.BaseModel{ID: id},
-		Status:    proto.Bool(false),
-		Disabled:  proto.String(desc),
-	})
-}
-
-func (u *UseCase) ResetUserPassword(ctx kratosx.Context, id uint32) error {
-	return u.UpdateUser(ctx, &User{
-		BaseModel: types.BaseModel{ID: id},
-		Password:  u.conf.DefaultUserPassword,
-	})
-}
-
-func (u *UseCase) SwitchCurrentUserRole(ctx kratosx.Context, id uint32) error {
-	if !u.repo.HasRole(ctx, md.UserId(ctx), id) {
-		return errors.RolePermissions()
-	}
-
-	return u.UpdateUser(ctx, &User{
-		BaseModel: types.BaseModel{ID: id},
-		RoleId:    id,
-	})
-}
-
-func (u *UseCase) UserLoginCaptcha(ctx kratosx.Context) (*CaptchaReply, error) {
-	res, err := ctx.Captcha().Image(imageCaptchaTp, ctx.ClientIP())
+// GetUserLoginCaptcha 获取用户登陆验证吗
+func (u *UseCase) GetUserLoginCaptcha(ctx kratosx.Context) (*GetUserLoginCaptchaReply, error) {
+	resp, err := ctx.Captcha().Image(loginCaptchaKey, ctx.ClientIP())
 	if err != nil {
-		return nil, errors.NewCaptchaFormat(err.Error())
+		return nil, errors.GenCaptchaError(err.Error())
 	}
 
-	return &CaptchaReply{
-		Uuid:    res.ID(),
-		Captcha: res.Base64String(),
-		Expire:  uint32(res.Expire().Seconds()),
+	return &GetUserLoginCaptchaReply{
+		Uuid:    resp.ID(),
+		Expire:  uint32(resp.Expire().Seconds()),
+		Captcha: resp.Base64String(),
 	}, nil
 }
 
 func (u *UseCase) UserLogin(ctx kratosx.Context, in *UserLoginRequest) (string, error) {
-	// 判断验证码是否正确
-	if err := ctx.Captcha().VerifyImage(imageCaptchaTp, ctx.ClientIP(), in.CaptchaId, in.Captcha); err != nil {
-		return "", errors.VerifyCaptcha()
+	if err := ctx.Captcha().VerifyImage(loginCaptchaKey, ctx.ClientIP(), in.CaptchaId, in.Captcha); err != nil {
+		return "", errors.VerifyCaptchaError()
 	}
 
-	// 密码解密
 	passByte, _ := base64.StdEncoding.DecodeString(in.Password)
 	decryptData, err := openssl.RSADecrypt(passByte, ctx.Loader(passwordCert))
 	if err != nil {
-		return "", errors.RsaDecodeFormat(err.Error())
+		ctx.Logger().Error("rsa解密失败:", err.Error())
+		return "", errors.SystemError()
 	}
 
-	// 序列化密码
 	pw := struct {
 		Password string `json:"password"`
 		Time     int64  `json:"time"`
 	}{}
-
 	if json.Unmarshal(decryptData, &pw) != nil {
-		return "", errors.PasswordFormat()
+		return "", errors.PasswordError()
 	}
 
-	// 判断当前时间戳是否过期,超过10s则拒绝
 	if time.Now().UnixMilli()-pw.Time > 10*1000 {
 		ctx.Logger().Errorw(
-			"login pwd timeout", time.Now().UnixMilli(),
+			"msg", "login pwd timeout",
+			"current", time.Now().UnixMilli(),
 			"submit", pw.Time,
 			"dt", time.Now().UnixMilli()-pw.Time,
 		)
-		return "", errors.PasswordExpire()
+		return "", errors.PasswordExpireError()
 	}
 
 	// 获取用户信息
 	var user *User
-	if util.IsPhone(in.Username) {
+	if valx.IsPhone(in.Username) {
 		user, err = u.repo.GetUserByPhone(ctx, in.Username)
-	} else if util.IsEmail(in.Username) {
+	} else if valx.IsEmail(in.Username) {
 		user, err = u.repo.GetUserByEmail(ctx, in.Username)
 	} else {
-		return "", errors.UsernameFormat()
+		return "", errors.UsernameFormatError()
 	}
 
-	// 查询不到用户信息
 	if err != nil {
-		return "", errors.UsernameNotExist()
+		return "", errors.UsernameNotExistError()
 	}
 
-	// 用户被禁用则拒绝登陆
 	if user.Status != nil && !*user.Status {
-		return "", errors.UserDisableFormat(*user.Disabled)
+		return "", errors.UserDisableError()
 	}
 
-	// 角色被禁用则拒绝登录
-	if user.Role.Status != nil {
-		if !*user.Role.Status {
-			return "", errors.RoleDisable()
+	var (
+		notSwitch   bool
+		enableRoles []*Role
+	)
+	for _, role := range user.Roles {
+		if role.Status != nil && *role.Status == true {
+			enableRoles = append(enableRoles, role)
+			if role.Id == user.RoleId {
+				notSwitch = true
+				user.Role = role
+			}
 		}
-		// 上级被禁用下级也不允许登录
-		if !u.roleRepo.ParentStatus(ctx, user.RoleId) {
-			return "", errors.RoleDisable()
-		}
+	}
+	if len(enableRoles) == 0 {
+		return "", errors.RoleDisableError()
 	}
 
-	// 对比用户密码，错误则拒绝登陆
-	if !util.CompareHashPwd(user.Password, pw.Password) {
-		return "", errors.UserPassword()
+	if !notSwitch {
+		user.RoleId = enableRoles[0].Id
+		user.Role = enableRoles[0]
 	}
 
-	// 生成登陆token
+	password, err := u.repo.GetUserPassword(ctx, user.Id)
+	if err != nil {
+		return "", errors.DatabaseError(err.Error())
+	}
+
+	if !crypto.CompareHashPwd(password, pw.Password) {
+		return "", errors.PasswordError()
+	}
+
 	token, err := ctx.JWT().NewToken(md.New(&md.Auth{
-		UserId:            user.ID,
+		UserId:            user.Id,
 		RoleId:            user.RoleId,
 		RoleKeyword:       user.Role.Keyword,
 		DepartmentId:      user.DepartmentId,
 		DepartmentKeyword: user.Department.Keyword,
 	}))
 	if err != nil {
-		return "", errors.NewTokenFormat(err.Error())
+		return "", errors.GenTokenError()
 	}
 
-	// 更新用户的当前token
-	if err := u.repo.UpdateUser(ctx, &User{
-		BaseModel: types.BaseModel{ID: user.ID},
-		Token:     token,
-		LastLogin: time.Now().Unix(),
-	}); err != nil {
-		return "", errors.DatabaseFormat(err.Error())
+	data := &User{
+		Id:       user.Id,
+		RoleId:   user.RoleId,
+		Token:    &token,
+		LoggedAt: time.Now().Unix(),
 	}
 
+	if err := u.repo.UpdateUser(ctx, data); err != nil {
+		return "", errors.DatabaseError(err.Error())
+	}
 	return token, nil
 }
 
+// UserLogout 退出登陆
 func (u *UseCase) UserLogout(ctx kratosx.Context) error {
 	token := ctx.Token()
 	if token != "" {
@@ -406,10 +474,11 @@ func (u *UseCase) UserLogout(ctx kratosx.Context) error {
 	return nil
 }
 
+// UserRefreshToken 用户刷新token
 func (u *UseCase) UserRefreshToken(ctx kratosx.Context) (string, error) {
 	token, err := ctx.JWT().Renewal(ctx)
 	if err != nil {
-		return "", errors.RefreshTokenFormat(err.Error())
+		return "", errors.RefreshTokenError(err.Error())
 	}
 	return token, nil
 }
