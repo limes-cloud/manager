@@ -1901,27 +1901,9 @@ func (m *UpdateCurrentUserRequest) validate(all bool) error {
 
 	var errors []error
 
-	if utf8.RuneCountInString(m.GetNickname()) < 1 {
-		err := UpdateCurrentUserRequestValidationError{
-			field:  "Nickname",
-			reason: "value length must be at least 1 runes",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
+	// no validation rules for Nickname
 
-	if utf8.RuneCountInString(m.GetGender()) < 1 {
-		err := UpdateCurrentUserRequestValidationError{
-			field:  "Gender",
-			reason: "value length must be at least 1 runes",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
+	// no validation rules for Gender
 
 	if m.Avatar != nil {
 		// no validation rules for Avatar

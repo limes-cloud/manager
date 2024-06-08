@@ -6,13 +6,13 @@ server:
     marshal:
       emitUnpopulated: true
       useProtoNames: true
-    formatResponse: true
-    cors:
-      allowCredentials: true
-      allowOrigins: [ "*" ]
-      allowMethods: [ "GET","POST","PUT","DELETE","OPTIONS" ]
-      AllowHeaders: [ "Content-Type", "Content-Length", "Authorization" ]
-      ExposeHeaders: [ "Content-Length", "Access-Control-Allow-Headers" ]
+#    formatResponse: true
+#    cors:
+#      allowCredentials: true
+#      allowOrigins: [ "*" ]
+#      allowMethods: [ "GET","POST","PUT","DELETE","OPTIONS" ]
+#      AllowHeaders: [ "Content-Type", "Content-Length", "Authorization" ]
+#      ExposeHeaders: [ "Content-Length", "Access-Control-Allow-Headers" ]
 log:
   level: 0
   caller: true
@@ -68,6 +68,11 @@ captcha:
     expire: 180s
     redis: cache
     template: captcha
+client:
+  - server: Resource
+    type: direct
+    backends:
+      - target: 127.0.0.1:8003
 loader:
   login: static/cert/login.pem
 email:

@@ -43,4 +43,5 @@ enum ErrorReason {
   GenTokenError = 31[(errors.message)="token生成失败"];
   ParseTokenError = 32[(errors.message)="token解析失败"];
   ForbiddenError = 33[(errors.code)=403,(errors.message)="无接口权限"];
+  ResourceServerError = 34[(errors.message)="资源服务异常"];
 }

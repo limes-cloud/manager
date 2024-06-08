@@ -20,7 +20,7 @@ type User struct {
 	LoggedAt     int64       `json:"loggedAt" gorm:"column:logged_at"`
 	UserJobs     []*UserJob  `json:"userJobs"`
 	UserRoles    []*UserRole `json:"userRoles"`
-	Roles        []*Role     `json:"roles" gorm:"many2many:user_role"` //fixed code
+	Roles        []*Role     `json:"roles" gorm:"many2many:user_role"` // fixed code
 	Jobs         []*Job      `json:"jobs" gorm:"many2many:user_job"`
 	Department   *Department `json:"department"`
 	Role         *Role       `json:"role"`

@@ -3,15 +3,14 @@ package service
 import (
 	"context"
 
-	"github.com/limes-cloud/manager/internal/data"
-
-	"github.com/limes-cloud/kratosx"
-
 	"github.com/go-kratos/kratos/v2/transport/grpc"
 	"github.com/go-kratos/kratos/v2/transport/http"
+	"github.com/limes-cloud/kratosx"
+
 	pb "github.com/limes-cloud/manager/api/manager/system/v1"
 	"github.com/limes-cloud/manager/internal/biz/system"
 	"github.com/limes-cloud/manager/internal/conf"
+	"github.com/limes-cloud/manager/internal/data"
 )
 
 type SystemService struct {
@@ -34,10 +33,8 @@ func init() {
 }
 
 // GetSystemSetting 获取系统设置
-func (s *SystemService) GetSystemSetting(c context.Context, req *pb.GetSystemSettingRequest) (*pb.GetSystemSettingReply, error) {
-	setting := s.uc.GetSystemSetting(kratosx.MustContext(c), &system.GetSystemSettingRequest{
-		DictionaryKeywords: req.DictionaryKeywords,
-	})
+func (s *SystemService) GetSystemSetting(c context.Context, _ *pb.GetSystemSettingRequest) (*pb.GetSystemSettingReply, error) {
+	setting := s.uc.GetSystemSetting(kratosx.MustContext(c), &system.GetSystemSettingRequest{})
 
 	reply := pb.GetSystemSettingReply{
 		Debug:              setting.Debug,

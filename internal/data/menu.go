@@ -6,10 +6,11 @@ import (
 
 	"github.com/limes-cloud/kratosx"
 	"github.com/limes-cloud/kratosx/pkg/valx"
-	biz "github.com/limes-cloud/manager/internal/biz/menu"
-	"github.com/limes-cloud/manager/internal/data/model"
 	"google.golang.org/protobuf/proto"
 	"gorm.io/gorm/clause"
+
+	biz "github.com/limes-cloud/manager/internal/biz/menu"
+	"github.com/limes-cloud/manager/internal/data/model"
 )
 
 type menuRepo struct {
@@ -133,7 +134,7 @@ func (r menuRepo) CreateMenu(ctx kratosx.Context, req *biz.Menu) (uint32, error)
 		if err := ctx.DB().Create(m).Error; err != nil {
 			return err
 		}
-		if m.IsHome != nil && *m.IsHome == true {
+		if m.IsHome != nil && *m.IsHome {
 			if err := r.resetHome(ctx, m.Id); err != nil {
 				return err
 			}
@@ -208,7 +209,7 @@ func (r menuRepo) UpdateMenu(ctx kratosx.Context, req *biz.Menu) error {
 			}
 		}
 
-		if req.IsHome != nil && *req.IsHome == true {
+		if req.IsHome != nil && *req.IsHome {
 			if err := r.resetHome(ctx, req.Id); err != nil {
 				return err
 			}
@@ -342,6 +343,7 @@ func (r menuRepo) deleteRbac(ctx kratosx.Context, req model.MenuApi) error {
 
 func (r menuRepo) updateRbac(ctx kratosx.Context, old model.MenuApi, now model.MenuApi) error {
 	return ctx.DB().
+		Model(model.CasbinRule{}).
 		Where("v1=? and v2=?", old.Api, old.Method).
 		UpdateColumn("v1", now.Api).
 		UpdateColumn("v2", now.Method).

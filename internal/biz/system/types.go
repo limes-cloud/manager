@@ -1,7 +1,6 @@
 package system
 
 type GetSystemSettingRequest struct {
-	DictionaryKeywords []string `json:"dictionaryKeywords"`
 }
 
 type GetSystemSettingReply struct {

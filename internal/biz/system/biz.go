@@ -2,6 +2,7 @@ package system
 
 import (
 	"github.com/limes-cloud/kratosx"
+
 	"github.com/limes-cloud/manager/internal/conf"
 )
 
@@ -15,7 +16,7 @@ func NewUseCase(config *conf.Config, repo Repo) *UseCase {
 }
 
 // GetSystemSetting 获取系统设置
-func (u *UseCase) GetSystemSetting(ctx kratosx.Context, req *GetSystemSettingRequest) *GetSystemSettingReply {
+func (u *UseCase) GetSystemSetting(ctx kratosx.Context, _ *GetSystemSettingRequest) *GetSystemSettingReply {
 	setting := u.conf.Setting
 	reply := GetSystemSettingReply{
 		Debug:              setting.Debug,
@@ -27,8 +28,8 @@ func (u *UseCase) GetSystemSetting(ctx kratosx.Context, req *GetSystemSettingReq
 		ChangePasswordType: u.conf.ChangePasswordType,
 	}
 
-	if len(req.DictionaryKeywords) != 0 {
-		dictionaries, err := u.repo.GetDictionaryValues(ctx, req.DictionaryKeywords)
+	if len(u.conf.DictionaryKeywords) != 0 {
+		dictionaries, err := u.repo.GetDictionaryValues(ctx, u.conf.DictionaryKeywords)
 		if err != nil {
 			ctx.Logger().Error("get dictionary error ", err.Error())
 		}
@@ -36,5 +37,4 @@ func (u *UseCase) GetSystemSetting(ctx kratosx.Context, req *GetSystemSettingReq
 	}
 
 	return &reply
-
 }

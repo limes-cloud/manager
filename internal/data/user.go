@@ -3,14 +3,17 @@ package data
 import (
 	"github.com/limes-cloud/kratosx"
 	"github.com/limes-cloud/kratosx/pkg/valx"
-	biz "github.com/limes-cloud/manager/internal/biz/user"
-	"github.com/limes-cloud/manager/internal/data/model"
+	file "github.com/limes-cloud/resource/api/resource/file/v1"
 	"google.golang.org/protobuf/proto"
 	"gorm.io/gorm/clause"
+
+	biz "github.com/limes-cloud/manager/internal/biz/user"
+	"github.com/limes-cloud/manager/internal/data/model"
+	"github.com/limes-cloud/manager/internal/pkg/service"
 )
 
 type userRepo struct {
-	departmentRepo //fixed code
+	departmentRepo // fixed code
 	roleRepo
 }
 
@@ -19,9 +22,13 @@ func NewUserRepo() biz.Repo {
 }
 
 // ToUserEntity model转entity
-func (r userRepo) ToUserEntity(m *model.User) *biz.User {
+func (r userRepo) ToUserEntity(ctx kratosx.Context, m *model.User) *biz.User {
 	e := &biz.User{}
 	_ = valx.Transform(m, e)
+
+	if e.Avatar != nil && *e.Avatar != "" {
+		e.Avatar = proto.String(r.GetResourceURL(ctx, *e.Avatar))
+	}
 	return e
 }
 
@@ -44,7 +51,7 @@ func (r userRepo) GetUserByPhone(ctx kratosx.Context, phone string) (*biz.User, 
 		return nil, err
 	}
 
-	return r.ToUserEntity(&m), nil
+	return r.ToUserEntity(ctx, &m), nil
 }
 
 // GetUserByEmail 获取指定数据 fixed code
@@ -59,7 +66,7 @@ func (r userRepo) GetUserByEmail(ctx kratosx.Context, email string) (*biz.User, 
 		return nil, err
 	}
 
-	return r.ToUserEntity(&m), nil
+	return r.ToUserEntity(ctx, &m), nil
 }
 
 // GetUser 获取指定的数据 fixed code
@@ -74,7 +81,7 @@ func (r userRepo) GetUser(ctx kratosx.Context, id uint32) (*biz.User, error) {
 		return nil, err
 	}
 
-	return r.ToUserEntity(&m), nil
+	return r.ToUserEntity(ctx, &m), nil
 }
 
 // GetUserToken 获取指定的用户token
@@ -158,7 +165,7 @@ func (r userRepo) ListUser(ctx kratosx.Context, req *biz.ListUserRequest) ([]*bi
 	}
 
 	for _, m := range ms {
-		bs = append(bs, r.ToUserEntity(m))
+		bs = append(bs, r.ToUserEntity(ctx, m))
 	}
 	return bs, uint32(total), nil
 }
@@ -204,4 +211,19 @@ func (r userRepo) HasUserDataScope(ctx kratosx.Context, pid, uid uint32) (bool, 
 	}
 
 	return valx.InList(scopes, depId), nil
+}
+
+func (r userRepo) GetResourceURL(ctx kratosx.Context, sha string) string {
+	client, err := service.NewResourceFile(ctx)
+	if err != nil {
+		ctx.Logger().Warnw("msg", "init resource client error", "err", err.Error())
+		return ""
+	}
+	reply, err := client.GetFile(ctx, &file.GetFileRequest{Sha: proto.String(sha)})
+	if err != nil {
+		ctx.Logger().Warnw("msg", "get resource sha error", "err", err.Error())
+		return ""
+	}
+
+	return reply.Url
 }

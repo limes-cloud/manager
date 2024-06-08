@@ -1,8 +1,8 @@
 package conf
 
 type Config struct {
-	DefaultUserAvatar   string //默认头像
-	DefaultUserPassword string //默认密码
+	DefaultUserAvatar   string // 默认头像
+	DefaultUserPassword string // 默认密码
 	Setting             struct {
 		Name      string
 		Debug     bool
@@ -12,5 +12,6 @@ type Config struct {
 		Logo      string
 		Watermark string
 	}
+	DictionaryKeywords []string
 	ChangePasswordType string
 }

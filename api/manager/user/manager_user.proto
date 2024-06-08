@@ -143,8 +143,8 @@ message DeleteUserReply {
 
 message UpdateCurrentUserRequest{
   optional string avatar = 1;
-  string nickname = 2[(validate.rules).string = {min_len:1}];
-  string gender = 3[(validate.rules).string = {min_len:1}];
+  string nickname = 2;
+  string gender = 3;
 }
 
 message UpdateCurrentUserReply{
