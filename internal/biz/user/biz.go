@@ -9,10 +9,11 @@ import (
 	"github.com/limes-cloud/kratosx"
 	"github.com/limes-cloud/kratosx/pkg/crypto"
 	"github.com/limes-cloud/kratosx/pkg/valx"
+	"google.golang.org/protobuf/proto"
+
 	"github.com/limes-cloud/manager/api/manager/errors"
 	"github.com/limes-cloud/manager/internal/conf"
 	"github.com/limes-cloud/manager/internal/pkg/md"
-	"google.golang.org/protobuf/proto"
 )
 
 type UseCase struct {
@@ -166,7 +167,7 @@ func (u *UseCase) UpdateUserStatus(ctx kratosx.Context, id uint32, status bool) 
 		return errors.UpdateError(err.Error())
 	}
 
-	if status == false {
+	if !status {
 		token, logged, err := u.repo.GetUserToken(ctx, id)
 		if err != nil {
 			return errors.DatabaseError(err.Error())
@@ -315,12 +316,16 @@ func (u *UseCase) SendCurrentUserCaptcha(ctx kratosx.Context, tp string) (*SendC
 
 // UpdateCurrentUserPassword 修改当前用户密码
 func (u *UseCase) UpdateCurrentUserPassword(ctx kratosx.Context, req *UpdateCurrentUserPasswordRequest) error {
+	ou, err := u.repo.GetUser(ctx, md.UserId(ctx))
+	if err != nil {
+		return errors.DatabaseError(err.Error())
+	}
 	switch u.conf.ChangePasswordType {
 	case ChangePwCaptchaType:
 		if req.CaptchaId == nil || req.Captcha == nil {
 			return errors.ParamsError()
 		}
-		if err := ctx.Captcha().VerifyEmail(pwdCaptchaKey, ctx.ClientIP(), *req.CaptchaId, *req.Captcha); err != nil {
+		if err := ctx.Captcha().VerifyEmail(pwdCaptchaKey, ctx.ClientIP(), *req.CaptchaId, *req.Captcha, ou.Email); err != nil {
 			return errors.VerifyCaptchaError()
 		}
 	case ChangePwPasswordType:
@@ -415,7 +420,7 @@ func (u *UseCase) UserLogin(ctx kratosx.Context, in *UserLoginRequest) (string, 
 		enableRoles []*Role
 	)
 	for _, role := range user.Roles {
-		if role.Status != nil && *role.Status == true {
+		if role.Status != nil && *role.Status {
 			enableRoles = append(enableRoles, role)
 			if role.Id == user.RoleId {
 				notSwitch = true

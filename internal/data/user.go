@@ -5,6 +5,7 @@ import (
 	"github.com/limes-cloud/kratosx/pkg/valx"
 	file "github.com/limes-cloud/resource/api/resource/file/v1"
 	"google.golang.org/protobuf/proto"
+	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 
 	biz "github.com/limes-cloud/manager/internal/biz/user"
@@ -178,7 +179,19 @@ func (r userRepo) CreateUser(ctx kratosx.Context, req *biz.User) (uint32, error)
 
 // UpdateUser 更新数据
 func (r userRepo) UpdateUser(ctx kratosx.Context, req *biz.User) error {
-	return ctx.DB().Updates(r.ToUserModel(req)).Error
+	return ctx.DB().Transaction(func(tx *gorm.DB) error {
+		if len(req.UserRoles) != 0 {
+			if err := tx.Where("user_id=?", req.Id).Delete(model.UserRole{}).Error; err != nil {
+				return err
+			}
+		}
+		if len(req.UserJobs) != 0 {
+			if err := tx.Where("user_id=?", req.Id).Delete(model.UserJob{}).Error; err != nil {
+				return err
+			}
+		}
+		return tx.Updates(r.ToUserModel(req)).Error
+	})
 }
 
 // UpdateUserStatus 更新数据状态

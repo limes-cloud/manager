@@ -6,7 +6,7 @@ require (
 	github.com/envoyproxy/protoc-gen-validate v1.0.4
 	github.com/forgoer/openssl v1.6.0
 	github.com/go-kratos/kratos/v2 v2.7.3
-	github.com/limes-cloud/kratosx v1.0.42
+	github.com/limes-cloud/kratosx v1.0.44
 	github.com/limes-cloud/resource v1.0.11
 	go.uber.org/automaxprocs v1.5.3
 	google.golang.org/genproto/googleapis/api v0.0.0-20240429193739-8cf5692501f6

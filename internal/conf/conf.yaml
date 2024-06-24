@@ -29,7 +29,7 @@ database:
   system: #数据库实例名称,如有多个数据库可新增
     enable: true #是否启用数据库
     drive: mysql #数据库类型
-    autoCreate: false #是否自动创建数据库
+    autoCreate: true #是否自动创建数据库
     connect:
       username: root
       password: root
