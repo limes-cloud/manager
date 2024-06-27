@@ -1,38 +1,35 @@
 /*
  Navicat Premium Data Transfer
 
- Source Server         : dev
+ Source Server      : dev
  Source Server Type    : MySQL
  Source Server Version : 80200
- Source Host           : localhost:3306
- Source Schema         : manager_auto
+ Source Host    : localhost:3306
+ Source Schema      : manager
 
  Target Server Type    : MySQL
  Target Server Version : 80200
- File Encoding         : 65001
+ File Encoding      : 65001
 
- Date: 27/06/2024 12:47:31
+ Date: 27/06/2024 15:55:50
 */
-
-SET NAMES utf8mb4;
-SET FOREIGN_KEY_CHECKS = 0;
 
 -- ----------------------------
 -- Table structure for casbin_rule
 -- ----------------------------
 DROP TABLE IF EXISTS `casbin_rule`;
 CREATE TABLE `casbin_rule` (
-                               `id` bigint unsigned NOT NULL AUTO_INCREMENT,
-                               `ptype` varchar(100) DEFAULT NULL,
-                               `v0` varchar(100) DEFAULT NULL,
-                               `v1` varchar(100) DEFAULT NULL,
-                               `v2` varchar(100) DEFAULT NULL,
-                               `v3` varchar(100) DEFAULT NULL,
-                               `v4` varchar(100) DEFAULT NULL,
-                               `v5` varchar(100) DEFAULT NULL,
-                               PRIMARY KEY (`id`),
-                               UNIQUE KEY `idx_casbin_rule` (`ptype`,`v0`,`v1`,`v2`,`v3`,`v4`,`v5`)
-) ENGINE=InnoDB AUTO_INCREMENT=591 DEFAULT CHARSET=utf8mb4 ;
+      `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+      `ptype` varchar(100) DEFAULT NULL,
+      `v0` varchar(100) DEFAULT NULL,
+      `v1` varchar(100) DEFAULT NULL,
+      `v2` varchar(100) DEFAULT NULL,
+      `v3` varchar(100) DEFAULT NULL,
+      `v4` varchar(100) DEFAULT NULL,
+      `v5` varchar(100) DEFAULT NULL,
+      PRIMARY KEY (`id`),
+      UNIQUE KEY `idx_casbin_rule` (`ptype`,`v0`,`v1`,`v2`,`v3`,`v4`,`v5`)
+) ENGINE=InnoDB AUTO_INCREMENT=591 DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------
 -- Records of casbin_rule
@@ -45,18 +42,18 @@ COMMIT;
 -- ----------------------------
 DROP TABLE IF EXISTS `department`;
 CREATE TABLE `department` (
-                              `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
-                              `parent_id` bigint unsigned NOT NULL COMMENT '父id',
-                              `keyword` char(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '标识',
-                              `name` varchar(64) NOT NULL COMMENT '名称',
-                              `description` varchar(256) NOT NULL COMMENT '描述',
-                              `created_at` bigint unsigned NOT NULL DEFAULT '0' COMMENT '创建时间',
-                              `updated_at` bigint unsigned NOT NULL DEFAULT '0' COMMENT '修改时间',
-                              PRIMARY KEY (`id`),
-                              UNIQUE KEY `keyword` (`keyword`),
-                              KEY `idx_department_created_at` (`created_at`),
-                              KEY `idx_department_updated_at` (`updated_at`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4  COMMENT='部门信息';
+     `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+     `parent_id` bigint unsigned NOT NULL COMMENT '父id',
+     `keyword` char(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '标识',
+     `name` varchar(64) NOT NULL COMMENT '名称',
+     `description` varchar(256) NOT NULL COMMENT '描述',
+     `created_at` bigint unsigned NOT NULL DEFAULT '0' COMMENT '创建时间',
+     `updated_at` bigint unsigned NOT NULL DEFAULT '0' COMMENT '修改时间',
+     PRIMARY KEY (`id`),
+     UNIQUE KEY `keyword` (`keyword`),
+     KEY `idx_department_created_at` (`created_at`),
+     KEY `idx_department_updated_at` (`updated_at`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COMMENT='部门信息';
 
 -- ----------------------------
 -- Records of department
@@ -70,15 +67,15 @@ COMMIT;
 -- ----------------------------
 DROP TABLE IF EXISTS `department_closure`;
 CREATE TABLE `department_closure` (
-                                      `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
-                                      `parent` bigint unsigned NOT NULL COMMENT '部门id',
-                                      `children` bigint unsigned NOT NULL COMMENT '部门id',
-                                      PRIMARY KEY (`id`),
-                                      KEY `parent` (`parent`),
-                                      KEY `children` (`children`),
-                                      CONSTRAINT `department_closure_ibfk_1` FOREIGN KEY (`children`) REFERENCES `department` (`id`) ON DELETE CASCADE,
-                                      CONSTRAINT `department_closure_ibfk_2` FOREIGN KEY (`parent`) REFERENCES `department` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4  COMMENT='部门层级信息';
+    `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+    `parent` bigint unsigned NOT NULL COMMENT '部门id',
+    `children` bigint unsigned NOT NULL COMMENT '部门id',
+    PRIMARY KEY (`id`),
+    KEY `parent` (`parent`),
+    KEY `children` (`children`),
+    CONSTRAINT `department_closure_ibfk_1` FOREIGN KEY (`children`) REFERENCES `department` (`id`) ON DELETE CASCADE,
+    CONSTRAINT `department_closure_ibfk_2` FOREIGN KEY (`parent`) REFERENCES `department` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COMMENT='部门层级信息';
 
 -- ----------------------------
 -- Records of department_closure
@@ -91,19 +88,19 @@ COMMIT;
 -- ----------------------------
 DROP TABLE IF EXISTS `dictionary`;
 CREATE TABLE `dictionary` (
-                              `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
-                              `keyword` char(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '关键字',
-                              `name` varchar(64) NOT NULL COMMENT '名称',
-                              `description` varchar(256) DEFAULT NULL COMMENT '描述',
-                              `created_at` bigint unsigned NOT NULL DEFAULT '0' COMMENT '创建时间',
-                              `updated_at` bigint unsigned NOT NULL DEFAULT '0' COMMENT '修改时间',
-                              `deleted_at` bigint unsigned NOT NULL DEFAULT '0' COMMENT '删除时间',
-                              PRIMARY KEY (`id`),
-                              UNIQUE KEY `keyword` (`keyword`,`deleted_at`),
-                              KEY `idx_dictionary_created_at` (`created_at`),
-                              KEY `idx_dictionary_updated_at` (`updated_at`),
-                              KEY `idx_dictionary_deleted_at` (`deleted_at`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4  COMMENT='字典信息';
+     `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+     `keyword` char(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '关键字',
+     `name` varchar(64) NOT NULL COMMENT '名称',
+     `description` varchar(256) DEFAULT NULL COMMENT '描述',
+     `created_at` bigint unsigned NOT NULL DEFAULT '0' COMMENT '创建时间',
+     `updated_at` bigint unsigned NOT NULL DEFAULT '0' COMMENT '修改时间',
+     `deleted_at` bigint unsigned NOT NULL DEFAULT '0' COMMENT '删除时间',
+     PRIMARY KEY (`id`),
+     UNIQUE KEY `keyword` (`keyword`,`deleted_at`),
+     KEY `idx_dictionary_created_at` (`created_at`),
+     KEY `idx_dictionary_updated_at` (`updated_at`),
+     KEY `idx_dictionary_deleted_at` (`deleted_at`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COMMENT='字典信息';
 
 -- ----------------------------
 -- Records of dictionary
@@ -116,24 +113,24 @@ COMMIT;
 -- ----------------------------
 DROP TABLE IF EXISTS `dictionary_value`;
 CREATE TABLE `dictionary_value` (
-                                    `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
-                                    `dictionary_id` bigint unsigned NOT NULL COMMENT '字典id',
-                                    `label` varchar(128) NOT NULL COMMENT '标签',
-                                    `value` varchar(128) NOT NULL COMMENT '标识',
-                                    `status` tinyint(1) DEFAULT '1' COMMENT '状态',
-                                    `weight` int unsigned DEFAULT '0' COMMENT '权重',
-                                    `type` char(32) DEFAULT NULL COMMENT '类型',
-                                    `extra` varchar(512) DEFAULT NULL COMMENT '扩展信息',
-                                    `description` varchar(256) DEFAULT NULL COMMENT '描述',
-                                    `created_at` bigint unsigned NOT NULL DEFAULT '0' COMMENT '创建时间',
-                                    `updated_at` bigint unsigned NOT NULL DEFAULT '0' COMMENT '修改时间',
-                                    PRIMARY KEY (`id`),
-                                    UNIQUE KEY `value` (`dictionary_id`,`value`),
-                                    KEY `idx_dictionary_value_created_at` (`created_at`),
-                                    KEY `idx_dictionary_value_updated_at` (`updated_at`),
-                                    KEY `idx_dictionary_value_weight` (`weight`),
-                                    CONSTRAINT `fk_dictionary_value_dict` FOREIGN KEY (`dictionary_id`) REFERENCES `dictionary` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4  COMMENT='字典值信息';
+    `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+    `dictionary_id` bigint unsigned NOT NULL COMMENT '字典id',
+    `label` varchar(128) NOT NULL COMMENT '标签',
+    `value` varchar(128) NOT NULL COMMENT '标识',
+    `status` tinyint(1) DEFAULT '1' COMMENT '状态',
+    `weight` int unsigned DEFAULT '0' COMMENT '权重',
+    `type` char(32) DEFAULT NULL COMMENT '类型',
+    `extra` varchar(512) DEFAULT NULL COMMENT '扩展信息',
+    `description` varchar(256) DEFAULT NULL COMMENT '描述',
+    `created_at` bigint unsigned NOT NULL DEFAULT '0' COMMENT '创建时间',
+    `updated_at` bigint unsigned NOT NULL DEFAULT '0' COMMENT '修改时间',
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `value` (`dictionary_id`,`value`),
+    KEY `idx_dictionary_value_created_at` (`created_at`),
+    KEY `idx_dictionary_value_updated_at` (`updated_at`),
+    KEY `idx_dictionary_value_weight` (`weight`),
+    CONSTRAINT `fk_dictionary_value_dict` FOREIGN KEY (`dictionary_id`) REFERENCES `dictionary` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COMMENT='字典值信息';
 
 -- ----------------------------
 -- Records of dictionary_value
@@ -146,10 +143,10 @@ COMMIT;
 -- ----------------------------
 DROP TABLE IF EXISTS `gorm_init`;
 CREATE TABLE `gorm_init` (
-                             `id` int unsigned NOT NULL AUTO_INCREMENT,
-                             `init` tinyint(1) DEFAULT NULL,
-                             PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 ;
+    `id` int unsigned NOT NULL AUTO_INCREMENT,
+    `init` tinyint(1) DEFAULT NULL,
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------
 -- Records of gorm_init
@@ -163,21 +160,21 @@ COMMIT;
 -- ----------------------------
 DROP TABLE IF EXISTS `job`;
 CREATE TABLE `job` (
-                       `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
-                       `keyword` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '关键字',
-                       `name` varchar(64) NOT NULL COMMENT '名称',
-                       `weight` int unsigned DEFAULT NULL COMMENT '权重',
-                       `description` varchar(256) NOT NULL COMMENT '描述',
-                       `created_at` bigint unsigned NOT NULL DEFAULT '0' COMMENT '创建时间',
-                       `updated_at` bigint unsigned NOT NULL DEFAULT '0' COMMENT '修改时间',
-                       `deleted_at` bigint unsigned NOT NULL DEFAULT '0' COMMENT '删除时间',
-                       PRIMARY KEY (`id`),
-                       UNIQUE KEY `keyword` (`keyword`,`deleted_at`),
-                       KEY `idx_job_weight` (`weight`),
-                       KEY `idx_job_updated_at` (`updated_at`),
-                       KEY `idx_job_created_at` (`created_at`),
-                       KEY `idx_job_deleted_at` (`deleted_at`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4  COMMENT='职位信息';
+    `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+    `keyword` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '关键字',
+    `name` varchar(64) NOT NULL COMMENT '名称',
+    `weight` int unsigned DEFAULT NULL COMMENT '权重',
+    `description` varchar(256) NOT NULL COMMENT '描述',
+    `created_at` bigint unsigned NOT NULL DEFAULT '0' COMMENT '创建时间',
+    `updated_at` bigint unsigned NOT NULL DEFAULT '0' COMMENT '修改时间',
+    `deleted_at` bigint unsigned NOT NULL DEFAULT '0' COMMENT '删除时间',
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `keyword` (`keyword`,`deleted_at`),
+    KEY `idx_job_weight` (`weight`),
+    KEY `idx_job_updated_at` (`updated_at`),
+    KEY `idx_job_created_at` (`created_at`),
+    KEY `idx_job_deleted_at` (`deleted_at`)
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COMMENT='职位信息';
 
 -- ----------------------------
 -- Records of job
@@ -191,192 +188,192 @@ COMMIT;
 -- ----------------------------
 DROP TABLE IF EXISTS `menu`;
 CREATE TABLE `menu` (
-                        `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
-                        `parent_id` bigint unsigned NOT NULL COMMENT '父id',
-                        `title` varchar(128) NOT NULL COMMENT '标题',
-                        `type` char(32) NOT NULL COMMENT '类型',
-                        `keyword` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT '关键词',
-                        `icon` char(32) DEFAULT NULL COMMENT '图标',
-                        `api` varchar(128) DEFAULT NULL COMMENT '接口',
-                        `method` varchar(12) DEFAULT NULL COMMENT '接口方法',
-                        `path` varchar(128) DEFAULT NULL COMMENT '路径',
-                        `permission` varchar(128) DEFAULT NULL COMMENT '指令',
-                        `component` varchar(128) DEFAULT NULL COMMENT '组件',
-                        `redirect` varchar(128) DEFAULT NULL COMMENT '重定向地址',
-                        `weight` int unsigned DEFAULT '0' COMMENT '权重',
-                        `is_hidden` tinyint(1) DEFAULT NULL COMMENT '是否隐藏',
-                        `is_cache` tinyint(1) DEFAULT NULL COMMENT '是否缓存',
-                        `is_home` tinyint(1) DEFAULT NULL COMMENT '是否为首页',
-                        `is_affix` tinyint(1) DEFAULT NULL COMMENT '是否为标签',
-                        `created_at` bigint unsigned NOT NULL DEFAULT '0' COMMENT '创建时间',
-                        `updated_at` bigint unsigned NOT NULL DEFAULT '0' COMMENT '修改时间',
-                        PRIMARY KEY (`id`),
-                        UNIQUE KEY `keyword` (`keyword`),
-                        UNIQUE KEY `path` (`path`),
-                        UNIQUE KEY `api_method` (`api`,`method`),
-                        KEY `idx_menu_created_at` (`created_at`),
-                        KEY `idx_menu_updated_at` (`updated_at`),
-                        KEY `idx_menu_weight` (`weight`)
-) ENGINE=InnoDB AUTO_INCREMENT=2427 DEFAULT CHARSET=utf8mb4  COMMENT='菜单信息';
+    `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+    `parent_id` bigint unsigned NOT NULL COMMENT '父id',
+    `title` varchar(128) NOT NULL COMMENT '标题',
+    `type` char(32) NOT NULL COMMENT '类型',
+    `keyword` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL COMMENT '关键词',
+    `icon` char(32) DEFAULT NULL COMMENT '图标',
+    `api` varchar(128) DEFAULT NULL COMMENT '接口',
+    `method` varchar(12) DEFAULT NULL COMMENT '接口方法',
+    `path` varchar(128) DEFAULT NULL COMMENT '路径',
+    `permission` varchar(128) DEFAULT NULL COMMENT '指令',
+    `component` varchar(128) DEFAULT NULL COMMENT '组件',
+    `redirect` varchar(128) DEFAULT NULL COMMENT '重定向地址',
+    `weight` int unsigned DEFAULT '0' COMMENT '权重',
+    `is_hidden` tinyint(1) DEFAULT NULL COMMENT '是否隐藏',
+    `is_cache` tinyint(1) DEFAULT NULL COMMENT '是否缓存',
+    `is_home` tinyint(1) DEFAULT NULL COMMENT '是否为首页',
+    `is_affix` tinyint(1) DEFAULT NULL COMMENT '是否为标签',
+    `created_at` bigint unsigned NOT NULL DEFAULT '0' COMMENT '创建时间',
+    `updated_at` bigint unsigned NOT NULL DEFAULT '0' COMMENT '修改时间',
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `keyword` (`keyword`),
+    UNIQUE KEY `path` (`path`),
+    UNIQUE KEY `api_method` (`api`,`method`),
+    KEY `idx_menu_created_at` (`created_at`),
+    KEY `idx_menu_updated_at` (`updated_at`),
+    KEY `idx_menu_weight` (`weight`)
+) ENGINE=InnoDB AUTO_INCREMENT=2427 DEFAULT CHARSET=utf8mb4 COMMENT='菜单信息';
 
 -- ----------------------------
 -- Records of menu
 -- ----------------------------
 BEGIN;
-INSERT INTO `menu` VALUES (2273, 0, '管理平台', 'R', 'SystemPlatform', 'apps', NULL, NULL, '/', NULL, 'Layout', NULL, 2, 0, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2274, 2273, '首页面板', 'M', 'Dashboard', 'dashboard', NULL, NULL, '/dashboard', NULL, '/dashboard/index', NULL, 0, 0, 1, 1, 1, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2275, 2273, '管理中心', 'M', 'SystemPlatformManager', 'apps', NULL, NULL, '/manager', NULL, NULL, NULL, 0, 0, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2276, 2275, '基础接口', 'G', 'ManagerBaseApi', 'apps', NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2277, 2276, '获取用户可见部门树', 'BA', NULL, NULL, '/manager/api/v1/departments', 'GET', NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2278, 2276, '获取用户可见角色树', 'BA', NULL, NULL, '/manager/api/v1/roles', 'GET', NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2279, 2276, '获取个人用户信息', 'BA', NULL, NULL, '/manager/api/v1/user/current', 'GET', NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2280, 2276, '更新个人用户信息', 'BA', NULL, NULL, '/manager/api/v1/user/current/info', 'PUT', NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2281, 2276, '更新个人用户密码', 'BA', NULL, NULL, '/manager/api/v1/user/current/password', 'PUT', NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2282, 2276, '保存个人用户设置', 'BA', NULL, NULL, '/manager/api/v1/user/current/setting', 'PUT', NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2283, 2276, '发送用户验证吗', 'BA', NULL, NULL, '/manager/api/v1/user/current/captcha', 'POST', NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2284, 2276, '获取用户当前角色菜单', 'BA', NULL, NULL, '/manager/api/v1/menus/by/cur_role', 'GET', NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2285, 2276, '退出登录', 'BA', NULL, NULL, '/manager/api/v1/user/logout', 'POST', NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2286, 2276, '刷新token', 'BA', NULL, NULL, '/manager/api/v1/user/token/refresh', 'POST', NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2287, 2276, '用户登录', 'BA', NULL, NULL, '/manager/api/v1/user/login', 'POST', NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2288, 2276, '获取登录验证码', 'BA', NULL, NULL, '/manager/api/v1/user/login/captcha', 'POST', NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2289, 2276, '获取系统基础设置', 'BA', NULL, NULL, '/manager/api/v1/system/setting', 'GET', NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2290, 2276, '接口鉴权', 'BA', NULL, NULL, '/manager/api/v1/auth', 'POST', NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2291, 2276, '切换用户角色', 'BA', NULL, NULL, '/manager/api/v1/user/current/role', 'POST', NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2292, 2276, '分块上传文件', 'BA', NULL, NULL, '/resource/api/v1/upload', 'POST', NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2293, 2276, '预上传文件', 'BA', NULL, NULL, '/resource/api/v1/prepare_upload', 'POST', NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2294, 2276, '获取字段类型', 'BA', NULL, NULL, '/usercenter/api/v1/field/types', 'GET', NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2295, 2275, '字典管理', 'M', 'ManagerDictionary', 'storage', NULL, NULL, '/manager/dictionary', NULL, '/manager/dictionary/index', NULL, 0, NULL, 1, NULL, 1, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2296, 2295, '查询字典', 'A', NULL, NULL, '/manager/api/v1/dictionaries', 'GET', NULL, 'manager:dictionary:query', NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2297, 2295, '新增字典', 'A', NULL, NULL, '/manager/api/v1/dictionary', 'POST', NULL, 'manager:dictionary:add', NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2298, 2295, '修改字典', 'A', NULL, NULL, '/manager/api/v1/dictionary', 'PUT', NULL, 'manager:dictionary:update', NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2299, 2295, '删除字典', 'A', NULL, NULL, '/manager/api/v1/dictionary', 'DELETE', NULL, 'manager:dictionary:delete', NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2300, 2295, '获取字典值', 'A', NULL, NULL, '/manager/api/v1/dictionary_values', 'GET', NULL, 'manager:dictionary:value:query', NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2301, 2295, '新增字典值', 'A', NULL, NULL, '/manager/api/v1/dictionary_value', 'POST', NULL, 'manager:dictionary:value:add', NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2302, 2295, '修改字典值', 'A', NULL, NULL, '/manager/api/v1/dictionary_value', 'PUT', NULL, 'manager:dictionary:value:update', NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2303, 2295, '更新字典值目录状态', 'A', NULL, NULL, '/manager/api/v1/dictionary_value/status', 'PUT', NULL, 'manager:dictionary:value:status', NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2304, 2295, '删除字典值', 'A', NULL, NULL, '/manager/api/v1/dictionary_value', 'DELETE', NULL, 'manager:dictionary:value:delete', NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2305, 2275, '菜单管理', 'M', 'ManagerMenu', 'menu', NULL, NULL, '/manager/menu', NULL, '/manager/menu/index', NULL, 0, 0, 1, 1, 1, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2306, 2305, '查询菜单', 'A', NULL, NULL, '/manager/api/v1/menus', 'GET', NULL, 'manager:menu:query', NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2307, 2305, '新增菜单', 'A', NULL, NULL, '/manager/api/v1/menu', 'POST', NULL, 'manager:menu:add', NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2308, 2305, '修改菜单', 'A', NULL, NULL, '/manager/api/v1/menu', 'PUT', NULL, 'manager:menu:update', NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2309, 2305, '删除菜单', 'A', NULL, NULL, '/manager/api/v1/menu', 'DELETE', NULL, 'manager:menu:delete', NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2310, 2275, '职位管理', 'M', 'ManagerJob', 'tag', NULL, NULL, '/manager/job', NULL, '/manager/job/index', NULL, 0, NULL, 1, NULL, 1, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2311, 2310, '查询职位', 'A', NULL, NULL, '/manager/api/v1/jobs', 'GET', NULL, 'manager:job:query', NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2312, 2310, '新增职位', 'A', NULL, NULL, '/manager/api/v1/job', 'POST', NULL, 'manager:job:add', NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2313, 2310, '修改职位', 'A', NULL, NULL, '/manager/api/v1/job', 'PUT', NULL, 'manager:job:update', NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2314, 2310, '删除职位', 'A', NULL, NULL, '/manager/api/v1/job', 'DELETE', NULL, 'manager:job:delete', NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2315, 2275, '部门管理', 'M', 'ManagerDepartment', 'user-group', NULL, NULL, '/manager/department', NULL, '/manager/department/index', NULL, 0, 0, 1, NULL, 1, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2316, 2315, '新增部门', 'A', NULL, NULL, '/manager/api/v1/department', 'POST', NULL, 'manager:department:add', NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2317, 2315, '修改部门', 'A', NULL, NULL, '/manager/api/v1/department', 'PUT', NULL, 'manager:department:update', NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2318, 2315, '删除部门', 'A', NULL, NULL, '/manager/api/v1/department', 'DELETE', NULL, 'manager:department:delete', NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2319, 2275, '角色管理', 'M', 'ManagerRole', 'safe', NULL, NULL, '/manager/role', NULL, '/manager/role/index', NULL, 0, NULL, 0, NULL, 1, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2320, 2319, '新增角色', 'A', NULL, NULL, '/manager/api/v1/role', 'POST', NULL, 'manager:role:add', NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2321, 2319, '修改角色', 'A', NULL, NULL, '/manager/api/v1/role', 'PUT', NULL, 'manager:role:update', NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2322, 2319, '修改角色状态', 'A', NULL, NULL, '/manager/api/v1/role/status', 'PUT', NULL, 'manager:role:update:status', NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2323, 2319, '删除角色', 'A', NULL, NULL, '/manager/api/v1/role', 'DELETE', NULL, 'manager:role:delete', NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2324, 2319, '角色菜单管理', 'G', NULL, NULL, NULL, NULL, NULL, 'manager:role:menu', NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2325, 2324, '查询角色菜单', 'A', NULL, NULL, '/manager/api/v1/role/menu_ids', 'GET', NULL, 'manager:role:menu:query', NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2326, 2324, '修改角色菜单', 'A', NULL, NULL, '/manager/api/v1/role/menu', 'POST', NULL, 'manager:role:menu:update', NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2327, 2275, '用户管理', 'M', 'ManagerUser', 'user', NULL, NULL, '/manager/user', NULL, '/manager/user/index', NULL, 0, NULL, 1, NULL, 1, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2328, 2327, '查询用户列表', 'A', NULL, NULL, '/manager/api/v1/users', 'GET', NULL, 'manager:user:query', NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2329, 2327, '新增用户', 'A', NULL, NULL, '/manager/api/v1/user', 'POST', NULL, 'manager:user:add', NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2330, 2327, '修改用户', 'A', NULL, NULL, '/manager/api/v1/user', 'PUT', NULL, 'manager:user:update', NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2331, 2327, '删除用户', 'A', NULL, NULL, '/manager/api/v1/user', 'DELETE', NULL, 'manager:user:delete', NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2332, 2327, '修改用户状态', 'A', NULL, NULL, '/manager/api/v1/user/status', 'PUT', NULL, 'manager:user:status', NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2333, 2327, '重置账号密码', 'A', NULL, NULL, '/manager/api/v1/user/password/reset', 'POST', NULL, 'manager:user:reset:password', '', NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2334, 2273, '资源中心', 'M', 'SystemPlatformResource', 'file', NULL, NULL, '/resource', NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2335, 2334, '文件管理', 'M', 'ResourceFile', 'file', NULL, NULL, '/resource/file', NULL, '/resource/file/index', NULL, 0, 0, 1, NULL, 1, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2336, 2335, '目录管理', 'G', NULL, NULL, NULL, NULL, NULL, 'resource:directory:group', NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2337, 2336, '查看目录', 'A', NULL, NULL, '/resource/api/v1/directories', 'GET', NULL, 'resource:directory:query', NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2338, 2336, '新增目录', 'A', NULL, NULL, '/resource/api/v1/directory', 'POST', NULL, 'resource:directory:add', NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2339, 2336, '修改目录', 'A', NULL, NULL, '/resource/api/v1/directory', 'PUT', NULL, 'resource:directory:update', NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2340, 2336, '删除目录', 'A', NULL, NULL, '/resource/api/v1/directory', 'DELETE', NULL, 'resource:directory:delete', NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2341, 2335, '文件管理', 'G', NULL, NULL, NULL, NULL, NULL, 'resource:file:group', NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2342, 2341, '查看文件', 'A', NULL, NULL, '/resource/api/v1/files', 'GET', NULL, 'resource:file:query', NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2343, 2341, '修改文件', 'A', NULL, NULL, '/resource/api/v1/file', 'PUT', NULL, 'resource:file:update', NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2344, 2341, '删除文件', 'A', NULL, NULL, '/resource/api/v1/file', 'DELETE', NULL, 'resource:file:delete', NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2345, 2334, '导出管理', 'M', 'ResourceExport', 'export', NULL, NULL, '/resource/export', NULL, '/resource/export/index', NULL, 0, 0, 1, NULL, 1, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2346, 2345, '查看导出', 'A', NULL, NULL, '/resource/api/v1/exports', 'GET', NULL, 'resource:export:query', NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2347, 2345, '新增导出', 'A', NULL, NULL, '/resource/api/v1/export', 'POST', NULL, 'resource:export:file', NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2348, 2345, '删除导出', 'A', NULL, NULL, '/resource/api/v1/export', 'DELETE', NULL, 'resource:export:delete', NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2349, 2273, '用户中心', 'M', 'SystemPlatformUserCenter', 'user', NULL, NULL, '/usercenter', NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2350, 2349, '授权渠道', 'M', 'UserCenterChannel', 'mind-mapping', NULL, NULL, '/usercenter/channel', NULL, '/usercenter/channel/index', NULL, 0, 0, 1, NULL, 1, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2351, 2350, '查看渠道', 'A', NULL, NULL, '/usercenter/api/v1/channels', 'GET', NULL, 'uc:channel:query', NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2352, 2350, '新增渠道', 'A', NULL, NULL, '/usercenter/api/v1/channel', 'POST', NULL, 'uc:channel:add', NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2353, 2350, '修改渠道', 'A', NULL, NULL, '/usercenter/api/v1/channel', 'PUT', NULL, 'uc:channel:update', NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2354, 2350, '修改渠道状态', 'A', NULL, NULL, '/usercenter/api/v1/channel/status', 'PUT', NULL, 'uc:channel:update:status', NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2355, 2350, '删除渠道', 'A', NULL, NULL, '/usercenter/api/v1/channel', 'DELETE', NULL, 'uc:channel:delete', NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2356, 2349, '信息字段', 'M', 'UserCenterField', 'list', NULL, NULL, '/usercenter/field', NULL, '/usercenter/field/index', NULL, 0, 0, 1, 0, 1, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2357, 2356, '查看字段列表', 'A', NULL, NULL, '/usercenter/api/v1/fields', 'GET', NULL, 'uc:field:query', NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2358, 2356, '新增字段', 'A', NULL, NULL, '/usercenter/api/v1/field', 'POST', NULL, 'uc:field:add', NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2359, 2356, '修改字段', 'A', NULL, NULL, '/usercenter/api/v1/field', 'PUT', NULL, 'uc:field:update', NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2360, 2356, '修改字段状态', 'A', NULL, NULL, '/usercenter/api/v1/field/status', 'PUT', NULL, 'uc:field:update:status', NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2361, 2356, '删除字段', 'A', NULL, NULL, '/usercenter/api/v1/field', 'DELETE', NULL, 'uc:field:delete', NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2362, 2349, '应用管理', 'M', 'UserCenterApp', 'apps', NULL, NULL, '/usercenter/app', NULL, '/usercenter/app/index', NULL, 0, 0, 1, NULL, 1, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2363, 2362, '查看应用', 'A', NULL, NULL, '/usercenter/api/v1/apps', 'GET', NULL, 'uc:app:query', NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2364, 2362, '新增应用', 'A', NULL, NULL, '/usercenter/api/v1/app', 'POST', NULL, 'uc:app:add', NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2365, 2362, '修改应用', 'A', NULL, NULL, '/usercenter/api/v1/app', 'PUT', NULL, 'uc:app:update', NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2366, 2362, '修改应用状态', 'A', NULL, NULL, '/usercenter/api/v1/app/status', 'PUT', NULL, 'uc:app:update:status', NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2367, 2362, '删除应用', 'A', NULL, NULL, '/usercenter/api/v1/app', 'DELETE', NULL, 'uc:app:delete', NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2368, 2349, '用户管理', 'M', 'UserCenterUser', 'user', NULL, NULL, '/usercenter/user', NULL, '/usercenter/user/index', NULL, 0, 0, 1, NULL, 1, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2369, 2368, '查看用户', 'A', NULL, NULL, '/usercenter/api/v1/users', 'GET', NULL, 'uc:user:query', NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2370, 2368, '新增用户', 'A', NULL, NULL, '/usercenter/api/v1/user', 'POST', NULL, 'uc:user:add', NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2371, 2368, '导入用户', 'A', NULL, NULL, '/usercenter/api/v1/users', 'POST', NULL, 'uc:user:import', NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2372, 2368, '修改用户', 'A', NULL, NULL, '/usercenter/api/v1/user', 'PUT', NULL, 'uc:user:update', NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2373, 2368, '修改用户状态', 'A', NULL, NULL, '/usercenter/api/v1/user/status', 'PUT', NULL, 'uc:user:update:status', NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2374, 2368, '删除用户', 'A', NULL, NULL, '/usercenter/api/v1/user', 'DELETE', NULL, 'uc:user:delete', NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2375, 2368, '查看用户详细信息', 'G', NULL, NULL, NULL, NULL, NULL, 'uc:user:more', NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2376, 2375, '获取用户应用信息', 'A', NULL, NULL, '/usercenter/api/v1/auths', 'GET', NULL, 'uc:auth:query', NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2377, 2375, '创建用户应用信息', 'A', NULL, NULL, '/usercenter/api/v1/auth', 'POST', NULL, 'uc:auth:add', NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2378, 2375, '修改用户应用状态信息', 'A', NULL, NULL, '/usercenter/api/v1/auth/status', 'PUT', NULL, 'uc:auth:update:status', NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2379, 2375, '删除用户应用信息', 'A', NULL, NULL, '/usercenter/api/v1/auth', 'DELETE', NULL, 'uc:auth:delete', NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2380, 2375, '获取用户渠道信息', 'A', NULL, NULL, '/usercenter/api/v1/oauths', 'GET', NULL, 'uc:oauth:query', NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2381, 2375, '删除用户渠道信息', 'A', NULL, NULL, '/usercenter/api/v1/oauth', 'DELETE', NULL, 'uc:oauth:delete', NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2382, 2375, '获取用户扩展信息', 'A', NULL, NULL, '/usercenter/api/v1/userinfos', 'GET', NULL, 'uc:userinfo:query', NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2383, 2375, '创建用户扩展信息', 'A', NULL, NULL, '/usercenter/api/v1/userinfo', 'POST', NULL, 'uc:userinfo:add', NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2384, 2375, '修改用户扩展信息', 'A', NULL, NULL, '/usercenter/api/v1/userinfo', 'PUT', NULL, 'uc:userinfo:update', NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2385, 2375, '删除用户扩展信息', 'A', NULL, NULL, '/usercenter/api/v1/userinfo', 'DELETE', NULL, 'uc:userinfo:delete', NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2386, 2273, '配置中心', 'M', 'SystemPlatformConfigure', 'code-block', NULL, NULL, '/configure', NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2387, 2386, '环境管理', 'M', 'ConfigureEnv', 'common', NULL, NULL, '/configure/env', NULL, '/configure/env/index', NULL, 0, NULL, 1, NULL, 1, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2388, 2387, '查看环境', 'A', NULL, NULL, '/configure/api/v1/envs', 'GET', NULL, 'configure:env:query', NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2389, 2387, '新增环境', 'A', NULL, NULL, '/configure/api/v1/env', 'POST', NULL, 'configure:env:add', NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2390, 2387, '修改环境', 'A', NULL, NULL, '/configure/api/v1/env', 'PUT', NULL, 'configure:env:update', NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2391, 2387, '修改环境状态', 'A', NULL, NULL, '/configure/api/v1/env/status', 'PUT', NULL, 'configure:env:update:status', NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2392, 2387, '删除环境', 'A', NULL, NULL, '/configure/api/v1/env', 'DELETE', NULL, 'configure:env:delete', NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2393, 2387, '查看环境Token', 'A', NULL, NULL, '/configure/api/v1/env/token', 'GET', NULL, 'configure:env:token:query', NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2394, 2387, '重置环境token', 'A', NULL, NULL, '/configure/api/v1/env/token', 'PUT', NULL, 'configure:env:token:reset', NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2395, 2386, '服务管理', 'M', 'ConfigureServer', 'apps', NULL, NULL, '/configure/server', NULL, '/configure/server/index', NULL, 0, NULL, 1, NULL, 1, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2396, 2395, '查询服务', 'A', NULL, NULL, '/configure/api/v1/servers', 'GET', NULL, 'configure:server:query', NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2397, 2395, '新增服务', 'A', NULL, NULL, '/configure/api/v1/server', 'POST', NULL, 'configure:server:add', NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2398, 2395, '修改服务', 'A', NULL, NULL, '/configure/api/v1/server', 'PUT', NULL, 'configure:server:update', NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2399, 2395, '修改服务状态', 'A', NULL, NULL, '/configure/api/v1/server/status', 'PUT', NULL, 'configure:server:update:status', NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2400, 2395, '删除服务', 'A', NULL, NULL, '/configure/api/v1/server', 'DELETE', NULL, 'configure:server:delete', NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2401, 2386, '业务变量', 'M', 'ConfigureBusiness', 'code', NULL, NULL, '/configure/business', NULL, '/configure/business/index', NULL, 0, NULL, 1, NULL, 1, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2402, 2401, '查看业务变量', 'A', NULL, NULL, '/configure/api/v1/business', 'GET', NULL, 'configure:business:query', NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2403, 2401, '新增业务变量', 'A', NULL, NULL, '/configure/api/v1/business', 'POST', NULL, 'configure:business:add', NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2404, 2401, '修改业务变量', 'A', NULL, NULL, '/configure/api/v1/business', 'PUT', NULL, 'configure:business:update', NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2405, 2401, '删除业务变量', 'A', NULL, NULL, '/configure/api/v1/business', 'DELETE', NULL, 'configure:business:delete', NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2406, 2401, '查看业务变量值', 'A', NULL, NULL, '/configure/business/values', 'get', NULL, 'configure:business:value:query', NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2407, 2401, '设置业务变量值', 'A', NULL, NULL, '/configure/business/values', 'PUT', NULL, 'configure:business:value:update', NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2408, 2386, '资源变量', 'M', 'ConfigureResource', 'unordered-list', NULL, NULL, '/configure/resource', NULL, '/configure/resource/index', NULL, 0, NULL, 1, NULL, 1, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2409, 2408, '查看资源', 'A', NULL, NULL, '/configure/api/v1/resources', 'GET', NULL, 'configure:resource:query', NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2410, 2408, '新增资源', 'A', NULL, NULL, '/configure/api/v1/resource', 'POST', NULL, 'configure:resource:add', NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2411, 2408, '修改资源', 'A', NULL, NULL, '/configure/api/v1/resource', 'PUT', NULL, 'configure:resource:update', NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2412, 2408, '删除资源', 'A', NULL, NULL, '/configure/api/v1/resource', 'DELETE', NULL, 'configure:resource:delete', NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2413, 2408, '查看业务变量值', 'A', NULL, NULL, '/configure/resource/values', 'get', NULL, 'configure:resource:value:query', NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2414, 2408, '设置业务变量值', 'A', NULL, NULL, '/configure/resource/values', 'PUT', NULL, 'configure:resource:value:update', NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2415, 2386, '配置模板', 'M', 'ConfgureTemplate', 'file', NULL, NULL, '/configure/template', NULL, '/configure/template/index', NULL, 0, NULL, 1, NULL, 1, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2416, 2415, '模板管理', 'G', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2417, 2416, '查看模板历史版本', 'A', NULL, NULL, '/configure/api/v1/templates', 'GET', NULL, 'configure:template:history', NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2418, 2416, '查看指定模板详细数据', 'A', NULL, NULL, '/configure/api/v1/template', 'GET', NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2419, 2416, '查看当前正在使用的模板', 'A', NULL, NULL, '/configure/api/v1/template/current', 'GET', NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2420, 2416, '提交模板', 'A', NULL, NULL, '/configure/api/v1/template', 'POST', NULL, 'configure:template:add', NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2421, 2416, '模板对比', 'A', NULL, NULL, '/configure/api/v1/template/compare', 'POST', NULL, 'configure:template:compare', NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2422, 2416, '切换模板', 'A', NULL, NULL, '/configure/api/v1/template/switch', 'POST', NULL, 'configure:template:switch', NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2423, 2416, '模板预览', 'A', NULL, NULL, '/configure/api/v1/template/preview', 'POST', NULL, 'configure:template:preview', NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2424, 2415, '配置管理', 'G', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2425, 2424, '配置对比', 'A', NULL, NULL, '/configure/api/v1/configure/compare', 'POST', NULL, 'configure:configure:compare', NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
-INSERT INTO `menu` VALUES (2426, 2424, '同步配置', 'A', NULL, NULL, '/configure/api/v1/configure', 'PUT', NULL, 'configure:configure:sync', NULL, NULL, 0, NULL, NULL, NULL, NULL, 1719290128, 1719290128);
+INSERT INTO `menu` VALUES (2273, 0, '管理平台', 'R', 'SystemPlatform', 'apps', NULL, NULL, '/', NULL, 'Layout', NULL, 2, 0, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2274, 2273, '首页面板', 'M', 'Dashboard', 'dashboard', NULL, NULL, '/dashboard', NULL, '/dashboard/index', NULL, 0, 0, 1, 1, 1, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2275, 2273, '管理中心', 'M', 'SystemPlatformManager', 'apps', NULL, NULL, '/manager', NULL, NULL, NULL, 0, 0, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2276, 2275, '基础接口', 'G', 'ManagerBaseApi', 'apps', NULL, NULL, NULL, NULL, NULL, NULL, 0, 1, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2277, 2276, '获取用户可见部门树', 'BA', NULL, NULL, '/manager/api/v1/departments', 'GET', NULL, NULL, NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2278, 2276, '获取用户可见角色树', 'BA', NULL, NULL, '/manager/api/v1/roles', 'GET', NULL, NULL, NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2279, 2276, '获取个人用户信息', 'BA', NULL, NULL, '/manager/api/v1/user/current', 'GET', NULL, NULL, NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2280, 2276, '更新个人用户信息', 'BA', NULL, NULL, '/manager/api/v1/user/current/info', 'PUT', NULL, NULL, NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2281, 2276, '更新个人用户密码', 'BA', NULL, NULL, '/manager/api/v1/user/current/password', 'PUT', NULL, NULL, NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2282, 2276, '保存个人用户设置', 'BA', NULL, NULL, '/manager/api/v1/user/current/setting', 'PUT', NULL, NULL, NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2283, 2276, '发送用户验证吗', 'BA', NULL, NULL, '/manager/api/v1/user/current/captcha', 'POST', NULL, NULL, NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2284, 2276, '获取用户当前角色菜单', 'BA', NULL, NULL, '/manager/api/v1/menus/by/cur_role', 'GET', NULL, NULL, NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2285, 2276, '退出登录', 'BA', NULL, NULL, '/manager/api/v1/user/logout', 'POST', NULL, NULL, NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2286, 2276, '刷新token', 'BA', NULL, NULL, '/manager/api/v1/user/token/refresh', 'POST', NULL, NULL, NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2287, 2276, '用户登录', 'BA', NULL, NULL, '/manager/api/v1/user/login', 'POST', NULL, NULL, NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2288, 2276, '获取登录验证码', 'BA', NULL, NULL, '/manager/api/v1/user/login/captcha', 'POST', NULL, NULL, NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2289, 2276, '获取系统基础设置', 'BA', NULL, NULL, '/manager/api/v1/system/setting', 'GET', NULL, NULL, NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2290, 2276, '接口鉴权', 'BA', NULL, NULL, '/manager/api/v1/auth', 'POST', NULL, NULL, NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2291, 2276, '切换用户角色', 'BA', NULL, NULL, '/manager/api/v1/user/current/role', 'POST', NULL, NULL, NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2292, 2276, '分块上传文件', 'BA', NULL, NULL, '/resource/api/v1/upload', 'POST', NULL, NULL, NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2293, 2276, '预上传文件', 'BA', NULL, NULL, '/resource/api/v1/prepare_upload', 'POST', NULL, NULL, NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2294, 2276, '获取字段类型', 'BA', NULL, NULL, '/usercenter/api/v1/field/types', 'GET', NULL, NULL, NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2295, 2275, '字典管理', 'M', 'ManagerDictionary', 'storage', NULL, NULL, '/manager/dictionary', NULL, '/manager/dictionary/index', NULL, 0, NULL, 1, 0, 1, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2296, 2295, '查询字典', 'A', NULL, NULL, '/manager/api/v1/dictionaries', 'GET', NULL, 'manager:dictionary:query', NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2297, 2295, '新增字典', 'A', NULL, NULL, '/manager/api/v1/dictionary', 'POST', NULL, 'manager:dictionary:add', NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2298, 2295, '修改字典', 'A', NULL, NULL, '/manager/api/v1/dictionary', 'PUT', NULL, 'manager:dictionary:update', NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2299, 2295, '删除字典', 'A', NULL, NULL, '/manager/api/v1/dictionary', 'DELETE', NULL, 'manager:dictionary:delete', NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2300, 2295, '获取字典值', 'A', NULL, NULL, '/manager/api/v1/dictionary_values', 'GET', NULL, 'manager:dictionary:value:query', NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2301, 2295, '新增字典值', 'A', NULL, NULL, '/manager/api/v1/dictionary_value', 'POST', NULL, 'manager:dictionary:value:add', NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2302, 2295, '修改字典值', 'A', NULL, NULL, '/manager/api/v1/dictionary_value', 'PUT', NULL, 'manager:dictionary:value:update', NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2303, 2295, '更新字典值目录状态', 'A', NULL, NULL, '/manager/api/v1/dictionary_value/status', 'PUT', NULL, 'manager:dictionary:value:status', NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2304, 2295, '删除字典值', 'A', NULL, NULL, '/manager/api/v1/dictionary_value', 'DELETE', NULL, 'manager:dictionary:value:delete', NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2305, 2275, '菜单管理', 'M', 'ManagerMenu', 'menu', NULL, NULL, '/manager/menu', NULL, '/manager/menu/index', NULL, 0, 0, 1, 0, 1, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2306, 2305, '查询菜单', 'A', NULL, NULL, '/manager/api/v1/menus', 'GET', NULL, 'manager:menu:query', NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2307, 2305, '新增菜单', 'A', NULL, NULL, '/manager/api/v1/menu', 'POST', NULL, 'manager:menu:add', NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2308, 2305, '修改菜单', 'A', NULL, NULL, '/manager/api/v1/menu', 'PUT', NULL, 'manager:menu:update', NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2309, 2305, '删除菜单', 'A', NULL, NULL, '/manager/api/v1/menu', 'DELETE', NULL, 'manager:menu:delete', NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2310, 2275, '职位管理', 'M', 'ManagerJob', 'tag', NULL, NULL, '/manager/job', NULL, '/manager/job/index', NULL, 0, NULL, 1, 0, 1, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2311, 2310, '查询职位', 'A', NULL, NULL, '/manager/api/v1/jobs', 'GET', NULL, 'manager:job:query', NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2312, 2310, '新增职位', 'A', NULL, NULL, '/manager/api/v1/job', 'POST', NULL, 'manager:job:add', NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2313, 2310, '修改职位', 'A', NULL, NULL, '/manager/api/v1/job', 'PUT', NULL, 'manager:job:update', NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2314, 2310, '删除职位', 'A', NULL, NULL, '/manager/api/v1/job', 'DELETE', NULL, 'manager:job:delete', NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2315, 2275, '部门管理', 'M', 'ManagerDepartment', 'user-group', NULL, NULL, '/manager/department', NULL, '/manager/department/index', NULL, 0, 0, 1, 0, 1, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2316, 2315, '新增部门', 'A', NULL, NULL, '/manager/api/v1/department', 'POST', NULL, 'manager:department:add', NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2317, 2315, '修改部门', 'A', NULL, NULL, '/manager/api/v1/department', 'PUT', NULL, 'manager:department:update', NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2318, 2315, '删除部门', 'A', NULL, NULL, '/manager/api/v1/department', 'DELETE', NULL, 'manager:department:delete', NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2319, 2275, '角色管理', 'M', 'ManagerRole', 'safe', NULL, NULL, '/manager/role', NULL, '/manager/role/index', NULL, 0, NULL, 0, 0, 1, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2320, 2319, '新增角色', 'A', NULL, NULL, '/manager/api/v1/role', 'POST', NULL, 'manager:role:add', NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2321, 2319, '修改角色', 'A', NULL, NULL, '/manager/api/v1/role', 'PUT', NULL, 'manager:role:update', NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2322, 2319, '修改角色状态', 'A', NULL, NULL, '/manager/api/v1/role/status', 'PUT', NULL, 'manager:role:update:status', NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2323, 2319, '删除角色', 'A', NULL, NULL, '/manager/api/v1/role', 'DELETE', NULL, 'manager:role:delete', NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2324, 2319, '角色菜单管理', 'G', NULL, NULL, NULL, NULL, NULL, 'manager:role:menu', NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2325, 2324, '查询角色菜单', 'A', NULL, NULL, '/manager/api/v1/role/menu_ids', 'GET', NULL, 'manager:role:menu:query', NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2326, 2324, '修改角色菜单', 'A', NULL, NULL, '/manager/api/v1/role/menu', 'POST', NULL, 'manager:role:menu:update', NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2327, 2275, '用户管理', 'M', 'ManagerUser', 'user', NULL, NULL, '/manager/user', NULL, '/manager/user/index', NULL, 0, NULL, 1, 0, 1, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2328, 2327, '查询用户列表', 'A', NULL, NULL, '/manager/api/v1/users', 'GET', NULL, 'manager:user:query', NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2329, 2327, '新增用户', 'A', NULL, NULL, '/manager/api/v1/user', 'POST', NULL, 'manager:user:add', NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2330, 2327, '修改用户', 'A', NULL, NULL, '/manager/api/v1/user', 'PUT', NULL, 'manager:user:update', NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2331, 2327, '删除用户', 'A', NULL, NULL, '/manager/api/v1/user', 'DELETE', NULL, 'manager:user:delete', NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2332, 2327, '修改用户状态', 'A', NULL, NULL, '/manager/api/v1/user/status', 'PUT', NULL, 'manager:user:status', NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2333, 2327, '重置账号密码', 'A', NULL, NULL, '/manager/api/v1/user/password/reset', 'POST', NULL, 'manager:user:reset:password', '', NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2334, 2273, '资源中心', 'M', 'SystemPlatformResource', 'file', NULL, NULL, '/resource', NULL, NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2335, 2334, '文件管理', 'M', 'ResourceFile', 'file', NULL, NULL, '/resource/file', NULL, '/resource/file/index', NULL, 0, 0, 1, 0, 1, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2336, 2335, '目录管理', 'G', NULL, NULL, NULL, NULL, NULL, 'resource:directory:group', NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2337, 2336, '查看目录', 'A', NULL, NULL, '/resource/api/v1/directories', 'GET', NULL, 'resource:directory:query', NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2338, 2336, '新增目录', 'A', NULL, NULL, '/resource/api/v1/directory', 'POST', NULL, 'resource:directory:add', NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2339, 2336, '修改目录', 'A', NULL, NULL, '/resource/api/v1/directory', 'PUT', NULL, 'resource:directory:update', NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2340, 2336, '删除目录', 'A', NULL, NULL, '/resource/api/v1/directory', 'DELETE', NULL, 'resource:directory:delete', NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2341, 2335, '文件管理', 'G', NULL, NULL, NULL, NULL, NULL, 'resource:file:group', NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2342, 2341, '查看文件', 'A', NULL, NULL, '/resource/api/v1/files', 'GET', NULL, 'resource:file:query', NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2343, 2341, '修改文件', 'A', NULL, NULL, '/resource/api/v1/file', 'PUT', NULL, 'resource:file:update', NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2344, 2341, '删除文件', 'A', NULL, NULL, '/resource/api/v1/file', 'DELETE', NULL, 'resource:file:delete', NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2345, 2334, '导出管理', 'M', 'ResourceExport', 'export', NULL, NULL, '/resource/export', NULL, '/resource/export/index', NULL, 0, 0, 1, 0, 1, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2346, 2345, '查看导出', 'A', NULL, NULL, '/resource/api/v1/exports', 'GET', NULL, 'resource:export:query', NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2347, 2345, '新增导出', 'A', NULL, NULL, '/resource/api/v1/export', 'POST', NULL, 'resource:export:file', NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2348, 2345, '删除导出', 'A', NULL, NULL, '/resource/api/v1/export', 'DELETE', NULL, 'resource:export:delete', NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2349, 2273, '用户中心', 'M', 'SystemPlatformUserCenter', 'user', NULL, NULL, '/usercenter', NULL, NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2350, 2349, '授权渠道', 'M', 'UserCenterChannel', 'mind-mapping', NULL, NULL, '/usercenter/channel', NULL, '/usercenter/channel/index', NULL, 0, 0, 1, 0, 1, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2351, 2350, '查看渠道', 'A', NULL, NULL, '/usercenter/api/v1/channels', 'GET', NULL, 'uc:channel:query', NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2352, 2350, '新增渠道', 'A', NULL, NULL, '/usercenter/api/v1/channel', 'POST', NULL, 'uc:channel:add', NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2353, 2350, '修改渠道', 'A', NULL, NULL, '/usercenter/api/v1/channel', 'PUT', NULL, 'uc:channel:update', NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2354, 2350, '修改渠道状态', 'A', NULL, NULL, '/usercenter/api/v1/channel/status', 'PUT', NULL, 'uc:channel:update:status', NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2355, 2350, '删除渠道', 'A', NULL, NULL, '/usercenter/api/v1/channel', 'DELETE', NULL, 'uc:channel:delete', NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2356, 2349, '信息字段', 'M', 'UserCenterField', 'list', NULL, NULL, '/usercenter/field', NULL, '/usercenter/field/index', NULL, 0, 0, 1, 0, 1, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2357, 2356, '查看字段列表', 'A', NULL, NULL, '/usercenter/api/v1/fields', 'GET', NULL, 'uc:field:query', NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2358, 2356, '新增字段', 'A', NULL, NULL, '/usercenter/api/v1/field', 'POST', NULL, 'uc:field:add', NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2359, 2356, '修改字段', 'A', NULL, NULL, '/usercenter/api/v1/field', 'PUT', NULL, 'uc:field:update', NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2360, 2356, '修改字段状态', 'A', NULL, NULL, '/usercenter/api/v1/field/status', 'PUT', NULL, 'uc:field:update:status', NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2361, 2356, '删除字段', 'A', NULL, NULL, '/usercenter/api/v1/field', 'DELETE', NULL, 'uc:field:delete', NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2362, 2349, '应用管理', 'M', 'UserCenterApp', 'apps', NULL, NULL, '/usercenter/app', NULL, '/usercenter/app/index', NULL, 0, 0, 1, 0, 1, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2363, 2362, '查看应用', 'A', NULL, NULL, '/usercenter/api/v1/apps', 'GET', NULL, 'uc:app:query', NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2364, 2362, '新增应用', 'A', NULL, NULL, '/usercenter/api/v1/app', 'POST', NULL, 'uc:app:add', NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2365, 2362, '修改应用', 'A', NULL, NULL, '/usercenter/api/v1/app', 'PUT', NULL, 'uc:app:update', NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2366, 2362, '修改应用状态', 'A', NULL, NULL, '/usercenter/api/v1/app/status', 'PUT', NULL, 'uc:app:update:status', NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2367, 2362, '删除应用', 'A', NULL, NULL, '/usercenter/api/v1/app', 'DELETE', NULL, 'uc:app:delete', NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2368, 2349, '用户管理', 'M', 'UserCenterUser', 'user', NULL, NULL, '/usercenter/user', NULL, '/usercenter/user/index', NULL, 0, 0, 1, 0, 1, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2369, 2368, '查看用户', 'A', NULL, NULL, '/usercenter/api/v1/users', 'GET', NULL, 'uc:user:query', NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2370, 2368, '新增用户', 'A', NULL, NULL, '/usercenter/api/v1/user', 'POST', NULL, 'uc:user:add', NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2371, 2368, '导入用户', 'A', NULL, NULL, '/usercenter/api/v1/users', 'POST', NULL, 'uc:user:import', NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2372, 2368, '修改用户', 'A', NULL, NULL, '/usercenter/api/v1/user', 'PUT', NULL, 'uc:user:update', NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2373, 2368, '修改用户状态', 'A', NULL, NULL, '/usercenter/api/v1/user/status', 'PUT', NULL, 'uc:user:update:status', NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2374, 2368, '删除用户', 'A', NULL, NULL, '/usercenter/api/v1/user', 'DELETE', NULL, 'uc:user:delete', NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2375, 2368, '查看用户详细信息', 'G', NULL, NULL, NULL, NULL, NULL, 'uc:user:more', NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2376, 2375, '获取用户应用信息', 'A', NULL, NULL, '/usercenter/api/v1/auths', 'GET', NULL, 'uc:auth:query', NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2377, 2375, '创建用户应用信息', 'A', NULL, NULL, '/usercenter/api/v1/auth', 'POST', NULL, 'uc:auth:add', NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2378, 2375, '修改用户应用状态信息', 'A', NULL, NULL, '/usercenter/api/v1/auth/status', 'PUT', NULL, 'uc:auth:update:status', NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2379, 2375, '删除用户应用信息', 'A', NULL, NULL, '/usercenter/api/v1/auth', 'DELETE', NULL, 'uc:auth:delete', NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2380, 2375, '获取用户渠道信息', 'A', NULL, NULL, '/usercenter/api/v1/oauths', 'GET', NULL, 'uc:oauth:query', NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2381, 2375, '删除用户渠道信息', 'A', NULL, NULL, '/usercenter/api/v1/oauth', 'DELETE', NULL, 'uc:oauth:delete', NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2382, 2375, '获取用户扩展信息', 'A', NULL, NULL, '/usercenter/api/v1/userinfos', 'GET', NULL, 'uc:userinfo:query', NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2383, 2375, '创建用户扩展信息', 'A', NULL, NULL, '/usercenter/api/v1/userinfo', 'POST', NULL, 'uc:userinfo:add', NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2384, 2375, '修改用户扩展信息', 'A', NULL, NULL, '/usercenter/api/v1/userinfo', 'PUT', NULL, 'uc:userinfo:update', NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2385, 2375, '删除用户扩展信息', 'A', NULL, NULL, '/usercenter/api/v1/userinfo', 'DELETE', NULL, 'uc:userinfo:delete', NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2386, 2273, '配置中心', 'M', 'SystemPlatformConfigure', 'code-block', NULL, NULL, '/configure', NULL, NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2387, 2386, '环境管理', 'M', 'ConfigureEnv', 'common', NULL, NULL, '/configure/env', NULL, '/configure/env/index', NULL, 0, NULL, 1, 0, 1, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2388, 2387, '查看环境', 'A', NULL, NULL, '/configure/api/v1/envs', 'GET', NULL, 'configure:env:query', NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2389, 2387, '新增环境', 'A', NULL, NULL, '/configure/api/v1/env', 'POST', NULL, 'configure:env:add', NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2390, 2387, '修改环境', 'A', NULL, NULL, '/configure/api/v1/env', 'PUT', NULL, 'configure:env:update', NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2391, 2387, '修改环境状态', 'A', NULL, NULL, '/configure/api/v1/env/status', 'PUT', NULL, 'configure:env:update:status', NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2392, 2387, '删除环境', 'A', NULL, NULL, '/configure/api/v1/env', 'DELETE', NULL, 'configure:env:delete', NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2393, 2387, '查看环境Token', 'A', NULL, NULL, '/configure/api/v1/env/token', 'GET', NULL, 'configure:env:token:query', NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2394, 2387, '重置环境token', 'A', NULL, NULL, '/configure/api/v1/env/token', 'PUT', NULL, 'configure:env:token:reset', NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2395, 2386, '服务管理', 'M', 'ConfigureServer', 'apps', NULL, NULL, '/configure/server', NULL, '/configure/server/index', NULL, 0, NULL, 1, 0, 1, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2396, 2395, '查询服务', 'A', NULL, NULL, '/configure/api/v1/servers', 'GET', NULL, 'configure:server:query', NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2397, 2395, '新增服务', 'A', NULL, NULL, '/configure/api/v1/server', 'POST', NULL, 'configure:server:add', NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2398, 2395, '修改服务', 'A', NULL, NULL, '/configure/api/v1/server', 'PUT', NULL, 'configure:server:update', NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2399, 2395, '修改服务状态', 'A', NULL, NULL, '/configure/api/v1/server/status', 'PUT', NULL, 'configure:server:update:status', NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2400, 2395, '删除服务', 'A', NULL, NULL, '/configure/api/v1/server', 'DELETE', NULL, 'configure:server:delete', NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2401, 2386, '业务变量', 'M', 'ConfigureBusiness', 'code', NULL, NULL, '/configure/business', NULL, '/configure/business/index', NULL, 0, NULL, 1, 0, 1, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2402, 2401, '查看业务变量', 'A', NULL, NULL, '/configure/api/v1/business', 'GET', NULL, 'configure:business:query', NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2403, 2401, '新增业务变量', 'A', NULL, NULL, '/configure/api/v1/business', 'POST', NULL, 'configure:business:add', NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2404, 2401, '修改业务变量', 'A', NULL, NULL, '/configure/api/v1/business', 'PUT', NULL, 'configure:business:update', NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2405, 2401, '删除业务变量', 'A', NULL, NULL, '/configure/api/v1/business', 'DELETE', NULL, 'configure:business:delete', NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2406, 2401, '查看业务变量值', 'A', NULL, NULL, '/configure/business/values', 'get', NULL, 'configure:business:value:query', NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2407, 2401, '设置业务变量值', 'A', NULL, NULL, '/configure/business/values', 'PUT', NULL, 'configure:business:value:update', NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2408, 2386, '资源变量', 'M', 'ConfigureResource', 'unordered-list', NULL, NULL, '/configure/resource', NULL, '/configure/resource/index', NULL, 0, NULL, 1, 0, 1, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2409, 2408, '查看资源', 'A', NULL, NULL, '/configure/api/v1/resources', 'GET', NULL, 'configure:resource:query', NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2410, 2408, '新增资源', 'A', NULL, NULL, '/configure/api/v1/resource', 'POST', NULL, 'configure:resource:add', NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2411, 2408, '修改资源', 'A', NULL, NULL, '/configure/api/v1/resource', 'PUT', NULL, 'configure:resource:update', NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2412, 2408, '删除资源', 'A', NULL, NULL, '/configure/api/v1/resource', 'DELETE', NULL, 'configure:resource:delete', NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2413, 2408, '查看业务变量值', 'A', NULL, NULL, '/configure/resource/values', 'get', NULL, 'configure:resource:value:query', NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2414, 2408, '设置业务变量值', 'A', NULL, NULL, '/configure/resource/values', 'PUT', NULL, 'configure:resource:value:update', NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2415, 2386, '配置模板', 'M', 'ConfgureTemplate', 'file', NULL, NULL, '/configure/template', NULL, '/configure/template/index', NULL, 0, NULL, 1, 0, 1, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2416, 2415, '模板管理', 'G', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2417, 2416, '查看模板历史版本', 'A', NULL, NULL, '/configure/api/v1/templates', 'GET', NULL, 'configure:template:history', NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2418, 2416, '查看指定模板详细数据', 'A', NULL, NULL, '/configure/api/v1/template', 'GET', NULL, NULL, NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2419, 2416, '查看当前正在使用的模板', 'A', NULL, NULL, '/configure/api/v1/template/current', 'GET', NULL, NULL, NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2420, 2416, '提交模板', 'A', NULL, NULL, '/configure/api/v1/template', 'POST', NULL, 'configure:template:add', NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2421, 2416, '模板对比', 'A', NULL, NULL, '/configure/api/v1/template/compare', 'POST', NULL, 'configure:template:compare', NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2422, 2416, '切换模板', 'A', NULL, NULL, '/configure/api/v1/template/switch', 'POST', NULL, 'configure:template:switch', NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2423, 2416, '模板预览', 'A', NULL, NULL, '/configure/api/v1/template/preview', 'POST', NULL, 'configure:template:preview', NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2424, 2415, '配置管理', 'G', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2425, 2424, '配置对比', 'A', NULL, NULL, '/configure/api/v1/configure/compare', 'POST', NULL, 'configure:configure:compare', NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
+INSERT INTO `menu` VALUES (2426, 2424, '同步配置', 'A', NULL, NULL, '/configure/api/v1/configure', 'PUT', NULL, 'configure:configure:sync', NULL, NULL, 0, NULL, NULL, 0, NULL, 1719290128, 1719464475);
 COMMIT;
 
 -- ----------------------------
@@ -384,15 +381,15 @@ COMMIT;
 -- ----------------------------
 DROP TABLE IF EXISTS `menu_closure`;
 CREATE TABLE `menu_closure` (
-                                `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
-                                `parent` bigint unsigned NOT NULL COMMENT '菜单id',
-                                `children` bigint unsigned NOT NULL COMMENT '菜单id',
-                                PRIMARY KEY (`id`),
-                                KEY `parent` (`parent`),
-                                KEY `children` (`children`),
-                                CONSTRAINT `menu_closure_ibfk_1` FOREIGN KEY (`children`) REFERENCES `menu` (`id`) ON DELETE CASCADE,
-                                CONSTRAINT `menu_closure_ibfk_2` FOREIGN KEY (`parent`) REFERENCES `menu` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=5483 DEFAULT CHARSET=utf8mb4  COMMENT='菜单层级信息';
+    `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+    `parent` bigint unsigned NOT NULL COMMENT '菜单id',
+    `children` bigint unsigned NOT NULL COMMENT '菜单id',
+    PRIMARY KEY (`id`),
+    KEY `parent` (`parent`),
+    KEY `children` (`children`),
+    CONSTRAINT `menu_closure_ibfk_1` FOREIGN KEY (`children`) REFERENCES `menu` (`id`) ON DELETE CASCADE,
+    CONSTRAINT `menu_closure_ibfk_2` FOREIGN KEY (`parent`) REFERENCES `menu` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=5483 DEFAULT CHARSET=utf8mb4 COMMENT='菜单层级信息';
 
 -- ----------------------------
 -- Records of menu_closure
@@ -864,29 +861,30 @@ COMMIT;
 -- ----------------------------
 DROP TABLE IF EXISTS `role`;
 CREATE TABLE `role` (
-                        `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
-                        `parent_id` bigint unsigned NOT NULL COMMENT '父id',
-                        `name` varchar(64) NOT NULL COMMENT '名称',
-                        `keyword` char(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '标识',
-                        `status` tinyint(1) NOT NULL DEFAULT '0' COMMENT '状态',
-                        `description` varchar(128) NOT NULL COMMENT '描述',
-                        `department_ids` tinytext COMMENT '自定义部门',
-                        `data_scope` char(32) NOT NULL COMMENT '权限类型',
-                        `created_at` bigint unsigned NOT NULL DEFAULT '0' COMMENT '创建时间',
-                        `updated_at` bigint unsigned NOT NULL DEFAULT '0' COMMENT '修改时间',
-                        `deleted_at` bigint unsigned NOT NULL DEFAULT '0' COMMENT '删除时间',
-                        PRIMARY KEY (`id`),
-                        UNIQUE KEY `keyword` (`keyword`,`deleted_at`),
-                        KEY `idx_role_created_at` (`created_at`),
-                        KEY `idx_role_updated_at` (`updated_at`),
-                        KEY `idx_role_deleted_at` (`deleted_at`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4  COMMENT='角色信息';
+    `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+    `parent_id` bigint unsigned NOT NULL COMMENT '父id',
+    `name` varchar(64) NOT NULL COMMENT '名称',
+    `keyword` char(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '标识',
+    `status` tinyint(1) NOT NULL DEFAULT '0' COMMENT '状态',
+    `description` varchar(128) NOT NULL COMMENT '描述',
+    `department_ids` tinytext COMMENT '自定义部门',
+    `data_scope` char(32) NOT NULL COMMENT '权限类型',
+    `created_at` bigint unsigned NOT NULL DEFAULT '0' COMMENT '创建时间',
+    `updated_at` bigint unsigned NOT NULL DEFAULT '0' COMMENT '修改时间',
+    `deleted_at` bigint unsigned NOT NULL DEFAULT '0' COMMENT '删除时间',
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `keyword` (`keyword`,`deleted_at`),
+    KEY `idx_role_created_at` (`created_at`),
+    KEY `idx_role_updated_at` (`updated_at`),
+    KEY `idx_role_deleted_at` (`deleted_at`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COMMENT='角色信息';
 
 -- ----------------------------
 -- Records of role
 -- ----------------------------
 BEGIN;
 INSERT INTO `role` VALUES (1, 0, '超级管理员', 'superAdmin', 1, '超级管理员  ', NULL, 'ALL', 1713706137, 1713706137, 0);
+INSERT INTO `role` VALUES (5, 1, '2', '3', 1, '4', NULL, 'ALL', 1719464519, 1719464562, 0);
 COMMIT;
 
 -- ----------------------------
@@ -894,20 +892,21 @@ COMMIT;
 -- ----------------------------
 DROP TABLE IF EXISTS `role_closure`;
 CREATE TABLE `role_closure` (
-                                `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
-                                `parent` bigint unsigned NOT NULL COMMENT '角色id',
-                                `children` bigint unsigned NOT NULL COMMENT '角色id',
-                                PRIMARY KEY (`id`),
-                                KEY `parent` (`parent`),
-                                KEY `children` (`children`),
-                                CONSTRAINT `role_closure_ibfk_1` FOREIGN KEY (`children`) REFERENCES `role` (`id`) ON DELETE CASCADE,
-                                CONSTRAINT `role_closure_ibfk_2` FOREIGN KEY (`parent`) REFERENCES `role` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4  COMMENT='角色层级信息';
+    `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+    `parent` bigint unsigned NOT NULL COMMENT '角色id',
+    `children` bigint unsigned NOT NULL COMMENT '角色id',
+    PRIMARY KEY (`id`),
+    KEY `parent` (`parent`),
+    KEY `children` (`children`),
+    CONSTRAINT `role_closure_ibfk_1` FOREIGN KEY (`children`) REFERENCES `role` (`id`) ON DELETE CASCADE,
+    CONSTRAINT `role_closure_ibfk_2` FOREIGN KEY (`parent`) REFERENCES `role` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COMMENT='角色层级信息';
 
 -- ----------------------------
 -- Records of role_closure
 -- ----------------------------
 BEGIN;
+INSERT INTO `role_closure` VALUES (5, 1, 5);
 COMMIT;
 
 -- ----------------------------
@@ -915,16 +914,16 @@ COMMIT;
 -- ----------------------------
 DROP TABLE IF EXISTS `role_menu`;
 CREATE TABLE `role_menu` (
-                             `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
-                             `role_id` bigint unsigned NOT NULL COMMENT '角色id',
-                             `menu_id` bigint unsigned NOT NULL COMMENT '菜单id',
-                             PRIMARY KEY (`id`),
-                             UNIQUE KEY `role_id_2` (`role_id`,`menu_id`),
-                             KEY `role_id` (`role_id`),
-                             KEY `menu_id` (`menu_id`),
-                             CONSTRAINT `role_menu_ibfk_1` FOREIGN KEY (`menu_id`) REFERENCES `menu` (`id`) ON DELETE CASCADE,
-                             CONSTRAINT `role_menu_ibfk_2` FOREIGN KEY (`role_id`) REFERENCES `role` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=219 DEFAULT CHARSET=utf8mb4  COMMENT='角色菜单信息';
+    `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+    `role_id` bigint unsigned NOT NULL COMMENT '角色id',
+    `menu_id` bigint unsigned NOT NULL COMMENT '菜单id',
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `role_id_2` (`role_id`,`menu_id`),
+    KEY `role_id` (`role_id`),
+    KEY `menu_id` (`menu_id`),
+    CONSTRAINT `role_menu_ibfk_1` FOREIGN KEY (`menu_id`) REFERENCES `menu` (`id`) ON DELETE CASCADE,
+    CONSTRAINT `role_menu_ibfk_2` FOREIGN KEY (`role_id`) REFERENCES `role` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=219 DEFAULT CHARSET=utf8mb4 COMMENT='角色菜单信息';
 
 -- ----------------------------
 -- Records of role_menu
@@ -937,36 +936,36 @@ COMMIT;
 -- ----------------------------
 DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user` (
-                        `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
-                        `department_id` bigint unsigned NOT NULL COMMENT '部门id',
-                        `role_id` bigint unsigned NOT NULL COMMENT '角色id',
-                        `name` char(32) NOT NULL COMMENT '名称',
-                        `nickname` varchar(64) NOT NULL COMMENT '昵称',
-                        `gender` char(32) NOT NULL COMMENT '性别',
-                        `avatar` varchar(256) DEFAULT NULL COMMENT '头像',
-                        `email` varchar(64) NOT NULL COMMENT '邮箱',
-                        `phone` char(32) NOT NULL COMMENT '电话',
-                        `password` varchar(256) NOT NULL COMMENT '密码',
-                        `status` tinyint(1) DEFAULT '0' COMMENT '状态',
-                        `setting` tinytext COMMENT '用户设置',
-                        `token` varchar(512) DEFAULT NULL COMMENT '用户token',
-                        `logged_at` bigint NOT NULL DEFAULT '0' COMMENT '登陆时间',
-                        `created_at` bigint NOT NULL DEFAULT '0' COMMENT '创建时间',
-                        `updated_at` bigint NOT NULL DEFAULT '0' COMMENT '修改时间',
-                        PRIMARY KEY (`id`),
-                        KEY `idx_user_updated_at` (`updated_at`),
-                        KEY `idx_user_created_at` (`created_at`),
-                        KEY `fk_user_role` (`role_id`),
-                        KEY `fk_user_department` (`department_id`),
-                        CONSTRAINT `fk_user_department` FOREIGN KEY (`department_id`) REFERENCES `department` (`id`),
-                        CONSTRAINT `fk_user_role` FOREIGN KEY (`role_id`) REFERENCES `role` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4  COMMENT='用户信息';
+    `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+    `department_id` bigint unsigned NOT NULL COMMENT '部门id',
+    `role_id` bigint unsigned NOT NULL COMMENT '角色id',
+    `name` char(32) NOT NULL COMMENT '名称',
+    `nickname` varchar(64) NOT NULL COMMENT '昵称',
+    `gender` char(32) NOT NULL COMMENT '性别',
+    `avatar` varchar(256) DEFAULT NULL COMMENT '头像',
+    `email` varchar(64) NOT NULL COMMENT '邮箱',
+    `phone` char(32) NOT NULL COMMENT '电话',
+    `password` varchar(256) NOT NULL COMMENT '密码',
+    `status` tinyint(1) DEFAULT '0' COMMENT '状态',
+    `setting` tinytext COMMENT '用户设置',
+    `token` varchar(512) DEFAULT NULL COMMENT '用户token',
+    `logged_at` bigint NOT NULL DEFAULT '0' COMMENT '登陆时间',
+    `created_at` bigint NOT NULL DEFAULT '0' COMMENT '创建时间',
+    `updated_at` bigint NOT NULL DEFAULT '0' COMMENT '修改时间',
+    PRIMARY KEY (`id`),
+    KEY `idx_user_updated_at` (`updated_at`),
+    KEY `idx_user_created_at` (`created_at`),
+    KEY `fk_user_role` (`role_id`),
+    KEY `fk_user_department` (`department_id`),
+    CONSTRAINT `fk_user_department` FOREIGN KEY (`department_id`) REFERENCES `department` (`id`),
+    CONSTRAINT `fk_user_role` FOREIGN KEY (`role_id`) REFERENCES `role` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COMMENT='用户信息';
 
 -- ----------------------------
 -- Records of user
 -- ----------------------------
 BEGIN;
-INSERT INTO `user` VALUES (1, 1, 1, '超级管理员', '超级管理员', 'F', '2a0786fe9127b8116bc30ed2ce9581e2', '1280291001@qq.com', '18888888888', '$2a$10$9qRJe9KQo6sEcU8ipKg.e.dkl2E7Wy64SigYlgraTAn.1paHFq6W.', 1, '{\"theme\":\"light\",\"themeColor\":\"#165DFF\",\"skin\":\"default\",\"tabBar\":true,\"menuWidth\":200,\"layout\":\"default\",\"language\":\"zh_CN\",\"animation\":\"gp-fade\"}', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkZXBhcnRtZW50SWQiOjEsImRlcGFydG1lbnRLZXl3b3JkIjoiY29tcGFueSIsImV4cCI6MTcxOTM4NTM1NSwiaWF0IjoxNzE5Mzc4MTU0LCJuYmYiOjE3MTkzNzgxNTQsInJvbGVJZCI6MSwicm9sZUtleXdvcmQiOiJzdXBlckFkbWluIiwidXNlcklkIjoxfQ.6uNK-x39GFfK_1FCUpbcfPz83W9gdn_Xtq1zhjGM0xc', 1719378154, 1713706137, 1719378154);
+INSERT INTO `user` VALUES (1, 1, 1, '超级管理员', '超级管理员', 'F', '2a0786fe9127b8116bc30ed2ce9581e2', '1280291001@qq.com', '18888888888', '$2a$10$9qRJe9KQo6sEcU8ipKg.e.dkl2E7Wy64SigYlgraTAn.1paHFq6W.', 1, '{\"theme\":\"light\",\"themeColor\":\"#165DFF\",\"skin\":\"default\",\"tabBar\":true,\"menuWidth\":200,\"layout\":\"default\",\"language\":\"zh_CN\",\"animation\":\"gp-fade\"}', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkZXBhcnRtZW50SWQiOjEsImRlcGFydG1lbnRLZXl3b3JkIjoiY29tcGFueSIsImV4cCI6MTcxOTQ4MDA2NiwiaWF0IjoxNzE5NDcyODY1LCJuYmYiOjE3MTk0NzI4NjUsInJvbGVJZCI6MSwicm9sZUtleXdvcmQiOiJzdXBlckFkbWluIiwidXNlcklkIjoxfQ.BTX_QTdvi6Dc_2ydgUjjYjVXicMvc3flm7O-AkB5-1M', 1719472865, 1713706137, 1719472865);
 COMMIT;
 
 -- ----------------------------
@@ -974,15 +973,15 @@ COMMIT;
 -- ----------------------------
 DROP TABLE IF EXISTS `user_job`;
 CREATE TABLE `user_job` (
-                            `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
-                            `job_id` bigint unsigned NOT NULL COMMENT '职位id',
-                            `user_id` bigint unsigned NOT NULL COMMENT '用户id',
-                            PRIMARY KEY (`id`),
-                            UNIQUE KEY `job_id` (`job_id`,`user_id`),
-                            KEY `user_id` (`user_id`),
-                            CONSTRAINT `user_job_ibfk_1` FOREIGN KEY (`job_id`) REFERENCES `job` (`id`) ON DELETE CASCADE,
-                            CONSTRAINT `user_job_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4  COMMENT='用户职位信息';
+    `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+    `job_id` bigint unsigned NOT NULL COMMENT '职位id',
+    `user_id` bigint unsigned NOT NULL COMMENT '用户id',
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `job_id` (`job_id`,`user_id`),
+    KEY `user_id` (`user_id`),
+    CONSTRAINT `user_job_ibfk_1` FOREIGN KEY (`job_id`) REFERENCES `job` (`id`) ON DELETE CASCADE,
+    CONSTRAINT `user_job_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COMMENT='用户职位信息';
 
 -- ----------------------------
 -- Records of user_job
@@ -996,15 +995,15 @@ COMMIT;
 -- ----------------------------
 DROP TABLE IF EXISTS `user_role`;
 CREATE TABLE `user_role` (
-                             `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
-                             `role_id` bigint unsigned NOT NULL COMMENT '角色id',
-                             `user_id` bigint unsigned NOT NULL COMMENT '用户id',
-                             PRIMARY KEY (`id`),
-                             UNIQUE KEY `role_id` (`role_id`,`user_id`),
-                             KEY `user_id` (`user_id`),
-                             CONSTRAINT `user_role_ibfk_1` FOREIGN KEY (`role_id`) REFERENCES `role` (`id`) ON DELETE CASCADE,
-                             CONSTRAINT `user_role_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4  COMMENT='用户角色信息';
+    `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+    `role_id` bigint unsigned NOT NULL COMMENT '角色id',
+    `user_id` bigint unsigned NOT NULL COMMENT '用户id',
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `role_id` (`role_id`,`user_id`),
+    KEY `user_id` (`user_id`),
+    CONSTRAINT `user_role_ibfk_1` FOREIGN KEY (`role_id`) REFERENCES `role` (`id`) ON DELETE CASCADE,
+    CONSTRAINT `user_role_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COMMENT='用户角色信息';
 
 -- ----------------------------
 -- Records of user_role
@@ -1012,5 +1011,3 @@ CREATE TABLE `user_role` (
 BEGIN;
 INSERT INTO `user_role` VALUES (1, 1, 1);
 COMMIT;
-
-SET FOREIGN_KEY_CHECKS = 1;
