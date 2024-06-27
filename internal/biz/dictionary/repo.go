@@ -20,6 +20,9 @@ type Repo interface {
 	// ListDictionaryValue 获取字典值目录列表
 	ListDictionaryValue(ctx kratosx.Context, req *ListDictionaryValueRequest) ([]*DictionaryValue, uint32, error)
 
+	// AllDictionaryValue 获取全部字典值目录列表
+	AllDictionaryValue(ctx kratosx.Context, keyword string) ([]*DictionaryValue, error)
+
 	// CreateDictionaryValue 创建字典值目录
 	CreateDictionaryValue(ctx kratosx.Context, req *DictionaryValue) (uint32, error)
 

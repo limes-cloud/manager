@@ -316,12 +316,21 @@ func (r menuRepo) resetHome(ctx kratosx.Context, id uint32) error {
 	if err != nil {
 		return err
 	}
-	cids, err := r.GetMenuChildrenIds(ctx, id)
+
+	var menu model.Menu
+	if err = ctx.DB().
+		Where("id in ?", pids).
+		Where("type=?", biz.MenuRoot).
+		Find(&menu).Error; err != nil {
+		return err
+	}
+
+	cids, err := r.GetMenuChildrenIds(ctx, menu.Id)
 	if err != nil {
 		return err
 	}
 	pids = append(pids, cids...)
-	return ctx.DB().Model(model.MenuApi{}).Where("id in ?", pids).Update("is_home", false).Error
+	return ctx.DB().Model(model.Menu{}).Where("id in ?", pids).Update("is_home", false).Error
 }
 
 func (r menuRepo) addRbac(ctx kratosx.Context, roles []string, req model.MenuApi) error {

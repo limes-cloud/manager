@@ -43,6 +43,18 @@ service Dictionary{
     };
   }
 
+  // GetDictionaryValues 获取指定keys的所有值
+  rpc GetDictionaryValues (GetDictionaryValuesRequest) returns (GetDictionaryValuesReply) {
+    option (google.api.http) = {
+      post: "/manager/api/v1/dictionary/values",
+      body: "*",
+      additional_bindings:{
+        post: "/manager/client/v1/dictionary/values",
+        body: "*",
+      }
+    };
+  }
+
   // ListDictionaryValue 获取字典值目录列表
   rpc ListDictionaryValue (ListDictionaryValueRequest) returns (ListDictionaryValueReply) {
     option (google.api.http) = {

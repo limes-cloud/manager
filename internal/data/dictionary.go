@@ -5,10 +5,11 @@ import (
 
 	"github.com/limes-cloud/kratosx"
 	"github.com/limes-cloud/kratosx/pkg/valx"
-	biz "github.com/limes-cloud/manager/internal/biz/dictionary"
-	"github.com/limes-cloud/manager/internal/data/model"
 	"google.golang.org/protobuf/proto"
 	"gorm.io/gorm/clause"
+
+	biz "github.com/limes-cloud/manager/internal/biz/dictionary"
+	"github.com/limes-cloud/manager/internal/data/model"
 )
 
 type dictionaryRepo struct {
@@ -218,4 +219,28 @@ func (r dictionaryRepo) GetDictionaryByKeyword(ctx kratosx.Context, keyword stri
 	}
 
 	return r.ToDictionaryEntity(&m), nil
+}
+
+func (r dictionaryRepo) AllDictionaryValue(ctx kratosx.Context, keyword string) ([]*biz.DictionaryValue, error) {
+	var (
+		m  = model.Dictionary{}
+		ms []*model.DictionaryValue
+		bs []*biz.DictionaryValue
+	)
+	db := ctx.DB().Select("id")
+	if err := db.Where("keyword = ?", keyword).First(&m).Error; err != nil {
+		return nil, err
+	}
+
+	if err := ctx.DB().Select("*").
+		Where("status=true").
+		Where("dictionary_id=?", m.Id).
+		Find(&ms).Error; err != nil {
+		return nil, err
+	}
+
+	for _, m := range ms {
+		bs = append(bs, r.ToDictionaryValueEntity(m))
+	}
+	return bs, nil
 }

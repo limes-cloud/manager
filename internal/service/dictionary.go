@@ -2,10 +2,12 @@ package service
 
 import (
 	"context"
+
 	"github.com/go-kratos/kratos/v2/transport/grpc"
 	"github.com/go-kratos/kratos/v2/transport/http"
 	"github.com/limes-cloud/kratosx"
 	"github.com/limes-cloud/kratosx/pkg/valx"
+
 	pb "github.com/limes-cloud/manager/api/manager/dictionary/v1"
 	"github.com/limes-cloud/manager/api/manager/errors"
 	"github.com/limes-cloud/manager/internal/biz/dictionary"
@@ -208,4 +210,28 @@ func (s *DictionaryService) DeleteDictionaryValue(c context.Context, req *pb.Del
 		return nil, err
 	}
 	return &pb.DeleteDictionaryValueReply{Total: total}, nil
+}
+
+func (s *DictionaryService) GetDictionaryValues(c context.Context, req *pb.GetDictionaryValuesRequest) (*pb.GetDictionaryValuesReply, error) {
+	var (
+		ctx = kratosx.MustContext(c)
+	)
+	res, err := s.uc.GetDictionaryValues(ctx, req.Keywords)
+	if err != nil {
+		return nil, err
+	}
+
+	reply := pb.GetDictionaryValuesReply{Dict: make(map[string]*pb.GetDictionaryValuesReply_Value)}
+	for key, values := range res {
+		for _, val := range values {
+			reply.Dict[key].List = append(reply.Dict[key].List, &pb.GetDictionaryValuesReply_Value_Item{
+				Label:       val.Label,
+				Value:       val.Value,
+				Type:        val.Type,
+				Extra:       val.Extra,
+				Description: val.Description,
+			})
+		}
+	}
+	return &reply, nil
 }

@@ -2,6 +2,7 @@ package dictionary
 
 import (
 	"github.com/limes-cloud/kratosx"
+
 	"github.com/limes-cloud/manager/api/manager/errors"
 	"github.com/limes-cloud/manager/internal/conf"
 )
@@ -112,4 +113,17 @@ func (u *UseCase) GetDictionary(ctx kratosx.Context, req *GetDictionaryRequest) 
 		return nil, errors.GetError(err.Error())
 	}
 	return res, nil
+}
+
+// GetDictionaryValues 获取字典值目录列表
+func (u *UseCase) GetDictionaryValues(ctx kratosx.Context, keywords []string) (map[string][]*DictionaryValue, error) {
+	var reply = make(map[string][]*DictionaryValue)
+	for _, key := range keywords {
+		values, err := u.repo.AllDictionaryValue(ctx, key)
+		if err != nil {
+			return nil, errors.GetError(err.Error())
+		}
+		reply[key] = values
+	}
+	return reply, nil
 }

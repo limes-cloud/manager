@@ -9,6 +9,24 @@ option java_outer_classname = "DictionaryV1";
 
 import "validate/validate.proto";
 
+message GetDictionaryValuesRequest{
+  repeated string keywords = 1[(validate.rules).repeated = {min_items: 1,unique:true}];
+}
+
+message GetDictionaryValuesReply {
+  message Value {
+    message Item {
+      string label = 1;
+      string value = 2;
+      optional string type = 3;
+      optional string extra = 4;
+      optional string description = 5;
+    }
+    repeated Item list = 1;
+  }
+  map<string,Value> dict = 1;
+}
+
 message ListDictionaryValueRequest {
   uint32 page = 1[(validate.rules).uint32 = {gt: 0}];
   uint32 pageSize = 2[(validate.rules).uint32 = {gt: 0,lte:50}];
