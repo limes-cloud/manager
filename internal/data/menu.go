@@ -7,7 +7,6 @@ import (
 	"github.com/limes-cloud/kratosx"
 	"github.com/limes-cloud/kratosx/pkg/valx"
 	"google.golang.org/protobuf/proto"
-	"gorm.io/gorm/clause"
 
 	biz "github.com/limes-cloud/manager/internal/biz/menu"
 	"github.com/limes-cloud/manager/internal/data/model"
@@ -111,10 +110,7 @@ func (r menuRepo) ListMenuByRoleId(ctx kratosx.Context, id uint32) ([]*biz.Menu,
 		return nil, 0, err
 	}
 
-	if err := db.Order(clause.OrderByColumn{
-		Column: clause.Column{Name: "weight"},
-		Desc:   true,
-	}).Find(&ms).Error; err != nil {
+	if err := db.Order("weight desc").Order("id asc").Find(&ms).Error; err != nil {
 		return nil, 0, err
 	}
 
