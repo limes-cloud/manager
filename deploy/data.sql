@@ -13,7 +13,7 @@
 --
 -- 表的结构 `casbin_rule`
 --
-
+DROP TABLE IF EXISTS `casbin_rule`;
 CREATE TABLE `casbin_rule` (
                                `id` bigint(20) UNSIGNED NOT NULL,
                                `ptype` varchar(100) DEFAULT NULL,
@@ -30,7 +30,7 @@ CREATE TABLE `casbin_rule` (
 --
 -- 表的结构 `department`
 --
-
+DROP TABLE IF EXISTS `department`;
 CREATE TABLE `department` (
                               `id` bigint(20) UNSIGNED NOT NULL COMMENT '主键ID',
                               `parent_id` bigint(20) UNSIGNED NOT NULL COMMENT '父id',
@@ -53,7 +53,7 @@ INSERT INTO `department` (`id`, `parent_id`, `keyword`, `name`, `description`, `
 --
 -- 表的结构 `department_closure`
 --
-
+DROP TABLE IF EXISTS `department_closure`;
 CREATE TABLE `department_closure` (
                                       `id` bigint(20) UNSIGNED NOT NULL COMMENT '主键ID',
                                       `parent` bigint(20) UNSIGNED NOT NULL COMMENT '部门id',
@@ -65,7 +65,7 @@ CREATE TABLE `department_closure` (
 --
 -- 表的结构 `dictionary`
 --
-
+DROP TABLE IF EXISTS `dictionary`;
 CREATE TABLE `dictionary` (
                               `id` bigint(20) UNSIGNED NOT NULL COMMENT '主键ID',
                               `keyword` char(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '关键字',
@@ -81,7 +81,7 @@ CREATE TABLE `dictionary` (
 --
 -- 表的结构 `dictionary_value`
 --
-
+DROP TABLE IF EXISTS `dictionary_value`;
 CREATE TABLE `dictionary_value` (
                                     `id` bigint(20) UNSIGNED NOT NULL COMMENT '主键ID',
                                     `dictionary_id` bigint(20) UNSIGNED NOT NULL COMMENT '字典id',
@@ -101,7 +101,7 @@ CREATE TABLE `dictionary_value` (
 --
 -- 表的结构 `gorm_init`
 --
-
+DROP TABLE IF EXISTS `gorm_init`;
 CREATE TABLE `gorm_init` (
                              `id` int(10) UNSIGNED NOT NULL,
                              `init` tinyint(1) DEFAULT NULL
@@ -119,7 +119,7 @@ INSERT INTO `gorm_init` (`id`, `init`) VALUES
 --
 -- 表的结构 `job`
 --
-
+DROP TABLE IF EXISTS `job`;
 CREATE TABLE `job` (
                        `id` bigint(20) UNSIGNED NOT NULL COMMENT '主键ID',
                        `keyword` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '关键字',
@@ -143,7 +143,7 @@ INSERT INTO `job` (`id`, `keyword`, `name`, `weight`, `description`, `created_at
 --
 -- 表的结构 `menu`
 --
-
+DROP TABLE IF EXISTS `menu`;
 CREATE TABLE `menu` (
                         `id` bigint(20) UNSIGNED NOT NULL COMMENT '主键ID',
                         `parent_id` bigint(20) UNSIGNED NOT NULL COMMENT '父id',
