@@ -3,9 +3,9 @@ package data
 import (
 	"github.com/limes-cloud/kratosx"
 	"github.com/limes-cloud/kratosx/pkg/valx"
+
 	biz "github.com/limes-cloud/manager/internal/biz/resource"
 	"github.com/limes-cloud/manager/internal/data/model"
-	"gorm.io/gorm/clause"
 )
 
 type resourceRepo struct {
@@ -14,7 +14,7 @@ type resourceRepo struct {
 
 func NewResourceRepo() biz.Repo {
 	return &resourceRepo{
-		departmentRepo{},
+		departmentRepo: departmentRepo{},
 	}
 }
 
@@ -50,24 +50,50 @@ func (r resourceRepo) GetResourceScopes(ctx kratosx.Context, userId uint32, keyw
 	return false, ids, nil
 }
 
-func (r resourceRepo) UpdateResourceScopes(ctx kratosx.Context, userId uint32, req []*biz.Resource) error {
+func (r resourceRepo) UpdateResource(ctx kratosx.Context, req *biz.UpdateResourceRequest) error {
 	var list []*model.Resource
-	for _, item := range req {
-		list = append(list, r.ToResourceModel(item))
-	}
-
-	all, scopes, err := r.GetDepartmentDataScope(ctx, userId)
+	all, scopes, err := r.GetDepartmentDataScope(ctx, req.UserId)
 	if err != nil {
 		return err
 	}
+	for _, id := range req.DepartmentIds {
+		if all || valx.InList(scopes, id) {
+			list = append(list, &model.Resource{
+				Keyword:      req.Keyword,
+				ResourceId:   req.ResourceId,
+				DepartmentId: id,
+			})
+		}
+	}
 
 	return ctx.Transaction(func(ctx kratosx.Context) error {
+		db := ctx.DB().Where("keyword=?", req.Keyword).Where("resource_id=?", req.ResourceId)
 		if !all {
-			if err := ctx.DB().Delete(model.Resource{}, "department_id in ?", scopes).Error; err != nil {
-				return err
-			}
+			db = db.Where("department_id in ?", scopes)
 		}
-		return ctx.DB().Clauses(clause.OnConflict{UpdateAll: true}).Create(list).Error
+		if err := db.Delete(model.Resource{}).Error; err != nil {
+			return err
+		}
+		return ctx.DB().Create(list).Error
 	})
+}
 
+func (r resourceRepo) GetResource(ctx kratosx.Context, req *biz.GetResourceRequest) ([]uint32, error) {
+	all, scopes, err := r.GetDepartmentDataScope(ctx, req.UserId)
+	if err != nil {
+		return nil, err
+	}
+
+	var ids []uint32
+	db := ctx.DB().Select("department_id").
+		Model(model.Resource{}).
+		Where("keyword=? and resource_id=?", req.Keyword, req.ResourceId)
+	if !all {
+		db.Where("department_id in ?", scopes)
+	}
+
+	if err = db.Scan(&ids).Error; err != nil {
+		return nil, err
+	}
+	return ids, nil
 }

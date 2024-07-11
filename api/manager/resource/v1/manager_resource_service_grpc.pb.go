@@ -19,18 +19,21 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	Resource_GetResourceScopes_FullMethodName    = "/manager_resource.Resource/GetResourceScopes"
-	Resource_UpdateResourceScopes_FullMethodName = "/manager_resource.Resource/UpdateResourceScopes"
+	Resource_GetResourceScopes_FullMethodName = "/manager_resource.Resource/GetResourceScopes"
+	Resource_GetResource_FullMethodName       = "/manager_resource.Resource/GetResource"
+	Resource_UpdateResource_FullMethodName    = "/manager_resource.Resource/UpdateResource"
 )
 
 // ResourceClient is the client API for Resource service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ResourceClient interface {
-	// GetResourceScopes 获取资源权限
+	// GetCurrentResourceScopes 获取指定用户的资源列表
 	GetResourceScopes(ctx context.Context, in *GetResourceScopesRequest, opts ...grpc.CallOption) (*GetResourceScopesReply, error)
-	// UpdateResourceScopes 更新资源权限
-	UpdateResourceScopes(ctx context.Context, in *UpdateResourceScopesRequest, opts ...grpc.CallOption) (*UpdateResourceScopesReply, error)
+	// GetResource 获取资源权限
+	GetResource(ctx context.Context, in *GetResourceRequest, opts ...grpc.CallOption) (*GetResourceReply, error)
+	// UpdateResource 更新资源权限
+	UpdateResource(ctx context.Context, in *UpdateResourceRequest, opts ...grpc.CallOption) (*UpdateResourceReply, error)
 }
 
 type resourceClient struct {
@@ -50,9 +53,18 @@ func (c *resourceClient) GetResourceScopes(ctx context.Context, in *GetResourceS
 	return out, nil
 }
 
-func (c *resourceClient) UpdateResourceScopes(ctx context.Context, in *UpdateResourceScopesRequest, opts ...grpc.CallOption) (*UpdateResourceScopesReply, error) {
-	out := new(UpdateResourceScopesReply)
-	err := c.cc.Invoke(ctx, Resource_UpdateResourceScopes_FullMethodName, in, out, opts...)
+func (c *resourceClient) GetResource(ctx context.Context, in *GetResourceRequest, opts ...grpc.CallOption) (*GetResourceReply, error) {
+	out := new(GetResourceReply)
+	err := c.cc.Invoke(ctx, Resource_GetResource_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *resourceClient) UpdateResource(ctx context.Context, in *UpdateResourceRequest, opts ...grpc.CallOption) (*UpdateResourceReply, error) {
+	out := new(UpdateResourceReply)
+	err := c.cc.Invoke(ctx, Resource_UpdateResource_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -63,10 +75,12 @@ func (c *resourceClient) UpdateResourceScopes(ctx context.Context, in *UpdateRes
 // All implementations must embed UnimplementedResourceServer
 // for forward compatibility
 type ResourceServer interface {
-	// GetResourceScopes 获取资源权限
+	// GetCurrentResourceScopes 获取指定用户的资源列表
 	GetResourceScopes(context.Context, *GetResourceScopesRequest) (*GetResourceScopesReply, error)
-	// UpdateResourceScopes 更新资源权限
-	UpdateResourceScopes(context.Context, *UpdateResourceScopesRequest) (*UpdateResourceScopesReply, error)
+	// GetResource 获取资源权限
+	GetResource(context.Context, *GetResourceRequest) (*GetResourceReply, error)
+	// UpdateResource 更新资源权限
+	UpdateResource(context.Context, *UpdateResourceRequest) (*UpdateResourceReply, error)
 	mustEmbedUnimplementedResourceServer()
 }
 
@@ -77,8 +91,11 @@ type UnimplementedResourceServer struct {
 func (UnimplementedResourceServer) GetResourceScopes(context.Context, *GetResourceScopesRequest) (*GetResourceScopesReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetResourceScopes not implemented")
 }
-func (UnimplementedResourceServer) UpdateResourceScopes(context.Context, *UpdateResourceScopesRequest) (*UpdateResourceScopesReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpdateResourceScopes not implemented")
+func (UnimplementedResourceServer) GetResource(context.Context, *GetResourceRequest) (*GetResourceReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetResource not implemented")
+}
+func (UnimplementedResourceServer) UpdateResource(context.Context, *UpdateResourceRequest) (*UpdateResourceReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateResource not implemented")
 }
 func (UnimplementedResourceServer) mustEmbedUnimplementedResourceServer() {}
 
@@ -111,20 +128,38 @@ func _Resource_GetResourceScopes_Handler(srv interface{}, ctx context.Context, d
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Resource_UpdateResourceScopes_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpdateResourceScopesRequest)
+func _Resource_GetResource_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetResourceRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ResourceServer).UpdateResourceScopes(ctx, in)
+		return srv.(ResourceServer).GetResource(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Resource_UpdateResourceScopes_FullMethodName,
+		FullMethod: Resource_GetResource_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ResourceServer).UpdateResourceScopes(ctx, req.(*UpdateResourceScopesRequest))
+		return srv.(ResourceServer).GetResource(ctx, req.(*GetResourceRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Resource_UpdateResource_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateResourceRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ResourceServer).UpdateResource(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Resource_UpdateResource_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ResourceServer).UpdateResource(ctx, req.(*UpdateResourceRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -141,8 +176,12 @@ var Resource_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Resource_GetResourceScopes_Handler,
 		},
 		{
-			MethodName: "UpdateResourceScopes",
-			Handler:    _Resource_UpdateResourceScopes_Handler,
+			MethodName: "GetResource",
+			Handler:    _Resource_GetResource_Handler,
+		},
+		{
+			MethodName: "UpdateResource",
+			Handler:    _Resource_UpdateResource_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -27,7 +27,8 @@ type GetResourceScopesRequest struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Keyword string `protobuf:"bytes,1,opt,name=keyword,proto3" json:"keyword,omitempty"`
+	UserId  uint32 `protobuf:"varint,1,opt,name=userId,proto3" json:"userId,omitempty"`
+	Keyword string `protobuf:"bytes,2,opt,name=keyword,proto3" json:"keyword,omitempty"`
 }
 
 func (x *GetResourceScopesRequest) Reset() {
@@ -60,6 +61,13 @@ func (x *GetResourceScopesRequest) ProtoReflect() protoreflect.Message {
 // Deprecated: Use GetResourceScopesRequest.ProtoReflect.Descriptor instead.
 func (*GetResourceScopesRequest) Descriptor() ([]byte, []int) {
 	return file_api_manager_resource_manager_resource_proto_rawDescGZIP(), []int{0}
+}
+
+func (x *GetResourceScopesRequest) GetUserId() uint32 {
+	if x != nil {
+		return x.UserId
+	}
+	return 0
 }
 
 func (x *GetResourceScopesRequest) GetKeyword() string {
@@ -124,18 +132,17 @@ func (x *GetResourceScopesReply) GetScopes() []uint32 {
 	return nil
 }
 
-type UpdateResourceScopesRequest struct {
+type GetResourceRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Keyword    string   `protobuf:"bytes,1,opt,name=keyword,proto3" json:"keyword,omitempty"`
-	ResourceId uint32   `protobuf:"varint,2,opt,name=resourceId,proto3" json:"resourceId,omitempty"`
-	Scopes     []uint32 `protobuf:"varint,3,rep,packed,name=scopes,proto3" json:"scopes,omitempty"`
+	Keyword    string `protobuf:"bytes,1,opt,name=keyword,proto3" json:"keyword,omitempty"`
+	ResourceId uint32 `protobuf:"varint,2,opt,name=resourceId,proto3" json:"resourceId,omitempty"`
 }
 
-func (x *UpdateResourceScopesRequest) Reset() {
-	*x = UpdateResourceScopesRequest{}
+func (x *GetResourceRequest) Reset() {
+	*x = GetResourceRequest{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_api_manager_resource_manager_resource_proto_msgTypes[2]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -143,13 +150,13 @@ func (x *UpdateResourceScopesRequest) Reset() {
 	}
 }
 
-func (x *UpdateResourceScopesRequest) String() string {
+func (x *GetResourceRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*UpdateResourceScopesRequest) ProtoMessage() {}
+func (*GetResourceRequest) ProtoMessage() {}
 
-func (x *UpdateResourceScopesRequest) ProtoReflect() protoreflect.Message {
+func (x *GetResourceRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_api_manager_resource_manager_resource_proto_msgTypes[2]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -161,40 +168,35 @@ func (x *UpdateResourceScopesRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use UpdateResourceScopesRequest.ProtoReflect.Descriptor instead.
-func (*UpdateResourceScopesRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use GetResourceRequest.ProtoReflect.Descriptor instead.
+func (*GetResourceRequest) Descriptor() ([]byte, []int) {
 	return file_api_manager_resource_manager_resource_proto_rawDescGZIP(), []int{2}
 }
 
-func (x *UpdateResourceScopesRequest) GetKeyword() string {
+func (x *GetResourceRequest) GetKeyword() string {
 	if x != nil {
 		return x.Keyword
 	}
 	return ""
 }
 
-func (x *UpdateResourceScopesRequest) GetResourceId() uint32 {
+func (x *GetResourceRequest) GetResourceId() uint32 {
 	if x != nil {
 		return x.ResourceId
 	}
 	return 0
 }
 
-func (x *UpdateResourceScopesRequest) GetScopes() []uint32 {
-	if x != nil {
-		return x.Scopes
-	}
-	return nil
-}
-
-type UpdateResourceScopesReply struct {
+type GetResourceReply struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
+
+	DepartmentIds []uint32 `protobuf:"varint,3,rep,packed,name=departmentIds,proto3" json:"departmentIds,omitempty"`
 }
 
-func (x *UpdateResourceScopesReply) Reset() {
-	*x = UpdateResourceScopesReply{}
+func (x *GetResourceReply) Reset() {
+	*x = GetResourceReply{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_api_manager_resource_manager_resource_proto_msgTypes[3]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -202,13 +204,13 @@ func (x *UpdateResourceScopesReply) Reset() {
 	}
 }
 
-func (x *UpdateResourceScopesReply) String() string {
+func (x *GetResourceReply) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*UpdateResourceScopesReply) ProtoMessage() {}
+func (*GetResourceReply) ProtoMessage() {}
 
-func (x *UpdateResourceScopesReply) ProtoReflect() protoreflect.Message {
+func (x *GetResourceReply) ProtoReflect() protoreflect.Message {
 	mi := &file_api_manager_resource_manager_resource_proto_msgTypes[3]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -220,9 +222,117 @@ func (x *UpdateResourceScopesReply) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use UpdateResourceScopesReply.ProtoReflect.Descriptor instead.
-func (*UpdateResourceScopesReply) Descriptor() ([]byte, []int) {
+// Deprecated: Use GetResourceReply.ProtoReflect.Descriptor instead.
+func (*GetResourceReply) Descriptor() ([]byte, []int) {
 	return file_api_manager_resource_manager_resource_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *GetResourceReply) GetDepartmentIds() []uint32 {
+	if x != nil {
+		return x.DepartmentIds
+	}
+	return nil
+}
+
+type UpdateResourceRequest struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Keyword       string   `protobuf:"bytes,1,opt,name=keyword,proto3" json:"keyword,omitempty"`
+	ResourceId    uint32   `protobuf:"varint,2,opt,name=resourceId,proto3" json:"resourceId,omitempty"`
+	DepartmentIds []uint32 `protobuf:"varint,3,rep,packed,name=departmentIds,proto3" json:"departmentIds,omitempty"`
+}
+
+func (x *UpdateResourceRequest) Reset() {
+	*x = UpdateResourceRequest{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_api_manager_resource_manager_resource_proto_msgTypes[4]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *UpdateResourceRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UpdateResourceRequest) ProtoMessage() {}
+
+func (x *UpdateResourceRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_api_manager_resource_manager_resource_proto_msgTypes[4]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UpdateResourceRequest.ProtoReflect.Descriptor instead.
+func (*UpdateResourceRequest) Descriptor() ([]byte, []int) {
+	return file_api_manager_resource_manager_resource_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *UpdateResourceRequest) GetKeyword() string {
+	if x != nil {
+		return x.Keyword
+	}
+	return ""
+}
+
+func (x *UpdateResourceRequest) GetResourceId() uint32 {
+	if x != nil {
+		return x.ResourceId
+	}
+	return 0
+}
+
+func (x *UpdateResourceRequest) GetDepartmentIds() []uint32 {
+	if x != nil {
+		return x.DepartmentIds
+	}
+	return nil
+}
+
+type UpdateResourceReply struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+}
+
+func (x *UpdateResourceReply) Reset() {
+	*x = UpdateResourceReply{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_api_manager_resource_manager_resource_proto_msgTypes[5]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *UpdateResourceReply) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UpdateResourceReply) ProtoMessage() {}
+
+func (x *UpdateResourceReply) ProtoReflect() protoreflect.Message {
+	mi := &file_api_manager_resource_manager_resource_proto_msgTypes[5]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UpdateResourceReply.ProtoReflect.Descriptor instead.
+func (*UpdateResourceReply) Descriptor() ([]byte, []int) {
+	return file_api_manager_resource_manager_resource_proto_rawDescGZIP(), []int{5}
 }
 
 var File_api_manager_resource_manager_resource_proto protoreflect.FileDescriptor
@@ -235,25 +345,39 @@ var file_api_manager_resource_manager_resource_proto_rawDesc = []byte{
 	0x17, 0x76, 0x61, 0x6c, 0x69, 0x64, 0x61, 0x74, 0x65, 0x2f, 0x76, 0x61, 0x6c, 0x69, 0x64, 0x61,
 	0x74, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x1a, 0x1c, 0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65,
 	0x2f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2f, 0x73, 0x74, 0x72, 0x75, 0x63, 0x74,
-	0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x22, 0x34, 0x0a, 0x18, 0x47, 0x65, 0x74, 0x52, 0x65, 0x73,
+	0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x22, 0x5e, 0x0a, 0x18, 0x47, 0x65, 0x74, 0x52, 0x65, 0x73,
 	0x6f, 0x75, 0x72, 0x63, 0x65, 0x53, 0x63, 0x6f, 0x70, 0x65, 0x73, 0x52, 0x65, 0x71, 0x75, 0x65,
-	0x73, 0x74, 0x12, 0x18, 0x0a, 0x07, 0x6b, 0x65, 0x79, 0x77, 0x6f, 0x72, 0x64, 0x18, 0x01, 0x20,
-	0x01, 0x28, 0x09, 0x52, 0x07, 0x6b, 0x65, 0x79, 0x77, 0x6f, 0x72, 0x64, 0x22, 0x42, 0x0a, 0x16,
-	0x47, 0x65, 0x74, 0x52, 0x65, 0x73, 0x6f, 0x75, 0x72, 0x63, 0x65, 0x53, 0x63, 0x6f, 0x70, 0x65,
-	0x73, 0x52, 0x65, 0x70, 0x6c, 0x79, 0x12, 0x10, 0x0a, 0x03, 0x61, 0x6c, 0x6c, 0x18, 0x01, 0x20,
-	0x01, 0x28, 0x08, 0x52, 0x03, 0x61, 0x6c, 0x6c, 0x12, 0x16, 0x0a, 0x06, 0x73, 0x63, 0x6f, 0x70,
-	0x65, 0x73, 0x18, 0x02, 0x20, 0x03, 0x28, 0x0d, 0x52, 0x06, 0x73, 0x63, 0x6f, 0x70, 0x65, 0x73,
-	0x22, 0x6f, 0x0a, 0x1b, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x52, 0x65, 0x73, 0x6f, 0x75, 0x72,
-	0x63, 0x65, 0x53, 0x63, 0x6f, 0x70, 0x65, 0x73, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12,
-	0x18, 0x0a, 0x07, 0x6b, 0x65, 0x79, 0x77, 0x6f, 0x72, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09,
-	0x52, 0x07, 0x6b, 0x65, 0x79, 0x77, 0x6f, 0x72, 0x64, 0x12, 0x1e, 0x0a, 0x0a, 0x72, 0x65, 0x73,
-	0x6f, 0x75, 0x72, 0x63, 0x65, 0x49, 0x64, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0d, 0x52, 0x0a, 0x72,
-	0x65, 0x73, 0x6f, 0x75, 0x72, 0x63, 0x65, 0x49, 0x64, 0x12, 0x16, 0x0a, 0x06, 0x73, 0x63, 0x6f,
-	0x70, 0x65, 0x73, 0x18, 0x03, 0x20, 0x03, 0x28, 0x0d, 0x52, 0x06, 0x73, 0x63, 0x6f, 0x70, 0x65,
-	0x73, 0x22, 0x1b, 0x0a, 0x19, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x52, 0x65, 0x73, 0x6f, 0x75,
-	0x72, 0x63, 0x65, 0x53, 0x63, 0x6f, 0x70, 0x65, 0x73, 0x52, 0x65, 0x70, 0x6c, 0x79, 0x42, 0x09,
-	0x5a, 0x07, 0x2e, 0x2f, 0x76, 0x31, 0x3b, 0x76, 0x31, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f,
-	0x33,
+	0x73, 0x74, 0x12, 0x1f, 0x0a, 0x06, 0x75, 0x73, 0x65, 0x72, 0x49, 0x64, 0x18, 0x01, 0x20, 0x01,
+	0x28, 0x0d, 0x42, 0x07, 0xfa, 0x42, 0x04, 0x2a, 0x02, 0x28, 0x01, 0x52, 0x06, 0x75, 0x73, 0x65,
+	0x72, 0x49, 0x64, 0x12, 0x21, 0x0a, 0x07, 0x6b, 0x65, 0x79, 0x77, 0x6f, 0x72, 0x64, 0x18, 0x02,
+	0x20, 0x01, 0x28, 0x09, 0x42, 0x07, 0xfa, 0x42, 0x04, 0x72, 0x02, 0x10, 0x01, 0x52, 0x07, 0x6b,
+	0x65, 0x79, 0x77, 0x6f, 0x72, 0x64, 0x22, 0x42, 0x0a, 0x16, 0x47, 0x65, 0x74, 0x52, 0x65, 0x73,
+	0x6f, 0x75, 0x72, 0x63, 0x65, 0x53, 0x63, 0x6f, 0x70, 0x65, 0x73, 0x52, 0x65, 0x70, 0x6c, 0x79,
+	0x12, 0x10, 0x0a, 0x03, 0x61, 0x6c, 0x6c, 0x18, 0x01, 0x20, 0x01, 0x28, 0x08, 0x52, 0x03, 0x61,
+	0x6c, 0x6c, 0x12, 0x16, 0x0a, 0x06, 0x73, 0x63, 0x6f, 0x70, 0x65, 0x73, 0x18, 0x02, 0x20, 0x03,
+	0x28, 0x0d, 0x52, 0x06, 0x73, 0x63, 0x6f, 0x70, 0x65, 0x73, 0x22, 0x60, 0x0a, 0x12, 0x47, 0x65,
+	0x74, 0x52, 0x65, 0x73, 0x6f, 0x75, 0x72, 0x63, 0x65, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74,
+	0x12, 0x21, 0x0a, 0x07, 0x6b, 0x65, 0x79, 0x77, 0x6f, 0x72, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28,
+	0x09, 0x42, 0x07, 0xfa, 0x42, 0x04, 0x72, 0x02, 0x10, 0x01, 0x52, 0x07, 0x6b, 0x65, 0x79, 0x77,
+	0x6f, 0x72, 0x64, 0x12, 0x27, 0x0a, 0x0a, 0x72, 0x65, 0x73, 0x6f, 0x75, 0x72, 0x63, 0x65, 0x49,
+	0x64, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0d, 0x42, 0x07, 0xfa, 0x42, 0x04, 0x2a, 0x02, 0x28, 0x00,
+	0x52, 0x0a, 0x72, 0x65, 0x73, 0x6f, 0x75, 0x72, 0x63, 0x65, 0x49, 0x64, 0x22, 0x38, 0x0a, 0x10,
+	0x47, 0x65, 0x74, 0x52, 0x65, 0x73, 0x6f, 0x75, 0x72, 0x63, 0x65, 0x52, 0x65, 0x70, 0x6c, 0x79,
+	0x12, 0x24, 0x0a, 0x0d, 0x64, 0x65, 0x70, 0x61, 0x72, 0x74, 0x6d, 0x65, 0x6e, 0x74, 0x49, 0x64,
+	0x73, 0x18, 0x03, 0x20, 0x03, 0x28, 0x0d, 0x52, 0x0d, 0x64, 0x65, 0x70, 0x61, 0x72, 0x74, 0x6d,
+	0x65, 0x6e, 0x74, 0x49, 0x64, 0x73, 0x22, 0x95, 0x01, 0x0a, 0x15, 0x55, 0x70, 0x64, 0x61, 0x74,
+	0x65, 0x52, 0x65, 0x73, 0x6f, 0x75, 0x72, 0x63, 0x65, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74,
+	0x12, 0x21, 0x0a, 0x07, 0x6b, 0x65, 0x79, 0x77, 0x6f, 0x72, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28,
+	0x09, 0x42, 0x07, 0xfa, 0x42, 0x04, 0x72, 0x02, 0x10, 0x01, 0x52, 0x07, 0x6b, 0x65, 0x79, 0x77,
+	0x6f, 0x72, 0x64, 0x12, 0x27, 0x0a, 0x0a, 0x72, 0x65, 0x73, 0x6f, 0x75, 0x72, 0x63, 0x65, 0x49,
+	0x64, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0d, 0x42, 0x07, 0xfa, 0x42, 0x04, 0x2a, 0x02, 0x28, 0x00,
+	0x52, 0x0a, 0x72, 0x65, 0x73, 0x6f, 0x75, 0x72, 0x63, 0x65, 0x49, 0x64, 0x12, 0x30, 0x0a, 0x0d,
+	0x64, 0x65, 0x70, 0x61, 0x72, 0x74, 0x6d, 0x65, 0x6e, 0x74, 0x49, 0x64, 0x73, 0x18, 0x03, 0x20,
+	0x03, 0x28, 0x0d, 0x42, 0x0a, 0xfa, 0x42, 0x07, 0x92, 0x01, 0x04, 0x08, 0x01, 0x18, 0x01, 0x52,
+	0x0d, 0x64, 0x65, 0x70, 0x61, 0x72, 0x74, 0x6d, 0x65, 0x6e, 0x74, 0x49, 0x64, 0x73, 0x22, 0x15,
+	0x0a, 0x13, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x52, 0x65, 0x73, 0x6f, 0x75, 0x72, 0x63, 0x65,
+	0x52, 0x65, 0x70, 0x6c, 0x79, 0x42, 0x09, 0x5a, 0x07, 0x2e, 0x2f, 0x76, 0x31, 0x3b, 0x76, 0x31,
+	0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -268,12 +392,14 @@ func file_api_manager_resource_manager_resource_proto_rawDescGZIP() []byte {
 	return file_api_manager_resource_manager_resource_proto_rawDescData
 }
 
-var file_api_manager_resource_manager_resource_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
+var file_api_manager_resource_manager_resource_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
 var file_api_manager_resource_manager_resource_proto_goTypes = []interface{}{
-	(*GetResourceScopesRequest)(nil),    // 0: manager_resource.GetResourceScopesRequest
-	(*GetResourceScopesReply)(nil),      // 1: manager_resource.GetResourceScopesReply
-	(*UpdateResourceScopesRequest)(nil), // 2: manager_resource.UpdateResourceScopesRequest
-	(*UpdateResourceScopesReply)(nil),   // 3: manager_resource.UpdateResourceScopesReply
+	(*GetResourceScopesRequest)(nil), // 0: manager_resource.GetResourceScopesRequest
+	(*GetResourceScopesReply)(nil),   // 1: manager_resource.GetResourceScopesReply
+	(*GetResourceRequest)(nil),       // 2: manager_resource.GetResourceRequest
+	(*GetResourceReply)(nil),         // 3: manager_resource.GetResourceReply
+	(*UpdateResourceRequest)(nil),    // 4: manager_resource.UpdateResourceRequest
+	(*UpdateResourceReply)(nil),      // 5: manager_resource.UpdateResourceReply
 }
 var file_api_manager_resource_manager_resource_proto_depIdxs = []int32{
 	0, // [0:0] is the sub-list for method output_type
@@ -314,7 +440,7 @@ func file_api_manager_resource_manager_resource_proto_init() {
 			}
 		}
 		file_api_manager_resource_manager_resource_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*UpdateResourceScopesRequest); i {
+			switch v := v.(*GetResourceRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -326,7 +452,31 @@ func file_api_manager_resource_manager_resource_proto_init() {
 			}
 		}
 		file_api_manager_resource_manager_resource_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*UpdateResourceScopesReply); i {
+			switch v := v.(*GetResourceReply); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_api_manager_resource_manager_resource_proto_msgTypes[4].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*UpdateResourceRequest); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_api_manager_resource_manager_resource_proto_msgTypes[5].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*UpdateResourceReply); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -344,7 +494,7 @@ func file_api_manager_resource_manager_resource_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_api_manager_resource_manager_resource_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   4,
+			NumMessages:   6,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

@@ -19,69 +19,66 @@ var _ = binding.EncodeURL
 
 const _ = http.SupportPackageIsVersion1
 
-const OperationResourceGetResourceScopes = "/manager_resource.Resource/GetResourceScopes"
-const OperationResourceUpdateResourceScopes = "/manager_resource.Resource/UpdateResourceScopes"
+const OperationResourceGetResource = "/manager_resource.Resource/GetResource"
+const OperationResourceUpdateResource = "/manager_resource.Resource/UpdateResource"
 
 type ResourceHTTPServer interface {
-	// GetResourceScopes GetResourceScopes 获取资源权限
-	GetResourceScopes(context.Context, *GetResourceScopesRequest) (*GetResourceScopesReply, error)
-	// UpdateResourceScopes UpdateResourceScopes 更新资源权限
-	UpdateResourceScopes(context.Context, *UpdateResourceScopesRequest) (*UpdateResourceScopesReply, error)
+	// GetResource GetResource 获取资源权限
+	GetResource(context.Context, *GetResourceRequest) (*GetResourceReply, error)
+	// UpdateResource UpdateResource 更新资源权限
+	UpdateResource(context.Context, *UpdateResourceRequest) (*UpdateResourceReply, error)
 }
 
 func RegisterResourceHTTPServer(s *http.Server, srv ResourceHTTPServer) {
 	r := s.Route("/")
-	r.POST("/manager/api/v1/resource/scopes", _Resource_GetResourceScopes0_HTTP_Handler(srv))
-	r.PUT("/manager/api/v1/resource/scopes", _Resource_UpdateResourceScopes0_HTTP_Handler(srv))
+	r.GET("/manager/api/v1/resource", _Resource_GetResource0_HTTP_Handler(srv))
+	r.PUT("/manager/api/v1/resource", _Resource_UpdateResource0_HTTP_Handler(srv))
 }
 
-func _Resource_GetResourceScopes0_HTTP_Handler(srv ResourceHTTPServer) func(ctx http.Context) error {
+func _Resource_GetResource0_HTTP_Handler(srv ResourceHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in GetResourceScopesRequest
-		if err := ctx.Bind(&in); err != nil {
-			return err
-		}
+		var in GetResourceRequest
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationResourceGetResourceScopes)
+		http.SetOperation(ctx, OperationResourceGetResource)
 		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
-			return srv.GetResourceScopes(ctx, req.(*GetResourceScopesRequest))
+			return srv.GetResource(ctx, req.(*GetResourceRequest))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		reply := out.(*GetResourceScopesReply)
+		reply := out.(*GetResourceReply)
 		return ctx.Result(200, reply)
 	}
 }
 
-func _Resource_UpdateResourceScopes0_HTTP_Handler(srv ResourceHTTPServer) func(ctx http.Context) error {
+func _Resource_UpdateResource0_HTTP_Handler(srv ResourceHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in UpdateResourceScopesRequest
+		var in UpdateResourceRequest
 		if err := ctx.Bind(&in); err != nil {
 			return err
 		}
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationResourceUpdateResourceScopes)
+		http.SetOperation(ctx, OperationResourceUpdateResource)
 		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
-			return srv.UpdateResourceScopes(ctx, req.(*UpdateResourceScopesRequest))
+			return srv.UpdateResource(ctx, req.(*UpdateResourceRequest))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		reply := out.(*UpdateResourceScopesReply)
+		reply := out.(*UpdateResourceReply)
 		return ctx.Result(200, reply)
 	}
 }
 
 type ResourceHTTPClient interface {
-	GetResourceScopes(ctx context.Context, req *GetResourceScopesRequest, opts ...http.CallOption) (rsp *GetResourceScopesReply, err error)
-	UpdateResourceScopes(ctx context.Context, req *UpdateResourceScopesRequest, opts ...http.CallOption) (rsp *UpdateResourceScopesReply, err error)
+	GetResource(ctx context.Context, req *GetResourceRequest, opts ...http.CallOption) (rsp *GetResourceReply, err error)
+	UpdateResource(ctx context.Context, req *UpdateResourceRequest, opts ...http.CallOption) (rsp *UpdateResourceReply, err error)
 }
 
 type ResourceHTTPClientImpl struct {
@@ -92,24 +89,24 @@ func NewResourceHTTPClient(client *http.Client) ResourceHTTPClient {
 	return &ResourceHTTPClientImpl{client}
 }
 
-func (c *ResourceHTTPClientImpl) GetResourceScopes(ctx context.Context, in *GetResourceScopesRequest, opts ...http.CallOption) (*GetResourceScopesReply, error) {
-	var out GetResourceScopesReply
-	pattern := "/manager/api/v1/resource/scopes"
-	path := binding.EncodeURL(pattern, in, false)
-	opts = append(opts, http.Operation(OperationResourceGetResourceScopes))
+func (c *ResourceHTTPClientImpl) GetResource(ctx context.Context, in *GetResourceRequest, opts ...http.CallOption) (*GetResourceReply, error) {
+	var out GetResourceReply
+	pattern := "/manager/api/v1/resource"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationResourceGetResource))
 	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return &out, err
 }
 
-func (c *ResourceHTTPClientImpl) UpdateResourceScopes(ctx context.Context, in *UpdateResourceScopesRequest, opts ...http.CallOption) (*UpdateResourceScopesReply, error) {
-	var out UpdateResourceScopesReply
-	pattern := "/manager/api/v1/resource/scopes"
+func (c *ResourceHTTPClientImpl) UpdateResource(ctx context.Context, in *UpdateResourceRequest, opts ...http.CallOption) (*UpdateResourceReply, error) {
+	var out UpdateResourceReply
+	pattern := "/manager/api/v1/resource"
 	path := binding.EncodeURL(pattern, in, false)
-	opts = append(opts, http.Operation(OperationResourceUpdateResourceScopes))
+	opts = append(opts, http.Operation(OperationResourceUpdateResource))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "PUT", path, in, &out, opts...)
 	if err != nil {

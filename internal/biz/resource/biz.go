@@ -2,6 +2,7 @@ package resource
 
 import (
 	"github.com/limes-cloud/kratosx"
+
 	"github.com/limes-cloud/manager/api/manager/errors"
 	"github.com/limes-cloud/manager/internal/conf"
 	"github.com/limes-cloud/manager/internal/pkg/md"
@@ -12,30 +13,33 @@ type UseCase struct {
 	repo Repo
 }
 
-func NewUseCase(config *conf.Config) *UseCase {
-	return &UseCase{conf: config}
+func NewUseCase(config *conf.Config, repo Repo) *UseCase {
+	return &UseCase{conf: config, repo: repo}
 }
 
-// GetResourceScopes 获取指定用户的资源权限
-func (u *UseCase) GetResourceScopes(ctx kratosx.Context, keyword string) (bool, []uint32, error) {
-	all, scopes, err := u.repo.GetResourceScopes(ctx, md.UserId(ctx), keyword)
+// GetResourceScopes 获取指定的资源权限
+func (u *UseCase) GetResourceScopes(ctx kratosx.Context, userId uint32, keyword string) (bool, []uint32, error) {
+	all, scopes, err := u.repo.GetResourceScopes(ctx, userId, keyword)
 	if err != nil {
 		return false, nil, errors.DatabaseError(err.Error())
 	}
 	return all, scopes, nil
 }
 
-// UpdateResourceScopes 更新指定用户的资源权限
-func (u *UseCase) UpdateResourceScopes(ctx kratosx.Context, req *UpdateResourceScopesRequest) error {
-	var list []*Resource
-	for _, scope := range req.Scopes {
-		list = append(list, &Resource{
-			Keyword:      req.Keyword,
-			ResourceId:   req.ResourceId,
-			DepartmentId: scope,
-		})
+// GetResource 获取指定的资源权限
+func (u *UseCase) GetResource(ctx kratosx.Context, req *GetResourceRequest) ([]uint32, error) {
+	req.UserId = md.UserId(ctx)
+	ids, err := u.repo.GetResource(ctx, req)
+	if err != nil {
+		return nil, errors.DatabaseError(err.Error())
 	}
-	if err := u.repo.UpdateResourceScopes(ctx, md.UserId(ctx), list); err != nil {
+	return ids, nil
+}
+
+// UpdateResource 更新资源权限
+func (u *UseCase) UpdateResource(ctx kratosx.Context, req *UpdateResourceRequest) error {
+	req.UserId = md.UserId(ctx)
+	if err := u.repo.UpdateResource(ctx, req); err != nil {
 		return errors.DatabaseError(err.Error())
 	}
 	return nil

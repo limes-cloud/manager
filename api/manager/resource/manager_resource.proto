@@ -7,8 +7,10 @@ option go_package = "./v1;v1";
 import "validate/validate.proto";
 import "google/protobuf/struct.proto";
 
+
 message GetResourceScopesRequest{
-  string keyword = 1;
+  uint32 userId = 1[(validate.rules).uint32 = {gte: 1}];
+  string keyword = 2[(validate.rules).string = {min_len: 1}];
 }
 
 message GetResourceScopesReply{
@@ -16,11 +18,20 @@ message GetResourceScopesReply{
   repeated uint32 scopes = 2;
 }
 
-message UpdateResourceScopesRequest{
-  string keyword = 1;
-  uint32 resourceId = 2;
-  repeated uint32 scopes = 3;
+message GetResourceRequest{
+  string keyword = 1[(validate.rules).string = {min_len: 1}];
+  uint32 resourceId = 2[(validate.rules).uint32 = {gte: 0}];
 }
 
-message UpdateResourceScopesReply{
+message GetResourceReply{
+    repeated uint32 departmentIds = 3;
+}
+
+message UpdateResourceRequest{
+  string keyword = 1[(validate.rules).string = {min_len: 1}];
+  uint32 resourceId = 2[(validate.rules).uint32 = {gte: 0}];
+  repeated uint32 departmentIds = 3[(validate.rules).repeated = {min_items: 1,unique: true}];
+}
+
+message UpdateResourceReply{
 }

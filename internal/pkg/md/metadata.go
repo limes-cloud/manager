@@ -5,14 +5,6 @@ import (
 	"github.com/limes-cloud/kratosx/pkg/valx"
 )
 
-const (
-	uid  = "userId"
-	rid  = "roleId"
-	rkey = "roleKeyword"
-	did  = "departmentId"
-	dkey = "departmentKeyword"
-)
-
 type Auth struct {
 	UserId            uint32 `json:"userId"`
 	RoleId            uint32 `json:"roleId"`
@@ -33,41 +25,41 @@ func Get(ctx kratosx.Context) (*Auth, error) {
 }
 
 func UserId(ctx kratosx.Context) uint32 {
-	m, err := ctx.JWT().ParseMapClaims(ctx)
+	m, err := Get(ctx)
 	if err != nil {
 		return 0
 	}
-	return uint32(m[uid].(float64))
+	return m.UserId
 }
 
 func RoleId(ctx kratosx.Context) uint32 {
-	m, err := ctx.JWT().ParseMapClaims(ctx)
+	m, err := Get(ctx)
 	if err != nil {
 		return 0
 	}
-	return uint32(m[rid].(float64))
+	return m.RoleId
 }
 
 func RoleKeyword(ctx kratosx.Context) string {
-	m, err := ctx.JWT().ParseMapClaims(ctx)
+	m, err := Get(ctx)
 	if err != nil {
 		return ""
 	}
-	return m[rkey].(string)
+	return m.RoleKeyword
 }
 
 func DepartmentId(ctx kratosx.Context) uint32 {
-	m, err := ctx.JWT().ParseMapClaims(ctx)
+	m, err := Get(ctx)
 	if err != nil {
 		return 0
 	}
-	return uint32(m[did].(float64))
+	return m.DepartmentId
 }
 
 func DepartmentKeyword(ctx kratosx.Context) string {
-	m, err := ctx.JWT().ParseMapClaims(ctx)
+	m, err := Get(ctx)
 	if err != nil {
 		return ""
 	}
-	return m[dkey].(string)
+	return m.DepartmentKeyword
 }

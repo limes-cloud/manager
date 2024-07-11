@@ -1,7 +1,14 @@
 package resource
 
-type UpdateResourceScopesRequest struct {
-	Keyword    string   `json:"keyword"`
-	Scopes     []uint32 `json:"scopes"`
-	ResourceId uint32   `json:"resourceId"`
+type UpdateResourceRequest struct {
+	UserId        uint32   `json:"userId"`
+	Keyword       string   `json:"keyword"`
+	ResourceId    uint32   `json:"resourceId"`
+	DepartmentIds []uint32 `json:"departmentIds"`
+}
+
+type GetResourceRequest struct {
+	UserId     uint32 `json:"userId"`
+	Keyword    string `json:"keyword"`
+	ResourceId uint32 `json:"resourceId"`
 }
