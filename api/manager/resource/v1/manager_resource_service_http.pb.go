@@ -32,7 +32,7 @@ type ResourceHTTPServer interface {
 func RegisterResourceHTTPServer(s *http.Server, srv ResourceHTTPServer) {
 	r := s.Route("/")
 	r.GET("/manager/api/v1/resource", _Resource_GetResource0_HTTP_Handler(srv))
-	r.PUT("/manager/api/v1/resource", _Resource_UpdateResource0_HTTP_Handler(srv))
+	r.PUT("/manager/api/v1/resource/{keyword}", _Resource_UpdateResource0_HTTP_Handler(srv))
 }
 
 func _Resource_GetResource0_HTTP_Handler(srv ResourceHTTPServer) func(ctx http.Context) error {
@@ -61,6 +61,9 @@ func _Resource_UpdateResource0_HTTP_Handler(srv ResourceHTTPServer) func(ctx htt
 			return err
 		}
 		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindVars(&in); err != nil {
 			return err
 		}
 		http.SetOperation(ctx, OperationResourceUpdateResource)
@@ -104,7 +107,7 @@ func (c *ResourceHTTPClientImpl) GetResource(ctx context.Context, in *GetResourc
 
 func (c *ResourceHTTPClientImpl) UpdateResource(ctx context.Context, in *UpdateResourceRequest, opts ...http.CallOption) (*UpdateResourceReply, error) {
 	var out UpdateResourceReply
-	pattern := "/manager/api/v1/resource"
+	pattern := "/manager/api/v1/resource/{keyword}"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationResourceUpdateResource))
 	opts = append(opts, http.PathTemplate(pattern))

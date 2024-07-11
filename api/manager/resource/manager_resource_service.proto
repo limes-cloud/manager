@@ -21,7 +21,7 @@ service Resource {
   // UpdateResource 更新资源权限
   rpc UpdateResource(UpdateResourceRequest) returns(UpdateResourceReply){
     option (google.api.http) = {
-      put: "/manager/api/v1/resource",
+      put: "/manager/api/v1/resource/{keyword}",
       body: "*"
     };
   }
