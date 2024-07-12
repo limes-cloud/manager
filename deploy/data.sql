@@ -1028,6 +1028,16 @@ CREATE TABLE `user_role` (
                              `user_id` bigint(20) UNSIGNED NOT NULL COMMENT '用户id'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户角色信息';
 
+
+CREATE TABLE `resource` (
+                            `id` bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+                            `keyword` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '关键字',
+                            `department_id` bigint unsigned NOT NULL COMMENT '部门id',
+                            `resource_id` bigint unsigned NOT NULL COMMENT '资源id',
+                            PRIMARY KEY (`id`),
+                            UNIQUE `department_id` (`keyword`,`department_id`,`resource_id`),
+                            FOREIGN KEY(department_id) REFERENCES department(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='资源权限信息';
 --
 -- 转存表中的数据 `user_role`
 --
