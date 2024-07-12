@@ -99,7 +99,7 @@ func (r menuRepo) ListMenuByRoleId(ctx kratosx.Context, id uint32) ([]*biz.Menu,
 	if id != 1 {
 		var ids []uint32
 		if err := ctx.DB().Model(model.RoleMenu{}).
-			Scan("menu_id").
+			Select("menu_id").
 			Where("role_id=?", id).
 			Scan(&ids).Error; err != nil {
 			return nil, 0, err

@@ -3,8 +3,8 @@ package auth
 import (
 	"github.com/limes-cloud/kratosx"
 	"github.com/limes-cloud/kratosx/pkg/valx"
-	"github.com/limes-cloud/manager/api/manager/errors"
 
+	"github.com/limes-cloud/manager/api/manager/errors"
 	"github.com/limes-cloud/manager/internal/conf"
 	"github.com/limes-cloud/manager/internal/pkg/md"
 )
@@ -30,8 +30,13 @@ func (u *UseCase) Auth(ctx kratosx.Context, in *AuthRequest) (*md.Auth, error) {
 		return info, nil
 	}
 
-	author := ctx.Authentication().Enforce()
-	isAuth, _ := author.Enforce(info.RoleKeyword, in.Path, in.Method)
+	author := ctx.Authentication()
+	if author.IsWhitelist(in.Path, in.Method) {
+		return info, nil
+	}
+
+	enforce := ctx.Authentication().Enforce()
+	isAuth, _ := enforce.Enforce(info.RoleKeyword, in.Path, in.Method)
 	if !isAuth {
 		return nil, errors.ForbiddenError()
 	}
