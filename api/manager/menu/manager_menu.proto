@@ -10,8 +10,6 @@ option java_outer_classname = "MenuV1";
 import "validate/validate.proto";
 
 message ListMenuRequest {
-  optional string order = 1[(validate.rules).string = {in: ["asc","desc"]}];
-  optional string orderBy = 2[(validate.rules).string = {in: ["id","weight","created_at","updated_at"]}];
   optional string title = 3;
 }
 
@@ -39,8 +37,7 @@ message ListMenuReply {
     repeated Menu children = 20;
   }
 
-  uint32 total = 1;
-  repeated Menu list = 2;
+  repeated Menu list = 1;
 }
 
 message ListMenuByCurRoleRequest{
@@ -98,7 +95,7 @@ message CreateMenuReply {
 }
 
 message UpdateMenuRequest {
-  uint32 id = 1[(validate.rules).uint32 = {gt: 0}];
+  uint32 id = 1[(validate.rules).uint32 = {gte: 1}];
   uint32 parentId = 2;
   string title = 3[(validate.rules).string = {min_len: 1}];
   string type = 4[(validate.rules).string = {min_len: 1}];
@@ -121,10 +118,9 @@ message UpdateMenuReply {
 }
 
 message DeleteMenuRequest {
-  repeated uint32 ids = 1[(validate.rules).repeated = {min_items: 1, unique:true, max_items:50}];
+  uint32 id = 1[(validate.rules).uint32 = {gte: 1}];
 }
 
 message DeleteMenuReply {
-  uint32 total = 1;
 }
 

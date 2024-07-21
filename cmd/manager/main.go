@@ -14,12 +14,12 @@ import (
 	"github.com/limes-cloud/kratosx/pkg/printx"
 	_ "go.uber.org/automaxprocs"
 
+	"github.com/limes-cloud/manager/internal/app"
 	"github.com/limes-cloud/manager/internal/conf"
-	"github.com/limes-cloud/manager/internal/service"
 )
 
 func main() {
-	app := kratosx.New(
+	srv := kratosx.New(
 		kratosx.Config(client.NewFromEnv()),
 		kratosx.RegistrarServer(RegisterServer),
 		kratosx.Options(
@@ -31,7 +31,7 @@ func main() {
 		),
 	)
 
-	if err := app.Run(); err != nil {
+	if err := srv.Run(); err != nil {
 		log.Println("run service fail", err.Error())
 	}
 }
@@ -43,6 +43,7 @@ func RegisterServer(c config.Config, hs *http.Server, gs *grpc.Server) {
 			log.Printf("business配置变更失败：%s", err.Error())
 		}
 	})
+
 	// 注册服务
-	service.New(cfg, hs, gs)
+	app.New(cfg, hs, gs)
 }

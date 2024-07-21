@@ -3,6 +3,8 @@ package md
 import (
 	"github.com/limes-cloud/kratosx"
 	"github.com/limes-cloud/kratosx/pkg/valx"
+
+	"github.com/limes-cloud/manager/api/manager/errors"
 )
 
 type Auth struct {
@@ -19,47 +21,43 @@ func New(info *Auth) map[string]any {
 	return res
 }
 
-func Get(ctx kratosx.Context) (*Auth, error) {
-	var auth Auth
-	return &auth, ctx.JWT().Parse(ctx, &auth)
+func Get(ctx kratosx.Context) *Auth {
+	var (
+		data Auth
+		err  error
+	)
+	if ctx.Token() != "" {
+		err = ctx.JWT().Parse(ctx, &data)
+	} else {
+		// 三方服务调用的时候通过auth信息获取
+		err = ctx.Authentication().ParseAuth(ctx, &data)
+	}
+	if err != nil {
+		panic(errors.ForbiddenError())
+	}
+
+	if data.UserId == 0 {
+		panic(errors.ForbiddenError())
+	}
+	return &data
 }
 
 func UserId(ctx kratosx.Context) uint32 {
-	m, err := Get(ctx)
-	if err != nil {
-		return 0
-	}
-	return m.UserId
+	return Get(ctx).UserId
 }
 
 func RoleId(ctx kratosx.Context) uint32 {
-	m, err := Get(ctx)
-	if err != nil {
-		return 0
-	}
-	return m.RoleId
+	return Get(ctx).RoleId
 }
 
 func RoleKeyword(ctx kratosx.Context) string {
-	m, err := Get(ctx)
-	if err != nil {
-		return ""
-	}
-	return m.RoleKeyword
+	return Get(ctx).RoleKeyword
 }
 
 func DepartmentId(ctx kratosx.Context) uint32 {
-	m, err := Get(ctx)
-	if err != nil {
-		return 0
-	}
-	return m.DepartmentId
+	return Get(ctx).DepartmentId
 }
 
 func DepartmentKeyword(ctx kratosx.Context) string {
-	m, err := Get(ctx)
-	if err != nil {
-		return ""
-	}
-	return m.DepartmentKeyword
+	return Get(ctx).DepartmentKeyword
 }

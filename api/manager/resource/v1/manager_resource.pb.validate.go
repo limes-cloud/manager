@@ -57,17 +57,6 @@ func (m *GetResourceScopesRequest) validate(all bool) error {
 
 	var errors []error
 
-	if m.GetUserId() < 1 {
-		err := GetResourceScopesRequestValidationError{
-			field:  "UserId",
-			reason: "value must be greater than or equal to 1",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
 	if utf8.RuneCountInString(m.GetKeyword()) < 1 {
 		err := GetResourceScopesRequestValidationError{
 			field:  "Keyword",

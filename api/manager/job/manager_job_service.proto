@@ -42,11 +42,4 @@ service Job{
     };
   }
 
-  // GetJob 获取指定的职位信息
-  rpc GetJob (GetJobRequest) returns (GetJobReply) {
-    option (google.api.http) = {
-      get: "/manager/api/v1/job",
-    };
-  }
-
 }

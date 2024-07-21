@@ -57,36 +57,6 @@ func (m *ListMenuRequest) validate(all bool) error {
 
 	var errors []error
 
-	if m.Order != nil {
-
-		if _, ok := _ListMenuRequest_Order_InLookup[m.GetOrder()]; !ok {
-			err := ListMenuRequestValidationError{
-				field:  "Order",
-				reason: "value must be in list [asc desc]",
-			}
-			if !all {
-				return err
-			}
-			errors = append(errors, err)
-		}
-
-	}
-
-	if m.OrderBy != nil {
-
-		if _, ok := _ListMenuRequest_OrderBy_InLookup[m.GetOrderBy()]; !ok {
-			err := ListMenuRequestValidationError{
-				field:  "OrderBy",
-				reason: "value must be in list [id weight created_at updated_at]",
-			}
-			if !all {
-				return err
-			}
-			errors = append(errors, err)
-		}
-
-	}
-
 	if m.Title != nil {
 		// no validation rules for Title
 	}
@@ -169,18 +139,6 @@ var _ interface {
 	ErrorName() string
 } = ListMenuRequestValidationError{}
 
-var _ListMenuRequest_Order_InLookup = map[string]struct{}{
-	"asc":  {},
-	"desc": {},
-}
-
-var _ListMenuRequest_OrderBy_InLookup = map[string]struct{}{
-	"id":         {},
-	"weight":     {},
-	"created_at": {},
-	"updated_at": {},
-}
-
 // Validate checks the field values on ListMenuReply with the rules defined in
 // the proto definition for this message. If any rules are violated, the first
 // error encountered is returned, or nil if there are no violations.
@@ -202,8 +160,6 @@ func (m *ListMenuReply) validate(all bool) error {
 	}
 
 	var errors []error
-
-	// no validation rules for Total
 
 	for idx, item := range m.GetList() {
 		_, _ = idx, item
@@ -859,10 +815,10 @@ func (m *UpdateMenuRequest) validate(all bool) error {
 
 	var errors []error
 
-	if m.GetId() <= 0 {
+	if m.GetId() < 1 {
 		err := UpdateMenuRequestValidationError{
 			field:  "Id",
-			reason: "value must be greater than 0",
+			reason: "value must be greater than or equal to 1",
 		}
 		if !all {
 			return err
@@ -1148,36 +1104,15 @@ func (m *DeleteMenuRequest) validate(all bool) error {
 
 	var errors []error
 
-	if l := len(m.GetIds()); l < 1 || l > 50 {
+	if m.GetId() < 1 {
 		err := DeleteMenuRequestValidationError{
-			field:  "Ids",
-			reason: "value must contain between 1 and 50 items, inclusive",
+			field:  "Id",
+			reason: "value must be greater than or equal to 1",
 		}
 		if !all {
 			return err
 		}
 		errors = append(errors, err)
-	}
-
-	_DeleteMenuRequest_Ids_Unique := make(map[uint32]struct{}, len(m.GetIds()))
-
-	for idx, item := range m.GetIds() {
-		_, _ = idx, item
-
-		if _, exists := _DeleteMenuRequest_Ids_Unique[item]; exists {
-			err := DeleteMenuRequestValidationError{
-				field:  fmt.Sprintf("Ids[%v]", idx),
-				reason: "repeated value must contain unique items",
-			}
-			if !all {
-				return err
-			}
-			errors = append(errors, err)
-		} else {
-			_DeleteMenuRequest_Ids_Unique[item] = struct{}{}
-		}
-
-		// no validation rules for Ids[idx]
 	}
 
 	if len(errors) > 0 {
@@ -1281,8 +1216,6 @@ func (m *DeleteMenuReply) validate(all bool) error {
 	}
 
 	var errors []error
-
-	// no validation rules for Total
 
 	if len(errors) > 0 {
 		return DeleteMenuReplyMultiError(errors)

@@ -59,10 +59,10 @@ func (m *GetUserRequest) validate(all bool) error {
 
 	if m.Id != nil {
 
-		if m.GetId() <= 0 {
+		if m.GetId() < 1 {
 			err := GetUserRequestValidationError{
 				field:  "Id",
-				reason: "value must be greater than 0",
+				reason: "value must be greater than or equal to 1",
 			}
 			if !all {
 				return err
@@ -469,10 +469,10 @@ func (m *ListUserRequest) validate(all bool) error {
 
 	var errors []error
 
-	if m.GetPage() <= 0 {
+	if m.GetPage() < 1 {
 		err := ListUserRequestValidationError{
 			field:  "Page",
-			reason: "value must be greater than 0",
+			reason: "value must be greater than or equal to 1",
 		}
 		if !all {
 			return err
@@ -480,10 +480,10 @@ func (m *ListUserRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	if val := m.GetPageSize(); val <= 0 || val > 50 {
+	if val := m.GetPageSize(); val < 1 || val > 50 {
 		err := ListUserRequestValidationError{
 			field:  "PageSize",
-			reason: "value must be inside range (0, 50]",
+			reason: "value must be inside range [1, 50]",
 		}
 		if !all {
 			return err
@@ -793,10 +793,10 @@ func (m *CreateUserRequest) validate(all bool) error {
 
 	var errors []error
 
-	if m.GetDepartmentId() <= 0 {
+	if m.GetDepartmentId() < 1 {
 		err := CreateUserRequestValidationError{
 			field:  "DepartmentId",
-			reason: "value must be greater than 0",
+			reason: "value must be greater than or equal to 1",
 		}
 		if !all {
 			return err
@@ -1116,10 +1116,10 @@ func (m *UpdateUserRequest) validate(all bool) error {
 
 	var errors []error
 
-	if m.GetId() <= 0 {
+	if m.GetId() < 1 {
 		err := UpdateUserRequestValidationError{
 			field:  "Id",
-			reason: "value must be greater than 0",
+			reason: "value must be greater than or equal to 1",
 		}
 		if !all {
 			return err
@@ -1127,10 +1127,10 @@ func (m *UpdateUserRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	if m.GetDepartmentId() <= 0 {
+	if m.GetDepartmentId() < 1 {
 		err := UpdateUserRequestValidationError{
 			field:  "DepartmentId",
-			reason: "value must be greater than 0",
+			reason: "value must be greater than or equal to 1",
 		}
 		if !all {
 			return err
@@ -1448,10 +1448,10 @@ func (m *UpdateUserStatusRequest) validate(all bool) error {
 
 	var errors []error
 
-	if m.GetId() <= 0 {
+	if m.GetId() < 1 {
 		err := UpdateUserStatusRequestValidationError{
 			field:  "Id",
-			reason: "value must be greater than 0",
+			reason: "value must be greater than or equal to 1",
 		}
 		if !all {
 			return err
@@ -1665,36 +1665,15 @@ func (m *DeleteUserRequest) validate(all bool) error {
 
 	var errors []error
 
-	if l := len(m.GetIds()); l < 1 || l > 50 {
+	if m.GetId() < 1 {
 		err := DeleteUserRequestValidationError{
-			field:  "Ids",
-			reason: "value must contain between 1 and 50 items, inclusive",
+			field:  "Id",
+			reason: "value must be greater than or equal to 1",
 		}
 		if !all {
 			return err
 		}
 		errors = append(errors, err)
-	}
-
-	_DeleteUserRequest_Ids_Unique := make(map[uint32]struct{}, len(m.GetIds()))
-
-	for idx, item := range m.GetIds() {
-		_, _ = idx, item
-
-		if _, exists := _DeleteUserRequest_Ids_Unique[item]; exists {
-			err := DeleteUserRequestValidationError{
-				field:  fmt.Sprintf("Ids[%v]", idx),
-				reason: "repeated value must contain unique items",
-			}
-			if !all {
-				return err
-			}
-			errors = append(errors, err)
-		} else {
-			_DeleteUserRequest_Ids_Unique[item] = struct{}{}
-		}
-
-		// no validation rules for Ids[idx]
 	}
 
 	if len(errors) > 0 {
@@ -1798,8 +1777,6 @@ func (m *DeleteUserReply) validate(all bool) error {
 	}
 
 	var errors []error
-
-	// no validation rules for Total
 
 	if len(errors) > 0 {
 		return DeleteUserReplyMultiError(errors)

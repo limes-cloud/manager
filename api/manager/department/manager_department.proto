@@ -9,9 +9,24 @@ option java_outer_classname = "DepartmentV1";
 
 import "validate/validate.proto";
 
+message GetDepartmentRequest {
+  oneof params{
+     uint32 id = 1[(validate.rules).uint32 = {gte: 1}];
+     string keyword = 2[(validate.rules).string = {min_len: 1}];
+  }
+}
+
+message GetDepartmentReply {
+  uint32 id = 1;
+  uint32 parentId = 2;
+  string name = 3;
+  string keyword = 4;
+  optional string description = 5;
+  uint32 createdAt = 6;
+  uint32 updatedAt = 7;
+}
+
 message ListDepartmentRequest {
-  optional string order = 1[(validate.rules).string = {in: ["asc","desc"]}];
-  optional string orderBy = 2[(validate.rules).string = {in: ["id","keyword","created_at","updated_at"]}];
   optional string name = 3;
   optional string keyword = 4;
 }
@@ -28,12 +43,11 @@ message ListDepartmentReply {
     repeated Department children = 8;
   }
 
-  uint32 total = 1;
   repeated Department list = 2;
 }
 
 message CreateDepartmentRequest {
-  uint32 parentId = 1[(validate.rules).uint32 = {gt: 0}];
+  uint32 parentId = 1[(validate.rules).uint32 = {gte: 1}];
   string name = 2[(validate.rules).string = {min_len: 1}];
   string keyword = 3[(validate.rules).string = {min_len: 1}];
   optional string description = 4;
@@ -44,8 +58,8 @@ message CreateDepartmentReply {
 }
 
 message UpdateDepartmentRequest {
-  uint32 id = 1[(validate.rules).uint32 = {gt: 0}];
-  uint32 parentId = 2[(validate.rules).uint32 = {gt: 0}];
+  uint32 id = 1[(validate.rules).uint32 = {gte: 1}];
+  uint32 parentId = 2[(validate.rules).uint32 = {gte: 1}];
   string name = 3[(validate.rules).string = {min_len: 1}];
   optional string description = 4;
 }
@@ -54,25 +68,10 @@ message UpdateDepartmentReply {
 }
 
 message DeleteDepartmentRequest {
-  repeated uint32 ids = 1[(validate.rules).repeated = {min_items: 1, unique:true, max_items:50}];
+  uint32 id = 1[(validate.rules).uint32 = {gte:1}];
 }
 
 message DeleteDepartmentReply {
-  uint32 total = 1;
 }
 
-message GetDepartmentRequest {
-  optional uint32 id = 1[(validate.rules).uint32 = {gt: 0}];
-  optional string keyword = 2[(validate.rules).string = {min_len: 1}];
-}
-
-message GetDepartmentReply {
-  uint32 id = 1;
-  uint32 parentId = 2;
-  string name = 3;
-  string keyword = 4;
-  optional string description = 5;
-  uint32 createdAt = 6;
-  uint32 updatedAt = 7;
-}
 

@@ -24,10 +24,10 @@ enum ErrorReason {
   ListTrashError = 12[(errors.message)="获取回收站列表数据失败"];
   DeleteTrashError = 13[(errors.message)="删除回收站数据失败"];
   RevertTrashError = 14[(errors.message)="还原回收站数据失败"];
-  DepartmentPermissionsError = 15[(errors.message)="无此部门权限"];
-  RolePermissionsError = 16[(errors.message)="无此角色权限"];
-  UserPermissionsError = 17[(errors.message)="无此用户权限"];
-  MenuPermissionsError = 18[(errors.message)="无此菜单权限"];
+  DepartmentPurviewError = 15[(errors.message)="无此部门权限"];
+  RolePurviewError = 16[(errors.message)="无此角色权限"];
+  UserPurviewError = 17[(errors.message)="无此用户权限"];
+  MenuPurviewError = 18[(errors.message)="无此菜单权限"];
   EditSystemDataError = 19[(errors.message)="系统数据，不允许修改"];
   GenCaptchaError = 20[(errors.message)="生成验证码失败"];
   SendCaptchaError = 21[(errors.message)="发送验证码失败"];

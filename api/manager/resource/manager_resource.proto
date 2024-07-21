@@ -9,8 +9,7 @@ import "google/protobuf/struct.proto";
 
 
 message GetResourceScopesRequest{
-  uint32 userId = 1[(validate.rules).uint32 = {gte: 1}];
-  string keyword = 2[(validate.rules).string = {min_len: 1}];
+  string keyword = 1[(validate.rules).string = {min_len: 1}];
 }
 
 message GetResourceScopesReply{

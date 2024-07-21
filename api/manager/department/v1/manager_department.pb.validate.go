@@ -35,6 +35,277 @@ var (
 	_ = sort.Sort
 )
 
+// Validate checks the field values on GetDepartmentRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *GetDepartmentRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on GetDepartmentRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// GetDepartmentRequestMultiError, or nil if none found.
+func (m *GetDepartmentRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *GetDepartmentRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	switch v := m.Params.(type) {
+	case *GetDepartmentRequest_Id:
+		if v == nil {
+			err := GetDepartmentRequestValidationError{
+				field:  "Params",
+				reason: "oneof value cannot be a typed-nil",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+		if m.GetId() < 1 {
+			err := GetDepartmentRequestValidationError{
+				field:  "Id",
+				reason: "value must be greater than or equal to 1",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+	case *GetDepartmentRequest_Keyword:
+		if v == nil {
+			err := GetDepartmentRequestValidationError{
+				field:  "Params",
+				reason: "oneof value cannot be a typed-nil",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+		if utf8.RuneCountInString(m.GetKeyword()) < 1 {
+			err := GetDepartmentRequestValidationError{
+				field:  "Keyword",
+				reason: "value length must be at least 1 runes",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+	default:
+		_ = v // ensures v is used
+	}
+
+	if len(errors) > 0 {
+		return GetDepartmentRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// GetDepartmentRequestMultiError is an error wrapping multiple validation
+// errors returned by GetDepartmentRequest.ValidateAll() if the designated
+// constraints aren't met.
+type GetDepartmentRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m GetDepartmentRequestMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m GetDepartmentRequestMultiError) AllErrors() []error { return m }
+
+// GetDepartmentRequestValidationError is the validation error returned by
+// GetDepartmentRequest.Validate if the designated constraints aren't met.
+type GetDepartmentRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e GetDepartmentRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e GetDepartmentRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e GetDepartmentRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e GetDepartmentRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e GetDepartmentRequestValidationError) ErrorName() string {
+	return "GetDepartmentRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e GetDepartmentRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sGetDepartmentRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = GetDepartmentRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = GetDepartmentRequestValidationError{}
+
+// Validate checks the field values on GetDepartmentReply with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *GetDepartmentReply) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on GetDepartmentReply with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// GetDepartmentReplyMultiError, or nil if none found.
+func (m *GetDepartmentReply) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *GetDepartmentReply) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Id
+
+	// no validation rules for ParentId
+
+	// no validation rules for Name
+
+	// no validation rules for Keyword
+
+	// no validation rules for CreatedAt
+
+	// no validation rules for UpdatedAt
+
+	if m.Description != nil {
+		// no validation rules for Description
+	}
+
+	if len(errors) > 0 {
+		return GetDepartmentReplyMultiError(errors)
+	}
+
+	return nil
+}
+
+// GetDepartmentReplyMultiError is an error wrapping multiple validation errors
+// returned by GetDepartmentReply.ValidateAll() if the designated constraints
+// aren't met.
+type GetDepartmentReplyMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m GetDepartmentReplyMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m GetDepartmentReplyMultiError) AllErrors() []error { return m }
+
+// GetDepartmentReplyValidationError is the validation error returned by
+// GetDepartmentReply.Validate if the designated constraints aren't met.
+type GetDepartmentReplyValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e GetDepartmentReplyValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e GetDepartmentReplyValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e GetDepartmentReplyValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e GetDepartmentReplyValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e GetDepartmentReplyValidationError) ErrorName() string {
+	return "GetDepartmentReplyValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e GetDepartmentReplyValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sGetDepartmentReply.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = GetDepartmentReplyValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = GetDepartmentReplyValidationError{}
+
 // Validate checks the field values on ListDepartmentRequest with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
@@ -56,36 +327,6 @@ func (m *ListDepartmentRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	if m.Order != nil {
-
-		if _, ok := _ListDepartmentRequest_Order_InLookup[m.GetOrder()]; !ok {
-			err := ListDepartmentRequestValidationError{
-				field:  "Order",
-				reason: "value must be in list [asc desc]",
-			}
-			if !all {
-				return err
-			}
-			errors = append(errors, err)
-		}
-
-	}
-
-	if m.OrderBy != nil {
-
-		if _, ok := _ListDepartmentRequest_OrderBy_InLookup[m.GetOrderBy()]; !ok {
-			err := ListDepartmentRequestValidationError{
-				field:  "OrderBy",
-				reason: "value must be in list [id keyword created_at updated_at]",
-			}
-			if !all {
-				return err
-			}
-			errors = append(errors, err)
-		}
-
-	}
 
 	if m.Name != nil {
 		// no validation rules for Name
@@ -175,18 +416,6 @@ var _ interface {
 	ErrorName() string
 } = ListDepartmentRequestValidationError{}
 
-var _ListDepartmentRequest_Order_InLookup = map[string]struct{}{
-	"asc":  {},
-	"desc": {},
-}
-
-var _ListDepartmentRequest_OrderBy_InLookup = map[string]struct{}{
-	"id":         {},
-	"keyword":    {},
-	"created_at": {},
-	"updated_at": {},
-}
-
 // Validate checks the field values on ListDepartmentReply with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
@@ -208,8 +437,6 @@ func (m *ListDepartmentReply) validate(all bool) error {
 	}
 
 	var errors []error
-
-	// no validation rules for Total
 
 	for idx, item := range m.GetList() {
 		_, _ = idx, item
@@ -347,10 +574,10 @@ func (m *CreateDepartmentRequest) validate(all bool) error {
 
 	var errors []error
 
-	if m.GetParentId() <= 0 {
+	if m.GetParentId() < 1 {
 		err := CreateDepartmentRequestValidationError{
 			field:  "ParentId",
-			reason: "value must be greater than 0",
+			reason: "value must be greater than or equal to 1",
 		}
 		if !all {
 			return err
@@ -590,10 +817,10 @@ func (m *UpdateDepartmentRequest) validate(all bool) error {
 
 	var errors []error
 
-	if m.GetId() <= 0 {
+	if m.GetId() < 1 {
 		err := UpdateDepartmentRequestValidationError{
 			field:  "Id",
-			reason: "value must be greater than 0",
+			reason: "value must be greater than or equal to 1",
 		}
 		if !all {
 			return err
@@ -601,10 +828,10 @@ func (m *UpdateDepartmentRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	if m.GetParentId() <= 0 {
+	if m.GetParentId() < 1 {
 		err := UpdateDepartmentRequestValidationError{
 			field:  "ParentId",
-			reason: "value must be greater than 0",
+			reason: "value must be greater than or equal to 1",
 		}
 		if !all {
 			return err
@@ -831,36 +1058,15 @@ func (m *DeleteDepartmentRequest) validate(all bool) error {
 
 	var errors []error
 
-	if l := len(m.GetIds()); l < 1 || l > 50 {
+	if m.GetId() < 1 {
 		err := DeleteDepartmentRequestValidationError{
-			field:  "Ids",
-			reason: "value must contain between 1 and 50 items, inclusive",
+			field:  "Id",
+			reason: "value must be greater than or equal to 1",
 		}
 		if !all {
 			return err
 		}
 		errors = append(errors, err)
-	}
-
-	_DeleteDepartmentRequest_Ids_Unique := make(map[uint32]struct{}, len(m.GetIds()))
-
-	for idx, item := range m.GetIds() {
-		_, _ = idx, item
-
-		if _, exists := _DeleteDepartmentRequest_Ids_Unique[item]; exists {
-			err := DeleteDepartmentRequestValidationError{
-				field:  fmt.Sprintf("Ids[%v]", idx),
-				reason: "repeated value must contain unique items",
-			}
-			if !all {
-				return err
-			}
-			errors = append(errors, err)
-		} else {
-			_DeleteDepartmentRequest_Ids_Unique[item] = struct{}{}
-		}
-
-		// no validation rules for Ids[idx]
 	}
 
 	if len(errors) > 0 {
@@ -965,8 +1171,6 @@ func (m *DeleteDepartmentReply) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for Total
-
 	if len(errors) > 0 {
 		return DeleteDepartmentReplyMultiError(errors)
 	}
@@ -1046,256 +1250,6 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = DeleteDepartmentReplyValidationError{}
-
-// Validate checks the field values on GetDepartmentRequest with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the first error encountered is returned, or nil if there are no violations.
-func (m *GetDepartmentRequest) Validate() error {
-	return m.validate(false)
-}
-
-// ValidateAll checks the field values on GetDepartmentRequest with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the result is a list of violation errors wrapped in
-// GetDepartmentRequestMultiError, or nil if none found.
-func (m *GetDepartmentRequest) ValidateAll() error {
-	return m.validate(true)
-}
-
-func (m *GetDepartmentRequest) validate(all bool) error {
-	if m == nil {
-		return nil
-	}
-
-	var errors []error
-
-	if m.Id != nil {
-
-		if m.GetId() <= 0 {
-			err := GetDepartmentRequestValidationError{
-				field:  "Id",
-				reason: "value must be greater than 0",
-			}
-			if !all {
-				return err
-			}
-			errors = append(errors, err)
-		}
-
-	}
-
-	if m.Keyword != nil {
-
-		if utf8.RuneCountInString(m.GetKeyword()) < 1 {
-			err := GetDepartmentRequestValidationError{
-				field:  "Keyword",
-				reason: "value length must be at least 1 runes",
-			}
-			if !all {
-				return err
-			}
-			errors = append(errors, err)
-		}
-
-	}
-
-	if len(errors) > 0 {
-		return GetDepartmentRequestMultiError(errors)
-	}
-
-	return nil
-}
-
-// GetDepartmentRequestMultiError is an error wrapping multiple validation
-// errors returned by GetDepartmentRequest.ValidateAll() if the designated
-// constraints aren't met.
-type GetDepartmentRequestMultiError []error
-
-// Error returns a concatenation of all the error messages it wraps.
-func (m GetDepartmentRequestMultiError) Error() string {
-	var msgs []string
-	for _, err := range m {
-		msgs = append(msgs, err.Error())
-	}
-	return strings.Join(msgs, "; ")
-}
-
-// AllErrors returns a list of validation violation errors.
-func (m GetDepartmentRequestMultiError) AllErrors() []error { return m }
-
-// GetDepartmentRequestValidationError is the validation error returned by
-// GetDepartmentRequest.Validate if the designated constraints aren't met.
-type GetDepartmentRequestValidationError struct {
-	field  string
-	reason string
-	cause  error
-	key    bool
-}
-
-// Field function returns field value.
-func (e GetDepartmentRequestValidationError) Field() string { return e.field }
-
-// Reason function returns reason value.
-func (e GetDepartmentRequestValidationError) Reason() string { return e.reason }
-
-// Cause function returns cause value.
-func (e GetDepartmentRequestValidationError) Cause() error { return e.cause }
-
-// Key function returns key value.
-func (e GetDepartmentRequestValidationError) Key() bool { return e.key }
-
-// ErrorName returns error name.
-func (e GetDepartmentRequestValidationError) ErrorName() string {
-	return "GetDepartmentRequestValidationError"
-}
-
-// Error satisfies the builtin error interface
-func (e GetDepartmentRequestValidationError) Error() string {
-	cause := ""
-	if e.cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.cause)
-	}
-
-	key := ""
-	if e.key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %sGetDepartmentRequest.%s: %s%s",
-		key,
-		e.field,
-		e.reason,
-		cause)
-}
-
-var _ error = GetDepartmentRequestValidationError{}
-
-var _ interface {
-	Field() string
-	Reason() string
-	Key() bool
-	Cause() error
-	ErrorName() string
-} = GetDepartmentRequestValidationError{}
-
-// Validate checks the field values on GetDepartmentReply with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the first error encountered is returned, or nil if there are no violations.
-func (m *GetDepartmentReply) Validate() error {
-	return m.validate(false)
-}
-
-// ValidateAll checks the field values on GetDepartmentReply with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the result is a list of violation errors wrapped in
-// GetDepartmentReplyMultiError, or nil if none found.
-func (m *GetDepartmentReply) ValidateAll() error {
-	return m.validate(true)
-}
-
-func (m *GetDepartmentReply) validate(all bool) error {
-	if m == nil {
-		return nil
-	}
-
-	var errors []error
-
-	// no validation rules for Id
-
-	// no validation rules for ParentId
-
-	// no validation rules for Name
-
-	// no validation rules for Keyword
-
-	// no validation rules for CreatedAt
-
-	// no validation rules for UpdatedAt
-
-	if m.Description != nil {
-		// no validation rules for Description
-	}
-
-	if len(errors) > 0 {
-		return GetDepartmentReplyMultiError(errors)
-	}
-
-	return nil
-}
-
-// GetDepartmentReplyMultiError is an error wrapping multiple validation errors
-// returned by GetDepartmentReply.ValidateAll() if the designated constraints
-// aren't met.
-type GetDepartmentReplyMultiError []error
-
-// Error returns a concatenation of all the error messages it wraps.
-func (m GetDepartmentReplyMultiError) Error() string {
-	var msgs []string
-	for _, err := range m {
-		msgs = append(msgs, err.Error())
-	}
-	return strings.Join(msgs, "; ")
-}
-
-// AllErrors returns a list of validation violation errors.
-func (m GetDepartmentReplyMultiError) AllErrors() []error { return m }
-
-// GetDepartmentReplyValidationError is the validation error returned by
-// GetDepartmentReply.Validate if the designated constraints aren't met.
-type GetDepartmentReplyValidationError struct {
-	field  string
-	reason string
-	cause  error
-	key    bool
-}
-
-// Field function returns field value.
-func (e GetDepartmentReplyValidationError) Field() string { return e.field }
-
-// Reason function returns reason value.
-func (e GetDepartmentReplyValidationError) Reason() string { return e.reason }
-
-// Cause function returns cause value.
-func (e GetDepartmentReplyValidationError) Cause() error { return e.cause }
-
-// Key function returns key value.
-func (e GetDepartmentReplyValidationError) Key() bool { return e.key }
-
-// ErrorName returns error name.
-func (e GetDepartmentReplyValidationError) ErrorName() string {
-	return "GetDepartmentReplyValidationError"
-}
-
-// Error satisfies the builtin error interface
-func (e GetDepartmentReplyValidationError) Error() string {
-	cause := ""
-	if e.cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.cause)
-	}
-
-	key := ""
-	if e.key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %sGetDepartmentReply.%s: %s%s",
-		key,
-		e.field,
-		e.reason,
-		cause)
-}
-
-var _ error = GetDepartmentReplyValidationError{}
-
-var _ interface {
-	Field() string
-	Reason() string
-	Key() bool
-	Cause() error
-	ErrorName() string
-} = GetDepartmentReplyValidationError{}
 
 // Validate checks the field values on ListDepartmentReply_Department with the
 // rules defined in the proto definition for this message. If any rules are

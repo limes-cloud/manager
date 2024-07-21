@@ -28,8 +28,8 @@ message GetDictionaryValuesReply {
 }
 
 message ListDictionaryValueRequest {
-  uint32 page = 1[(validate.rules).uint32 = {gt: 0}];
-  uint32 pageSize = 2[(validate.rules).uint32 = {gt: 0,lte:50}];
+  uint32 page = 1[(validate.rules).uint32 = {gte: 1}];
+  uint32 pageSize = 2[(validate.rules).uint32 = {gte: 1,lte:50}];
   optional string order = 3[(validate.rules).string = {in: ["asc","desc"]}];
   optional string orderBy = 4[(validate.rules).string = {in: ["id","created_at","weight"]}];
   optional uint32 dictionaryId = 5;
@@ -58,7 +58,7 @@ message ListDictionaryValueReply {
 }
 
 message CreateDictionaryValueRequest {
-  uint32 dictionaryId = 1[(validate.rules).uint32 = {gt: 0}];
+  uint32 dictionaryId = 1[(validate.rules).uint32 = {gte: 1}];
   string label = 2[(validate.rules).string = {min_len: 1}];
   string value = 3[(validate.rules).string = {min_len: 1}];
   optional bool status = 4;
@@ -73,8 +73,8 @@ message CreateDictionaryValueReply {
 }
 
 message UpdateDictionaryValueRequest {
-  uint32 id = 1[(validate.rules).uint32 = {gt: 0}];
-  uint32 dictionaryId = 2[(validate.rules).uint32 = {gt: 0}];
+  uint32 id = 1[(validate.rules).uint32 = {gte: 1}];
+  uint32 dictionaryId = 2[(validate.rules).uint32 = {gte: 1}];
   string label = 3[(validate.rules).string = {min_len: 1}];
   string value = 4[(validate.rules).string = {min_len: 1}];
   optional int32 weight = 5;
@@ -87,7 +87,7 @@ message UpdateDictionaryValueReply {
 }
 
 message UpdateDictionaryValueStatusRequest {
-  uint32 id = 1[(validate.rules).uint32 = {gt: 0}];
+  uint32 id = 1[(validate.rules).uint32 = {gte: 1}];
   bool status = 2;
 }
 
@@ -95,9 +95,8 @@ message UpdateDictionaryValueStatusReply {
 }
 
 message DeleteDictionaryValueRequest {
-  repeated uint32 ids = 1[(validate.rules).repeated = {min_items: 1, unique:true, max_items:50}];
+  uint32 id = 1[(validate.rules).uint32 = {gte: 1}];
 }
 
 message DeleteDictionaryValueReply {
-  uint32 total = 1;
 }

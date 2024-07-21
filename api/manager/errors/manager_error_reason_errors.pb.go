@@ -311,83 +311,83 @@ func RevertTrashError(args ...any) *errors.Error {
 	}
 }
 
-func IsDepartmentPermissionsError(err error) bool {
+func IsDepartmentPurviewError(err error) bool {
 	if err == nil {
 		return false
 	}
 	e := errors.FromError(err)
-	return e.Reason == ErrorReason_DepartmentPermissionsError.String() && e.Code == 500
+	return e.Reason == ErrorReason_DepartmentPurviewError.String() && e.Code == 500
 }
 
-func DepartmentPermissionsError(args ...any) *errors.Error {
+func DepartmentPurviewError(args ...any) *errors.Error {
 	switch len(args) {
 	case 0:
-		return errors.New(500, ErrorReason_DepartmentPermissionsError.String(), "无此部门权限")
+		return errors.New(500, ErrorReason_DepartmentPurviewError.String(), "无此部门权限")
 	case 1:
-		return errors.New(500, ErrorReason_DepartmentPermissionsError.String(), "无此部门权限:"+fmt.Sprint(args[0]))
+		return errors.New(500, ErrorReason_DepartmentPurviewError.String(), "无此部门权限:"+fmt.Sprint(args[0]))
 	default:
 		msg := fmt.Sprintf(fmt.Sprint(args[0]), args[1:]...)
-		return errors.New(500, ErrorReason_DepartmentPermissionsError.String(), "无此部门权限:"+msg)
+		return errors.New(500, ErrorReason_DepartmentPurviewError.String(), "无此部门权限:"+msg)
 	}
 }
 
-func IsRolePermissionsError(err error) bool {
+func IsRolePurviewError(err error) bool {
 	if err == nil {
 		return false
 	}
 	e := errors.FromError(err)
-	return e.Reason == ErrorReason_RolePermissionsError.String() && e.Code == 500
+	return e.Reason == ErrorReason_RolePurviewError.String() && e.Code == 500
 }
 
-func RolePermissionsError(args ...any) *errors.Error {
+func RolePurviewError(args ...any) *errors.Error {
 	switch len(args) {
 	case 0:
-		return errors.New(500, ErrorReason_RolePermissionsError.String(), "无此角色权限")
+		return errors.New(500, ErrorReason_RolePurviewError.String(), "无此角色权限")
 	case 1:
-		return errors.New(500, ErrorReason_RolePermissionsError.String(), "无此角色权限:"+fmt.Sprint(args[0]))
+		return errors.New(500, ErrorReason_RolePurviewError.String(), "无此角色权限:"+fmt.Sprint(args[0]))
 	default:
 		msg := fmt.Sprintf(fmt.Sprint(args[0]), args[1:]...)
-		return errors.New(500, ErrorReason_RolePermissionsError.String(), "无此角色权限:"+msg)
+		return errors.New(500, ErrorReason_RolePurviewError.String(), "无此角色权限:"+msg)
 	}
 }
 
-func IsUserPermissionsError(err error) bool {
+func IsUserPurviewError(err error) bool {
 	if err == nil {
 		return false
 	}
 	e := errors.FromError(err)
-	return e.Reason == ErrorReason_UserPermissionsError.String() && e.Code == 500
+	return e.Reason == ErrorReason_UserPurviewError.String() && e.Code == 500
 }
 
-func UserPermissionsError(args ...any) *errors.Error {
+func UserPurviewError(args ...any) *errors.Error {
 	switch len(args) {
 	case 0:
-		return errors.New(500, ErrorReason_UserPermissionsError.String(), "无此用户权限")
+		return errors.New(500, ErrorReason_UserPurviewError.String(), "无此用户权限")
 	case 1:
-		return errors.New(500, ErrorReason_UserPermissionsError.String(), "无此用户权限:"+fmt.Sprint(args[0]))
+		return errors.New(500, ErrorReason_UserPurviewError.String(), "无此用户权限:"+fmt.Sprint(args[0]))
 	default:
 		msg := fmt.Sprintf(fmt.Sprint(args[0]), args[1:]...)
-		return errors.New(500, ErrorReason_UserPermissionsError.String(), "无此用户权限:"+msg)
+		return errors.New(500, ErrorReason_UserPurviewError.String(), "无此用户权限:"+msg)
 	}
 }
 
-func IsMenuPermissionsError(err error) bool {
+func IsMenuPurviewError(err error) bool {
 	if err == nil {
 		return false
 	}
 	e := errors.FromError(err)
-	return e.Reason == ErrorReason_MenuPermissionsError.String() && e.Code == 500
+	return e.Reason == ErrorReason_MenuPurviewError.String() && e.Code == 500
 }
 
-func MenuPermissionsError(args ...any) *errors.Error {
+func MenuPurviewError(args ...any) *errors.Error {
 	switch len(args) {
 	case 0:
-		return errors.New(500, ErrorReason_MenuPermissionsError.String(), "无此菜单权限")
+		return errors.New(500, ErrorReason_MenuPurviewError.String(), "无此菜单权限")
 	case 1:
-		return errors.New(500, ErrorReason_MenuPermissionsError.String(), "无此菜单权限:"+fmt.Sprint(args[0]))
+		return errors.New(500, ErrorReason_MenuPurviewError.String(), "无此菜单权限:"+fmt.Sprint(args[0]))
 	default:
 		msg := fmt.Sprintf(fmt.Sprint(args[0]), args[1:]...)
-		return errors.New(500, ErrorReason_MenuPermissionsError.String(), "无此菜单权限:"+msg)
+		return errors.New(500, ErrorReason_MenuPurviewError.String(), "无此菜单权限:"+msg)
 	}
 }
 
