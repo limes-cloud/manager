@@ -9,8 +9,6 @@ type GetUserRequest struct {
 type ListUserRequest struct {
 	Page          uint32   `json:"page"`
 	PageSize      uint32   `json:"pageSize"`
-	Order         *string  `json:"order"`
-	OrderBy       *string  `json:"orderBy"`
 	DepartmentId  *uint32  `json:"departmentId"`
 	RoleId        *uint32  `json:"roleId"`
 	Name          *string  `json:"name"`

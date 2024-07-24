@@ -119,7 +119,7 @@ func (u *UseService) CreateUser(ctx kratosx.Context, req *entity.User) (uint32, 
 		ctx.Logger().Warnw("msg", "get dept purview error", "err", err.Error())
 		return 0, errors.DatabaseError()
 	}
-	if hasDeptPurview {
+	if !hasDeptPurview {
 		return 0, errors.DepartmentPurviewError()
 	}
 

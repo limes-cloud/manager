@@ -6,6 +6,7 @@ require (
 	github.com/envoyproxy/protoc-gen-validate v1.0.4
 	github.com/forgoer/openssl v1.6.0
 	github.com/go-kratos/kratos/v2 v2.7.3
+	github.com/gogo/protobuf v1.3.2
 	github.com/limes-cloud/configure v1.0.39
 	github.com/limes-cloud/kratosx v1.0.47
 	github.com/limes-cloud/resource v1.0.17
@@ -135,3 +136,4 @@ require (
 	modernc.org/memory v1.8.0 // indirect
 	modernc.org/sqlite v1.29.8 // indirect
 )
+

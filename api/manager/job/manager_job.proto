@@ -12,10 +12,8 @@ import "validate/validate.proto";
 message ListJobRequest {
   uint32 page = 1[(validate.rules).uint32 = {gte: 1}];
   uint32 pageSize = 2[(validate.rules).uint32 = {gte: 1,lte:50}];
-  optional string order = 3[(validate.rules).string = {in: ["asc","desc"]}];
-  optional string orderBy = 4[(validate.rules).string = {in: ["id","weight","created_at"]}];
-  optional string keyword = 5;
-  optional string name = 6;
+  optional string keyword = 3;
+  optional string name = 4;
 }
 
 message ListJobReply {

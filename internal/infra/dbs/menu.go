@@ -27,7 +27,7 @@ func NewMenuInfra() repository.MenuRepository {
 	return _MenuInfra
 }
 
-func (r MenuInfra) InitBasicMenu(ctx kratosx.Context) {
+func (r *MenuInfra) InitBasicMenu(ctx kratosx.Context) {
 	var list []*entity.Menu
 	if err := ctx.DB().Model(entity.Menu{}).Find(&list, "type=?", entity.MenuBasic).Error; err != nil {
 		ctx.Logger().Errorf("init basic api error %s", err.Error())
@@ -41,7 +41,7 @@ func (r MenuInfra) InitBasicMenu(ctx kratosx.Context) {
 }
 
 // ListMenu 获取列表
-func (r MenuInfra) ListMenu(ctx kratosx.Context, req *types.ListMenuRequest) ([]*entity.Menu, error) {
+func (r *MenuInfra) ListMenu(ctx kratosx.Context, req *types.ListMenuRequest) ([]*entity.Menu, error) {
 	var (
 		ms []*entity.Menu
 		fs = []string{"*"}
@@ -56,7 +56,7 @@ func (r MenuInfra) ListMenu(ctx kratosx.Context, req *types.ListMenuRequest) ([]
 }
 
 // ListMenuByRoleId 获取指定的角色的菜单
-func (r MenuInfra) ListMenuByRoleId(ctx kratosx.Context, id uint32) ([]*entity.Menu, error) {
+func (r *MenuInfra) ListMenuByRoleId(ctx kratosx.Context, id uint32) ([]*entity.Menu, error) {
 	var (
 		ms []*entity.Menu
 		fs = []string{"*"}
@@ -78,7 +78,7 @@ func (r MenuInfra) ListMenuByRoleId(ctx kratosx.Context, id uint32) ([]*entity.M
 	return ms, db.Find(&ms).Error
 }
 
-func (r MenuInfra) ListMenuApi(ctx kratosx.Context) ([]*types.MenuApi, error) {
+func (r *MenuInfra) ListMenuApi(ctx kratosx.Context) ([]*types.MenuApi, error) {
 	var (
 		ms []*types.MenuApi
 		fs = []string{"id", "api", "method"}
@@ -87,7 +87,7 @@ func (r MenuInfra) ListMenuApi(ctx kratosx.Context) ([]*types.MenuApi, error) {
 }
 
 // CreateMenu 创建数据
-func (r MenuInfra) CreateMenu(ctx kratosx.Context, menu *entity.Menu) (uint32, error) {
+func (r *MenuInfra) CreateMenu(ctx kratosx.Context, menu *entity.Menu) (uint32, error) {
 	if menu.Type == entity.MenuRoot {
 		menu.ParentId = 0
 	}
@@ -106,13 +106,13 @@ func (r MenuInfra) CreateMenu(ctx kratosx.Context, menu *entity.Menu) (uint32, e
 }
 
 // GetMenu 获取指定的数据
-func (r MenuInfra) GetMenu(ctx kratosx.Context, id uint32) (*entity.Menu, error) {
+func (r *MenuInfra) GetMenu(ctx kratosx.Context, id uint32) (*entity.Menu, error) {
 	var menu = entity.Menu{}
 	return &menu, ctx.DB().First(&menu, id).Error
 }
 
 // UpdateMenu 更新数据
-func (r MenuInfra) UpdateMenu(ctx kratosx.Context, menu *entity.Menu) error {
+func (r *MenuInfra) UpdateMenu(ctx kratosx.Context, menu *entity.Menu) error {
 	defer func() {
 		_ = ctx.Authentication().Enforce().LoadPolicy()
 	}()
@@ -141,7 +141,7 @@ func (r MenuInfra) UpdateMenu(ctx kratosx.Context, menu *entity.Menu) error {
 }
 
 // DeleteMenu 删除数据
-func (r MenuInfra) DeleteMenu(ctx kratosx.Context, id uint32) error {
+func (r *MenuInfra) DeleteMenu(ctx kratosx.Context, id uint32) error {
 	defer func() {
 		_ = ctx.Authentication().Enforce().LoadPolicy()
 	}()
@@ -156,7 +156,7 @@ func (r MenuInfra) DeleteMenu(ctx kratosx.Context, id uint32) error {
 }
 
 // GetMenuChildrenIds 获取指定id的所有子id
-func (r MenuInfra) GetMenuChildrenIds(ctx kratosx.Context, id uint32) ([]uint32, error) {
+func (r *MenuInfra) GetMenuChildrenIds(ctx kratosx.Context, id uint32) ([]uint32, error) {
 	var ids []uint32
 	return ids, ctx.DB().Model(entity.MenuClosure{}).
 		Select("children").
@@ -164,7 +164,7 @@ func (r MenuInfra) GetMenuChildrenIds(ctx kratosx.Context, id uint32) ([]uint32,
 		Scan(&ids).Error
 }
 
-func (r MenuInfra) ListMenuChildrenApi(ctx kratosx.Context, id uint32) ([]*entity.Menu, error) {
+func (r *MenuInfra) ListMenuChildrenApi(ctx kratosx.Context, id uint32) ([]*entity.Menu, error) {
 	ids, err := r.GetMenuChildrenIds(ctx, id)
 	if err != nil {
 		return nil, err
@@ -175,7 +175,7 @@ func (r MenuInfra) ListMenuChildrenApi(ctx kratosx.Context, id uint32) ([]*entit
 }
 
 // GetMenuParentIds 获取指定id的所有父id
-func (r MenuInfra) GetMenuParentIds(ctx kratosx.Context, id uint32) ([]uint32, error) {
+func (r *MenuInfra) GetMenuParentIds(ctx kratosx.Context, id uint32) ([]uint32, error) {
 	var ids []uint32
 	return ids, ctx.DB().Model(entity.MenuClosure{}).
 		Select("parent").
@@ -184,7 +184,7 @@ func (r MenuInfra) GetMenuParentIds(ctx kratosx.Context, id uint32) ([]uint32, e
 }
 
 // appendMenuChildren 添加id到指定的父id下
-func (r MenuInfra) appendMenuChildren(ctx kratosx.Context, pid uint32, id uint32) error {
+func (r *MenuInfra) appendMenuChildren(ctx kratosx.Context, pid uint32, id uint32) error {
 	list := []*entity.MenuClosure{
 		{
 			Parent:   pid,
@@ -202,12 +202,12 @@ func (r MenuInfra) appendMenuChildren(ctx kratosx.Context, pid uint32, id uint32
 }
 
 // removeMenuParent 删除指定id的所有父层级
-func (r MenuInfra) removeMenuParent(ctx kratosx.Context, id uint32) error {
+func (r *MenuInfra) removeMenuParent(ctx kratosx.Context, id uint32) error {
 	return ctx.DB().Delete(&entity.MenuClosure{}, "children=?", id).Error
 }
 
 // SetHome 重置当前树的首页节点
-func (r MenuInfra) SetHome(ctx kratosx.Context, id uint32) error {
+func (r *MenuInfra) SetHome(ctx kratosx.Context, id uint32) error {
 	pids, err := r.GetMenuParentIds(ctx, id)
 	if err != nil {
 		return err

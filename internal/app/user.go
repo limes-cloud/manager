@@ -43,8 +43,6 @@ func (s *UserApp) ListUser(c context.Context, req *pb.ListUserRequest) (*pb.List
 	result, total, err := s.srv.ListUser(ctx, &types.ListUserRequest{
 		Page:         req.Page,
 		PageSize:     req.PageSize,
-		Order:        req.Order,
-		OrderBy:      req.OrderBy,
 		DepartmentId: req.DepartmentId,
 		RoleId:       req.RoleId,
 		Name:         req.Name,

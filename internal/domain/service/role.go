@@ -183,17 +183,19 @@ func (u *RoleService) DeleteRole(ctx kratosx.Context, id uint32) error {
 	}
 
 	if err := ctx.Transaction(func(ctx kratosx.Context) error {
-		// 删除角色
-		if err = u.repo.DeleteRole(ctx, id); err != nil {
-			return err
-		}
 
-		// 删除角色相关权限
+		// 查询下级角色
 		keywords, err := u.repo.GetRoleChildrenKeywords(ctx, id)
 		if err != nil {
 			return err
 		}
 
+		// 删除角色
+		if err = u.repo.DeleteRole(ctx, id); err != nil {
+			return err
+		}
+
+		// 删除权限
 		return u.rbac.DeleteRbacRoles(ctx, keywords)
 	}); err != nil {
 		ctx.Logger().Warnw("msg", "delete role error", "err", err.Error())

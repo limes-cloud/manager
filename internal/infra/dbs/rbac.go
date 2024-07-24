@@ -73,6 +73,9 @@ func (r *RbacInfra) UpdateRbacRoleApis(ctx kratosx.Context, role string, apis []
 		if err := ctx.DB().Where("v0=?", role).Delete(&entity.CasbinRule{}).Error; err != nil {
 			return err
 		}
+		if len(list) == 0 {
+			return nil
+		}
 		return ctx.DB().Create(&list).Error
 	})
 }

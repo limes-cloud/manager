@@ -79,36 +79,6 @@ func (m *ListDictionaryRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	if m.Order != nil {
-
-		if _, ok := _ListDictionaryRequest_Order_InLookup[m.GetOrder()]; !ok {
-			err := ListDictionaryRequestValidationError{
-				field:  "Order",
-				reason: "value must be in list [asc desc]",
-			}
-			if !all {
-				return err
-			}
-			errors = append(errors, err)
-		}
-
-	}
-
-	if m.OrderBy != nil {
-
-		if _, ok := _ListDictionaryRequest_OrderBy_InLookup[m.GetOrderBy()]; !ok {
-			err := ListDictionaryRequestValidationError{
-				field:  "OrderBy",
-				reason: "value must be in list [id]",
-			}
-			if !all {
-				return err
-			}
-			errors = append(errors, err)
-		}
-
-	}
-
 	if m.Keyword != nil {
 		// no validation rules for Keyword
 	}
@@ -196,15 +166,6 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = ListDictionaryRequestValidationError{}
-
-var _ListDictionaryRequest_Order_InLookup = map[string]struct{}{
-	"asc":  {},
-	"desc": {},
-}
-
-var _ListDictionaryRequest_OrderBy_InLookup = map[string]struct{}{
-	"id": {},
-}
 
 // Validate checks the field values on ListDictionaryReply with the rules
 // defined in the proto definition for this message. If any rules are

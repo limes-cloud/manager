@@ -79,36 +79,6 @@ func (m *ListJobRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	if m.Order != nil {
-
-		if _, ok := _ListJobRequest_Order_InLookup[m.GetOrder()]; !ok {
-			err := ListJobRequestValidationError{
-				field:  "Order",
-				reason: "value must be in list [asc desc]",
-			}
-			if !all {
-				return err
-			}
-			errors = append(errors, err)
-		}
-
-	}
-
-	if m.OrderBy != nil {
-
-		if _, ok := _ListJobRequest_OrderBy_InLookup[m.GetOrderBy()]; !ok {
-			err := ListJobRequestValidationError{
-				field:  "OrderBy",
-				reason: "value must be in list [id weight created_at]",
-			}
-			if !all {
-				return err
-			}
-			errors = append(errors, err)
-		}
-
-	}
-
 	if m.Keyword != nil {
 		// no validation rules for Keyword
 	}
@@ -194,17 +164,6 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = ListJobRequestValidationError{}
-
-var _ListJobRequest_Order_InLookup = map[string]struct{}{
-	"asc":  {},
-	"desc": {},
-}
-
-var _ListJobRequest_OrderBy_InLookup = map[string]struct{}{
-	"id":         {},
-	"weight":     {},
-	"created_at": {},
-}
 
 // Validate checks the field values on ListJobReply with the rules defined in
 // the proto definition for this message. If any rules are violated, the first

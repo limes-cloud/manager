@@ -70,10 +70,10 @@ func (m *GetRoleRequest) validate(all bool) error {
 			errors = append(errors, err)
 		}
 
-		if m.GetId() <= 1 {
+		if m.GetId() < 1 {
 			err := GetRoleRequestValidationError{
 				field:  "Id",
-				reason: "value must be greater than 1",
+				reason: "value must be greater than or equal to 1",
 			}
 			if !all {
 				return err
@@ -333,10 +333,10 @@ func (m *GetRoleMenuIdsRequest) validate(all bool) error {
 
 	var errors []error
 
-	if m.GetRoleId() <= 1 {
+	if m.GetRoleId() < 1 {
 		err := GetRoleMenuIdsRequestValidationError{
 			field:  "RoleId",
-			reason: "value must be greater than 1",
+			reason: "value must be greater than or equal to 1",
 		}
 		if !all {
 			return err
@@ -790,10 +790,10 @@ func (m *CreateRoleRequest) validate(all bool) error {
 
 	var errors []error
 
-	if m.GetParentId() <= 1 {
+	if m.GetParentId() < 1 {
 		err := CreateRoleRequestValidationError{
 			field:  "ParentId",
-			reason: "value must be greater than 1",
+			reason: "value must be greater than or equal to 1",
 		}
 		if !all {
 			return err
@@ -1069,10 +1069,10 @@ func (m *UpdateRoleRequest) validate(all bool) error {
 
 	var errors []error
 
-	if m.GetId() <= 1 {
+	if m.GetId() < 1 {
 		err := UpdateRoleRequestValidationError{
 			field:  "Id",
-			reason: "value must be greater than 1",
+			reason: "value must be greater than or equal to 1",
 		}
 		if !all {
 			return err
@@ -1080,10 +1080,10 @@ func (m *UpdateRoleRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	if m.GetParentId() <= 1 {
+	if m.GetParentId() < 1 {
 		err := UpdateRoleRequestValidationError{
 			field:  "ParentId",
-			reason: "value must be greater than 1",
+			reason: "value must be greater than or equal to 1",
 		}
 		if !all {
 			return err
@@ -1342,10 +1342,10 @@ func (m *UpdateRoleStatusRequest) validate(all bool) error {
 
 	var errors []error
 
-	if m.GetId() <= 1 {
+	if m.GetId() < 1 {
 		err := UpdateRoleStatusRequestValidationError{
 			field:  "Id",
-			reason: "value must be greater than 1",
+			reason: "value must be greater than or equal to 1",
 		}
 		if !all {
 			return err
@@ -1457,10 +1457,10 @@ func (m *UpdateRoleMenuRequest) validate(all bool) error {
 
 	var errors []error
 
-	if m.GetRoleId() <= 1 {
+	if m.GetRoleId() < 1 {
 		err := UpdateRoleMenuRequestValidationError{
 			field:  "RoleId",
-			reason: "value must be greater than 1",
+			reason: "value must be greater than or equal to 1",
 		}
 		if !all {
 			return err

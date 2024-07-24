@@ -193,7 +193,7 @@ func (r *RoleInfra) GetRoleChildrenKeywords(ctx kratosx.Context, id uint32) ([]s
 
 func (r *RoleInfra) GetRoleDataScope(ctx kratosx.Context, rid uint32) (bool, []uint32, error) {
 	if rid == 1 {
-		return true, []uint32{}, nil
+		return true, nil, nil
 	}
 	ids, err := r.GetRoleChildrenIds(ctx, rid)
 	if err != nil {

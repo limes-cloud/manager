@@ -1,11 +1,10 @@
 package dbs
 
 import (
+	"github.com/gogo/protobuf/proto"
 	"sync"
 
 	"github.com/limes-cloud/kratosx"
-	"google.golang.org/protobuf/proto"
-
 	"github.com/limes-cloud/manager/internal/domain/entity"
 	"github.com/limes-cloud/manager/internal/domain/repository"
 	"github.com/limes-cloud/manager/internal/types"
@@ -90,7 +89,7 @@ func (r *DictionaryInfra) ListDictionaryValue(ctx kratosx.Context, req *types.Li
 		fs    = []string{"*"}
 	)
 
-	db := ctx.DB().Select(fs)
+	db := ctx.DB().Model(entity.DictionaryValue{}).Select(fs)
 	if req.DictionaryId != nil {
 		db = db.Where("dictionary_id = ?", *req.DictionaryId)
 	}
@@ -108,14 +107,11 @@ func (r *DictionaryInfra) ListDictionaryValue(ctx kratosx.Context, req *types.Li
 		return nil, 0, err
 	}
 
-	db = db.Offset(int((req.Page - 1) * req.PageSize)).Limit(int(req.PageSize))
 	db = order(db, proto.String("weight"), proto.String("desc"))
 
-	if err := db.Find(&ms).Error; err != nil {
-		return nil, 0, err
-	}
+	db = db.Offset(int((req.Page - 1) * req.PageSize)).Limit(int(req.PageSize))
 
-	return ms, uint32(total), nil
+	return ms, uint32(total), db.Find(&ms).Error
 }
 
 // CreateDictionaryValue 创建数据
@@ -149,12 +145,12 @@ func (r *DictionaryInfra) AllDictionaryValue(ctx kratosx.Context, keyword string
 		m  = entity.Dictionary{}
 		ms []*entity.DictionaryValue
 	)
-	db := ctx.DB().Select("id")
+	db := ctx.DB().Model(entity.Dictionary{}).Select("id")
 	if err := db.Where("keyword = ?", keyword).First(&m).Error; err != nil {
 		return nil, err
 	}
 
-	if err := ctx.DB().Select("*").
+	if err := ctx.DB().Model(entity.DictionaryValue{}).Select("*").
 		Where("status=true").
 		Where("dictionary_id=?", m.Id).
 		Find(&ms).Error; err != nil {
@@ -164,7 +160,7 @@ func (r *DictionaryInfra) AllDictionaryValue(ctx kratosx.Context, keyword string
 	return ms, nil
 }
 
-func (s *DictionaryInfra) ListDictionaryValues(ctx kratosx.Context, keywords []string) ([]*types.DictionaryValue, error) {
+func (r *DictionaryInfra) ListDictionaryValues(ctx kratosx.Context, keywords []string) ([]*types.DictionaryValue, error) {
 	var list []*types.DictionaryValue
 	if err := ctx.DB().Model(entity.DictionaryValue{}).
 		Select([]string{"keyword", "label", "value", "type", "extra"}).

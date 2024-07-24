@@ -1,6 +1,7 @@
 package dbs
 
 import (
+	"google.golang.org/protobuf/proto"
 	"sync"
 
 	"github.com/limes-cloud/kratosx"
@@ -56,11 +57,10 @@ func (r *JobInfra) ListJob(ctx kratosx.Context, req *types.ListJobRequest) ([]*e
 	if err := db.Count(&total).Error; err != nil {
 		return nil, 0, err
 	}
+
+	db = order(db, proto.String("weight"), proto.String("desc"))
 	db = db.Offset(int((req.Page - 1) * req.PageSize)).Limit(int(req.PageSize))
-	if err := db.Find(&ms).Error; err != nil {
-		return nil, 0, err
-	}
-	return ms, uint32(total), nil
+	return ms, uint32(total), db.Find(&ms).Error
 }
 
 // CreateJob 创建数据
