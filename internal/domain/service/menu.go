@@ -37,31 +37,23 @@ func NewMenuService(
 }
 
 // ListMenuByCurRole 获取当前角色的菜单树
-func (u *MenuService) ListMenuByCurRole(ctx kratosx.Context) ([]tree.Tree, error) {
+func (u *MenuService) ListMenuByCurRole(ctx kratosx.Context) ([]*entity.Menu, error) {
 	list, err := u.repo.ListMenuByRoleId(ctx, md.RoleId(ctx))
 	if err != nil {
 		ctx.Logger().Warnw("msg", "list menu error", "err", err.Error())
 		return nil, errors.ListError()
 	}
-	var ts []tree.Tree
-	for _, item := range list {
-		ts = append(ts, item)
-	}
-	return tree.BuildArrayTree(ts), nil
+	return tree.BuildArrayTree(list), nil
 }
 
 // ListMenu 获取菜单信息列表树
-func (u *MenuService) ListMenu(ctx kratosx.Context, req *types.ListMenuRequest) ([]tree.Tree, error) {
+func (u *MenuService) ListMenu(ctx kratosx.Context, req *types.ListMenuRequest) ([]*entity.Menu, error) {
 	list, err := u.repo.ListMenu(ctx, req)
 	if err != nil {
 		ctx.Logger().Warnw("msg", "list menu error", "err", err.Error())
 		return nil, errors.ListError()
 	}
-	var ts []tree.Tree
-	for _, item := range list {
-		ts = append(ts, item)
-	}
-	return tree.BuildArrayTree(ts), nil
+	return tree.BuildArrayTree(list), nil
 }
 
 // CreateMenu 创建菜单信息

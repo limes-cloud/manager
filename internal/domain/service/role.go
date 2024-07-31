@@ -20,11 +20,11 @@ type RoleService struct {
 	rbac repository.RbacRepository
 }
 
-func NewRoleService(config *conf.Config,
+func NewRoleService(
+	config *conf.Config,
 	repo repository.RoleRepository,
 	menu repository.MenuRepository,
 	rbac repository.RbacRepository,
-
 ) *RoleService {
 	return &RoleService{conf: config, repo: repo, menu: menu, rbac: rbac}
 }
@@ -50,24 +50,18 @@ func (u *RoleService) GetRoleByKeyword(ctx kratosx.Context, keyword string) (*en
 }
 
 // ListRole 获取角色信息列表树
-func (u *RoleService) ListRole(ctx kratosx.Context, req *types.ListRoleRequest) ([]tree.Tree, error) {
+func (u *RoleService) ListRole(ctx kratosx.Context, req *types.ListRoleRequest) ([]*entity.Role, error) {
 	// 获取角色列表
 	list, err := u.repo.ListRole(ctx, req)
 	if err != nil {
 		ctx.Logger().Warnw("msg", "list role error", "err", err.Error())
 		return nil, errors.ListError()
 	}
-
-	// 转换为角色树
-	var ts []tree.Tree
-	for _, item := range list {
-		ts = append(ts, item)
-	}
-	return tree.BuildArrayTree(ts), nil
+	return tree.BuildArrayTree(list), nil
 }
 
 // ListCurrentRole 获取当前角色信息列表树
-func (u *RoleService) ListCurrentRole(ctx kratosx.Context, req *types.ListRoleRequest) ([]tree.Tree, error) {
+func (u *RoleService) ListCurrentRole(ctx kratosx.Context, req *types.ListRoleRequest) ([]*entity.Role, error) {
 	// 获取角色权限
 	all, scopes, err := u.repo.GetRoleDataScope(ctx, md.RoleId(ctx))
 	if err != nil {

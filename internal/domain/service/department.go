@@ -22,7 +22,7 @@ func NewDepartmentService(config *conf.Config, repo repository.DepartmentReposit
 }
 
 // ListDepartment 获取部门信息列表树
-func (u *DepartmentService) ListDepartment(ctx kratosx.Context, req *types.ListDepartmentRequest) ([]tree.Tree, error) {
+func (u *DepartmentService) ListDepartment(ctx kratosx.Context, req *types.ListDepartmentRequest) ([]*entity.Department, error) {
 	// 获取部门列表
 	list, err := u.repo.ListDepartment(ctx, req)
 	if err != nil {
@@ -30,16 +30,11 @@ func (u *DepartmentService) ListDepartment(ctx kratosx.Context, req *types.ListD
 		return nil, errors.ListError()
 	}
 
-	// 转换为部门树
-	var ts []tree.Tree
-	for _, item := range list {
-		ts = append(ts, item)
-	}
-	return tree.BuildArrayTree(ts), nil
+	return tree.BuildArrayTree(list), nil
 }
 
 // ListCurrentDepartment 获取当前用户的部门信息列表树
-func (u *DepartmentService) ListCurrentDepartment(ctx kratosx.Context, req *types.ListDepartmentRequest) ([]tree.Tree, error) {
+func (u *DepartmentService) ListCurrentDepartment(ctx kratosx.Context, req *types.ListDepartmentRequest) ([]*entity.Department, error) {
 	// 获取当前用户的部门权限列表
 	all, scopes, err := u.repo.GetDepartmentDataScope(ctx, md.UserId(ctx))
 	if err != nil {

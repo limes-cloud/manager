@@ -5,39 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="986be327-4ef6-4fb0-b836-2023bc76be7e" name="Changes" comment="e">
-      <change afterPath="$PROJECT_DIR$/tmp/runtime/output-2024-07-24T15-27-45.704.log" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/manager/dictionary/manager_dictionary.proto" beforeDir="false" afterPath="$PROJECT_DIR$/api/manager/dictionary/manager_dictionary.proto" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/manager/dictionary/manager_dictionary_value.proto" beforeDir="false" afterPath="$PROJECT_DIR$/api/manager/dictionary/manager_dictionary_value.proto" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/manager/dictionary/v1/manager_dictionary.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/manager/dictionary/v1/manager_dictionary.pb.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/manager/dictionary/v1/manager_dictionary.pb.validate.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/manager/dictionary/v1/manager_dictionary.pb.validate.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/manager/dictionary/v1/manager_dictionary_value.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/manager/dictionary/v1/manager_dictionary_value.pb.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/manager/dictionary/v1/manager_dictionary_value.pb.validate.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/manager/dictionary/v1/manager_dictionary_value.pb.validate.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/manager/job/manager_job.proto" beforeDir="false" afterPath="$PROJECT_DIR$/api/manager/job/manager_job.proto" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/manager/job/openapi.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/api/manager/job/openapi.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/manager/job/v1/manager_job.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/manager/job/v1/manager_job.pb.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/manager/job/v1/manager_job.pb.validate.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/manager/job/v1/manager_job.pb.validate.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/manager/role/manager_role.proto" beforeDir="false" afterPath="$PROJECT_DIR$/api/manager/role/manager_role.proto" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/manager/role/v1/manager_role.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/manager/role/v1/manager_role.pb.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/manager/role/v1/manager_role.pb.validate.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/manager/role/v1/manager_role.pb.validate.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/manager/user/manager_user.proto" beforeDir="false" afterPath="$PROJECT_DIR$/api/manager/user/manager_user.proto" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/manager/user/v1/manager_user.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/manager/user/v1/manager_user.pb.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/manager/user/v1/manager_user.pb.validate.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/manager/user/v1/manager_user.pb.validate.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/app/user.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/app/user.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/domain/service/role.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/domain/service/role.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/domain/service/user.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/domain/service/user.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/infra/dbs/department.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/infra/dbs/department.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/infra/dbs/dictionary.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/infra/dbs/dictionary.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/infra/dbs/job.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/infra/dbs/job.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/infra/dbs/menu.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/infra/dbs/menu.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/infra/dbs/rbac.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/infra/dbs/rbac.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/infra/dbs/role.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/infra/dbs/role.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/infra/dbs/user.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/infra/dbs/user.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/types/user.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/types/user.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/cert/login.pem" beforeDir="false" afterPath="$PROJECT_DIR$/static/cert/login.pem" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tmp/runtime/output.log" beforeDir="false" afterPath="$PROJECT_DIR$/tmp/runtime/output.log" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../web/admin-web" beforeDir="false" afterPath="$PROJECT_DIR$/../../web/admin-web" afterDir="false" />
     </list>

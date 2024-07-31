@@ -1,7 +1,6 @@
 package entity
 
 import (
-	"github.com/limes-cloud/kratosx/pkg/tree"
 	"github.com/limes-cloud/kratosx/types"
 )
 
@@ -31,14 +30,13 @@ func (m *Department) Parent() uint32 {
 }
 
 // AppendChildren 添加子节点
-func (m *Department) AppendChildren(child any) {
-	menu := child.(*Department)
-	m.Children = append(m.Children, menu)
+func (m *Department) AppendChildren(child *Department) {
+	m.Children = append(m.Children, child)
 }
 
 // ChildrenNode 获取子节点
-func (m *Department) ChildrenNode() []tree.Tree {
-	var list []tree.Tree
+func (m *Department) ChildrenNode() []*Department {
+	var list []*Department
 	for _, item := range m.Children {
 		list = append(list, item)
 	}
