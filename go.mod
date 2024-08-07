@@ -8,7 +8,7 @@ require (
 	github.com/go-kratos/kratos/v2 v2.7.3
 	github.com/gogo/protobuf v1.3.2
 	github.com/limes-cloud/configure v1.0.39
-	github.com/limes-cloud/kratosx v1.0.50
+	github.com/limes-cloud/kratosx v1.0.51
 	github.com/limes-cloud/resource v1.0.17
 	go.uber.org/automaxprocs v1.5.3
 	google.golang.org/genproto/googleapis/api v0.0.0-20240429193739-8cf5692501f6

@@ -35,14 +35,17 @@ type UseService struct {
 	repo repository.UserRepository
 	dept repository.DepartmentRepository
 	role repository.RoleRepository
+	file repository.FileRepository
 }
 
-func NewUseService(config *conf.Config,
+func NewUseService(
+	config *conf.Config,
 	repo repository.UserRepository,
 	dept repository.DepartmentRepository,
 	role repository.RoleRepository,
+	file repository.FileRepository,
 ) *UseService {
-	return &UseService{conf: config, repo: repo, dept: dept, role: role}
+	return &UseService{conf: config, repo: repo, dept: dept, role: role, file: file}
 }
 
 // GetUser 获取指定的用户信息
@@ -107,6 +110,13 @@ func (u *UseService) ListUser(ctx kratosx.Context, req *types.ListUserRequest) (
 	list, total, err := u.repo.ListUser(ctx, req)
 	if err != nil {
 		return nil, 0, errors.ListError(err.Error())
+	}
+
+	for ind, item := range list {
+		if item.Avatar != nil {
+			url := u.file.GetFileURL(ctx, *item.Avatar)
+			list[ind].Avatar = &url
+		}
 	}
 	return list, total, nil
 }
@@ -328,6 +338,10 @@ func (u *UseService) GetCurrentUser(ctx kratosx.Context) (*entity.User, error) {
 		if role.Id == res.RoleId {
 			res.Role = role
 		}
+	}
+	if res.Avatar != nil {
+		url := u.file.GetFileURL(ctx, *res.Avatar)
+		res.Avatar = &url
 	}
 	return res, nil
 }
