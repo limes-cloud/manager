@@ -35,7 +35,7 @@ database:
       password: root
       host: 127.0.0.1
       port: 3306
-      dbName: manager_auto
+      dbName: manager
       option: ?charset=utf8mb4&parseTime=True&loc=Local
     config:
       initializer:
