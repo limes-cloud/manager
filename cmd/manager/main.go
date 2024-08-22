@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"github.com/limes-cloud/configure/api/configure/client"
 	"log"
 
 	"github.com/go-kratos/kratos/v2"
@@ -19,7 +20,7 @@ import (
 
 func main() {
 	srv := kratosx.New(
-		//kratosx.Config(client.NewFromEnv()),
+		kratosx.Config(client.NewFromEnv()),
 		kratosx.RegistrarServer(RegisterServer),
 		kratosx.Options(
 			kratos.AfterStart(func(ctx context.Context) error {
