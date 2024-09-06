@@ -1217,7 +1217,6 @@ github.com/gogo/protobuf v1.2.1/go.mod h1:hp+jE20tsWTFYpLwKvXlhS1hjn+gTNwPg2I6zV
 github.com/gogo/protobuf v1.2.2-0.20190723190241-65acae22fc9d/go.mod h1:SlYgWuQ5SjCEi6WLHjHCa1yvBfUnHcTbrrZtXPKa29o=
 github.com/gogo/protobuf v1.3.0/go.mod h1:SlYgWuQ5SjCEi6WLHjHCa1yvBfUnHcTbrrZtXPKa29o=
 github.com/gogo/protobuf v1.3.1/go.mod h1:SlYgWuQ5SjCEi6WLHjHCa1yvBfUnHcTbrrZtXPKa29o=
-github.com/gogo/protobuf v1.3.2 h1:Ov1cvc58UF3b5XjBnZv7+opcTcQFZebYjWzi34vdm4Q=
 github.com/gogo/protobuf v1.3.2/go.mod h1:P1XiOD3dCwIKUDQYPy72D8LYyHL2YPYrpS2s69NZV8Q=
 github.com/golang-jwt/jwt/v4 v4.0.0/go.mod h1:/xlHOz8bRuivTWchD4jCa+NbatV+wEUSzwAxVc6locg=
 github.com/golang-jwt/jwt/v4 v4.2.0/go.mod h1:/xlHOz8bRuivTWchD4jCa+NbatV+wEUSzwAxVc6locg=
@@ -1552,10 +1551,10 @@ github.com/lestrrat-go/option v1.0.0/go.mod h1:5ZHFbivi4xwXxhxY9XHDe2FHo6/Z7WWmt
 github.com/lib/pq v1.0.0/go.mod h1:5WUZQaWbwv1U+lTReE5YruASi9Al49XbQIvNi/34Woo=
 github.com/lib/pq v1.10.6 h1:jbk+ZieJ0D7EVGJYpL9QTz7/YW6UHbmdnZWYyK5cdBs=
 github.com/lib/pq v1.10.6/go.mod h1:AlVN5x4E4T544tWzH6hKfbfQvm3HdbOxrmggDNAPY9o=
-github.com/limes-cloud/configure v1.0.39 h1:wd6Cl0ryF0V9Qm/cyuHR3YMA9N+KdjtD4nIWuiKceeY=
-github.com/limes-cloud/configure v1.0.39/go.mod h1:LTEn9g5CKCUaJRvdzCc2xCmHVe+JSufXPve6wxQkIoQ=
-github.com/limes-cloud/kratosx v1.0.52 h1:QLXaC3/Yl+RFWg2wiBmPVPwhE88PIfvoltGxy+WhpPE=
-github.com/limes-cloud/kratosx v1.0.52/go.mod h1:b+EkbsoRm0w6261odWdPmTUyL5F5NMiA19OZpHQjaM4=
+github.com/limes-cloud/configure v1.0.45 h1:HSGmq9zUUZyT2A/E165c2hJJLitnLl/ycijrnr/fyEE=
+github.com/limes-cloud/configure v1.0.45/go.mod h1:NNu+c/XTeqGRDIdyQ2/cZdzX9axkQuvYz7fDJPcd3iA=
+github.com/limes-cloud/kratosx v1.0.53 h1:h67nIv7k8W1VyQL47hkwwdxtifcYkw6H45vRirjdV34=
+github.com/limes-cloud/kratosx v1.0.53/go.mod h1:b+EkbsoRm0w6261odWdPmTUyL5F5NMiA19OZpHQjaM4=
 github.com/limes-cloud/resource v1.0.17 h1:APazkDyS6j9WOwNpaDP9vK4p6UCg1bEMQKAP2JVpB8k=
 github.com/limes-cloud/resource v1.0.17/go.mod h1:YfoTHNDFPNF9BC9vwhQnRNpAmJjRPcmYtn2hVXs77q0=
 github.com/linuxkit/virtsock v0.0.0-20201010232012-f8cee7dfc7a3/go.mod h1:3r6x7q95whyfWQpmGZTu3gk3v2YkMi05HEzl7Tf7YEo=

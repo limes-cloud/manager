@@ -3621,6 +3621,272 @@ var _ interface {
 	ErrorName() string
 } = GetUserLoginCaptchaReplyValidationError{}
 
+// Validate checks the field values on ListLoginLogRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *ListLoginLogRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on ListLoginLogRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// ListLoginLogRequestMultiError, or nil if none found.
+func (m *ListLoginLogRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *ListLoginLogRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if m.GetPage() < 1 {
+		err := ListLoginLogRequestValidationError{
+			field:  "Page",
+			reason: "value must be greater than or equal to 1",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if val := m.GetPageSize(); val < 1 || val > 50 {
+		err := ListLoginLogRequestValidationError{
+			field:  "PageSize",
+			reason: "value must be inside range [1, 50]",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if m.Username != nil {
+		// no validation rules for Username
+	}
+
+	if len(errors) > 0 {
+		return ListLoginLogRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// ListLoginLogRequestMultiError is an error wrapping multiple validation
+// errors returned by ListLoginLogRequest.ValidateAll() if the designated
+// constraints aren't met.
+type ListLoginLogRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m ListLoginLogRequestMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m ListLoginLogRequestMultiError) AllErrors() []error { return m }
+
+// ListLoginLogRequestValidationError is the validation error returned by
+// ListLoginLogRequest.Validate if the designated constraints aren't met.
+type ListLoginLogRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e ListLoginLogRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e ListLoginLogRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e ListLoginLogRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e ListLoginLogRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e ListLoginLogRequestValidationError) ErrorName() string {
+	return "ListLoginLogRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e ListLoginLogRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sListLoginLogRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = ListLoginLogRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = ListLoginLogRequestValidationError{}
+
+// Validate checks the field values on ListLoginLogReply with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// first error encountered is returned, or nil if there are no violations.
+func (m *ListLoginLogReply) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on ListLoginLogReply with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// ListLoginLogReplyMultiError, or nil if none found.
+func (m *ListLoginLogReply) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *ListLoginLogReply) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Total
+
+	for idx, item := range m.GetList() {
+		_, _ = idx, item
+
+		if all {
+			switch v := interface{}(item).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, ListLoginLogReplyValidationError{
+						field:  fmt.Sprintf("List[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, ListLoginLogReplyValidationError{
+						field:  fmt.Sprintf("List[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return ListLoginLogReplyValidationError{
+					field:  fmt.Sprintf("List[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	if len(errors) > 0 {
+		return ListLoginLogReplyMultiError(errors)
+	}
+
+	return nil
+}
+
+// ListLoginLogReplyMultiError is an error wrapping multiple validation errors
+// returned by ListLoginLogReply.ValidateAll() if the designated constraints
+// aren't met.
+type ListLoginLogReplyMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m ListLoginLogReplyMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m ListLoginLogReplyMultiError) AllErrors() []error { return m }
+
+// ListLoginLogReplyValidationError is the validation error returned by
+// ListLoginLogReply.Validate if the designated constraints aren't met.
+type ListLoginLogReplyValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e ListLoginLogReplyValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e ListLoginLogReplyValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e ListLoginLogReplyValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e ListLoginLogReplyValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e ListLoginLogReplyValidationError) ErrorName() string {
+	return "ListLoginLogReplyValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e ListLoginLogReplyValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sListLoginLogReply.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = ListLoginLogReplyValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = ListLoginLogReplyValidationError{}
+
 // Validate checks the field values on GetUserReply_Role with the rules defined
 // in the proto definition for this message. If any rules are violated, the
 // first error encountered is returned, or nil if there are no violations.
@@ -4352,3 +4618,123 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = ListUserReply_UserValidationError{}
+
+// Validate checks the field values on ListLoginLogReply_Log with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *ListLoginLogReply_Log) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on ListLoginLogReply_Log with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// ListLoginLogReply_LogMultiError, or nil if none found.
+func (m *ListLoginLogReply_Log) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *ListLoginLogReply_Log) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Username
+
+	// no validation rules for Type
+
+	// no validation rules for Ip
+
+	// no validation rules for Address
+
+	// no validation rules for Browser
+
+	// no validation rules for Device
+
+	// no validation rules for Code
+
+	// no validation rules for Description
+
+	// no validation rules for CreatedAt
+
+	if len(errors) > 0 {
+		return ListLoginLogReply_LogMultiError(errors)
+	}
+
+	return nil
+}
+
+// ListLoginLogReply_LogMultiError is an error wrapping multiple validation
+// errors returned by ListLoginLogReply_Log.ValidateAll() if the designated
+// constraints aren't met.
+type ListLoginLogReply_LogMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m ListLoginLogReply_LogMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m ListLoginLogReply_LogMultiError) AllErrors() []error { return m }
+
+// ListLoginLogReply_LogValidationError is the validation error returned by
+// ListLoginLogReply_Log.Validate if the designated constraints aren't met.
+type ListLoginLogReply_LogValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e ListLoginLogReply_LogValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e ListLoginLogReply_LogValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e ListLoginLogReply_LogValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e ListLoginLogReply_LogValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e ListLoginLogReply_LogValidationError) ErrorName() string {
+	return "ListLoginLogReply_LogValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e ListLoginLogReply_LogValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sListLoginLogReply_Log.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = ListLoginLogReply_LogValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = ListLoginLogReply_LogValidationError{}

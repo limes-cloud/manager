@@ -1714,6 +1714,132 @@ func (x *GetUserLoginCaptchaReply) GetExpire() uint32 {
 	return 0
 }
 
+type ListLoginLogRequest struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Page       uint32  `protobuf:"varint,1,opt,name=page,proto3" json:"page,omitempty"`
+	PageSize   uint32  `protobuf:"varint,2,opt,name=pageSize,proto3" json:"pageSize,omitempty"`
+	Username   *string `protobuf:"bytes,3,opt,name=username,proto3,oneof" json:"username,omitempty"`
+	CreatedAts []int64 `protobuf:"varint,4,rep,packed,name=createdAts,proto3" json:"createdAts,omitempty"`
+}
+
+func (x *ListLoginLogRequest) Reset() {
+	*x = ListLoginLogRequest{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_api_manager_user_manager_user_proto_msgTypes[28]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *ListLoginLogRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListLoginLogRequest) ProtoMessage() {}
+
+func (x *ListLoginLogRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_api_manager_user_manager_user_proto_msgTypes[28]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListLoginLogRequest.ProtoReflect.Descriptor instead.
+func (*ListLoginLogRequest) Descriptor() ([]byte, []int) {
+	return file_api_manager_user_manager_user_proto_rawDescGZIP(), []int{28}
+}
+
+func (x *ListLoginLogRequest) GetPage() uint32 {
+	if x != nil {
+		return x.Page
+	}
+	return 0
+}
+
+func (x *ListLoginLogRequest) GetPageSize() uint32 {
+	if x != nil {
+		return x.PageSize
+	}
+	return 0
+}
+
+func (x *ListLoginLogRequest) GetUsername() string {
+	if x != nil && x.Username != nil {
+		return *x.Username
+	}
+	return ""
+}
+
+func (x *ListLoginLogRequest) GetCreatedAts() []int64 {
+	if x != nil {
+		return x.CreatedAts
+	}
+	return nil
+}
+
+type ListLoginLogReply struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Total uint32                   `protobuf:"varint,1,opt,name=total,proto3" json:"total,omitempty"`
+	List  []*ListLoginLogReply_Log `protobuf:"bytes,2,rep,name=list,proto3" json:"list,omitempty"`
+}
+
+func (x *ListLoginLogReply) Reset() {
+	*x = ListLoginLogReply{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_api_manager_user_manager_user_proto_msgTypes[29]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *ListLoginLogReply) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListLoginLogReply) ProtoMessage() {}
+
+func (x *ListLoginLogReply) ProtoReflect() protoreflect.Message {
+	mi := &file_api_manager_user_manager_user_proto_msgTypes[29]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListLoginLogReply.ProtoReflect.Descriptor instead.
+func (*ListLoginLogReply) Descriptor() ([]byte, []int) {
+	return file_api_manager_user_manager_user_proto_rawDescGZIP(), []int{29}
+}
+
+func (x *ListLoginLogReply) GetTotal() uint32 {
+	if x != nil {
+		return x.Total
+	}
+	return 0
+}
+
+func (x *ListLoginLogReply) GetList() []*ListLoginLogReply_Log {
+	if x != nil {
+		return x.List
+	}
+	return nil
+}
+
 type GetUserReply_Role struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -1727,7 +1853,7 @@ type GetUserReply_Role struct {
 func (x *GetUserReply_Role) Reset() {
 	*x = GetUserReply_Role{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_api_manager_user_manager_user_proto_msgTypes[28]
+		mi := &file_api_manager_user_manager_user_proto_msgTypes[30]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1740,7 +1866,7 @@ func (x *GetUserReply_Role) String() string {
 func (*GetUserReply_Role) ProtoMessage() {}
 
 func (x *GetUserReply_Role) ProtoReflect() protoreflect.Message {
-	mi := &file_api_manager_user_manager_user_proto_msgTypes[28]
+	mi := &file_api_manager_user_manager_user_proto_msgTypes[30]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1790,7 +1916,7 @@ type GetUserReply_Job struct {
 func (x *GetUserReply_Job) Reset() {
 	*x = GetUserReply_Job{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_api_manager_user_manager_user_proto_msgTypes[29]
+		mi := &file_api_manager_user_manager_user_proto_msgTypes[31]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1803,7 +1929,7 @@ func (x *GetUserReply_Job) String() string {
 func (*GetUserReply_Job) ProtoMessage() {}
 
 func (x *GetUserReply_Job) ProtoReflect() protoreflect.Message {
-	mi := &file_api_manager_user_manager_user_proto_msgTypes[29]
+	mi := &file_api_manager_user_manager_user_proto_msgTypes[31]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1853,7 +1979,7 @@ type GetUserReply_Department struct {
 func (x *GetUserReply_Department) Reset() {
 	*x = GetUserReply_Department{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_api_manager_user_manager_user_proto_msgTypes[30]
+		mi := &file_api_manager_user_manager_user_proto_msgTypes[32]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1866,7 +1992,7 @@ func (x *GetUserReply_Department) String() string {
 func (*GetUserReply_Department) ProtoMessage() {}
 
 func (x *GetUserReply_Department) ProtoReflect() protoreflect.Message {
-	mi := &file_api_manager_user_manager_user_proto_msgTypes[30]
+	mi := &file_api_manager_user_manager_user_proto_msgTypes[32]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1916,7 +2042,7 @@ type ListUserReply_Role struct {
 func (x *ListUserReply_Role) Reset() {
 	*x = ListUserReply_Role{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_api_manager_user_manager_user_proto_msgTypes[31]
+		mi := &file_api_manager_user_manager_user_proto_msgTypes[33]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1929,7 +2055,7 @@ func (x *ListUserReply_Role) String() string {
 func (*ListUserReply_Role) ProtoMessage() {}
 
 func (x *ListUserReply_Role) ProtoReflect() protoreflect.Message {
-	mi := &file_api_manager_user_manager_user_proto_msgTypes[31]
+	mi := &file_api_manager_user_manager_user_proto_msgTypes[33]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1979,7 +2105,7 @@ type ListUserReply_Department struct {
 func (x *ListUserReply_Department) Reset() {
 	*x = ListUserReply_Department{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_api_manager_user_manager_user_proto_msgTypes[32]
+		mi := &file_api_manager_user_manager_user_proto_msgTypes[34]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1992,7 +2118,7 @@ func (x *ListUserReply_Department) String() string {
 func (*ListUserReply_Department) ProtoMessage() {}
 
 func (x *ListUserReply_Department) ProtoReflect() protoreflect.Message {
-	mi := &file_api_manager_user_manager_user_proto_msgTypes[32]
+	mi := &file_api_manager_user_manager_user_proto_msgTypes[34]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2052,7 +2178,7 @@ type ListUserReply_User struct {
 func (x *ListUserReply_User) Reset() {
 	*x = ListUserReply_User{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_api_manager_user_manager_user_proto_msgTypes[33]
+		mi := &file_api_manager_user_manager_user_proto_msgTypes[35]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -2065,7 +2191,7 @@ func (x *ListUserReply_User) String() string {
 func (*ListUserReply_User) ProtoMessage() {}
 
 func (x *ListUserReply_User) ProtoReflect() protoreflect.Message {
-	mi := &file_api_manager_user_manager_user_proto_msgTypes[33]
+	mi := &file_api_manager_user_manager_user_proto_msgTypes[35]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2170,6 +2296,117 @@ func (x *ListUserReply_User) GetRole() *ListUserReply_Role {
 		return x.Role
 	}
 	return nil
+}
+
+type ListLoginLogReply_Log struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Username    string `protobuf:"bytes,1,opt,name=username,proto3" json:"username,omitempty"`
+	Type        string `protobuf:"bytes,2,opt,name=type,proto3" json:"type,omitempty"`
+	Ip          string `protobuf:"bytes,3,opt,name=ip,proto3" json:"ip,omitempty"`
+	Address     string `protobuf:"bytes,4,opt,name=address,proto3" json:"address,omitempty"`
+	Browser     string `protobuf:"bytes,5,opt,name=browser,proto3" json:"browser,omitempty"`
+	Device      string `protobuf:"bytes,6,opt,name=device,proto3" json:"device,omitempty"`
+	Code        int32  `protobuf:"varint,7,opt,name=code,proto3" json:"code,omitempty"`
+	Description string `protobuf:"bytes,8,opt,name=description,proto3" json:"description,omitempty"`
+	CreatedAt   uint32 `protobuf:"varint,9,opt,name=createdAt,proto3" json:"createdAt,omitempty"`
+}
+
+func (x *ListLoginLogReply_Log) Reset() {
+	*x = ListLoginLogReply_Log{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_api_manager_user_manager_user_proto_msgTypes[36]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *ListLoginLogReply_Log) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListLoginLogReply_Log) ProtoMessage() {}
+
+func (x *ListLoginLogReply_Log) ProtoReflect() protoreflect.Message {
+	mi := &file_api_manager_user_manager_user_proto_msgTypes[36]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListLoginLogReply_Log.ProtoReflect.Descriptor instead.
+func (*ListLoginLogReply_Log) Descriptor() ([]byte, []int) {
+	return file_api_manager_user_manager_user_proto_rawDescGZIP(), []int{29, 0}
+}
+
+func (x *ListLoginLogReply_Log) GetUsername() string {
+	if x != nil {
+		return x.Username
+	}
+	return ""
+}
+
+func (x *ListLoginLogReply_Log) GetType() string {
+	if x != nil {
+		return x.Type
+	}
+	return ""
+}
+
+func (x *ListLoginLogReply_Log) GetIp() string {
+	if x != nil {
+		return x.Ip
+	}
+	return ""
+}
+
+func (x *ListLoginLogReply_Log) GetAddress() string {
+	if x != nil {
+		return x.Address
+	}
+	return ""
+}
+
+func (x *ListLoginLogReply_Log) GetBrowser() string {
+	if x != nil {
+		return x.Browser
+	}
+	return ""
+}
+
+func (x *ListLoginLogReply_Log) GetDevice() string {
+	if x != nil {
+		return x.Device
+	}
+	return ""
+}
+
+func (x *ListLoginLogReply_Log) GetCode() int32 {
+	if x != nil {
+		return x.Code
+	}
+	return 0
+}
+
+func (x *ListLoginLogReply_Log) GetDescription() string {
+	if x != nil {
+		return x.Description
+	}
+	return ""
+}
+
+func (x *ListLoginLogReply_Log) GetCreatedAt() uint32 {
+	if x != nil {
+		return x.CreatedAt
+	}
+	return 0
 }
 
 var File_api_manager_user_manager_user_proto protoreflect.FileDescriptor
@@ -2448,10 +2685,42 @@ var file_api_manager_user_manager_user_proto_rawDesc = []byte{
 	0x0a, 0x07, 0x63, 0x61, 0x70, 0x74, 0x63, 0x68, 0x61, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52,
 	0x07, 0x63, 0x61, 0x70, 0x74, 0x63, 0x68, 0x61, 0x12, 0x16, 0x0a, 0x06, 0x65, 0x78, 0x70, 0x69,
 	0x72, 0x65, 0x18, 0x03, 0x20, 0x01, 0x28, 0x0d, 0x52, 0x06, 0x65, 0x78, 0x70, 0x69, 0x72, 0x65,
-	0x42, 0x30, 0x0a, 0x1b, 0x6d, 0x61, 0x6e, 0x61, 0x67, 0x65, 0x72, 0x2e, 0x61, 0x70, 0x69, 0x2e,
-	0x6d, 0x61, 0x6e, 0x61, 0x67, 0x65, 0x72, 0x2e, 0x75, 0x73, 0x65, 0x72, 0x2e, 0x76, 0x31, 0x42,
-	0x06, 0x55, 0x73, 0x65, 0x72, 0x56, 0x31, 0x50, 0x01, 0x5a, 0x07, 0x2e, 0x2f, 0x76, 0x31, 0x3b,
-	0x76, 0x31, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x22, 0xa7, 0x01, 0x0a, 0x13, 0x4c, 0x69, 0x73, 0x74, 0x4c, 0x6f, 0x67, 0x69, 0x6e, 0x4c, 0x6f,
+	0x67, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x1b, 0x0a, 0x04, 0x70, 0x61, 0x67, 0x65,
+	0x18, 0x01, 0x20, 0x01, 0x28, 0x0d, 0x42, 0x07, 0xfa, 0x42, 0x04, 0x2a, 0x02, 0x28, 0x01, 0x52,
+	0x04, 0x70, 0x61, 0x67, 0x65, 0x12, 0x25, 0x0a, 0x08, 0x70, 0x61, 0x67, 0x65, 0x53, 0x69, 0x7a,
+	0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0d, 0x42, 0x09, 0xfa, 0x42, 0x06, 0x2a, 0x04, 0x18, 0x32,
+	0x28, 0x01, 0x52, 0x08, 0x70, 0x61, 0x67, 0x65, 0x53, 0x69, 0x7a, 0x65, 0x12, 0x1f, 0x0a, 0x08,
+	0x75, 0x73, 0x65, 0x72, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x48, 0x00,
+	0x52, 0x08, 0x75, 0x73, 0x65, 0x72, 0x6e, 0x61, 0x6d, 0x65, 0x88, 0x01, 0x01, 0x12, 0x1e, 0x0a,
+	0x0a, 0x63, 0x72, 0x65, 0x61, 0x74, 0x65, 0x64, 0x41, 0x74, 0x73, 0x18, 0x04, 0x20, 0x03, 0x28,
+	0x03, 0x52, 0x0a, 0x63, 0x72, 0x65, 0x61, 0x74, 0x65, 0x64, 0x41, 0x74, 0x73, 0x42, 0x0b, 0x0a,
+	0x09, 0x5f, 0x75, 0x73, 0x65, 0x72, 0x6e, 0x61, 0x6d, 0x65, 0x22, 0xd9, 0x02, 0x0a, 0x11, 0x4c,
+	0x69, 0x73, 0x74, 0x4c, 0x6f, 0x67, 0x69, 0x6e, 0x4c, 0x6f, 0x67, 0x52, 0x65, 0x70, 0x6c, 0x79,
+	0x12, 0x14, 0x0a, 0x05, 0x74, 0x6f, 0x74, 0x61, 0x6c, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0d, 0x52,
+	0x05, 0x74, 0x6f, 0x74, 0x61, 0x6c, 0x12, 0x46, 0x0a, 0x04, 0x6c, 0x69, 0x73, 0x74, 0x18, 0x02,
+	0x20, 0x03, 0x28, 0x0b, 0x32, 0x32, 0x2e, 0x6d, 0x61, 0x6e, 0x61, 0x67, 0x65, 0x72, 0x2e, 0x61,
+	0x70, 0x69, 0x2e, 0x6d, 0x61, 0x6e, 0x61, 0x67, 0x65, 0x72, 0x2e, 0x75, 0x73, 0x65, 0x72, 0x2e,
+	0x76, 0x31, 0x2e, 0x4c, 0x69, 0x73, 0x74, 0x4c, 0x6f, 0x67, 0x69, 0x6e, 0x4c, 0x6f, 0x67, 0x52,
+	0x65, 0x70, 0x6c, 0x79, 0x2e, 0x4c, 0x6f, 0x67, 0x52, 0x04, 0x6c, 0x69, 0x73, 0x74, 0x1a, 0xe5,
+	0x01, 0x0a, 0x03, 0x4c, 0x6f, 0x67, 0x12, 0x1a, 0x0a, 0x08, 0x75, 0x73, 0x65, 0x72, 0x6e, 0x61,
+	0x6d, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x08, 0x75, 0x73, 0x65, 0x72, 0x6e, 0x61,
+	0x6d, 0x65, 0x12, 0x12, 0x0a, 0x04, 0x74, 0x79, 0x70, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09,
+	0x52, 0x04, 0x74, 0x79, 0x70, 0x65, 0x12, 0x0e, 0x0a, 0x02, 0x69, 0x70, 0x18, 0x03, 0x20, 0x01,
+	0x28, 0x09, 0x52, 0x02, 0x69, 0x70, 0x12, 0x18, 0x0a, 0x07, 0x61, 0x64, 0x64, 0x72, 0x65, 0x73,
+	0x73, 0x18, 0x04, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x61, 0x64, 0x64, 0x72, 0x65, 0x73, 0x73,
+	0x12, 0x18, 0x0a, 0x07, 0x62, 0x72, 0x6f, 0x77, 0x73, 0x65, 0x72, 0x18, 0x05, 0x20, 0x01, 0x28,
+	0x09, 0x52, 0x07, 0x62, 0x72, 0x6f, 0x77, 0x73, 0x65, 0x72, 0x12, 0x16, 0x0a, 0x06, 0x64, 0x65,
+	0x76, 0x69, 0x63, 0x65, 0x18, 0x06, 0x20, 0x01, 0x28, 0x09, 0x52, 0x06, 0x64, 0x65, 0x76, 0x69,
+	0x63, 0x65, 0x12, 0x12, 0x0a, 0x04, 0x63, 0x6f, 0x64, 0x65, 0x18, 0x07, 0x20, 0x01, 0x28, 0x05,
+	0x52, 0x04, 0x63, 0x6f, 0x64, 0x65, 0x12, 0x20, 0x0a, 0x0b, 0x64, 0x65, 0x73, 0x63, 0x72, 0x69,
+	0x70, 0x74, 0x69, 0x6f, 0x6e, 0x18, 0x08, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0b, 0x64, 0x65, 0x73,
+	0x63, 0x72, 0x69, 0x70, 0x74, 0x69, 0x6f, 0x6e, 0x12, 0x1c, 0x0a, 0x09, 0x63, 0x72, 0x65, 0x61,
+	0x74, 0x65, 0x64, 0x41, 0x74, 0x18, 0x09, 0x20, 0x01, 0x28, 0x0d, 0x52, 0x09, 0x63, 0x72, 0x65,
+	0x61, 0x74, 0x65, 0x64, 0x41, 0x74, 0x42, 0x30, 0x0a, 0x1b, 0x6d, 0x61, 0x6e, 0x61, 0x67, 0x65,
+	0x72, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x6d, 0x61, 0x6e, 0x61, 0x67, 0x65, 0x72, 0x2e, 0x75, 0x73,
+	0x65, 0x72, 0x2e, 0x76, 0x31, 0x42, 0x06, 0x55, 0x73, 0x65, 0x72, 0x56, 0x31, 0x50, 0x01, 0x5a,
+	0x07, 0x2e, 0x2f, 0x76, 0x31, 0x3b, 0x76, 0x31, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -2466,7 +2735,7 @@ func file_api_manager_user_manager_user_proto_rawDescGZIP() []byte {
 	return file_api_manager_user_manager_user_proto_rawDescData
 }
 
-var file_api_manager_user_manager_user_proto_msgTypes = make([]protoimpl.MessageInfo, 34)
+var file_api_manager_user_manager_user_proto_msgTypes = make([]protoimpl.MessageInfo, 37)
 var file_api_manager_user_manager_user_proto_goTypes = []interface{}{
 	(*GetUserRequest)(nil),                   // 0: manager.api.manager.user.v1.GetUserRequest
 	(*GetUserReply)(nil),                     // 1: manager.api.manager.user.v1.GetUserReply
@@ -2496,26 +2765,30 @@ var file_api_manager_user_manager_user_proto_goTypes = []interface{}{
 	(*SendCurrentUserCaptchaRequest)(nil),    // 25: manager.api.manager.user.v1.SendCurrentUserCaptchaRequest
 	(*SendCurrentUserCaptchaReply)(nil),      // 26: manager.api.manager.user.v1.SendCurrentUserCaptchaReply
 	(*GetUserLoginCaptchaReply)(nil),         // 27: manager.api.manager.user.v1.GetUserLoginCaptchaReply
-	(*GetUserReply_Role)(nil),                // 28: manager.api.manager.user.v1.GetUserReply.Role
-	(*GetUserReply_Job)(nil),                 // 29: manager.api.manager.user.v1.GetUserReply.Job
-	(*GetUserReply_Department)(nil),          // 30: manager.api.manager.user.v1.GetUserReply.Department
-	(*ListUserReply_Role)(nil),               // 31: manager.api.manager.user.v1.ListUserReply.Role
-	(*ListUserReply_Department)(nil),         // 32: manager.api.manager.user.v1.ListUserReply.Department
-	(*ListUserReply_User)(nil),               // 33: manager.api.manager.user.v1.ListUserReply.User
+	(*ListLoginLogRequest)(nil),              // 28: manager.api.manager.user.v1.ListLoginLogRequest
+	(*ListLoginLogReply)(nil),                // 29: manager.api.manager.user.v1.ListLoginLogReply
+	(*GetUserReply_Role)(nil),                // 30: manager.api.manager.user.v1.GetUserReply.Role
+	(*GetUserReply_Job)(nil),                 // 31: manager.api.manager.user.v1.GetUserReply.Job
+	(*GetUserReply_Department)(nil),          // 32: manager.api.manager.user.v1.GetUserReply.Department
+	(*ListUserReply_Role)(nil),               // 33: manager.api.manager.user.v1.ListUserReply.Role
+	(*ListUserReply_Department)(nil),         // 34: manager.api.manager.user.v1.ListUserReply.Department
+	(*ListUserReply_User)(nil),               // 35: manager.api.manager.user.v1.ListUserReply.User
+	(*ListLoginLogReply_Log)(nil),            // 36: manager.api.manager.user.v1.ListLoginLogReply.Log
 }
 var file_api_manager_user_manager_user_proto_depIdxs = []int32{
-	28, // 0: manager.api.manager.user.v1.GetUserReply.roles:type_name -> manager.api.manager.user.v1.GetUserReply.Role
-	29, // 1: manager.api.manager.user.v1.GetUserReply.jobs:type_name -> manager.api.manager.user.v1.GetUserReply.Job
-	30, // 2: manager.api.manager.user.v1.GetUserReply.department:type_name -> manager.api.manager.user.v1.GetUserReply.Department
-	28, // 3: manager.api.manager.user.v1.GetUserReply.role:type_name -> manager.api.manager.user.v1.GetUserReply.Role
-	33, // 4: manager.api.manager.user.v1.ListUserReply.list:type_name -> manager.api.manager.user.v1.ListUserReply.User
-	32, // 5: manager.api.manager.user.v1.ListUserReply.User.department:type_name -> manager.api.manager.user.v1.ListUserReply.Department
-	31, // 6: manager.api.manager.user.v1.ListUserReply.User.role:type_name -> manager.api.manager.user.v1.ListUserReply.Role
-	7,  // [7:7] is the sub-list for method output_type
-	7,  // [7:7] is the sub-list for method input_type
-	7,  // [7:7] is the sub-list for extension type_name
-	7,  // [7:7] is the sub-list for extension extendee
-	0,  // [0:7] is the sub-list for field type_name
+	30, // 0: manager.api.manager.user.v1.GetUserReply.roles:type_name -> manager.api.manager.user.v1.GetUserReply.Role
+	31, // 1: manager.api.manager.user.v1.GetUserReply.jobs:type_name -> manager.api.manager.user.v1.GetUserReply.Job
+	32, // 2: manager.api.manager.user.v1.GetUserReply.department:type_name -> manager.api.manager.user.v1.GetUserReply.Department
+	30, // 3: manager.api.manager.user.v1.GetUserReply.role:type_name -> manager.api.manager.user.v1.GetUserReply.Role
+	35, // 4: manager.api.manager.user.v1.ListUserReply.list:type_name -> manager.api.manager.user.v1.ListUserReply.User
+	36, // 5: manager.api.manager.user.v1.ListLoginLogReply.list:type_name -> manager.api.manager.user.v1.ListLoginLogReply.Log
+	34, // 6: manager.api.manager.user.v1.ListUserReply.User.department:type_name -> manager.api.manager.user.v1.ListUserReply.Department
+	33, // 7: manager.api.manager.user.v1.ListUserReply.User.role:type_name -> manager.api.manager.user.v1.ListUserReply.Role
+	8,  // [8:8] is the sub-list for method output_type
+	8,  // [8:8] is the sub-list for method input_type
+	8,  // [8:8] is the sub-list for extension type_name
+	8,  // [8:8] is the sub-list for extension extendee
+	0,  // [0:8] is the sub-list for field type_name
 }
 
 func init() { file_api_manager_user_manager_user_proto_init() }
@@ -2861,7 +3134,7 @@ func file_api_manager_user_manager_user_proto_init() {
 			}
 		}
 		file_api_manager_user_manager_user_proto_msgTypes[28].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*GetUserReply_Role); i {
+			switch v := v.(*ListLoginLogRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -2873,7 +3146,7 @@ func file_api_manager_user_manager_user_proto_init() {
 			}
 		}
 		file_api_manager_user_manager_user_proto_msgTypes[29].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*GetUserReply_Job); i {
+			switch v := v.(*ListLoginLogReply); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -2885,7 +3158,7 @@ func file_api_manager_user_manager_user_proto_init() {
 			}
 		}
 		file_api_manager_user_manager_user_proto_msgTypes[30].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*GetUserReply_Department); i {
+			switch v := v.(*GetUserReply_Role); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -2897,7 +3170,7 @@ func file_api_manager_user_manager_user_proto_init() {
 			}
 		}
 		file_api_manager_user_manager_user_proto_msgTypes[31].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ListUserReply_Role); i {
+			switch v := v.(*GetUserReply_Job); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -2909,7 +3182,7 @@ func file_api_manager_user_manager_user_proto_init() {
 			}
 		}
 		file_api_manager_user_manager_user_proto_msgTypes[32].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ListUserReply_Department); i {
+			switch v := v.(*GetUserReply_Department); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -2921,7 +3194,43 @@ func file_api_manager_user_manager_user_proto_init() {
 			}
 		}
 		file_api_manager_user_manager_user_proto_msgTypes[33].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*ListUserReply_Role); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_api_manager_user_manager_user_proto_msgTypes[34].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*ListUserReply_Department); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_api_manager_user_manager_user_proto_msgTypes[35].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*ListUserReply_User); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_api_manager_user_manager_user_proto_msgTypes[36].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*ListLoginLogReply_Log); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -2938,14 +3247,15 @@ func file_api_manager_user_manager_user_proto_init() {
 	file_api_manager_user_manager_user_proto_msgTypes[2].OneofWrappers = []interface{}{}
 	file_api_manager_user_manager_user_proto_msgTypes[12].OneofWrappers = []interface{}{}
 	file_api_manager_user_manager_user_proto_msgTypes[18].OneofWrappers = []interface{}{}
-	file_api_manager_user_manager_user_proto_msgTypes[33].OneofWrappers = []interface{}{}
+	file_api_manager_user_manager_user_proto_msgTypes[28].OneofWrappers = []interface{}{}
+	file_api_manager_user_manager_user_proto_msgTypes[35].OneofWrappers = []interface{}{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_api_manager_user_manager_user_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   34,
+			NumMessages:   37,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

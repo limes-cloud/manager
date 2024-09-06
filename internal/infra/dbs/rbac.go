@@ -6,7 +6,6 @@ import (
 	"github.com/limes-cloud/kratosx"
 
 	"github.com/limes-cloud/manager/internal/domain/entity"
-	"github.com/limes-cloud/manager/internal/domain/repository"
 	"github.com/limes-cloud/manager/internal/types"
 )
 
@@ -14,18 +13,18 @@ type RbacInfra struct {
 }
 
 var (
-	_RbacInfra     *RbacInfra
-	_RbacInfraOnce sync.Once
+	rbacIns  *RbacInfra
+	rbacOnce sync.Once
 )
 
-func NewRbacInfra() repository.RbacRepository {
-	_RbacInfraOnce.Do(func() {
-		_RbacInfra = &RbacInfra{}
+func NewRbacInfra() *RbacInfra {
+	rbacOnce.Do(func() {
+		rbacIns = &RbacInfra{}
 	})
-	return _RbacInfra
+	return rbacIns
 }
 
-func (r *RbacInfra) CreateRbacRolesApi(ctx kratosx.Context, roles []string, req types.MenuApi) error {
+func (infra *RbacInfra) CreateRbacRolesApi(ctx kratosx.Context, roles []string, req types.MenuApi) error {
 	defer ctx.Authentication().Enforce().LoadPolicy()
 
 	var list []*entity.CasbinRule
@@ -40,13 +39,13 @@ func (r *RbacInfra) CreateRbacRolesApi(ctx kratosx.Context, roles []string, req 
 	return ctx.DB().Create(&list).Error
 }
 
-func (r *RbacInfra) DeleteRbacApi(ctx kratosx.Context, api, method string) error {
+func (infra *RbacInfra) DeleteRbacApi(ctx kratosx.Context, api, method string) error {
 	defer ctx.Authentication().Enforce().LoadPolicy()
 
 	return ctx.DB().Where("v1=? and v2=?", api, method).Delete(entity.CasbinRule{}).Error
 }
 
-func (r *RbacInfra) UpdateRbacApi(ctx kratosx.Context, old types.MenuApi, now types.MenuApi) error {
+func (infra *RbacInfra) UpdateRbacApi(ctx kratosx.Context, old types.MenuApi, now types.MenuApi) error {
 	defer ctx.Authentication().Enforce().LoadPolicy()
 
 	return ctx.DB().
@@ -57,7 +56,7 @@ func (r *RbacInfra) UpdateRbacApi(ctx kratosx.Context, old types.MenuApi, now ty
 		Error
 }
 
-func (r *RbacInfra) UpdateRbacRoleApis(ctx kratosx.Context, role string, apis []*types.MenuApi) error {
+func (infra *RbacInfra) UpdateRbacRoleApis(ctx kratosx.Context, role string, apis []*types.MenuApi) error {
 	var list []*entity.CasbinRule
 	for _, item := range apis {
 		list = append(list, &entity.CasbinRule{
@@ -80,7 +79,7 @@ func (r *RbacInfra) UpdateRbacRoleApis(ctx kratosx.Context, role string, apis []
 	})
 }
 
-func (r *RbacInfra) DeleteRbacRoles(ctx kratosx.Context, roles []string) error {
+func (infra *RbacInfra) DeleteRbacRoles(ctx kratosx.Context, roles []string) error {
 	defer ctx.Authentication().Enforce().LoadPolicy()
 	return ctx.DB().Where("v0 in ?", roles).Delete(&entity.CasbinRule{}).Error
 }

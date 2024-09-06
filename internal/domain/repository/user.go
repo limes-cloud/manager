@@ -37,4 +37,10 @@ type UserRepository interface {
 
 	// DeleteUser 删除用户信息
 	DeleteUser(ctx kratosx.Context, id uint32) error
+
+	// ListLoginLog 获取登陆信息列表
+	ListLoginLog(ctx kratosx.Context, req *types.ListLoginLogRequest) ([]*entity.LoginLog, uint32, error)
+
+	// CreateLoginLog 创建登陆信息
+	CreateLoginLog(ctx kratosx.Context, req *entity.LoginLog) (uint32, error)
 }

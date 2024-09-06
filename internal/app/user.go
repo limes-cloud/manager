@@ -2,6 +2,7 @@ package app
 
 import (
 	"context"
+
 	"github.com/limes-cloud/manager/internal/infra/rpc"
 
 	"github.com/go-kratos/kratos/v2/transport/grpc"
@@ -32,7 +33,6 @@ func NewUserApp(conf *conf.Config) *UserApp {
 			dbs.NewDepartmentInfra(),
 			dbs.NewRoleRepo(),
 			rpc.NewFileInfra(),
-
 		),
 	}
 }
@@ -281,4 +281,32 @@ func (s *UserApp) GetUserLoginCaptcha(c context.Context, _ *emptypb.Empty) (*pb.
 		Captcha: reply.Captcha,
 		Expire:  reply.Expire,
 	}, nil
+}
+
+func (s *UserApp) ListLoginLog(c context.Context, req *pb.ListLoginLogRequest) (*pb.ListLoginLogReply, error) {
+	list, total, err := s.srv.ListLoginLog(kratosx.MustContext(c), &types.ListLoginLogRequest{
+		Page:       req.Page,
+		PageSize:   req.PageSize,
+		Username:   req.Username,
+		CreatedAts: req.CreatedAts,
+	})
+	if err != nil {
+		return nil, err
+	}
+	reply := &pb.ListLoginLogReply{Total: total}
+	for _, item := range list {
+		reply.List = append(reply.List, &pb.ListLoginLogReply_Log{
+			Username:    item.Username,
+			Type:        item.Type,
+			Ip:          item.IP,
+			Address:     item.Address,
+			Browser:     item.Browser,
+			Device:      item.Device,
+			Code:        int32(item.Code),
+			Description: item.Description,
+			CreatedAt:   uint32(item.CreatedAt),
+		})
+	}
+
+	return reply, nil
 }

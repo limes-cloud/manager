@@ -5,11 +5,17 @@ import (
 	"encoding/json"
 	"time"
 
+	"github.com/limes-cloud/manager/internal/pkg/ua"
+
+	"github.com/go-kratos/kratos/v2/transport"
+
 	"github.com/forgoer/openssl"
+	kerrors "github.com/go-kratos/kratos/v2/errors"
 	"github.com/limes-cloud/kratosx"
 	"github.com/limes-cloud/kratosx/pkg/crypto"
 	"github.com/limes-cloud/kratosx/pkg/valx"
 	ktypes "github.com/limes-cloud/kratosx/types"
+	"github.com/limes-cloud/manager/internal/pkg/address"
 	"google.golang.org/protobuf/proto"
 
 	"github.com/limes-cloud/manager/api/manager/errors"
@@ -463,16 +469,65 @@ func (u *UseService) GetUserLoginCaptcha(ctx kratosx.Context) (*types.GetUserLog
 	}, nil
 }
 
-func (u *UseService) UserLogin(ctx kratosx.Context, in *types.UserLoginRequest) (string, error) {
+func (u *UseService) UserLogin(ctx kratosx.Context, in *types.UserLoginRequest) (token string, rerr error) {
+	var (
+		user  *entity.User
+		utype string
+	)
+
+	defer func() {
+		if errors.IsUserDisableError(rerr) || errors.IsVerifyCaptchaError(rerr) {
+			return
+		}
+
+		header, ok := transport.FromServerContext(ctx)
+		if !ok {
+			return
+		}
+
+		var (
+			ip   = ctx.ClientIP()
+			ac   = address.New(ip)
+			ug   = ua.Parse(header.RequestHeader().Get("User-Agent"))
+			code = 200
+			desc = "登陆成功"
+		)
+
+		if rerr != nil {
+			var er *kerrors.Error
+			if ok := kerrors.As(rerr, &er); ok {
+				code = int(er.GetCode())
+				desc = er.Error()
+			} else {
+				code = 400
+				desc = rerr.Error()
+			}
+		}
+
+		_, _ = u.repo.CreateLoginLog(ctx, &entity.LoginLog{
+			Username:    in.Username,
+			Type:        utype,
+			IP:          ctx.ClientIP(),
+			Address:     ac.GetAddress(),
+			Browser:     ug.Name + " " + ug.Version,
+			Device:      ug.OS + " " + ug.OSVersion,
+			Code:        code,
+			Description: desc,
+		})
+	}()
+
 	if err := ctx.Captcha().VerifyImage(loginCaptchaKey, ctx.ClientIP(), in.CaptchaId, in.Captcha); err != nil {
-		return "", errors.VerifyCaptchaError()
+		ctx.Logger().Warnw("msg", "captcha verify error", "err", err.Error())
+		rerr = errors.VerifyCaptchaError()
+		return
 	}
 
 	passByte, _ := base64.StdEncoding.DecodeString(in.Password)
 	decryptData, err := openssl.RSADecrypt(passByte, ctx.Loader(passwordCert))
 	if err != nil {
-		ctx.Logger().Error("rsa解密失败:", err.Error())
-		return "", errors.SystemError()
+		ctx.Logger().Errorw("msg", "rsa decode error", "err", err.Error())
+		rerr = errors.VerifyCaptchaError()
+		return
 	}
 
 	pw := struct {
@@ -480,7 +535,9 @@ func (u *UseService) UserLogin(ctx kratosx.Context, in *types.UserLoginRequest) 
 		Time     int64  `json:"time"`
 	}{}
 	if json.Unmarshal(decryptData, &pw) != nil {
-		return "", errors.PasswordError()
+		ctx.Logger().Errorw("msg", "password format error", "err", err.Error())
+		rerr = errors.PasswordError()
+		return
 	}
 
 	if time.Now().UnixMilli()-pw.Time > 10*1000 {
@@ -490,25 +547,32 @@ func (u *UseService) UserLogin(ctx kratosx.Context, in *types.UserLoginRequest) 
 			"submit", pw.Time,
 			"dt", time.Now().UnixMilli()-pw.Time,
 		)
-		return "", errors.PasswordExpireError()
+		rerr = errors.PasswordExpireError()
+		return
 	}
 
 	// 获取用户信息
-	var user *entity.User
+
 	if valx.IsPhone(in.Username) {
+		utype = "phone"
 		user, err = u.repo.GetUserByPhone(ctx, in.Username)
 	} else if valx.IsEmail(in.Username) {
+		utype = "email"
 		user, err = u.repo.GetUserByEmail(ctx, in.Username)
 	} else {
-		return "", errors.UsernameFormatError()
+		rerr = errors.UsernameFormatError()
+		return
 	}
 
 	if err != nil {
-		return "", errors.UsernameNotExistError()
+		ctx.Logger().Errorw("msg", "get user info error", "err", err.Error())
+		rerr = errors.UsernameNotExistError()
+		return
 	}
 
 	if user.Status != nil && !*user.Status {
-		return "", errors.UserDisableError()
+		rerr = errors.UserDisableError()
+		return
 	}
 
 	var (
@@ -525,7 +589,8 @@ func (u *UseService) UserLogin(ctx kratosx.Context, in *types.UserLoginRequest) 
 		}
 	}
 	if len(enableRoles) == 0 {
-		return "", errors.RoleDisableError()
+		rerr = errors.RoleDisableError()
+		return
 	}
 
 	if !notSwitch {
@@ -534,10 +599,11 @@ func (u *UseService) UserLogin(ctx kratosx.Context, in *types.UserLoginRequest) 
 	}
 
 	if !crypto.CompareHashPwd(user.Password, pw.Password) {
-		return "", errors.PasswordError()
+		rerr = errors.PasswordError()
+		return
 	}
 
-	token, err := ctx.JWT().NewToken(md.New(&md.Auth{
+	token, err = ctx.JWT().NewToken(md.New(&md.Auth{
 		UserId:            user.Id,
 		RoleId:            user.RoleId,
 		RoleKeyword:       user.Role.Keyword,
@@ -545,7 +611,9 @@ func (u *UseService) UserLogin(ctx kratosx.Context, in *types.UserLoginRequest) 
 		DepartmentKeyword: user.Department.Keyword,
 	}))
 	if err != nil {
-		return "", errors.GenTokenError()
+		ctx.Logger().Errorw("msg", "gen user token error", "err", err.Error())
+		rerr = errors.GenTokenError()
+		return
 	}
 
 	data := &entity.User{
@@ -556,7 +624,9 @@ func (u *UseService) UserLogin(ctx kratosx.Context, in *types.UserLoginRequest) 
 	}
 
 	if err := u.repo.UpdateUser(ctx, data); err != nil {
-		return "", errors.DatabaseError(err.Error())
+		ctx.Logger().Errorw("msg", "update user login info error", "err", err.Error())
+		rerr = errors.SystemError()
+		return
 	}
 	return token, nil
 }
@@ -577,4 +647,13 @@ func (u *UseService) UserRefreshToken(ctx kratosx.Context) (string, error) {
 		return "", errors.RefreshTokenError(err.Error())
 	}
 	return token, nil
+}
+
+// ListLoginLog 获取用户登陆日志
+func (u *UseService) ListLoginLog(ctx kratosx.Context, req *types.ListLoginLogRequest) ([]*entity.LoginLog, uint32, error) {
+	list, total, err := u.repo.ListLoginLog(ctx, req)
+	if err != nil {
+		return nil, 0, errors.ListError()
+	}
+	return list, total, nil
 }

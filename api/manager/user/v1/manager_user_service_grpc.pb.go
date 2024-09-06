@@ -37,6 +37,7 @@ const (
 	User_UserLogin_FullMethodName                 = "/manager.api.manager.user.v1.User/UserLogin"
 	User_UserLogout_FullMethodName                = "/manager.api.manager.user.v1.User/UserLogout"
 	User_UserRefreshToken_FullMethodName          = "/manager.api.manager.user.v1.User/UserRefreshToken"
+	User_ListLoginLog_FullMethodName              = "/manager.api.manager.user.v1.User/ListLoginLog"
 )
 
 // UserClient is the client API for User service.
@@ -77,6 +78,8 @@ type UserClient interface {
 	UserLogout(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	// UserRefreshToken 用户刷新token
 	UserRefreshToken(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*UserRefreshTokenReply, error)
+	// ListLoginLog 获取用户登陆信息列表
+	ListLoginLog(ctx context.Context, in *ListLoginLogRequest, opts ...grpc.CallOption) (*ListLoginLogReply, error)
 }
 
 type userClient struct {
@@ -240,6 +243,15 @@ func (c *userClient) UserRefreshToken(ctx context.Context, in *emptypb.Empty, op
 	return out, nil
 }
 
+func (c *userClient) ListLoginLog(ctx context.Context, in *ListLoginLogRequest, opts ...grpc.CallOption) (*ListLoginLogReply, error) {
+	out := new(ListLoginLogReply)
+	err := c.cc.Invoke(ctx, User_ListLoginLog_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UserServer is the server API for User service.
 // All implementations must embed UnimplementedUserServer
 // for forward compatibility
@@ -278,6 +290,8 @@ type UserServer interface {
 	UserLogout(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
 	// UserRefreshToken 用户刷新token
 	UserRefreshToken(context.Context, *emptypb.Empty) (*UserRefreshTokenReply, error)
+	// ListLoginLog 获取用户登陆信息列表
+	ListLoginLog(context.Context, *ListLoginLogRequest) (*ListLoginLogReply, error)
 	mustEmbedUnimplementedUserServer()
 }
 
@@ -335,6 +349,9 @@ func (UnimplementedUserServer) UserLogout(context.Context, *emptypb.Empty) (*emp
 }
 func (UnimplementedUserServer) UserRefreshToken(context.Context, *emptypb.Empty) (*UserRefreshTokenReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UserRefreshToken not implemented")
+}
+func (UnimplementedUserServer) ListLoginLog(context.Context, *ListLoginLogRequest) (*ListLoginLogReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListLoginLog not implemented")
 }
 func (UnimplementedUserServer) mustEmbedUnimplementedUserServer() {}
 
@@ -655,6 +672,24 @@ func _User_UserRefreshToken_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
+func _User_ListLoginLog_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListLoginLogRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).ListLoginLog(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_ListLoginLog_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).ListLoginLog(ctx, req.(*ListLoginLogRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // User_ServiceDesc is the grpc.ServiceDesc for User service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -729,6 +764,10 @@ var User_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UserRefreshToken",
 			Handler:    _User_UserRefreshToken_Handler,
+		},
+		{
+			MethodName: "ListLoginLog",
+			Handler:    _User_ListLoginLog_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

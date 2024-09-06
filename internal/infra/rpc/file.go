@@ -3,7 +3,6 @@ package rpc
 import (
 	"github.com/limes-cloud/kratosx"
 	"github.com/limes-cloud/manager/api/manager/errors"
-	"github.com/limes-cloud/manager/internal/domain/repository"
 	file "github.com/limes-cloud/resource/api/resource/file/v1"
 )
 
@@ -14,7 +13,7 @@ const (
 type FileInfra struct {
 }
 
-func NewFileInfra() repository.FileRepository {
+func NewFileInfra() *FileInfra {
 	return &FileInfra{}
 }
 

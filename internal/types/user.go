@@ -51,3 +51,10 @@ type UserLoginRequest struct {
 	CaptchaId string `json:"captchaId"`
 	Captcha   string `json:"captcha"`
 }
+
+type ListLoginLogRequest struct {
+	Page       uint32  `json:"page"`
+	PageSize   uint32  `json:"pageSize"`
+	Username   *string `json:"username"`
+	CreatedAts []int64 `json:"createdAts"`
+}

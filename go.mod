@@ -6,11 +6,11 @@ require (
 	github.com/envoyproxy/protoc-gen-validate v1.0.4
 	github.com/forgoer/openssl v1.6.0
 	github.com/go-kratos/kratos/v2 v2.7.3
-	github.com/gogo/protobuf v1.3.2
-	github.com/limes-cloud/configure v1.0.39
-	github.com/limes-cloud/kratosx v1.0.52
+	github.com/limes-cloud/configure v1.0.45
+	github.com/limes-cloud/kratosx v1.0.53
 	github.com/limes-cloud/resource v1.0.17
 	go.uber.org/automaxprocs v1.5.3
+	golang.org/x/text v0.15.0
 	google.golang.org/genproto/googleapis/api v0.0.0-20240429193739-8cf5692501f6
 	google.golang.org/grpc v1.63.2
 	google.golang.org/protobuf v1.34.0
@@ -122,7 +122,6 @@ require (
 	golang.org/x/net v0.24.0 // indirect
 	golang.org/x/sync v0.7.0 // indirect
 	golang.org/x/sys v0.20.0 // indirect
-	golang.org/x/text v0.15.0 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20240429193739-8cf5692501f6 // indirect
 	gopkg.in/natefinch/lumberjack.v2 v2.2.1 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
