@@ -2,11 +2,10 @@ package repository
 
 import (
 	"github.com/limes-cloud/kratosx"
-
 	"github.com/limes-cloud/manager/internal/types"
 )
 
-type RbacRepository interface {
+type Rbac interface {
 	// CreateRbacRolesApi 批量添加角色所属菜单权限
 	CreateRbacRolesApi(ctx kratosx.Context, roles []string, api types.MenuApi) error
 

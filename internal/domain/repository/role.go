@@ -2,12 +2,11 @@ package repository
 
 import (
 	"github.com/limes-cloud/kratosx"
-
 	"github.com/limes-cloud/manager/internal/domain/entity"
 	"github.com/limes-cloud/manager/internal/types"
 )
 
-type RoleRepository interface {
+type Role interface {
 	// GetRole 获取指定的角色信息
 	GetRole(ctx kratosx.Context, id uint32) (*entity.Role, error)
 

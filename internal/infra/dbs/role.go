@@ -11,35 +11,35 @@ import (
 	"github.com/limes-cloud/manager/internal/types"
 )
 
-type RoleInfra struct {
+type Role struct {
 }
 
 var (
-	roleIns  *RoleInfra
+	roleIns  *Role
 	roleOnce sync.Once
 )
 
-func NewRoleRepo() *RoleInfra {
+func NewRoleRepo() *Role {
 	roleOnce.Do(func() {
-		roleIns = &RoleInfra{}
+		roleIns = &Role{}
 	})
 	return roleIns
 }
 
 // GetRole 获取指定的数据
-func (infra *RoleInfra) GetRole(ctx kratosx.Context, id uint32) (*entity.Role, error) {
+func (infra *Role) GetRole(ctx kratosx.Context, id uint32) (*entity.Role, error) {
 	var role = entity.Role{}
 	return &role, ctx.DB().First(&role, id).Error
 }
 
 // GetRoleByKeyword 获取指定数据
-func (infra *RoleInfra) GetRoleByKeyword(ctx kratosx.Context, keyword string) (*entity.Role, error) {
+func (infra *Role) GetRoleByKeyword(ctx kratosx.Context, keyword string) (*entity.Role, error) {
 	var role = entity.Role{}
 	return &role, ctx.DB().Where("keyword = ?", keyword).First(&role).Error
 }
 
 // ListRole 获取列表
-func (infra *RoleInfra) ListRole(ctx kratosx.Context, req *types.ListRoleRequest) ([]*entity.Role, error) {
+func (infra *Role) ListRole(ctx kratosx.Context, req *types.ListRoleRequest) ([]*entity.Role, error) {
 	var (
 		es []*entity.Role
 		fs = []string{"*"}
@@ -57,7 +57,7 @@ func (infra *RoleInfra) ListRole(ctx kratosx.Context, req *types.ListRoleRequest
 }
 
 // CreateRole 创建数据
-func (infra *RoleInfra) CreateRole(ctx kratosx.Context, role *entity.Role) (uint32, error) {
+func (infra *Role) CreateRole(ctx kratosx.Context, role *entity.Role) (uint32, error) {
 	return role.Id, ctx.Transaction(func(ctx kratosx.Context) error {
 		if err := ctx.DB().Create(role).Error; err != nil {
 			return err
@@ -67,7 +67,7 @@ func (infra *RoleInfra) CreateRole(ctx kratosx.Context, role *entity.Role) (uint
 }
 
 // UpdateRole 更新数据
-func (infra *RoleInfra) UpdateRole(ctx kratosx.Context, req *entity.Role) error {
+func (infra *Role) UpdateRole(ctx kratosx.Context, req *entity.Role) error {
 	if req.Id == req.ParentId {
 		return errors.New("父级不能为自己")
 	}
@@ -90,12 +90,12 @@ func (infra *RoleInfra) UpdateRole(ctx kratosx.Context, req *entity.Role) error 
 }
 
 // UpdateRoleStatus 更新数据状态
-func (infra *RoleInfra) UpdateRoleStatus(ctx kratosx.Context, id uint32, status bool) error {
+func (infra *Role) UpdateRoleStatus(ctx kratosx.Context, id uint32, status bool) error {
 	return ctx.DB().Model(entity.Role{}).Where("id=?", id).Update("status", status).Error
 }
 
 // DeleteRole 删除数据
-func (infra *RoleInfra) DeleteRole(ctx kratosx.Context, id uint32) error {
+func (infra *Role) DeleteRole(ctx kratosx.Context, id uint32) error {
 	ids, err := infra.GetRoleChildrenIds(ctx, id)
 	if err != nil {
 		return err
@@ -105,7 +105,7 @@ func (infra *RoleInfra) DeleteRole(ctx kratosx.Context, id uint32) error {
 }
 
 // GetRoleChildrenIds 获取指定id的所有子id
-func (infra *RoleInfra) GetRoleChildrenIds(ctx kratosx.Context, id uint32) ([]uint32, error) {
+func (infra *Role) GetRoleChildrenIds(ctx kratosx.Context, id uint32) ([]uint32, error) {
 	var ids []uint32
 	return ids, ctx.DB().Model(entity.RoleClosure{}).
 		Select("children").
@@ -114,7 +114,7 @@ func (infra *RoleInfra) GetRoleChildrenIds(ctx kratosx.Context, id uint32) ([]ui
 }
 
 // GetRoleParentIds 获取指定id的所有父id
-func (infra *RoleInfra) GetRoleParentIds(ctx kratosx.Context, id uint32) ([]uint32, error) {
+func (infra *Role) GetRoleParentIds(ctx kratosx.Context, id uint32) ([]uint32, error) {
 	var ids []uint32
 	return ids, ctx.DB().Model(entity.RoleClosure{}).
 		Select("parent").
@@ -123,7 +123,7 @@ func (infra *RoleInfra) GetRoleParentIds(ctx kratosx.Context, id uint32) ([]uint
 }
 
 // appendRoleChildren 添加id到指定的父id下
-func (infra *RoleInfra) appendRoleChildren(ctx kratosx.Context, pid uint32, id uint32) error {
+func (infra *Role) appendRoleChildren(ctx kratosx.Context, pid uint32, id uint32) error {
 	list := []*entity.RoleClosure{
 		{
 			Parent:   pid,
@@ -141,12 +141,12 @@ func (infra *RoleInfra) appendRoleChildren(ctx kratosx.Context, pid uint32, id u
 }
 
 // removeRoleParent 删除指定id的所有父层级
-func (infra *RoleInfra) removeRoleParent(ctx kratosx.Context, id uint32) error {
+func (infra *Role) removeRoleParent(ctx kratosx.Context, id uint32) error {
 	return ctx.DB().Delete(&entity.RoleClosure{}, "children=?", id).Error
 }
 
 // GetRoleMenuIds 获取指定角色的所有id
-func (infra *RoleInfra) GetRoleMenuIds(ctx kratosx.Context, id uint32) ([]uint32, error) {
+func (infra *Role) GetRoleMenuIds(ctx kratosx.Context, id uint32) ([]uint32, error) {
 	var ids []uint32
 	return ids, ctx.DB().Model(entity.RoleMenu{}).
 		Select("menu_id").
@@ -155,7 +155,7 @@ func (infra *RoleInfra) GetRoleMenuIds(ctx kratosx.Context, id uint32) ([]uint32
 }
 
 // UpdateRoleMenu 更新所有角色的id
-func (infra *RoleInfra) UpdateRoleMenu(ctx kratosx.Context, roleId uint32, menuIds []uint32) error {
+func (infra *Role) UpdateRoleMenu(ctx kratosx.Context, roleId uint32, menuIds []uint32) error {
 	var list []*entity.RoleMenu
 	for _, mid := range menuIds {
 		list = append(list, &entity.RoleMenu{
@@ -175,7 +175,7 @@ func (infra *RoleInfra) UpdateRoleMenu(ctx kratosx.Context, roleId uint32, menuI
 	})
 }
 
-func (infra *RoleInfra) GetRoleChildrenKeywords(ctx kratosx.Context, id uint32) ([]string, error) {
+func (infra *Role) GetRoleChildrenKeywords(ctx kratosx.Context, id uint32) ([]string, error) {
 	ids, err := infra.GetRoleChildrenIds(ctx, id)
 	if err != nil {
 		return nil, err
@@ -190,7 +190,7 @@ func (infra *RoleInfra) GetRoleChildrenKeywords(ctx kratosx.Context, id uint32) 
 		Scan(&keywords).Error
 }
 
-func (infra *RoleInfra) GetRoleDataScope(ctx kratosx.Context, rid uint32) (bool, []uint32, error) {
+func (infra *Role) GetRoleDataScope(ctx kratosx.Context, rid uint32) (bool, []uint32, error) {
 	if rid == 1 {
 		return true, nil, nil
 	}
@@ -202,7 +202,7 @@ func (infra *RoleInfra) GetRoleDataScope(ctx kratosx.Context, rid uint32) (bool,
 	return false, ids, nil
 }
 
-func (infra *RoleInfra) HasRolePurview(ctx kratosx.Context, pid uint32, rid uint32) (bool, error) {
+func (infra *Role) HasRolePurview(ctx kratosx.Context, pid uint32, rid uint32) (bool, error) {
 	all, scopes, err := infra.GetRoleDataScope(ctx, pid)
 	if err != nil {
 		return false, err
@@ -213,7 +213,7 @@ func (infra *RoleInfra) HasRolePurview(ctx kratosx.Context, pid uint32, rid uint
 	return valx.InList(scopes, rid), nil
 }
 
-func (infra *RoleInfra) AllRoleKeywordByMenuId(ctx kratosx.Context, id uint32) ([]string, error) {
+func (infra *Role) AllRoleKeywordByMenuId(ctx kratosx.Context, id uint32) ([]string, error) {
 	var (
 		keys []string
 		ids  []uint32

@@ -22,17 +22,17 @@ import (
 
 type UserApp struct {
 	pb.UnimplementedUserServer
-	srv *service.UseService
+	srv *service.Use
 }
 
 func NewUserApp(conf *conf.Config) *UserApp {
 	return &UserApp{
-		srv: service.NewUseService(
+		srv: service.NewUse(
 			conf,
-			dbs.NewUserInfra(),
-			dbs.NewDepartmentInfra(),
+			dbs.NewUser(),
+			dbs.NewDepartment(),
 			dbs.NewRoleRepo(),
-			rpc.NewFileInfra(),
+			rpc.NewFile(),
 		),
 	}
 }

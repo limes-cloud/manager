@@ -20,23 +20,23 @@ const (
 	DataScopeCustom      = "CUSTOM"   // 自定义权限
 )
 
-type DepartmentInfra struct {
+type Department struct {
 }
 
 var (
-	departmentIns  *DepartmentInfra
+	departmentIns  *Department
 	departmentOnce sync.Once
 )
 
-func NewDepartmentInfra() *DepartmentInfra {
+func NewDepartment() *Department {
 	departmentOnce.Do(func() {
-		departmentIns = &DepartmentInfra{}
+		departmentIns = &Department{}
 	})
 	return departmentIns
 }
 
 // GetDepartment 获取指定的数据
-func (infra *DepartmentInfra) GetDepartment(ctx kratosx.Context, id uint32) (*entity.Department, error) {
+func (infra *Department) GetDepartment(ctx kratosx.Context, id uint32) (*entity.Department, error) {
 	var (
 		ent = entity.Department{}
 		fs  = []string{"*"}
@@ -45,7 +45,7 @@ func (infra *DepartmentInfra) GetDepartment(ctx kratosx.Context, id uint32) (*en
 }
 
 // GetDepartmentByKeyword 获取指定数据
-func (infra *DepartmentInfra) GetDepartmentByKeyword(ctx kratosx.Context, keyword string) (*entity.Department, error) {
+func (infra *Department) GetDepartmentByKeyword(ctx kratosx.Context, keyword string) (*entity.Department, error) {
 	var (
 		m  = entity.Department{}
 		fs = []string{"*"}
@@ -54,7 +54,7 @@ func (infra *DepartmentInfra) GetDepartmentByKeyword(ctx kratosx.Context, keywor
 }
 
 // ListDepartment 获取列表 fixed code
-func (infra *DepartmentInfra) ListDepartment(ctx kratosx.Context, req *types.ListDepartmentRequest) ([]*entity.Department, error) {
+func (infra *Department) ListDepartment(ctx kratosx.Context, req *types.ListDepartmentRequest) ([]*entity.Department, error) {
 	var (
 		ms []*entity.Department
 		fs = []string{"*"}
@@ -76,7 +76,7 @@ func (infra *DepartmentInfra) ListDepartment(ctx kratosx.Context, req *types.Lis
 }
 
 // CreateDepartment 创建数据
-func (infra *DepartmentInfra) CreateDepartment(ctx kratosx.Context, req *entity.Department) (uint32, error) {
+func (infra *Department) CreateDepartment(ctx kratosx.Context, req *entity.Department) (uint32, error) {
 	return req.Id, ctx.Transaction(func(ctx kratosx.Context) error {
 		if err := ctx.DB().Create(req).Error; err != nil {
 			return err
@@ -86,7 +86,7 @@ func (infra *DepartmentInfra) CreateDepartment(ctx kratosx.Context, req *entity.
 }
 
 // UpdateDepartment 更新数据
-func (infra *DepartmentInfra) UpdateDepartment(ctx kratosx.Context, req *entity.Department) error {
+func (infra *Department) UpdateDepartment(ctx kratosx.Context, req *entity.Department) error {
 	if req.Id == req.ParentId {
 		return errors.New("父级不能为自己")
 	}
@@ -109,7 +109,7 @@ func (infra *DepartmentInfra) UpdateDepartment(ctx kratosx.Context, req *entity.
 }
 
 // DeleteDepartment 删除数据
-func (infra *DepartmentInfra) DeleteDepartment(ctx kratosx.Context, id uint32) error {
+func (infra *Department) DeleteDepartment(ctx kratosx.Context, id uint32) error {
 	ids, err := infra.GetDepartmentChildrenIds(ctx, id)
 	if err != nil {
 		return err
@@ -119,7 +119,7 @@ func (infra *DepartmentInfra) DeleteDepartment(ctx kratosx.Context, id uint32) e
 }
 
 // GetDepartmentChildrenIds 获取指定id的所有子id
-func (infra *DepartmentInfra) GetDepartmentChildrenIds(ctx kratosx.Context, id uint32) ([]uint32, error) {
+func (infra *Department) GetDepartmentChildrenIds(ctx kratosx.Context, id uint32) ([]uint32, error) {
 	var ids []uint32
 	return ids, ctx.DB().Model(entity.DepartmentClosure{}).
 		Select("children").
@@ -128,7 +128,7 @@ func (infra *DepartmentInfra) GetDepartmentChildrenIds(ctx kratosx.Context, id u
 }
 
 // GetDepartmentParentIds 获取指定id的所有父id
-func (infra *DepartmentInfra) GetDepartmentParentIds(ctx kratosx.Context, id uint32) ([]uint32, error) {
+func (infra *Department) GetDepartmentParentIds(ctx kratosx.Context, id uint32) ([]uint32, error) {
 	var ids []uint32
 	return ids, ctx.DB().Model(entity.DepartmentClosure{}).
 		Select("parent").
@@ -137,7 +137,7 @@ func (infra *DepartmentInfra) GetDepartmentParentIds(ctx kratosx.Context, id uin
 }
 
 // appendDepartmentChildren 添加id到指定的父id下
-func (infra *DepartmentInfra) appendDepartmentChildren(ctx kratosx.Context, pid uint32, id uint32) error {
+func (infra *Department) appendDepartmentChildren(ctx kratosx.Context, pid uint32, id uint32) error {
 	list := []*entity.DepartmentClosure{
 		{
 			Parent:   pid,
@@ -155,11 +155,11 @@ func (infra *DepartmentInfra) appendDepartmentChildren(ctx kratosx.Context, pid 
 }
 
 // removeDepartmentParent 删除指定id的所有父层级
-func (infra *DepartmentInfra) removeDepartmentParent(ctx kratosx.Context, id uint32) error {
+func (infra *Department) removeDepartmentParent(ctx kratosx.Context, id uint32) error {
 	return ctx.DB().Delete(&entity.DepartmentClosure{}, "children=?", id).Error
 }
 
-func (infra *DepartmentInfra) GetDepartmentDataScope(ctx kratosx.Context, uid uint32) (bool, []uint32, error) {
+func (infra *Department) GetDepartmentDataScope(ctx kratosx.Context, uid uint32) (bool, []uint32, error) {
 	if uid == 1 {
 		return true, nil, nil
 	}
@@ -221,7 +221,7 @@ func (infra *DepartmentInfra) GetDepartmentDataScope(ctx kratosx.Context, uid ui
 	return false, []uint32{}, nil
 }
 
-func (infra *DepartmentInfra) HasDepartmentPurview(ctx kratosx.Context, uid uint32, did uint32) (bool, error) {
+func (infra *Department) HasDepartmentPurview(ctx kratosx.Context, uid uint32, did uint32) (bool, error) {
 	all, scopes, err := infra.GetDepartmentDataScope(ctx, uid)
 	if err != nil {
 		return false, err

@@ -1,3 +1,4 @@
 package repository
 
-type SystemRepository any
+type System interface {
+}

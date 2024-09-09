@@ -20,12 +20,12 @@ import (
 
 type RoleApp struct {
 	pb.UnimplementedRoleServer
-	srv *service.RoleService
+	srv *service.Role
 }
 
 func NewRoleApp(conf *conf.Config) *RoleApp {
 	return &RoleApp{
-		srv: service.NewRoleService(conf, dbs.NewRoleRepo(), dbs.NewMenuInfra(), dbs.NewRbacInfra()),
+		srv: service.NewRole(conf, dbs.NewRoleRepo(), dbs.NewMenu(), dbs.NewRbac()),
 	}
 }
 

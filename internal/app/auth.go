@@ -15,12 +15,12 @@ import (
 
 type AuthApp struct {
 	pb.UnimplementedAuthServer
-	srv *service.AuthService
+	srv *service.Auth
 }
 
 func NewAuthApp(conf *conf.Config) *AuthApp {
 	return &AuthApp{
-		srv: service.NewAuthService(conf),
+		srv: service.NewAuth(conf),
 	}
 }
 

@@ -12,17 +12,17 @@ import (
 	"github.com/limes-cloud/manager/internal/types"
 )
 
-type DepartmentService struct {
+type Department struct {
 	conf *conf.Config
-	repo repository.DepartmentRepository
+	repo repository.Department
 }
 
-func NewDepartmentService(config *conf.Config, repo repository.DepartmentRepository) *DepartmentService {
-	return &DepartmentService{conf: config, repo: repo}
+func NewDepartment(config *conf.Config, repo repository.Department) *Department {
+	return &Department{conf: config, repo: repo}
 }
 
 // ListDepartment 获取部门信息列表树
-func (u *DepartmentService) ListDepartment(ctx kratosx.Context, req *types.ListDepartmentRequest) ([]*entity.Department, error) {
+func (u *Department) ListDepartment(ctx kratosx.Context, req *types.ListDepartmentRequest) ([]*entity.Department, error) {
 	// 获取部门列表
 	list, err := u.repo.ListDepartment(ctx, req)
 	if err != nil {
@@ -34,7 +34,7 @@ func (u *DepartmentService) ListDepartment(ctx kratosx.Context, req *types.ListD
 }
 
 // ListCurrentDepartment 获取当前用户的部门信息列表树
-func (u *DepartmentService) ListCurrentDepartment(ctx kratosx.Context, req *types.ListDepartmentRequest) ([]*entity.Department, error) {
+func (u *Department) ListCurrentDepartment(ctx kratosx.Context, req *types.ListDepartmentRequest) ([]*entity.Department, error) {
 	// 获取当前用户的部门权限列表
 	all, scopes, err := u.repo.GetDepartmentDataScope(ctx, md.UserId(ctx))
 	if err != nil {
@@ -50,7 +50,7 @@ func (u *DepartmentService) ListCurrentDepartment(ctx kratosx.Context, req *type
 }
 
 // CreateDepartment 创建部门信息
-func (u *DepartmentService) CreateDepartment(ctx kratosx.Context, req *entity.Department) (uint32, error) {
+func (u *Department) CreateDepartment(ctx kratosx.Context, req *entity.Department) (uint32, error) {
 	// 是否具有父级部门权限
 	hasPurview, err := u.repo.HasDepartmentPurview(ctx, md.UserId(ctx), req.ParentId)
 	if err != nil {
@@ -72,7 +72,7 @@ func (u *DepartmentService) CreateDepartment(ctx kratosx.Context, req *entity.De
 }
 
 // UpdateDepartment 更新部门信息
-func (u *DepartmentService) UpdateDepartment(ctx kratosx.Context, req *entity.Department) error {
+func (u *Department) UpdateDepartment(ctx kratosx.Context, req *entity.Department) error {
 	if req.Id == 1 {
 		return errors.EditSystemDataError()
 	}
@@ -104,7 +104,7 @@ func (u *DepartmentService) UpdateDepartment(ctx kratosx.Context, req *entity.De
 }
 
 // DeleteDepartment 删除部门信息
-func (u *DepartmentService) DeleteDepartment(ctx kratosx.Context, id uint32) error {
+func (u *Department) DeleteDepartment(ctx kratosx.Context, id uint32) error {
 	if id == 1 {
 		return errors.DeleteSystemDataError()
 	}
@@ -134,7 +134,7 @@ func (u *DepartmentService) DeleteDepartment(ctx kratosx.Context, id uint32) err
 }
 
 // GetDepartment 获取指定的部门信息
-func (u *DepartmentService) GetDepartment(ctx kratosx.Context, id uint32) (*entity.Department, error) {
+func (u *Department) GetDepartment(ctx kratosx.Context, id uint32) (*entity.Department, error) {
 	res, err := u.repo.GetDepartment(ctx, id)
 
 	if err != nil {
@@ -144,7 +144,7 @@ func (u *DepartmentService) GetDepartment(ctx kratosx.Context, id uint32) (*enti
 }
 
 // GetDepartmentByKeyword 获取指定的部门信息
-func (u *DepartmentService) GetDepartmentByKeyword(ctx kratosx.Context, keyword string) (*entity.Department, error) {
+func (u *Department) GetDepartmentByKeyword(ctx kratosx.Context, keyword string) (*entity.Department, error) {
 	res, err := u.repo.GetDepartmentByKeyword(ctx, keyword)
 	if err != nil {
 		return nil, errors.GetError(err.Error())

@@ -10,18 +10,18 @@ import (
 	"github.com/limes-cloud/manager/internal/types"
 )
 
-type AuthService struct {
+type Auth struct {
 	conf *conf.Config
 }
 
-func NewAuthService(conf *conf.Config) *AuthService {
-	return &AuthService{
+func NewAuth(conf *conf.Config) *Auth {
+	return &Auth{
 		conf: conf,
 	}
 }
 
 // Auth 外部接口鉴权
-func (u *AuthService) Auth(ctx kratosx.Context, in *types.AuthRequest) (*md.Auth, error) {
+func (u *Auth) Auth(ctx kratosx.Context, in *types.AuthRequest) (*md.Auth, error) {
 	info := md.Get(ctx)
 
 	if valx.InList(ctx.Config().App().Authentication.SkipRole, info.RoleKeyword) {

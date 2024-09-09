@@ -15,21 +15,21 @@ import (
 	"github.com/limes-cloud/manager/internal/types"
 )
 
-type MenuService struct {
+type Menu struct {
 	once sync.Once
 	conf *conf.Config
-	repo repository.MenuRepository
-	role repository.RoleRepository
-	rbac repository.RbacRepository
+	repo repository.Menu
+	role repository.Role
+	rbac repository.Rbac
 }
 
-func NewMenuService(
+func NewMenu(
 	config *conf.Config,
-	repo repository.MenuRepository,
-	role repository.RoleRepository,
-	rbac repository.RbacRepository,
-) *MenuService {
-	uc := &MenuService{conf: config, repo: repo, role: role, rbac: rbac}
+	repo repository.Menu,
+	role repository.Role,
+	rbac repository.Rbac,
+) *Menu {
+	uc := &Menu{conf: config, repo: repo, role: role, rbac: rbac}
 	uc.once.Do(func() {
 		uc.repo.InitBasicMenu(kratosx.MustContext(context.Background()))
 	})
@@ -37,7 +37,7 @@ func NewMenuService(
 }
 
 // ListMenuByCurRole 获取当前角色的菜单树
-func (u *MenuService) ListMenuByCurRole(ctx kratosx.Context) ([]*entity.Menu, error) {
+func (u *Menu) ListMenuByCurRole(ctx kratosx.Context) ([]*entity.Menu, error) {
 	list, err := u.repo.ListMenuByRoleId(ctx, md.RoleId(ctx))
 	if err != nil {
 		ctx.Logger().Warnw("msg", "list menu error", "err", err.Error())
@@ -47,7 +47,7 @@ func (u *MenuService) ListMenuByCurRole(ctx kratosx.Context) ([]*entity.Menu, er
 }
 
 // ListMenu 获取菜单信息列表树
-func (u *MenuService) ListMenu(ctx kratosx.Context, req *types.ListMenuRequest) ([]*entity.Menu, error) {
+func (u *Menu) ListMenu(ctx kratosx.Context, req *types.ListMenuRequest) ([]*entity.Menu, error) {
 	list, err := u.repo.ListMenu(ctx, req)
 	if err != nil {
 		ctx.Logger().Warnw("msg", "list menu error", "err", err.Error())
@@ -57,7 +57,7 @@ func (u *MenuService) ListMenu(ctx kratosx.Context, req *types.ListMenuRequest) 
 }
 
 // CreateMenu 创建菜单信息
-func (u *MenuService) CreateMenu(ctx kratosx.Context, menu *entity.Menu) (uint32, error) {
+func (u *Menu) CreateMenu(ctx kratosx.Context, menu *entity.Menu) (uint32, error) {
 	var id uint32
 	if err := ctx.Transaction(func(ctx kratosx.Context) error {
 		// 创建菜单
@@ -87,7 +87,7 @@ func (u *MenuService) CreateMenu(ctx kratosx.Context, menu *entity.Menu) (uint32
 }
 
 // UpdateMenu 更新菜单信息
-func (u *MenuService) UpdateMenu(ctx kratosx.Context, menu *entity.Menu) error {
+func (u *Menu) UpdateMenu(ctx kratosx.Context, menu *entity.Menu) error {
 	old, err := u.repo.GetMenu(ctx, menu.Id)
 	if err != nil {
 		return err
@@ -140,7 +140,7 @@ func (u *MenuService) UpdateMenu(ctx kratosx.Context, menu *entity.Menu) error {
 }
 
 // DeleteMenu 删除菜单信息
-func (u *MenuService) DeleteMenu(ctx kratosx.Context, id uint32) error {
+func (u *Menu) DeleteMenu(ctx kratosx.Context, id uint32) error {
 	apis, err := u.repo.ListMenuChildrenApi(ctx, id)
 	if err != nil {
 		ctx.Logger().Warnw("msg", "list menu api error", "err", err.Error())

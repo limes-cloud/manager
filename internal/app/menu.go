@@ -19,12 +19,12 @@ import (
 
 type MenuApp struct {
 	pb.UnimplementedMenuServer
-	srv *service.MenuService
+	srv *service.Menu
 }
 
 func NewMenuApp(conf *conf.Config) *MenuApp {
 	return &MenuApp{
-		srv: service.NewMenuService(conf, dbs.NewMenuInfra(), dbs.NewRoleRepo(), dbs.NewRbacInfra()),
+		srv: service.NewMenu(conf, dbs.NewMenu(), dbs.NewRoleRepo(), dbs.NewRbac()),
 	}
 }
 

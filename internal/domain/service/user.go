@@ -36,26 +36,26 @@ const (
 	passwordCert = "login"
 )
 
-type UseService struct {
+type Use struct {
 	conf *conf.Config
-	repo repository.UserRepository
-	dept repository.DepartmentRepository
-	role repository.RoleRepository
-	file repository.FileRepository
+	repo repository.User
+	dept repository.Department
+	role repository.Role
+	file repository.File
 }
 
-func NewUseService(
+func NewUse(
 	config *conf.Config,
-	repo repository.UserRepository,
-	dept repository.DepartmentRepository,
-	role repository.RoleRepository,
-	file repository.FileRepository,
-) *UseService {
-	return &UseService{conf: config, repo: repo, dept: dept, role: role, file: file}
+	repo repository.User,
+	dept repository.Department,
+	role repository.Role,
+	file repository.File,
+) *Use {
+	return &Use{conf: config, repo: repo, dept: dept, role: role, file: file}
 }
 
 // GetUser 获取指定的用户信息
-func (u *UseService) GetUser(ctx kratosx.Context, req *types.GetUserRequest) (*entity.User, error) {
+func (u *Use) GetUser(ctx kratosx.Context, req *types.GetUserRequest) (*entity.User, error) {
 	var (
 		user *entity.User
 		err  error
@@ -104,7 +104,7 @@ func (u *UseService) GetUser(ctx kratosx.Context, req *types.GetUserRequest) (*e
 }
 
 // ListUser 获取用户信息列表
-func (u *UseService) ListUser(ctx kratosx.Context, req *types.ListUserRequest) ([]*entity.User, uint32, error) {
+func (u *Use) ListUser(ctx kratosx.Context, req *types.ListUserRequest) ([]*entity.User, uint32, error) {
 	all, scopes, err := u.dept.GetDepartmentDataScope(ctx, md.UserId(ctx))
 	if err != nil {
 		return nil, 0, errors.DatabaseError(err.Error())
@@ -128,7 +128,7 @@ func (u *UseService) ListUser(ctx kratosx.Context, req *types.ListUserRequest) (
 }
 
 // CreateUser 创建用户信息
-func (u *UseService) CreateUser(ctx kratosx.Context, req *entity.User) (uint32, error) {
+func (u *Use) CreateUser(ctx kratosx.Context, req *entity.User) (uint32, error) {
 	// 判断是否具有部门权限
 	hasDeptPurview, err := u.dept.HasDepartmentPurview(ctx, md.UserId(ctx), req.DepartmentId)
 	if err != nil {
@@ -169,7 +169,7 @@ func (u *UseService) CreateUser(ctx kratosx.Context, req *entity.User) (uint32, 
 }
 
 // UpdateUser 更新用户信息
-func (u *UseService) UpdateUser(ctx kratosx.Context, user *entity.User) error {
+func (u *Use) UpdateUser(ctx kratosx.Context, user *entity.User) error {
 	var curUserId = md.UserId(ctx)
 
 	// 系统数据不允许修改
@@ -227,7 +227,7 @@ func (u *UseService) UpdateUser(ctx kratosx.Context, user *entity.User) error {
 }
 
 // UpdateUserStatus 更新用户信息状态 fixed code
-func (u *UseService) UpdateUserStatus(ctx kratosx.Context, id uint32, status bool) error {
+func (u *Use) UpdateUserStatus(ctx kratosx.Context, id uint32, status bool) error {
 	// 系统数据不允许修改
 	if id == 1 {
 		return errors.EditSystemDataError()
@@ -267,7 +267,7 @@ func (u *UseService) UpdateUserStatus(ctx kratosx.Context, id uint32, status boo
 }
 
 // DeleteUser 删除用户信息
-func (u *UseService) DeleteUser(ctx kratosx.Context, id uint32) error {
+func (u *Use) DeleteUser(ctx kratosx.Context, id uint32) error {
 	// 系统数据不允许修改
 	if id == 1 {
 		return errors.EditSystemDataError()
@@ -299,7 +299,7 @@ func (u *UseService) DeleteUser(ctx kratosx.Context, id uint32) error {
 }
 
 // ResetUserPassword 重置用户密码
-func (u *UseService) ResetUserPassword(ctx kratosx.Context, id uint32) error {
+func (u *Use) ResetUserPassword(ctx kratosx.Context, id uint32) error {
 	// 系统数据不允许修改
 	if id == 1 {
 		return errors.EditSystemDataError()
@@ -335,7 +335,7 @@ func (u *UseService) ResetUserPassword(ctx kratosx.Context, id uint32) error {
 }
 
 // GetCurrentUser 获取当前的用户信息
-func (u *UseService) GetCurrentUser(ctx kratosx.Context) (*entity.User, error) {
+func (u *Use) GetCurrentUser(ctx kratosx.Context) (*entity.User, error) {
 	res, err := u.repo.GetUser(ctx, md.UserId(ctx))
 	if err != nil {
 		return nil, errors.GetError(err.Error())
@@ -353,7 +353,7 @@ func (u *UseService) GetCurrentUser(ctx kratosx.Context) (*entity.User, error) {
 }
 
 // UpdateCurrentUser 更新当前的基础信息
-func (u *UseService) UpdateCurrentUser(ctx kratosx.Context, req *types.UpdateCurrentUserRequest) error {
+func (u *Use) UpdateCurrentUser(ctx kratosx.Context, req *types.UpdateCurrentUserRequest) error {
 	if err := u.repo.UpdateUser(ctx, &entity.User{
 		BaseModel: ktypes.BaseModel{Id: md.UserId(ctx)},
 		Avatar:    req.Avatar,
@@ -367,7 +367,7 @@ func (u *UseService) UpdateCurrentUser(ctx kratosx.Context, req *types.UpdateCur
 }
 
 // UpdateCurrentUserRole 切换当前用户角色
-func (u *UseService) UpdateCurrentUserRole(ctx kratosx.Context, rid uint32) error {
+func (u *Use) UpdateCurrentUserRole(ctx kratosx.Context, rid uint32) error {
 	rids, err := u.repo.GetUserRoleIds(ctx, md.UserId(ctx))
 	if err != nil {
 		ctx.Logger().Warnw("msg", "get user roles error", "err", err.Error())
@@ -387,7 +387,7 @@ func (u *UseService) UpdateCurrentUserRole(ctx kratosx.Context, rid uint32) erro
 }
 
 // UpdateCurrentUserSetting 保存当前用户设置
-func (u *UseService) UpdateCurrentUserSetting(ctx kratosx.Context, setting string) error {
+func (u *Use) UpdateCurrentUserSetting(ctx kratosx.Context, setting string) error {
 	if err := u.repo.UpdateUser(ctx, &entity.User{
 		BaseModel: ktypes.BaseModel{Id: md.UserId(ctx)},
 		Setting:   &setting,
@@ -398,7 +398,7 @@ func (u *UseService) UpdateCurrentUserSetting(ctx kratosx.Context, setting strin
 }
 
 // SendCurrentUserCaptcha 发送当前用户验证吗
-func (u *UseService) SendCurrentUserCaptcha(ctx kratosx.Context, tp string) (*types.SendCurrentUserCaptchaReply, error) {
+func (u *Use) SendCurrentUserCaptcha(ctx kratosx.Context, tp string) (*types.SendCurrentUserCaptchaReply, error) {
 	tps := []string{pwdCaptchaKey, loginCaptchaKey}
 	if !valx.InList(tps, tp) {
 		return nil, errors.ParamsError()
@@ -421,7 +421,7 @@ func (u *UseService) SendCurrentUserCaptcha(ctx kratosx.Context, tp string) (*ty
 }
 
 // UpdateCurrentUserPassword 修改当前用户密码
-func (u *UseService) UpdateCurrentUserPassword(ctx kratosx.Context, req *types.UpdateCurrentUserPasswordRequest) error {
+func (u *Use) UpdateCurrentUserPassword(ctx kratosx.Context, req *types.UpdateCurrentUserPasswordRequest) error {
 	user, err := u.repo.GetBaseUser(ctx, md.UserId(ctx))
 	if err != nil {
 		return errors.DatabaseError(err.Error())
@@ -456,7 +456,7 @@ func (u *UseService) UpdateCurrentUserPassword(ctx kratosx.Context, req *types.U
 }
 
 // GetUserLoginCaptcha 获取用户登陆验证吗
-func (u *UseService) GetUserLoginCaptcha(ctx kratosx.Context) (*types.GetUserLoginCaptchaReply, error) {
+func (u *Use) GetUserLoginCaptcha(ctx kratosx.Context) (*types.GetUserLoginCaptchaReply, error) {
 	resp, err := ctx.Captcha().Image(loginCaptchaKey, ctx.ClientIP())
 	if err != nil {
 		return nil, errors.GenCaptchaError(err.Error())
@@ -469,7 +469,7 @@ func (u *UseService) GetUserLoginCaptcha(ctx kratosx.Context) (*types.GetUserLog
 	}, nil
 }
 
-func (u *UseService) UserLogin(ctx kratosx.Context, in *types.UserLoginRequest) (token string, rerr error) {
+func (u *Use) UserLogin(ctx kratosx.Context, in *types.UserLoginRequest) (token string, rerr error) {
 	var (
 		user  *entity.User
 		utype string
@@ -632,7 +632,7 @@ func (u *UseService) UserLogin(ctx kratosx.Context, in *types.UserLoginRequest) 
 }
 
 // UserLogout 退出登陆
-func (u *UseService) UserLogout(ctx kratosx.Context) error {
+func (u *Use) UserLogout(ctx kratosx.Context) error {
 	token := ctx.Token()
 	if token != "" {
 		ctx.JWT().AddBlacklist(token)
@@ -641,7 +641,7 @@ func (u *UseService) UserLogout(ctx kratosx.Context) error {
 }
 
 // UserRefreshToken 用户刷新token
-func (u *UseService) UserRefreshToken(ctx kratosx.Context) (string, error) {
+func (u *Use) UserRefreshToken(ctx kratosx.Context) (string, error) {
 	token, err := ctx.JWT().Renewal(ctx)
 	if err != nil {
 		return "", errors.RefreshTokenError(err.Error())
@@ -650,7 +650,7 @@ func (u *UseService) UserRefreshToken(ctx kratosx.Context) (string, error) {
 }
 
 // ListLoginLog 获取用户登陆日志
-func (u *UseService) ListLoginLog(ctx kratosx.Context, req *types.ListLoginLogRequest) ([]*entity.LoginLog, uint32, error) {
+func (u *Use) ListLoginLog(ctx kratosx.Context, req *types.ListLoginLogRequest) ([]*entity.LoginLog, uint32, error) {
 	list, total, err := u.repo.ListLoginLog(ctx, req)
 	if err != nil {
 		return nil, 0, errors.ListError()

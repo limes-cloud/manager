@@ -2,12 +2,11 @@ package repository
 
 import (
 	"github.com/limes-cloud/kratosx"
-
 	"github.com/limes-cloud/manager/internal/domain/entity"
 	"github.com/limes-cloud/manager/internal/types"
 )
 
-type ResourceRepository interface {
+type Resource interface {
 	// GetResourceScopes 获取指定用户的资源权限
 	GetResourceScopes(ctx kratosx.Context, req *types.GetResourceScopesRequest) ([]uint32, error)
 

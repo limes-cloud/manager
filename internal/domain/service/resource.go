@@ -12,21 +12,21 @@ import (
 	"github.com/limes-cloud/manager/internal/types"
 )
 
-type ResourceService struct {
+type Resource struct {
 	conf *conf.Config
-	repo repository.ResourceRepository
-	dept repository.DepartmentRepository
+	repo repository.Resource
+	dept repository.Department
 }
 
-func NewResourceService(config *conf.Config,
-	repo repository.ResourceRepository,
-	dept repository.DepartmentRepository,
-) *ResourceService {
-	return &ResourceService{conf: config, repo: repo, dept: dept}
+func NewResource(config *conf.Config,
+	repo repository.Resource,
+	dept repository.Department,
+) *Resource {
+	return &Resource{conf: config, repo: repo, dept: dept}
 }
 
 // GetResourceScopes 获取指定的资源权限
-func (u *ResourceService) GetResourceScopes(ctx kratosx.Context, keyword string) (bool, []uint32, error) {
+func (u *Resource) GetResourceScopes(ctx kratosx.Context, keyword string) (bool, []uint32, error) {
 	// 获取用户当前的部门权限
 	all, scopes, err := u.dept.GetDepartmentDataScope(ctx, md.UserId(ctx))
 	if err != nil {
@@ -50,7 +50,7 @@ func (u *ResourceService) GetResourceScopes(ctx kratosx.Context, keyword string)
 }
 
 // GetResource 获取指定的资源权限
-func (u *ResourceService) GetResource(ctx kratosx.Context, req *types.GetResourceRequest) ([]uint32, error) {
+func (u *Resource) GetResource(ctx kratosx.Context, req *types.GetResourceRequest) ([]uint32, error) {
 	// 获取用户当前的部门权限
 	all, scopes, err := u.dept.GetDepartmentDataScope(ctx, md.UserId(ctx))
 	if err != nil {
@@ -70,7 +70,7 @@ func (u *ResourceService) GetResource(ctx kratosx.Context, req *types.GetResourc
 }
 
 // UpdateResource 更新资源权限
-func (u *ResourceService) UpdateResource(ctx kratosx.Context, req *types.UpdateResourceRequest) error {
+func (u *Resource) UpdateResource(ctx kratosx.Context, req *types.UpdateResourceRequest) error {
 	// 获取用户当前的部门权限
 	all, scopes, err := u.dept.GetDepartmentDataScope(ctx, md.UserId(ctx))
 	if err != nil {

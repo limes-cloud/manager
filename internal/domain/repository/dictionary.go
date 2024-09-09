@@ -2,12 +2,11 @@ package repository
 
 import (
 	"github.com/limes-cloud/kratosx"
-
 	"github.com/limes-cloud/manager/internal/domain/entity"
 	"github.com/limes-cloud/manager/internal/types"
 )
 
-type DictionaryRepository interface {
+type Dictionary interface {
 	// ListDictionary 获取字典目录列表
 	ListDictionary(ctx kratosx.Context, req *types.ListDictionaryRequest) ([]*entity.Dictionary, uint32, error)
 

@@ -10,17 +10,17 @@ import (
 	"github.com/limes-cloud/manager/internal/types"
 )
 
-type DictionaryService struct {
+type Dictionary struct {
 	conf *conf.Config
-	repo repository.DictionaryRepository
+	repo repository.Dictionary
 }
 
-func NewDictionaryService(config *conf.Config, repo repository.DictionaryRepository) *DictionaryService {
-	return &DictionaryService{conf: config, repo: repo}
+func NewDictionary(config *conf.Config, repo repository.Dictionary) *Dictionary {
+	return &Dictionary{conf: config, repo: repo}
 }
 
 // ListDictionary 获取字典目录列表
-func (u *DictionaryService) ListDictionary(ctx kratosx.Context, req *types.ListDictionaryRequest) ([]*entity.Dictionary, uint32, error) {
+func (u *Dictionary) ListDictionary(ctx kratosx.Context, req *types.ListDictionaryRequest) ([]*entity.Dictionary, uint32, error) {
 	list, total, err := u.repo.ListDictionary(ctx, req)
 	if err != nil {
 		ctx.Logger().Warnw("msg", "list dictionary error", "err", err.Error())
@@ -30,7 +30,7 @@ func (u *DictionaryService) ListDictionary(ctx kratosx.Context, req *types.ListD
 }
 
 // CreateDictionary 创建字典目录
-func (u *DictionaryService) CreateDictionary(ctx kratosx.Context, req *entity.Dictionary) (uint32, error) {
+func (u *Dictionary) CreateDictionary(ctx kratosx.Context, req *entity.Dictionary) (uint32, error) {
 	id, err := u.repo.CreateDictionary(ctx, req)
 	if err != nil {
 		return 0, errors.CreateError(err.Error())
@@ -39,7 +39,7 @@ func (u *DictionaryService) CreateDictionary(ctx kratosx.Context, req *entity.Di
 }
 
 // UpdateDictionary 更新字典目录
-func (u *DictionaryService) UpdateDictionary(ctx kratosx.Context, req *entity.Dictionary) error {
+func (u *Dictionary) UpdateDictionary(ctx kratosx.Context, req *entity.Dictionary) error {
 	if err := u.repo.UpdateDictionary(ctx, req); err != nil {
 		return errors.UpdateError(err.Error())
 	}
@@ -47,7 +47,7 @@ func (u *DictionaryService) UpdateDictionary(ctx kratosx.Context, req *entity.Di
 }
 
 // DeleteDictionary 删除字典目录
-func (u *DictionaryService) DeleteDictionary(ctx kratosx.Context, id uint32) error {
+func (u *Dictionary) DeleteDictionary(ctx kratosx.Context, id uint32) error {
 	if err := u.repo.DeleteDictionary(ctx, id); err != nil {
 		return errors.DeleteError(err.Error())
 	}
@@ -55,7 +55,7 @@ func (u *DictionaryService) DeleteDictionary(ctx kratosx.Context, id uint32) err
 }
 
 // ListDictionaryValue 获取字典值目录列表
-func (u *DictionaryService) ListDictionaryValue(ctx kratosx.Context, req *types.ListDictionaryValueRequest) ([]*entity.DictionaryValue, uint32, error) {
+func (u *Dictionary) ListDictionaryValue(ctx kratosx.Context, req *types.ListDictionaryValueRequest) ([]*entity.DictionaryValue, uint32, error) {
 	list, total, err := u.repo.ListDictionaryValue(ctx, req)
 	if err != nil {
 		return nil, 0, errors.ListError(err.Error())
@@ -64,7 +64,7 @@ func (u *DictionaryService) ListDictionaryValue(ctx kratosx.Context, req *types.
 }
 
 // CreateDictionaryValue 创建字典值目录
-func (u *DictionaryService) CreateDictionaryValue(ctx kratosx.Context, req *entity.DictionaryValue) (uint32, error) {
+func (u *Dictionary) CreateDictionaryValue(ctx kratosx.Context, req *entity.DictionaryValue) (uint32, error) {
 	id, err := u.repo.CreateDictionaryValue(ctx, req)
 	if err != nil {
 		return 0, errors.CreateError(err.Error())
@@ -73,7 +73,7 @@ func (u *DictionaryService) CreateDictionaryValue(ctx kratosx.Context, req *enti
 }
 
 // UpdateDictionaryValue 更新字典值目录
-func (u *DictionaryService) UpdateDictionaryValue(ctx kratosx.Context, req *entity.DictionaryValue) error {
+func (u *Dictionary) UpdateDictionaryValue(ctx kratosx.Context, req *entity.DictionaryValue) error {
 	if err := u.repo.UpdateDictionaryValue(ctx, req); err != nil {
 		return errors.UpdateError(err.Error())
 	}
@@ -81,7 +81,7 @@ func (u *DictionaryService) UpdateDictionaryValue(ctx kratosx.Context, req *enti
 }
 
 // UpdateDictionaryValueStatus 更新字典值目录状态
-func (u *DictionaryService) UpdateDictionaryValueStatus(ctx kratosx.Context, id uint32, status bool) error {
+func (u *Dictionary) UpdateDictionaryValueStatus(ctx kratosx.Context, id uint32, status bool) error {
 	if err := u.repo.UpdateDictionaryValueStatus(ctx, id, status); err != nil {
 		return errors.UpdateError(err.Error())
 	}
@@ -89,7 +89,7 @@ func (u *DictionaryService) UpdateDictionaryValueStatus(ctx kratosx.Context, id 
 }
 
 // DeleteDictionaryValue 删除字典值目录
-func (u *DictionaryService) DeleteDictionaryValue(ctx kratosx.Context, id uint32) error {
+func (u *Dictionary) DeleteDictionaryValue(ctx kratosx.Context, id uint32) error {
 	if err := u.repo.DeleteDictionaryValue(ctx, id); err != nil {
 		return errors.DeleteError(err.Error())
 	}
@@ -97,7 +97,7 @@ func (u *DictionaryService) DeleteDictionaryValue(ctx kratosx.Context, id uint32
 }
 
 // GetDictionary 获取指定的字典目录
-func (u *DictionaryService) GetDictionary(ctx kratosx.Context, req *types.GetDictionaryRequest) (*entity.Dictionary, error) {
+func (u *Dictionary) GetDictionary(ctx kratosx.Context, req *types.GetDictionaryRequest) (*entity.Dictionary, error) {
 	var (
 		res *entity.Dictionary
 		err error
@@ -118,7 +118,7 @@ func (u *DictionaryService) GetDictionary(ctx kratosx.Context, req *types.GetDic
 }
 
 // GetDictionaryValues 获取字典值目录列表
-func (u *DictionaryService) GetDictionaryValues(ctx kratosx.Context, keywords []string) (map[string][]*entity.DictionaryValue, error) {
+func (u *Dictionary) GetDictionaryValues(ctx kratosx.Context, keywords []string) (map[string][]*entity.DictionaryValue, error) {
 	var reply = make(map[string][]*entity.DictionaryValue)
 	for _, key := range keywords {
 		values, err := u.repo.AllDictionaryValue(ctx, key)

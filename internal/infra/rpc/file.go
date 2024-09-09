@@ -10,14 +10,14 @@ const (
 	Resource = "Resource"
 )
 
-type FileInfra struct {
+type File struct {
 }
 
-func NewFileInfra() *FileInfra {
-	return &FileInfra{}
+func NewFile() *File {
+	return &File{}
 }
 
-func (i FileInfra) client(ctx kratosx.Context) (file.FileClient, error) {
+func (i File) client(ctx kratosx.Context) (file.FileClient, error) {
 	conn, err := kratosx.MustContext(ctx).GrpcConn(Resource)
 	if err != nil {
 		return nil, errors.ResourceServerError()
@@ -25,7 +25,7 @@ func (i FileInfra) client(ctx kratosx.Context) (file.FileClient, error) {
 	return file.NewFileClient(conn), nil
 }
 
-func (i FileInfra) GetFileURL(ctx kratosx.Context, sha string) string {
+func (i File) GetFileURL(ctx kratosx.Context, sha string) string {
 	client, err := i.client(ctx)
 	if err != nil {
 		ctx.Logger().Warnw("msg", "connect resource server error", "err", err.Error())

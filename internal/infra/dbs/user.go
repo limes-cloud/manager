@@ -10,50 +10,50 @@ import (
 	"github.com/limes-cloud/manager/internal/types"
 )
 
-type UserInfra struct {
+type User struct {
 }
 
 var (
-	userIns  *UserInfra
+	userIns  *User
 	userOnce sync.Once
 )
 
-func NewUserInfra() *UserInfra {
+func NewUser() *User {
 	userOnce.Do(func() {
-		userIns = &UserInfra{}
+		userIns = &User{}
 	})
 	return userIns
 }
 
 // GetUserByPhone 获取指定数据
-func (infra *UserInfra) GetUserByPhone(ctx kratosx.Context, phone string) (*entity.User, error) {
+func (infra *User) GetUserByPhone(ctx kratosx.Context, phone string) (*entity.User, error) {
 	var user entity.User
 	db := ctx.DB().Preload("Roles").Preload("Jobs").Preload("Department")
 	return &user, db.Where("phone = ?", phone).First(&user).Error
 }
 
 // GetUserByEmail 获取指定数据
-func (infra *UserInfra) GetUserByEmail(ctx kratosx.Context, email string) (*entity.User, error) {
+func (infra *User) GetUserByEmail(ctx kratosx.Context, email string) (*entity.User, error) {
 	var user entity.User
 	db := ctx.DB().Preload("Roles").Preload("Jobs").Preload("Department")
 	return &user, db.Where("email = ?", email).First(&user).Error
 }
 
 // GetUser 获取指定的数据
-func (infra *UserInfra) GetUser(ctx kratosx.Context, id uint32) (*entity.User, error) {
+func (infra *User) GetUser(ctx kratosx.Context, id uint32) (*entity.User, error) {
 	var user entity.User
 	db := ctx.DB().Preload("Roles").Preload("Jobs").Preload("Department")
 	return &user, db.First(&user, id).Error
 }
 
 // GetBaseUser 获取指定的数据
-func (infra *UserInfra) GetBaseUser(ctx kratosx.Context, id uint32) (*entity.User, error) {
+func (infra *User) GetBaseUser(ctx kratosx.Context, id uint32) (*entity.User, error) {
 	var user entity.User
 	return &user, ctx.DB().First(&user, id).Error
 }
 
 // ListUser 获取列表 fixed code
-func (infra *UserInfra) ListUser(ctx kratosx.Context, req *types.ListUserRequest) ([]*entity.User, uint32, error) {
+func (infra *User) ListUser(ctx kratosx.Context, req *types.ListUserRequest) ([]*entity.User, uint32, error) {
 	var (
 		total int64
 		fs    = []string{"*"}
@@ -98,12 +98,12 @@ func (infra *UserInfra) ListUser(ctx kratosx.Context, req *types.ListUserRequest
 }
 
 // CreateUser 创建数据
-func (infra *UserInfra) CreateUser(ctx kratosx.Context, user *entity.User) (uint32, error) {
+func (infra *User) CreateUser(ctx kratosx.Context, user *entity.User) (uint32, error) {
 	return user.Id, ctx.DB().Create(user).Error
 }
 
 // UpdateUser 更新数据
-func (infra *UserInfra) UpdateUser(ctx kratosx.Context, user *entity.User) error {
+func (infra *User) UpdateUser(ctx kratosx.Context, user *entity.User) error {
 	return ctx.DB().Transaction(func(tx *gorm.DB) error {
 		if len(user.UserRoles) != 0 {
 			if err := tx.Where("user_id=?", user.Id).Delete(entity.UserRole{}).Error; err != nil {
@@ -120,22 +120,22 @@ func (infra *UserInfra) UpdateUser(ctx kratosx.Context, user *entity.User) error
 }
 
 // UpdateUserStatus 更新数据状态
-func (infra *UserInfra) UpdateUserStatus(ctx kratosx.Context, id uint32, status bool) error {
+func (infra *User) UpdateUserStatus(ctx kratosx.Context, id uint32, status bool) error {
 	return ctx.DB().Model(entity.User{}).Where("id=?", id).Update("status", status).Error
 }
 
 // DeleteUser 删除数据
-func (infra *UserInfra) DeleteUser(ctx kratosx.Context, id uint32) error {
+func (infra *User) DeleteUser(ctx kratosx.Context, id uint32) error {
 	return ctx.DB().Where("id = ?", id).Delete(&entity.User{}).Error
 }
 
-func (infra *UserInfra) GetUserRoleIds(ctx kratosx.Context, id uint32) ([]uint32, error) {
+func (infra *User) GetUserRoleIds(ctx kratosx.Context, id uint32) ([]uint32, error) {
 	var ids []uint32
 	return ids, ctx.DB().Model(entity.UserRole{}).Where("user_id=?", id).Scan(&ids).Error
 }
 
 // ListLoginLog 获取列表 fixed code
-func (infra *UserInfra) ListLoginLog(ctx kratosx.Context, req *types.ListLoginLogRequest) ([]*entity.LoginLog, uint32, error) {
+func (infra *User) ListLoginLog(ctx kratosx.Context, req *types.ListLoginLogRequest) ([]*entity.LoginLog, uint32, error) {
 	var (
 		total int64
 		fs    = []string{"*"}
@@ -160,6 +160,6 @@ func (infra *UserInfra) ListLoginLog(ctx kratosx.Context, req *types.ListLoginLo
 }
 
 // CreateLoginLog 创建数据
-func (infra *UserInfra) CreateLoginLog(ctx kratosx.Context, loginLog *entity.LoginLog) (uint32, error) {
+func (infra *User) CreateLoginLog(ctx kratosx.Context, loginLog *entity.LoginLog) (uint32, error) {
 	return loginLog.Id, ctx.DB().Create(loginLog).Error
 }

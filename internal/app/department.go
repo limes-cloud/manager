@@ -20,12 +20,12 @@ import (
 
 type DepartmentApp struct {
 	pb.UnimplementedDepartmentServer
-	srv *service.DepartmentService
+	srv *service.Department
 }
 
 func NewDepartmentApp(conf *conf.Config) *DepartmentApp {
 	return &DepartmentApp{
-		srv: service.NewDepartmentService(conf, dbs.NewDepartmentInfra()),
+		srv: service.NewDepartment(conf, dbs.NewDepartment()),
 	}
 }
 

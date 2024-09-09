@@ -16,12 +16,12 @@ import (
 
 type SystemApp struct {
 	pb.UnimplementedSystemServer
-	srv *service.SystemService
+	srv *service.System
 }
 
 func NewSystemApp(conf *conf.Config) *SystemApp {
 	return &SystemApp{
-		srv: service.NewSystemService(conf, dbs.NewDictionaryInfra()),
+		srv: service.NewSystem(conf, dbs.NewDictionary()),
 	}
 }
 

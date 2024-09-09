@@ -9,35 +9,35 @@ import (
 	"github.com/limes-cloud/manager/internal/types"
 )
 
-type JobInfra struct {
+type Job struct {
 }
 
 var (
-	jobIns  *JobInfra
+	jobIns  *Job
 	jobOnce sync.Once
 )
 
-func NewJobInfra() *JobInfra {
+func NewJob() *Job {
 	jobOnce.Do(func() {
-		jobIns = &JobInfra{}
+		jobIns = &Job{}
 	})
 	return jobIns
 }
 
 // GetJob 获取指定的数据
-func (infra *JobInfra) GetJob(ctx kratosx.Context, id uint32) (*entity.Job, error) {
+func (infra *Job) GetJob(ctx kratosx.Context, id uint32) (*entity.Job, error) {
 	var job = entity.Job{}
 	return &job, ctx.DB().First(&job, id).Error
 }
 
 // GetJobByKeyword 获取指定数据
-func (infra *JobInfra) GetJobByKeyword(ctx kratosx.Context, keyword string) (*entity.Job, error) {
+func (infra *Job) GetJobByKeyword(ctx kratosx.Context, keyword string) (*entity.Job, error) {
 	var job = entity.Job{}
 	return &job, ctx.DB().First(&job, "keyword=?", keyword).Error
 }
 
 // ListJob 获取列表
-func (infra *JobInfra) ListJob(ctx kratosx.Context, req *types.ListJobRequest) ([]*entity.Job, uint32, error) {
+func (infra *Job) ListJob(ctx kratosx.Context, req *types.ListJobRequest) ([]*entity.Job, uint32, error) {
 	var (
 		total int64
 		fs    = []string{"*"}
@@ -62,16 +62,16 @@ func (infra *JobInfra) ListJob(ctx kratosx.Context, req *types.ListJobRequest) (
 }
 
 // CreateJob 创建数据
-func (infra *JobInfra) CreateJob(ctx kratosx.Context, job *entity.Job) (uint32, error) {
+func (infra *Job) CreateJob(ctx kratosx.Context, job *entity.Job) (uint32, error) {
 	return job.Id, ctx.DB().Create(job).Error
 }
 
 // UpdateJob 更新数据
-func (infra *JobInfra) UpdateJob(ctx kratosx.Context, job *entity.Job) error {
+func (infra *Job) UpdateJob(ctx kratosx.Context, job *entity.Job) error {
 	return ctx.DB().Updates(job).Error
 }
 
 // DeleteJob 删除数据
-func (infra *JobInfra) DeleteJob(ctx kratosx.Context, id uint32) error {
+func (infra *Job) DeleteJob(ctx kratosx.Context, id uint32) error {
 	return ctx.DB().Where("id = ?", id).Delete(&entity.Job{}).Error
 }

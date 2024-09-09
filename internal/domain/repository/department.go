@@ -7,7 +7,7 @@ import (
 	"github.com/limes-cloud/manager/internal/types"
 )
 
-type DepartmentRepository interface {
+type Department interface {
 	// GetDepartment 获取指定的部门信息
 	GetDepartment(ctx kratosx.Context, id uint32) (*entity.Department, error)
 

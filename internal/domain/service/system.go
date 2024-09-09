@@ -8,17 +8,17 @@ import (
 	"github.com/limes-cloud/manager/internal/types"
 )
 
-type SystemService struct {
+type System struct {
 	conf *conf.Config
-	dict repository.DictionaryRepository
+	dict repository.Dictionary
 }
 
-func NewSystemService(config *conf.Config, dict repository.DictionaryRepository) *SystemService {
-	return &SystemService{conf: config, dict: dict}
+func NewSystem(config *conf.Config, dict repository.Dictionary) *System {
+	return &System{conf: config, dict: dict}
 }
 
 // GetSystemSetting 获取系统设置
-func (u *SystemService) GetSystemSetting(ctx kratosx.Context, _ *types.GetSystemSettingRequest) *types.GetSystemSettingReply {
+func (u *System) GetSystemSetting(ctx kratosx.Context, _ *types.GetSystemSettingRequest) *types.GetSystemSettingReply {
 	setting := u.conf.Setting
 	reply := types.GetSystemSettingReply{
 		Debug:              setting.Debug,

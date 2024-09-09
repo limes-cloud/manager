@@ -8,35 +8,35 @@ import (
 	"github.com/limes-cloud/manager/internal/types"
 )
 
-type DictionaryInfra struct {
+type Dictionary struct {
 }
 
 var (
-	dictionaryIns  *DictionaryInfra
+	dictionaryIns  *Dictionary
 	dictionaryOnce sync.Once
 )
 
-func NewDictionaryInfra() *DictionaryInfra {
+func NewDictionary() *Dictionary {
 	dictionaryOnce.Do(func() {
-		dictionaryIns = &DictionaryInfra{}
+		dictionaryIns = &Dictionary{}
 	})
 	return dictionaryIns
 }
 
 // GetDictionary 获取指定的数据
-func (infra *DictionaryInfra) GetDictionary(ctx kratosx.Context, id uint32) (*entity.Dictionary, error) {
+func (infra *Dictionary) GetDictionary(ctx kratosx.Context, id uint32) (*entity.Dictionary, error) {
 	var dict entity.Dictionary
 	return &dict, ctx.DB().First(&dict, id).Error
 }
 
 // GetDictionaryByKeyword 获取指定数据
-func (infra *DictionaryInfra) GetDictionaryByKeyword(ctx kratosx.Context, keyword string) (*entity.Dictionary, error) {
+func (infra *Dictionary) GetDictionaryByKeyword(ctx kratosx.Context, keyword string) (*entity.Dictionary, error) {
 	var dict entity.Dictionary
 	return &dict, ctx.DB().First(&dict, "keyword=?", keyword).Error
 }
 
 // ListDictionary 获取列表
-func (infra *DictionaryInfra) ListDictionary(ctx kratosx.Context, req *types.ListDictionaryRequest) ([]*entity.Dictionary, uint32, error) {
+func (infra *Dictionary) ListDictionary(ctx kratosx.Context, req *types.ListDictionaryRequest) ([]*entity.Dictionary, uint32, error) {
 	var (
 		total int64
 		fs    = []string{"*"}
@@ -65,22 +65,22 @@ func (infra *DictionaryInfra) ListDictionary(ctx kratosx.Context, req *types.Lis
 }
 
 // CreateDictionary 创建数据
-func (infra *DictionaryInfra) CreateDictionary(ctx kratosx.Context, dict *entity.Dictionary) (uint32, error) {
+func (infra *Dictionary) CreateDictionary(ctx kratosx.Context, dict *entity.Dictionary) (uint32, error) {
 	return dict.Id, ctx.DB().Create(&dict).Error
 }
 
 // UpdateDictionary 更新数据
-func (infra *DictionaryInfra) UpdateDictionary(ctx kratosx.Context, dict *entity.Dictionary) error {
+func (infra *Dictionary) UpdateDictionary(ctx kratosx.Context, dict *entity.Dictionary) error {
 	return ctx.DB().Updates(dict).Error
 }
 
 // DeleteDictionary 删除数据
-func (infra *DictionaryInfra) DeleteDictionary(ctx kratosx.Context, id uint32) error {
+func (infra *Dictionary) DeleteDictionary(ctx kratosx.Context, id uint32) error {
 	return ctx.DB().Where("id = ?", id).Delete(&entity.Dictionary{}).Error
 }
 
 // ListDictionaryValue 获取列表
-func (infra *DictionaryInfra) ListDictionaryValue(ctx kratosx.Context, req *types.ListDictionaryValueRequest) ([]*entity.DictionaryValue, uint32, error) {
+func (infra *Dictionary) ListDictionaryValue(ctx kratosx.Context, req *types.ListDictionaryValueRequest) ([]*entity.DictionaryValue, uint32, error) {
 	var (
 		ms    []*entity.DictionaryValue
 		total int64
@@ -112,32 +112,32 @@ func (infra *DictionaryInfra) ListDictionaryValue(ctx kratosx.Context, req *type
 }
 
 // CreateDictionaryValue 创建数据
-func (infra *DictionaryInfra) CreateDictionaryValue(ctx kratosx.Context, dictValue *entity.DictionaryValue) (uint32, error) {
+func (infra *Dictionary) CreateDictionaryValue(ctx kratosx.Context, dictValue *entity.DictionaryValue) (uint32, error) {
 	return dictValue.Id, ctx.DB().Create(dictValue).Error
 }
 
 // GetDictionaryValue 获取指定的数据
-func (infra *DictionaryInfra) GetDictionaryValue(ctx kratosx.Context, id uint32) (*entity.DictionaryValue, error) {
+func (infra *Dictionary) GetDictionaryValue(ctx kratosx.Context, id uint32) (*entity.DictionaryValue, error) {
 	var dictValue entity.DictionaryValue
 	return &dictValue, ctx.DB().First(&dictValue, "id=?", id).Error
 }
 
 // UpdateDictionaryValue 更新数据
-func (infra *DictionaryInfra) UpdateDictionaryValue(ctx kratosx.Context, dictValue *entity.DictionaryValue) error {
+func (infra *Dictionary) UpdateDictionaryValue(ctx kratosx.Context, dictValue *entity.DictionaryValue) error {
 	return ctx.DB().Updates(dictValue).Error
 }
 
 // UpdateDictionaryValueStatus 更新数据状态
-func (infra *DictionaryInfra) UpdateDictionaryValueStatus(ctx kratosx.Context, id uint32, status bool) error {
+func (infra *Dictionary) UpdateDictionaryValueStatus(ctx kratosx.Context, id uint32, status bool) error {
 	return ctx.DB().Model(entity.DictionaryValue{}).Where("id=?", id).Update("status", status).Error
 }
 
 // DeleteDictionaryValue 删除数据
-func (infra *DictionaryInfra) DeleteDictionaryValue(ctx kratosx.Context, id uint32) error {
+func (infra *Dictionary) DeleteDictionaryValue(ctx kratosx.Context, id uint32) error {
 	return ctx.DB().Where("id = ?", id).Delete(&entity.DictionaryValue{}).Error
 }
 
-func (infra *DictionaryInfra) AllDictionaryValue(ctx kratosx.Context, keyword string) ([]*entity.DictionaryValue, error) {
+func (infra *Dictionary) AllDictionaryValue(ctx kratosx.Context, keyword string) ([]*entity.DictionaryValue, error) {
 	var (
 		m  = entity.Dictionary{}
 		ms []*entity.DictionaryValue
@@ -157,7 +157,7 @@ func (infra *DictionaryInfra) AllDictionaryValue(ctx kratosx.Context, keyword st
 	return ms, nil
 }
 
-func (infra *DictionaryInfra) ListDictionaryValues(ctx kratosx.Context, keywords []string) ([]*types.DictionaryValue, error) {
+func (infra *Dictionary) ListDictionaryValues(ctx kratosx.Context, keywords []string) ([]*types.DictionaryValue, error) {
 	var list []*types.DictionaryValue
 	if err := ctx.DB().Model(entity.DictionaryValue{}).
 		Select([]string{"keyword", "label", "value", "type", "extra"}).

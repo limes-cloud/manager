@@ -20,12 +20,12 @@ import (
 
 type DictionaryApp struct {
 	pb.UnimplementedDictionaryServer
-	srv *service.DictionaryService
+	srv *service.Dictionary
 }
 
 func NewDictionaryApp(conf *conf.Config) *DictionaryApp {
 	return &DictionaryApp{
-		srv: service.NewDictionaryService(conf, dbs.NewDictionaryInfra()),
+		srv: service.NewDictionary(conf, dbs.NewDictionary()),
 	}
 }
 

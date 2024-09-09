@@ -2,12 +2,11 @@ package repository
 
 import (
 	"github.com/limes-cloud/kratosx"
-
 	"github.com/limes-cloud/manager/internal/domain/entity"
 	"github.com/limes-cloud/manager/internal/types"
 )
 
-type UserRepository interface {
+type User interface {
 	// GetUser 获取指定的用户信息
 	GetUser(ctx kratosx.Context, id uint32) (*entity.User, error)
 

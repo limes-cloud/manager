@@ -2,12 +2,11 @@ package repository
 
 import (
 	"github.com/limes-cloud/kratosx"
-
 	"github.com/limes-cloud/manager/internal/domain/entity"
 	"github.com/limes-cloud/manager/internal/types"
 )
 
-type JobRepository interface {
+type Job interface {
 	// ListJob 获取职位信息列表
 	ListJob(ctx kratosx.Context, req *types.ListJobRequest) ([]*entity.Job, uint32, error)
 

@@ -16,12 +16,12 @@ import (
 
 type ResourceApp struct {
 	pb.UnimplementedResourceServer
-	srv *service.ResourceService
+	srv *service.Resource
 }
 
 func NewResourceApp(conf *conf.Config) *ResourceApp {
 	return &ResourceApp{
-		srv: service.NewResourceService(conf, dbs.NewResourceInfra(), dbs.NewDepartmentInfra()),
+		srv: service.NewResource(conf, dbs.NewResource(), dbs.NewDepartment()),
 	}
 }
 

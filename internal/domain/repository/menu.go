@@ -2,12 +2,11 @@ package repository
 
 import (
 	"github.com/limes-cloud/kratosx"
-
 	"github.com/limes-cloud/manager/internal/domain/entity"
 	"github.com/limes-cloud/manager/internal/types"
 )
 
-type MenuRepository interface {
+type Menu interface {
 	// GetMenu 获取自定菜单信息
 	GetMenu(ctx kratosx.Context, id uint32) (*entity.Menu, error)
 

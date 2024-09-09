@@ -9,22 +9,22 @@ import (
 	"github.com/limes-cloud/manager/internal/types"
 )
 
-type RbacInfra struct {
+type Rbac struct {
 }
 
 var (
-	rbacIns  *RbacInfra
+	rbacIns  *Rbac
 	rbacOnce sync.Once
 )
 
-func NewRbacInfra() *RbacInfra {
+func NewRbac() *Rbac {
 	rbacOnce.Do(func() {
-		rbacIns = &RbacInfra{}
+		rbacIns = &Rbac{}
 	})
 	return rbacIns
 }
 
-func (infra *RbacInfra) CreateRbacRolesApi(ctx kratosx.Context, roles []string, req types.MenuApi) error {
+func (infra *Rbac) CreateRbacRolesApi(ctx kratosx.Context, roles []string, req types.MenuApi) error {
 	defer ctx.Authentication().Enforce().LoadPolicy()
 
 	var list []*entity.CasbinRule
@@ -39,13 +39,13 @@ func (infra *RbacInfra) CreateRbacRolesApi(ctx kratosx.Context, roles []string, 
 	return ctx.DB().Create(&list).Error
 }
 
-func (infra *RbacInfra) DeleteRbacApi(ctx kratosx.Context, api, method string) error {
+func (infra *Rbac) DeleteRbacApi(ctx kratosx.Context, api, method string) error {
 	defer ctx.Authentication().Enforce().LoadPolicy()
 
 	return ctx.DB().Where("v1=? and v2=?", api, method).Delete(entity.CasbinRule{}).Error
 }
 
-func (infra *RbacInfra) UpdateRbacApi(ctx kratosx.Context, old types.MenuApi, now types.MenuApi) error {
+func (infra *Rbac) UpdateRbacApi(ctx kratosx.Context, old types.MenuApi, now types.MenuApi) error {
 	defer ctx.Authentication().Enforce().LoadPolicy()
 
 	return ctx.DB().
@@ -56,7 +56,7 @@ func (infra *RbacInfra) UpdateRbacApi(ctx kratosx.Context, old types.MenuApi, no
 		Error
 }
 
-func (infra *RbacInfra) UpdateRbacRoleApis(ctx kratosx.Context, role string, apis []*types.MenuApi) error {
+func (infra *Rbac) UpdateRbacRoleApis(ctx kratosx.Context, role string, apis []*types.MenuApi) error {
 	var list []*entity.CasbinRule
 	for _, item := range apis {
 		list = append(list, &entity.CasbinRule{
@@ -79,7 +79,7 @@ func (infra *RbacInfra) UpdateRbacRoleApis(ctx kratosx.Context, role string, api
 	})
 }
 
-func (infra *RbacInfra) DeleteRbacRoles(ctx kratosx.Context, roles []string) error {
+func (infra *Rbac) DeleteRbacRoles(ctx kratosx.Context, roles []string) error {
 	defer ctx.Authentication().Enforce().LoadPolicy()
 	return ctx.DB().Where("v0 in ?", roles).Delete(&entity.CasbinRule{}).Error
 }

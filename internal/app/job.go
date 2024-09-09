@@ -20,12 +20,12 @@ import (
 
 type JobApp struct {
 	pb.UnimplementedJobServer
-	srv *service.JobService
+	srv *service.Job
 }
 
 func NewJobApp(conf *conf.Config) *JobApp {
 	return &JobApp{
-		srv: service.NewJobService(conf, dbs.NewJobInfra()),
+		srv: service.NewJob(conf, dbs.NewJob()),
 	}
 }
 
