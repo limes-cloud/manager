@@ -18,27 +18,27 @@ import (
 	"github.com/limes-cloud/manager/internal/types"
 )
 
-type DepartmentApp struct {
+type Department struct {
 	pb.UnimplementedDepartmentServer
 	srv *service.Department
 }
 
-func NewDepartmentApp(conf *conf.Config) *DepartmentApp {
-	return &DepartmentApp{
+func NewDepartment(conf *conf.Config) *Department {
+	return &Department{
 		srv: service.NewDepartment(conf, dbs.NewDepartment()),
 	}
 }
 
 func init() {
 	register(func(c *conf.Config, hs *http.Server, gs *grpc.Server) {
-		srv := NewDepartmentApp(c)
+		srv := NewDepartment(c)
 		pb.RegisterDepartmentHTTPServer(hs, srv)
 		pb.RegisterDepartmentServer(gs, srv)
 	})
 }
 
 // GetDepartment 获取指定的部门信息
-func (s *DepartmentApp) GetDepartment(c context.Context, req *pb.GetDepartmentRequest) (*pb.GetDepartmentReply, error) {
+func (s *Department) GetDepartment(c context.Context, req *pb.GetDepartmentRequest) (*pb.GetDepartmentReply, error) {
 	var (
 		ent *entity.Department
 		err error
@@ -67,7 +67,7 @@ func (s *DepartmentApp) GetDepartment(c context.Context, req *pb.GetDepartmentRe
 }
 
 // ListDepartment 获取部门信息列表
-func (s *DepartmentApp) ListDepartment(c context.Context, req *pb.ListDepartmentRequest) (*pb.ListDepartmentReply, error) {
+func (s *Department) ListDepartment(c context.Context, req *pb.ListDepartmentRequest) (*pb.ListDepartmentReply, error) {
 	ctx := kratosx.MustContext(c)
 	result, err := s.srv.ListCurrentDepartment(ctx, &types.ListDepartmentRequest{
 		Name:    req.Name,
@@ -87,7 +87,7 @@ func (s *DepartmentApp) ListDepartment(c context.Context, req *pb.ListDepartment
 }
 
 // CreateDepartment 创建部门信息
-func (s *DepartmentApp) CreateDepartment(c context.Context, req *pb.CreateDepartmentRequest) (*pb.CreateDepartmentReply, error) {
+func (s *Department) CreateDepartment(c context.Context, req *pb.CreateDepartmentRequest) (*pb.CreateDepartmentReply, error) {
 	id, err := s.srv.CreateDepartment(kratosx.MustContext(c), &entity.Department{
 		ParentId:    req.ParentId,
 		Name:        req.Name,
@@ -102,7 +102,7 @@ func (s *DepartmentApp) CreateDepartment(c context.Context, req *pb.CreateDepart
 }
 
 // UpdateDepartment 更新部门信息
-func (s *DepartmentApp) UpdateDepartment(c context.Context, req *pb.UpdateDepartmentRequest) (*pb.UpdateDepartmentReply, error) {
+func (s *Department) UpdateDepartment(c context.Context, req *pb.UpdateDepartmentRequest) (*pb.UpdateDepartmentReply, error) {
 	if err := s.srv.UpdateDepartment(kratosx.MustContext(c), &entity.Department{
 		BaseModel:   ktypes.BaseModel{Id: req.Id},
 		ParentId:    req.ParentId,
@@ -116,7 +116,7 @@ func (s *DepartmentApp) UpdateDepartment(c context.Context, req *pb.UpdateDepart
 }
 
 // DeleteDepartment 删除部门信息
-func (s *DepartmentApp) DeleteDepartment(c context.Context, req *pb.DeleteDepartmentRequest) (*pb.DeleteDepartmentReply, error) {
+func (s *Department) DeleteDepartment(c context.Context, req *pb.DeleteDepartmentRequest) (*pb.DeleteDepartmentReply, error) {
 	if err := s.srv.DeleteDepartment(kratosx.MustContext(c), req.Id); err != nil {
 		return nil, err
 	}

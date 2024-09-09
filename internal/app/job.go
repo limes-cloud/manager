@@ -18,27 +18,27 @@ import (
 	"github.com/limes-cloud/manager/internal/types"
 )
 
-type JobApp struct {
+type Job struct {
 	pb.UnimplementedJobServer
 	srv *service.Job
 }
 
-func NewJobApp(conf *conf.Config) *JobApp {
-	return &JobApp{
+func NewJob(conf *conf.Config) *Job {
+	return &Job{
 		srv: service.NewJob(conf, dbs.NewJob()),
 	}
 }
 
 func init() {
 	register(func(c *conf.Config, hs *http.Server, gs *grpc.Server) {
-		srv := NewJobApp(c)
+		srv := NewJob(c)
 		pb.RegisterJobHTTPServer(hs, srv)
 		pb.RegisterJobServer(gs, srv)
 	})
 }
 
 // ListJob 获取职位信息列表
-func (s *JobApp) ListJob(c context.Context, req *pb.ListJobRequest) (*pb.ListJobReply, error) {
+func (s *Job) ListJob(c context.Context, req *pb.ListJobRequest) (*pb.ListJobReply, error) {
 	var ctx = kratosx.MustContext(c)
 	result, total, err := s.srv.ListJob(ctx, &types.ListJobRequest{
 		Page:     req.Page,
@@ -60,7 +60,7 @@ func (s *JobApp) ListJob(c context.Context, req *pb.ListJobRequest) (*pb.ListJob
 }
 
 // CreateJob 创建职位信息
-func (s *JobApp) CreateJob(c context.Context, req *pb.CreateJobRequest) (*pb.CreateJobReply, error) {
+func (s *Job) CreateJob(c context.Context, req *pb.CreateJobRequest) (*pb.CreateJobReply, error) {
 	id, err := s.srv.CreateJob(kratosx.MustContext(c), &entity.Job{
 		Keyword:     req.Keyword,
 		Name:        req.Name,
@@ -75,7 +75,7 @@ func (s *JobApp) CreateJob(c context.Context, req *pb.CreateJobRequest) (*pb.Cre
 }
 
 // UpdateJob 更新职位信息
-func (s *JobApp) UpdateJob(c context.Context, req *pb.UpdateJobRequest) (*pb.UpdateJobReply, error) {
+func (s *Job) UpdateJob(c context.Context, req *pb.UpdateJobRequest) (*pb.UpdateJobReply, error) {
 	if err := s.srv.UpdateJob(kratosx.MustContext(c), &entity.Job{
 		BaseModel:   ktypes.BaseModel{Id: req.Id},
 		Keyword:     req.Keyword,
@@ -90,6 +90,6 @@ func (s *JobApp) UpdateJob(c context.Context, req *pb.UpdateJobRequest) (*pb.Upd
 }
 
 // DeleteJob 删除职位信息
-func (s *JobApp) DeleteJob(c context.Context, req *pb.DeleteJobRequest) (*pb.DeleteJobReply, error) {
+func (s *Job) DeleteJob(c context.Context, req *pb.DeleteJobRequest) (*pb.DeleteJobReply, error) {
 	return &pb.DeleteJobReply{}, s.srv.DeleteJob(kratosx.MustContext(c), req.Id)
 }

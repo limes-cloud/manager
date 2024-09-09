@@ -18,27 +18,27 @@ import (
 	"github.com/limes-cloud/manager/internal/types"
 )
 
-type DictionaryApp struct {
+type Dictionary struct {
 	pb.UnimplementedDictionaryServer
 	srv *service.Dictionary
 }
 
-func NewDictionaryApp(conf *conf.Config) *DictionaryApp {
-	return &DictionaryApp{
+func NewDictionary(conf *conf.Config) *Dictionary {
+	return &Dictionary{
 		srv: service.NewDictionary(conf, dbs.NewDictionary()),
 	}
 }
 
 func init() {
 	register(func(c *conf.Config, hs *http.Server, gs *grpc.Server) {
-		srv := NewDictionaryApp(c)
+		srv := NewDictionary(c)
 		pb.RegisterDictionaryHTTPServer(hs, srv)
 		pb.RegisterDictionaryServer(gs, srv)
 	})
 }
 
 // GetDictionary 获取指定的字典目录
-func (s *DictionaryApp) GetDictionary(c context.Context, req *pb.GetDictionaryRequest) (*pb.GetDictionaryReply, error) {
+func (s *Dictionary) GetDictionary(c context.Context, req *pb.GetDictionaryRequest) (*pb.GetDictionaryReply, error) {
 	result, err := s.srv.GetDictionary(kratosx.MustContext(c), &types.GetDictionaryRequest{
 		Id:      req.Id,
 		Keyword: req.Keyword,
@@ -57,7 +57,7 @@ func (s *DictionaryApp) GetDictionary(c context.Context, req *pb.GetDictionaryRe
 }
 
 // ListDictionary 获取字典目录列表
-func (s *DictionaryApp) ListDictionary(c context.Context, req *pb.ListDictionaryRequest) (*pb.ListDictionaryReply, error) {
+func (s *Dictionary) ListDictionary(c context.Context, req *pb.ListDictionaryRequest) (*pb.ListDictionaryReply, error) {
 	ctx := kratosx.MustContext(c)
 	result, total, err := s.srv.ListDictionary(ctx, &types.ListDictionaryRequest{
 		Page:     req.Page,
@@ -79,7 +79,7 @@ func (s *DictionaryApp) ListDictionary(c context.Context, req *pb.ListDictionary
 }
 
 // CreateDictionary 创建字典目录
-func (s *DictionaryApp) CreateDictionary(c context.Context, req *pb.CreateDictionaryRequest) (*pb.CreateDictionaryReply, error) {
+func (s *Dictionary) CreateDictionary(c context.Context, req *pb.CreateDictionaryRequest) (*pb.CreateDictionaryReply, error) {
 	id, err := s.srv.CreateDictionary(kratosx.MustContext(c), &entity.Dictionary{
 		Keyword:     req.Keyword,
 		Name:        req.Name,
@@ -92,7 +92,7 @@ func (s *DictionaryApp) CreateDictionary(c context.Context, req *pb.CreateDictio
 }
 
 // UpdateDictionary 更新字典目录
-func (s *DictionaryApp) UpdateDictionary(c context.Context, req *pb.UpdateDictionaryRequest) (*pb.UpdateDictionaryReply, error) {
+func (s *Dictionary) UpdateDictionary(c context.Context, req *pb.UpdateDictionaryRequest) (*pb.UpdateDictionaryReply, error) {
 	if err := s.srv.UpdateDictionary(kratosx.MustContext(c), &entity.Dictionary{
 		BaseModel:   ktypes.BaseModel{Id: req.Id},
 		Keyword:     req.Keyword,
@@ -106,12 +106,12 @@ func (s *DictionaryApp) UpdateDictionary(c context.Context, req *pb.UpdateDictio
 }
 
 // DeleteDictionary 删除字典目录
-func (s *DictionaryApp) DeleteDictionary(c context.Context, req *pb.DeleteDictionaryRequest) (*pb.DeleteDictionaryReply, error) {
+func (s *Dictionary) DeleteDictionary(c context.Context, req *pb.DeleteDictionaryRequest) (*pb.DeleteDictionaryReply, error) {
 	return &pb.DeleteDictionaryReply{}, s.srv.DeleteDictionary(kratosx.MustContext(c), req.Id)
 }
 
 // ListDictionaryValue 获取字典值目录列表
-func (s *DictionaryApp) ListDictionaryValue(c context.Context, req *pb.ListDictionaryValueRequest) (*pb.ListDictionaryValueReply, error) {
+func (s *Dictionary) ListDictionaryValue(c context.Context, req *pb.ListDictionaryValueRequest) (*pb.ListDictionaryValueReply, error) {
 	ctx := kratosx.MustContext(c)
 	result, total, err := s.srv.ListDictionaryValue(ctx, &types.ListDictionaryValueRequest{
 		Page:         req.Page,
@@ -135,7 +135,7 @@ func (s *DictionaryApp) ListDictionaryValue(c context.Context, req *pb.ListDicti
 }
 
 // CreateDictionaryValue 创建字典值目录
-func (s *DictionaryApp) CreateDictionaryValue(c context.Context, req *pb.CreateDictionaryValueRequest) (*pb.CreateDictionaryValueReply, error) {
+func (s *Dictionary) CreateDictionaryValue(c context.Context, req *pb.CreateDictionaryValueRequest) (*pb.CreateDictionaryValueReply, error) {
 	id, err := s.srv.CreateDictionaryValue(kratosx.MustContext(c), &entity.DictionaryValue{
 		DictionaryId: req.DictionaryId,
 		Label:        req.Label,
@@ -153,7 +153,7 @@ func (s *DictionaryApp) CreateDictionaryValue(c context.Context, req *pb.CreateD
 }
 
 // UpdateDictionaryValue 更新字典值目录
-func (s *DictionaryApp) UpdateDictionaryValue(c context.Context, req *pb.UpdateDictionaryValueRequest) (*pb.UpdateDictionaryValueReply, error) {
+func (s *Dictionary) UpdateDictionaryValue(c context.Context, req *pb.UpdateDictionaryValueRequest) (*pb.UpdateDictionaryValueReply, error) {
 	if err := s.srv.UpdateDictionaryValue(kratosx.MustContext(c), &entity.DictionaryValue{
 		BaseModel:    ktypes.BaseModel{Id: req.Id},
 		DictionaryId: req.DictionaryId,
@@ -171,16 +171,16 @@ func (s *DictionaryApp) UpdateDictionaryValue(c context.Context, req *pb.UpdateD
 }
 
 // UpdateDictionaryValueStatus 更新字典值目录状态
-func (s *DictionaryApp) UpdateDictionaryValueStatus(c context.Context, req *pb.UpdateDictionaryValueStatusRequest) (*pb.UpdateDictionaryValueStatusReply, error) {
+func (s *Dictionary) UpdateDictionaryValueStatus(c context.Context, req *pb.UpdateDictionaryValueStatusRequest) (*pb.UpdateDictionaryValueStatusReply, error) {
 	return &pb.UpdateDictionaryValueStatusReply{}, s.srv.UpdateDictionaryValueStatus(kratosx.MustContext(c), req.Id, req.Status)
 }
 
 // DeleteDictionaryValue 删除字典值目录
-func (s *DictionaryApp) DeleteDictionaryValue(c context.Context, req *pb.DeleteDictionaryValueRequest) (*pb.DeleteDictionaryValueReply, error) {
+func (s *Dictionary) DeleteDictionaryValue(c context.Context, req *pb.DeleteDictionaryValueRequest) (*pb.DeleteDictionaryValueReply, error) {
 	return &pb.DeleteDictionaryValueReply{}, s.srv.DeleteDictionaryValue(kratosx.MustContext(c), req.Id)
 }
 
-func (s *DictionaryApp) GetDictionaryValues(c context.Context, req *pb.GetDictionaryValuesRequest) (*pb.GetDictionaryValuesReply, error) {
+func (s *Dictionary) GetDictionaryValues(c context.Context, req *pb.GetDictionaryValuesRequest) (*pb.GetDictionaryValuesReply, error) {
 	var (
 		ctx = kratosx.MustContext(c)
 	)

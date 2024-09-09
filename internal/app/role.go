@@ -18,33 +18,33 @@ import (
 	"github.com/limes-cloud/manager/internal/types"
 )
 
-type RoleApp struct {
+type Role struct {
 	pb.UnimplementedRoleServer
 	srv *service.Role
 }
 
-func NewRoleApp(conf *conf.Config) *RoleApp {
-	return &RoleApp{
+func NewRole(conf *conf.Config) *Role {
+	return &Role{
 		srv: service.NewRole(conf, dbs.NewRoleRepo(), dbs.NewMenu(), dbs.NewRbac()),
 	}
 }
 
 func init() {
 	register(func(c *conf.Config, hs *http.Server, gs *grpc.Server) {
-		srv := NewRoleApp(c)
+		srv := NewRole(c)
 		pb.RegisterRoleHTTPServer(hs, srv)
 		pb.RegisterRoleServer(gs, srv)
 	})
 }
 
 // GetRoleMenuIds 获取指定角色的菜单id列表
-func (s *RoleApp) GetRoleMenuIds(c context.Context, req *pb.GetRoleMenuIdsRequest) (*pb.GetRoleMenuIdsReply, error) {
+func (s *Role) GetRoleMenuIds(c context.Context, req *pb.GetRoleMenuIdsRequest) (*pb.GetRoleMenuIdsReply, error) {
 	list, err := s.srv.GetRoleMenuIds(kratosx.MustContext(c), req.RoleId)
 	return &pb.GetRoleMenuIdsReply{List: list}, err
 }
 
 // GetRole 获取指定的角色信息
-func (s *RoleApp) GetRole(c context.Context, req *pb.GetRoleRequest) (*pb.GetRoleReply, error) {
+func (s *Role) GetRole(c context.Context, req *pb.GetRoleRequest) (*pb.GetRoleReply, error) {
 	var (
 		ent *entity.Role
 		err error
@@ -76,7 +76,7 @@ func (s *RoleApp) GetRole(c context.Context, req *pb.GetRoleRequest) (*pb.GetRol
 }
 
 // ListRole 获取角色信息列表
-func (s *RoleApp) ListRole(c context.Context, req *pb.ListRoleRequest) (*pb.ListRoleReply, error) {
+func (s *Role) ListRole(c context.Context, req *pb.ListRoleRequest) (*pb.ListRoleReply, error) {
 	var ctx = kratosx.MustContext(c)
 	result, err := s.srv.ListRole(ctx, &types.ListRoleRequest{
 		Name:    req.Name,
@@ -96,7 +96,7 @@ func (s *RoleApp) ListRole(c context.Context, req *pb.ListRoleRequest) (*pb.List
 }
 
 // CreateRole 创建角色信息
-func (s *RoleApp) CreateRole(c context.Context, req *pb.CreateRoleRequest) (*pb.CreateRoleReply, error) {
+func (s *Role) CreateRole(c context.Context, req *pb.CreateRoleRequest) (*pb.CreateRoleReply, error) {
 	var ctx = kratosx.MustContext(c)
 
 	id, err := s.srv.CreateRole(ctx, &entity.Role{
@@ -116,7 +116,7 @@ func (s *RoleApp) CreateRole(c context.Context, req *pb.CreateRoleRequest) (*pb.
 }
 
 // UpdateRole 更新角色信息
-func (s *RoleApp) UpdateRole(c context.Context, req *pb.UpdateRoleRequest) (*pb.UpdateRoleReply, error) {
+func (s *Role) UpdateRole(c context.Context, req *pb.UpdateRoleRequest) (*pb.UpdateRoleReply, error) {
 	if err := s.srv.UpdateRole(kratosx.MustContext(c), &entity.Role{
 		BaseModel:     ktypes.BaseModel{Id: req.Id},
 		ParentId:      req.ParentId,
@@ -132,16 +132,16 @@ func (s *RoleApp) UpdateRole(c context.Context, req *pb.UpdateRoleRequest) (*pb.
 }
 
 // UpdateRoleStatus 更新角色信息状态
-func (s *RoleApp) UpdateRoleStatus(c context.Context, req *pb.UpdateRoleStatusRequest) (*pb.UpdateRoleStatusReply, error) {
+func (s *Role) UpdateRoleStatus(c context.Context, req *pb.UpdateRoleStatusRequest) (*pb.UpdateRoleStatusReply, error) {
 	return &pb.UpdateRoleStatusReply{}, s.srv.UpdateRoleStatus(kratosx.MustContext(c), req.Id, req.Status)
 }
 
 // UpdateRoleMenu 更新角色菜单
-func (s *RoleApp) UpdateRoleMenu(c context.Context, req *pb.UpdateRoleMenuRequest) (*pb.UpdateRoleMenuReply, error) {
+func (s *Role) UpdateRoleMenu(c context.Context, req *pb.UpdateRoleMenuRequest) (*pb.UpdateRoleMenuReply, error) {
 	return &pb.UpdateRoleMenuReply{}, s.srv.UpdateRoleMenu(kratosx.MustContext(c), req.RoleId, req.MenuIds)
 }
 
 // DeleteRole 删除角色信息
-func (s *RoleApp) DeleteRole(c context.Context, req *pb.DeleteRoleRequest) (*pb.DeleteRoleReply, error) {
+func (s *Role) DeleteRole(c context.Context, req *pb.DeleteRoleRequest) (*pb.DeleteRoleReply, error) {
 	return &pb.DeleteRoleReply{}, s.srv.DeleteRole(kratosx.MustContext(c), req.Id)
 }

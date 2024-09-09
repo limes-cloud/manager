@@ -20,13 +20,13 @@ import (
 	"github.com/limes-cloud/manager/internal/types"
 )
 
-type UserApp struct {
+type User struct {
 	pb.UnimplementedUserServer
 	srv *service.Use
 }
 
-func NewUserApp(conf *conf.Config) *UserApp {
-	return &UserApp{
+func NewUser(conf *conf.Config) *User {
+	return &User{
 		srv: service.NewUse(
 			conf,
 			dbs.NewUser(),
@@ -39,14 +39,14 @@ func NewUserApp(conf *conf.Config) *UserApp {
 
 func init() {
 	register(func(c *conf.Config, hs *http.Server, gs *grpc.Server) {
-		srv := NewUserApp(c)
+		srv := NewUser(c)
 		pb.RegisterUserHTTPServer(hs, srv)
 		pb.RegisterUserServer(gs, srv)
 	})
 }
 
 // ListUser 获取用户信息列表
-func (s *UserApp) ListUser(c context.Context, req *pb.ListUserRequest) (*pb.ListUserReply, error) {
+func (s *User) ListUser(c context.Context, req *pb.ListUserRequest) (*pb.ListUserReply, error) {
 	var ctx = kratosx.MustContext(c)
 	result, total, err := s.srv.ListUser(ctx, &types.ListUserRequest{
 		Page:         req.Page,
@@ -74,7 +74,7 @@ func (s *UserApp) ListUser(c context.Context, req *pb.ListUserRequest) (*pb.List
 }
 
 // CreateUser 创建用户信息 fixed code
-func (s *UserApp) CreateUser(c context.Context, req *pb.CreateUserRequest) (*pb.CreateUserReply, error) {
+func (s *User) CreateUser(c context.Context, req *pb.CreateUserRequest) (*pb.CreateUserReply, error) {
 	var (
 		ent = entity.User{}
 		ctx = kratosx.MustContext(c)
@@ -106,7 +106,7 @@ func (s *UserApp) CreateUser(c context.Context, req *pb.CreateUserRequest) (*pb.
 }
 
 // UpdateUser 更新用户信息 fixed code
-func (s *UserApp) UpdateUser(c context.Context, req *pb.UpdateUserRequest) (*pb.UpdateUserReply, error) {
+func (s *User) UpdateUser(c context.Context, req *pb.UpdateUserRequest) (*pb.UpdateUserReply, error) {
 	var (
 		ent = entity.User{}
 		ctx = kratosx.MustContext(c)
@@ -137,17 +137,17 @@ func (s *UserApp) UpdateUser(c context.Context, req *pb.UpdateUserRequest) (*pb.
 }
 
 // DeleteUser 删除用户信息
-func (s *UserApp) DeleteUser(c context.Context, req *pb.DeleteUserRequest) (*pb.DeleteUserReply, error) {
+func (s *User) DeleteUser(c context.Context, req *pb.DeleteUserRequest) (*pb.DeleteUserReply, error) {
 	return &pb.DeleteUserReply{}, s.srv.DeleteUser(kratosx.MustContext(c), req.Id)
 }
 
 // UpdateUserStatus 更新用户信息状态
-func (s *UserApp) UpdateUserStatus(c context.Context, req *pb.UpdateUserStatusRequest) (*pb.UpdateUserStatusReply, error) {
+func (s *User) UpdateUserStatus(c context.Context, req *pb.UpdateUserStatusRequest) (*pb.UpdateUserStatusReply, error) {
 	return &pb.UpdateUserStatusReply{}, s.srv.UpdateUserStatus(kratosx.MustContext(c), req.Id, req.Status)
 }
 
 // GetUser 获取指定的用户信息
-func (s *UserApp) GetUser(c context.Context, req *pb.GetUserRequest) (*pb.GetUserReply, error) {
+func (s *User) GetUser(c context.Context, req *pb.GetUserRequest) (*pb.GetUserReply, error) {
 	var (
 		in  = types.GetUserRequest{}
 		ctx = kratosx.MustContext(c)
@@ -171,7 +171,7 @@ func (s *UserApp) GetUser(c context.Context, req *pb.GetUserRequest) (*pb.GetUse
 	return &reply, nil
 }
 
-func (s *UserApp) GetCurrentUser(c context.Context, _ *emptypb.Empty) (*pb.GetUserReply, error) {
+func (s *User) GetCurrentUser(c context.Context, _ *emptypb.Empty) (*pb.GetUserReply, error) {
 	var (
 		ctx = kratosx.MustContext(c)
 	)
@@ -189,11 +189,11 @@ func (s *UserApp) GetCurrentUser(c context.Context, _ *emptypb.Empty) (*pb.GetUs
 	return &reply, nil
 }
 
-func (s *UserApp) ResetUserPassword(c context.Context, req *pb.ResetUserPasswordRequest) (*pb.ResetUserPasswordReply, error) {
+func (s *User) ResetUserPassword(c context.Context, req *pb.ResetUserPasswordRequest) (*pb.ResetUserPasswordReply, error) {
 	return &pb.ResetUserPasswordReply{}, s.srv.ResetUserPassword(kratosx.MustContext(c), req.Id)
 }
 
-func (s *UserApp) UpdateCurrentUser(c context.Context, req *pb.UpdateCurrentUserRequest) (*pb.UpdateCurrentUserReply, error) {
+func (s *User) UpdateCurrentUser(c context.Context, req *pb.UpdateCurrentUserRequest) (*pb.UpdateCurrentUserReply, error) {
 	var (
 		in  types.UpdateCurrentUserRequest
 		ctx = kratosx.MustContext(c)
@@ -207,11 +207,11 @@ func (s *UserApp) UpdateCurrentUser(c context.Context, req *pb.UpdateCurrentUser
 	return &pb.UpdateCurrentUserReply{}, s.srv.UpdateCurrentUser(kratosx.MustContext(c), &in)
 }
 
-func (s *UserApp) UpdateCurrentUserRole(c context.Context, req *pb.UpdateCurrentUserRoleRequest) (*pb.UpdateCurrentUserRoleReply, error) {
+func (s *User) UpdateCurrentUserRole(c context.Context, req *pb.UpdateCurrentUserRoleRequest) (*pb.UpdateCurrentUserRoleReply, error) {
 	return &pb.UpdateCurrentUserRoleReply{}, s.srv.UpdateCurrentUserRole(kratosx.MustContext(c), req.RoleId)
 }
 
-func (s *UserApp) UpdateCurrentUserPassword(c context.Context, req *pb.UpdateCurrentUserPasswordRequest) (*pb.UpdateCurrentUserPasswordReply, error) {
+func (s *User) UpdateCurrentUserPassword(c context.Context, req *pb.UpdateCurrentUserPasswordRequest) (*pb.UpdateCurrentUserPasswordReply, error) {
 	var (
 		in  types.UpdateCurrentUserPasswordRequest
 		ctx = kratosx.MustContext(c)
@@ -225,11 +225,11 @@ func (s *UserApp) UpdateCurrentUserPassword(c context.Context, req *pb.UpdateCur
 	return &pb.UpdateCurrentUserPasswordReply{}, s.srv.UpdateCurrentUserPassword(ctx, &in)
 }
 
-func (s *UserApp) UpdateCurrentUserSetting(c context.Context, req *pb.UpdateCurrentUserSettingRequest) (*pb.UpdateCurrentUserSettingReply, error) {
+func (s *User) UpdateCurrentUserSetting(c context.Context, req *pb.UpdateCurrentUserSettingRequest) (*pb.UpdateCurrentUserSettingReply, error) {
 	return &pb.UpdateCurrentUserSettingReply{}, s.srv.UpdateCurrentUserSetting(kratosx.MustContext(c), req.Setting)
 }
 
-func (s *UserApp) UserLogin(c context.Context, req *pb.UserLoginRequest) (*pb.UserLoginReply, error) {
+func (s *User) UserLogin(c context.Context, req *pb.UserLoginRequest) (*pb.UserLoginReply, error) {
 	var (
 		in  types.UserLoginRequest
 		ctx = kratosx.MustContext(c)
@@ -247,11 +247,11 @@ func (s *UserApp) UserLogin(c context.Context, req *pb.UserLoginRequest) (*pb.Us
 	return &pb.UserLoginReply{Token: token}, nil
 }
 
-func (s *UserApp) UserLogout(c context.Context, _ *emptypb.Empty) (*emptypb.Empty, error) {
+func (s *User) UserLogout(c context.Context, _ *emptypb.Empty) (*emptypb.Empty, error) {
 	return &emptypb.Empty{}, s.srv.UserLogout(kratosx.MustContext(c))
 }
 
-func (s *UserApp) UserRefreshToken(c context.Context, _ *emptypb.Empty) (*pb.UserRefreshTokenReply, error) {
+func (s *User) UserRefreshToken(c context.Context, _ *emptypb.Empty) (*pb.UserRefreshTokenReply, error) {
 	token, err := s.srv.UserRefreshToken(kratosx.MustContext(c))
 	if err != nil {
 		return nil, err
@@ -259,7 +259,7 @@ func (s *UserApp) UserRefreshToken(c context.Context, _ *emptypb.Empty) (*pb.Use
 	return &pb.UserRefreshTokenReply{Token: token}, nil
 }
 
-func (s *UserApp) SendCurrentUserCaptcha(c context.Context, req *pb.SendCurrentUserCaptchaRequest) (*pb.SendCurrentUserCaptchaReply, error) {
+func (s *User) SendCurrentUserCaptcha(c context.Context, req *pb.SendCurrentUserCaptchaRequest) (*pb.SendCurrentUserCaptchaReply, error) {
 	reply, err := s.srv.SendCurrentUserCaptcha(kratosx.MustContext(c), req.Type)
 	if err != nil {
 		return nil, err
@@ -271,7 +271,7 @@ func (s *UserApp) SendCurrentUserCaptcha(c context.Context, req *pb.SendCurrentU
 	}, nil
 }
 
-func (s *UserApp) GetUserLoginCaptcha(c context.Context, _ *emptypb.Empty) (*pb.GetUserLoginCaptchaReply, error) {
+func (s *User) GetUserLoginCaptcha(c context.Context, _ *emptypb.Empty) (*pb.GetUserLoginCaptchaReply, error) {
 	reply, err := s.srv.GetUserLoginCaptcha(kratosx.MustContext(c))
 	if err != nil {
 		return nil, err
@@ -283,7 +283,7 @@ func (s *UserApp) GetUserLoginCaptcha(c context.Context, _ *emptypb.Empty) (*pb.
 	}, nil
 }
 
-func (s *UserApp) ListLoginLog(c context.Context, req *pb.ListLoginLogRequest) (*pb.ListLoginLogReply, error) {
+func (s *User) ListLoginLog(c context.Context, req *pb.ListLoginLogRequest) (*pb.ListLoginLogReply, error) {
 	list, total, err := s.srv.ListLoginLog(kratosx.MustContext(c), &types.ListLoginLogRequest{
 		Page:       req.Page,
 		PageSize:   req.PageSize,

@@ -14,27 +14,27 @@ import (
 	"github.com/limes-cloud/manager/internal/types"
 )
 
-type ResourceApp struct {
+type Resource struct {
 	pb.UnimplementedResourceServer
 	srv *service.Resource
 }
 
-func NewResourceApp(conf *conf.Config) *ResourceApp {
-	return &ResourceApp{
+func NewResource(conf *conf.Config) *Resource {
+	return &Resource{
 		srv: service.NewResource(conf, dbs.NewResource(), dbs.NewDepartment()),
 	}
 }
 
 func init() {
 	register(func(c *conf.Config, hs *http.Server, gs *grpc.Server) {
-		srv := NewResourceApp(c)
+		srv := NewResource(c)
 		pb.RegisterResourceHTTPServer(hs, srv)
 		pb.RegisterResourceServer(gs, srv)
 	})
 }
 
 // GetResourceScopes 获取当前用户的资源权限
-func (r ResourceApp) GetResourceScopes(c context.Context, req *pb.GetResourceScopesRequest) (*pb.GetResourceScopesReply, error) {
+func (r Resource) GetResourceScopes(c context.Context, req *pb.GetResourceScopesRequest) (*pb.GetResourceScopesReply, error) {
 	all, ids, err := r.srv.GetResourceScopes(kratosx.MustContext(c), req.Keyword)
 	if err != nil {
 		return nil, err
@@ -43,7 +43,7 @@ func (r ResourceApp) GetResourceScopes(c context.Context, req *pb.GetResourceSco
 }
 
 // GetResource 获取指定用户的资源权限
-func (r ResourceApp) GetResource(c context.Context, req *pb.GetResourceRequest) (*pb.GetResourceReply, error) {
+func (r Resource) GetResource(c context.Context, req *pb.GetResourceRequest) (*pb.GetResourceReply, error) {
 	ids, err := r.srv.GetResource(kratosx.MustContext(c), &types.GetResourceRequest{
 		Keyword:    req.Keyword,
 		ResourceId: req.ResourceId,
@@ -55,7 +55,7 @@ func (r ResourceApp) GetResource(c context.Context, req *pb.GetResourceRequest) 
 }
 
 // UpdateResource 更新用户的资源权限
-func (r ResourceApp) UpdateResource(c context.Context, req *pb.UpdateResourceRequest) (*pb.UpdateResourceReply, error) {
+func (r Resource) UpdateResource(c context.Context, req *pb.UpdateResourceRequest) (*pb.UpdateResourceReply, error) {
 	if err := r.srv.UpdateResource(kratosx.MustContext(c), &types.UpdateResourceRequest{
 		Keyword:       req.Keyword,
 		ResourceId:    req.ResourceId,

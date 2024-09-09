@@ -17,27 +17,27 @@ import (
 	"github.com/limes-cloud/manager/internal/types"
 )
 
-type MenuApp struct {
+type Menu struct {
 	pb.UnimplementedMenuServer
 	srv *service.Menu
 }
 
-func NewMenuApp(conf *conf.Config) *MenuApp {
-	return &MenuApp{
+func NewMenu(conf *conf.Config) *Menu {
+	return &Menu{
 		srv: service.NewMenu(conf, dbs.NewMenu(), dbs.NewRoleRepo(), dbs.NewRbac()),
 	}
 }
 
 func init() {
 	register(func(c *conf.Config, hs *http.Server, gs *grpc.Server) {
-		srv := NewMenuApp(c)
+		srv := NewMenu(c)
 		pb.RegisterMenuHTTPServer(hs, srv)
 		pb.RegisterMenuServer(gs, srv)
 	})
 }
 
 // ListMenu 获取菜单信息列表
-func (s *MenuApp) ListMenu(c context.Context, req *pb.ListMenuRequest) (*pb.ListMenuReply, error) {
+func (s *Menu) ListMenu(c context.Context, req *pb.ListMenuRequest) (*pb.ListMenuReply, error) {
 	var ctx = kratosx.MustContext(c)
 	result, err := s.srv.ListMenu(ctx, &types.ListMenuRequest{
 		Title: req.Title,
@@ -56,7 +56,7 @@ func (s *MenuApp) ListMenu(c context.Context, req *pb.ListMenuRequest) (*pb.List
 }
 
 // ListMenuByCurRole 获取当前角色的菜单信息列表
-func (s *MenuApp) ListMenuByCurRole(c context.Context, _ *pb.ListMenuByCurRoleRequest) (*pb.ListMenuByCurRoleReply, error) {
+func (s *Menu) ListMenuByCurRole(c context.Context, _ *pb.ListMenuByCurRoleRequest) (*pb.ListMenuByCurRoleReply, error) {
 	var ctx = kratosx.MustContext(c)
 	result, err := s.srv.ListMenuByCurRole(ctx)
 	if err != nil {
@@ -73,7 +73,7 @@ func (s *MenuApp) ListMenuByCurRole(c context.Context, _ *pb.ListMenuByCurRoleRe
 }
 
 // CreateMenu 创建菜单信息
-func (s *MenuApp) CreateMenu(c context.Context, req *pb.CreateMenuRequest) (*pb.CreateMenuReply, error) {
+func (s *Menu) CreateMenu(c context.Context, req *pb.CreateMenuRequest) (*pb.CreateMenuReply, error) {
 	var (
 		ctx = kratosx.MustContext(c)
 		ent = entity.Menu{}
@@ -93,7 +93,7 @@ func (s *MenuApp) CreateMenu(c context.Context, req *pb.CreateMenuRequest) (*pb.
 }
 
 // UpdateMenu 更新菜单信息
-func (s *MenuApp) UpdateMenu(c context.Context, req *pb.UpdateMenuRequest) (*pb.UpdateMenuReply, error) {
+func (s *Menu) UpdateMenu(c context.Context, req *pb.UpdateMenuRequest) (*pb.UpdateMenuReply, error) {
 	var (
 		ctx = kratosx.MustContext(c)
 		ent = entity.Menu{}
@@ -112,6 +112,6 @@ func (s *MenuApp) UpdateMenu(c context.Context, req *pb.UpdateMenuRequest) (*pb.
 }
 
 // DeleteMenu 删除菜单信息
-func (s *MenuApp) DeleteMenu(c context.Context, req *pb.DeleteMenuRequest) (*pb.DeleteMenuReply, error) {
+func (s *Menu) DeleteMenu(c context.Context, req *pb.DeleteMenuRequest) (*pb.DeleteMenuReply, error) {
 	return &pb.DeleteMenuReply{}, s.srv.DeleteMenu(kratosx.MustContext(c), req.Id)
 }

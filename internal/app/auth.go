@@ -13,27 +13,27 @@ import (
 	"github.com/limes-cloud/manager/internal/types"
 )
 
-type AuthApp struct {
+type Auth struct {
 	pb.UnimplementedAuthServer
 	srv *service.Auth
 }
 
-func NewAuthApp(conf *conf.Config) *AuthApp {
-	return &AuthApp{
+func NewAuth(conf *conf.Config) *Auth {
+	return &Auth{
 		srv: service.NewAuth(conf),
 	}
 }
 
 func init() {
 	register(func(c *conf.Config, hs *http.Server, gs *grpc.Server) {
-		srv := NewAuthApp(c)
+		srv := NewAuth(c)
 		pb.RegisterAuthHTTPServer(hs, srv)
 		pb.RegisterAuthServer(gs, srv)
 	})
 }
 
 // Auth 接口鉴权
-func (s *AuthApp) Auth(c context.Context, req *pb.AuthRequest) (*pb.AuthReply, error) {
+func (s *Auth) Auth(c context.Context, req *pb.AuthRequest) (*pb.AuthReply, error) {
 	res, err := s.srv.Auth(kratosx.MustContext(c), &types.AuthRequest{
 		Path:   req.Path,
 		Method: req.Method,

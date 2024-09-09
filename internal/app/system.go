@@ -14,27 +14,27 @@ import (
 	"github.com/limes-cloud/manager/internal/types"
 )
 
-type SystemApp struct {
+type System struct {
 	pb.UnimplementedSystemServer
 	srv *service.System
 }
 
-func NewSystemApp(conf *conf.Config) *SystemApp {
-	return &SystemApp{
+func NewSystem(conf *conf.Config) *System {
+	return &System{
 		srv: service.NewSystem(conf, dbs.NewDictionary()),
 	}
 }
 
 func init() {
 	register(func(c *conf.Config, hs *http.Server, gs *grpc.Server) {
-		srv := NewSystemApp(c)
+		srv := NewSystem(c)
 		pb.RegisterSystemHTTPServer(hs, srv)
 		pb.RegisterSystemServer(gs, srv)
 	})
 }
 
 // GetSystemSetting 获取系统设置
-func (s *SystemApp) GetSystemSetting(c context.Context, _ *pb.GetSystemSettingRequest) (*pb.GetSystemSettingReply, error) {
+func (s *System) GetSystemSetting(c context.Context, _ *pb.GetSystemSettingRequest) (*pb.GetSystemSettingReply, error) {
 	setting := s.srv.GetSystemSetting(kratosx.MustContext(c), &types.GetSystemSettingRequest{})
 
 	reply := pb.GetSystemSettingReply{
