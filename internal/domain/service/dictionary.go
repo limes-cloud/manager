@@ -33,6 +33,7 @@ func (u *Dictionary) ListDictionary(ctx kratosx.Context, req *types.ListDictiona
 func (u *Dictionary) CreateDictionary(ctx kratosx.Context, req *entity.Dictionary) (uint32, error) {
 	id, err := u.repo.CreateDictionary(ctx, req)
 	if err != nil {
+		ctx.Logger().Warnw("msg", "create dictionary error", "err", err.Error())
 		return 0, errors.CreateError(err.Error())
 	}
 	return id, nil
@@ -41,6 +42,7 @@ func (u *Dictionary) CreateDictionary(ctx kratosx.Context, req *entity.Dictionar
 // UpdateDictionary 更新字典目录
 func (u *Dictionary) UpdateDictionary(ctx kratosx.Context, req *entity.Dictionary) error {
 	if err := u.repo.UpdateDictionary(ctx, req); err != nil {
+		ctx.Logger().Warnw("msg", "update dictionary error", "err", err.Error())
 		return errors.UpdateError(err.Error())
 	}
 	return nil
@@ -49,6 +51,7 @@ func (u *Dictionary) UpdateDictionary(ctx kratosx.Context, req *entity.Dictionar
 // DeleteDictionary 删除字典目录
 func (u *Dictionary) DeleteDictionary(ctx kratosx.Context, id uint32) error {
 	if err := u.repo.DeleteDictionary(ctx, id); err != nil {
+		ctx.Logger().Warnw("msg", "delete dictionary error", "err", err.Error())
 		return errors.DeleteError(err.Error())
 	}
 	return nil
@@ -58,6 +61,7 @@ func (u *Dictionary) DeleteDictionary(ctx kratosx.Context, id uint32) error {
 func (u *Dictionary) ListDictionaryValue(ctx kratosx.Context, req *types.ListDictionaryValueRequest) ([]*entity.DictionaryValue, uint32, error) {
 	list, total, err := u.repo.ListDictionaryValue(ctx, req)
 	if err != nil {
+		ctx.Logger().Warnw("msg", "list dictionary error", "err", err.Error())
 		return nil, 0, errors.ListError(err.Error())
 	}
 	return list, total, nil
@@ -67,6 +71,7 @@ func (u *Dictionary) ListDictionaryValue(ctx kratosx.Context, req *types.ListDic
 func (u *Dictionary) CreateDictionaryValue(ctx kratosx.Context, req *entity.DictionaryValue) (uint32, error) {
 	id, err := u.repo.CreateDictionaryValue(ctx, req)
 	if err != nil {
+		ctx.Logger().Warnw("msg", "create dictionary error", "err", err.Error())
 		return 0, errors.CreateError(err.Error())
 	}
 	return id, nil
@@ -75,6 +80,7 @@ func (u *Dictionary) CreateDictionaryValue(ctx kratosx.Context, req *entity.Dict
 // UpdateDictionaryValue 更新字典值目录
 func (u *Dictionary) UpdateDictionaryValue(ctx kratosx.Context, req *entity.DictionaryValue) error {
 	if err := u.repo.UpdateDictionaryValue(ctx, req); err != nil {
+		ctx.Logger().Warnw("msg", "update dictionary error", "err", err.Error())
 		return errors.UpdateError(err.Error())
 	}
 	return nil
@@ -83,6 +89,7 @@ func (u *Dictionary) UpdateDictionaryValue(ctx kratosx.Context, req *entity.Dict
 // UpdateDictionaryValueStatus 更新字典值目录状态
 func (u *Dictionary) UpdateDictionaryValueStatus(ctx kratosx.Context, id uint32, status bool) error {
 	if err := u.repo.UpdateDictionaryValueStatus(ctx, id, status); err != nil {
+		ctx.Logger().Warnw("msg", "update dictionary value error", "err", err.Error())
 		return errors.UpdateError(err.Error())
 	}
 	return nil
@@ -91,6 +98,7 @@ func (u *Dictionary) UpdateDictionaryValueStatus(ctx kratosx.Context, id uint32,
 // DeleteDictionaryValue 删除字典值目录
 func (u *Dictionary) DeleteDictionaryValue(ctx kratosx.Context, id uint32) error {
 	if err := u.repo.DeleteDictionaryValue(ctx, id); err != nil {
+		ctx.Logger().Warnw("msg", "delete dictionary value error", "err", err.Error())
 		return errors.DeleteError(err.Error())
 	}
 	return nil

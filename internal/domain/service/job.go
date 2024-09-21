@@ -33,6 +33,7 @@ func (u *Job) ListJob(ctx kratosx.Context, req *types.ListJobRequest) ([]*entity
 func (u *Job) CreateJob(ctx kratosx.Context, req *entity.Job) (uint32, error) {
 	id, err := u.repo.CreateJob(ctx, req)
 	if err != nil {
+		ctx.Logger().Warnw("msg", "create job error", "err", err.Error())
 		return 0, errors.CreateError(err.Error())
 	}
 	return id, nil
@@ -41,6 +42,7 @@ func (u *Job) CreateJob(ctx kratosx.Context, req *entity.Job) (uint32, error) {
 // UpdateJob 更新职位信息
 func (u *Job) UpdateJob(ctx kratosx.Context, req *entity.Job) error {
 	if err := u.repo.UpdateJob(ctx, req); err != nil {
+		ctx.Logger().Warnw("msg", "update job error", "err", err.Error())
 		return errors.UpdateError(err.Error())
 	}
 	return nil
@@ -49,6 +51,7 @@ func (u *Job) UpdateJob(ctx kratosx.Context, req *entity.Job) error {
 // DeleteJob 删除职位信息
 func (u *Job) DeleteJob(ctx kratosx.Context, id uint32) error {
 	if err := u.repo.DeleteJob(ctx, id); err != nil {
+		ctx.Logger().Warnw("msg", "delete job error", "err", err.Error())
 		return errors.DeleteError(err.Error())
 	}
 	return nil

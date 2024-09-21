@@ -81,7 +81,7 @@ func (u *Role) CreateRole(ctx kratosx.Context, req *entity.Role) (uint32, error)
 	// 获取是否具有父级角色权限
 	hasPurview, err := u.repo.HasRolePurview(ctx, md.UserId(ctx), req.ParentId)
 	if err != nil {
-		ctx.Logger().Warnw("msg", "get role repo error", "err", err.Error())
+		ctx.Logger().Warnw("msg", "create role repo error", "err", err.Error())
 		return 0, errors.DatabaseError()
 	}
 
@@ -108,14 +108,14 @@ func (u *Role) UpdateRole(ctx kratosx.Context, req *entity.Role) error {
 	// 获取是否具有父级角色权限
 	hasParent, err := u.repo.HasRolePurview(ctx, md.UserId(ctx), req.ParentId)
 	if err != nil {
-		ctx.Logger().Warnw("msg", "get role repo error", "err", err.Error())
+		ctx.Logger().Warnw("msg", "update role repo error", "err", err.Error())
 		return errors.DatabaseError()
 	}
 
 	// 获取是否具有当前角色权限
 	hasCurrent, err := u.repo.HasRolePurview(ctx, md.UserId(ctx), req.Id)
 	if err != nil {
-		ctx.Logger().Warnw("msg", "get role repo error", "err", err.Error())
+		ctx.Logger().Warnw("msg", "update role repo error", "err", err.Error())
 		return errors.DatabaseError()
 	}
 
@@ -142,7 +142,7 @@ func (u *Role) UpdateRoleStatus(ctx kratosx.Context, id uint32, status bool) err
 	// 获取是否具有当前角色权限
 	hasCurrent, err := u.repo.HasRolePurview(ctx, md.UserId(ctx), id)
 	if err != nil {
-		ctx.Logger().Warnw("msg", "get role repo error", "err", err.Error())
+		ctx.Logger().Warnw("msg", "update role status error", "err", err.Error())
 		return errors.DatabaseError()
 	}
 
@@ -167,7 +167,7 @@ func (u *Role) DeleteRole(ctx kratosx.Context, id uint32) error {
 	// 获取是否具有当前角色权限
 	hasCurrent, err := u.repo.HasRolePurview(ctx, md.UserId(ctx), id)
 	if err != nil {
-		ctx.Logger().Warnw("msg", "get role repo error", "err", err.Error())
+		ctx.Logger().Warnw("msg", "delete role  error", "err", err.Error())
 		return errors.DatabaseError()
 	}
 
@@ -177,7 +177,6 @@ func (u *Role) DeleteRole(ctx kratosx.Context, id uint32) error {
 	}
 
 	if err := ctx.Transaction(func(ctx kratosx.Context) error {
-
 		// 查询下级角色
 		keywords, err := u.repo.GetRoleChildrenKeywords(ctx, id)
 		if err != nil {

@@ -74,7 +74,7 @@ func (u *Resource) UpdateResource(ctx kratosx.Context, req *types.UpdateResource
 	// 获取用户当前的部门权限
 	all, scopes, err := u.dept.GetDepartmentDataScope(ctx, md.UserId(ctx))
 	if err != nil {
-		ctx.Logger().Warnw("msg", "get resource scopes error", "err", err.Error())
+		ctx.Logger().Warnw("msg", "update resource scopes error", "err", err.Error())
 		return errors.DatabaseError()
 	}
 	if !all {

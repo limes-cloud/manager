@@ -7,7 +7,7 @@ require (
 	github.com/forgoer/openssl v1.6.0
 	github.com/go-kratos/kratos/v2 v2.7.3
 	github.com/limes-cloud/configure v1.0.45
-	github.com/limes-cloud/kratosx v1.0.53
+	github.com/limes-cloud/kratosx v1.0.55
 	github.com/limes-cloud/resource v1.0.17
 	go.uber.org/automaxprocs v1.5.3
 	golang.org/x/text v0.15.0

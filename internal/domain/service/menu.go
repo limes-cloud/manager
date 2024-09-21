@@ -143,7 +143,7 @@ func (u *Menu) UpdateMenu(ctx kratosx.Context, menu *entity.Menu) error {
 func (u *Menu) DeleteMenu(ctx kratosx.Context, id uint32) error {
 	apis, err := u.repo.ListMenuChildrenApi(ctx, id)
 	if err != nil {
-		ctx.Logger().Warnw("msg", "list menu api error", "err", err.Error())
+		ctx.Logger().Warnw("msg", "delete menu api error", "err", err.Error())
 		return errors.DatabaseError()
 	}
 
