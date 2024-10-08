@@ -361,9 +361,7 @@ func (m *ListDictionaryValueRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	if m.DictionaryId != nil {
-		// no validation rules for DictionaryId
-	}
+	// no validation rules for DictionaryId
 
 	if m.Label != nil {
 		// no validation rules for Label
@@ -650,6 +648,8 @@ func (m *CreateDictionaryValueRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
+	// no validation rules for ParentId
+
 	if m.Status != nil {
 		// no validation rules for Status
 	}
@@ -920,6 +920,8 @@ func (m *UpdateDictionaryValueRequest) validate(all bool) error {
 		}
 		errors = append(errors, err)
 	}
+
+	// no validation rules for ParentId
 
 	if m.Weight != nil {
 		// no validation rules for Weight
@@ -1723,6 +1725,40 @@ func (m *GetDictionaryValuesReply_Value_Item) validate(all bool) error {
 
 	// no validation rules for Value
 
+	for idx, item := range m.GetChildren() {
+		_, _ = idx, item
+
+		if all {
+			switch v := interface{}(item).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, GetDictionaryValuesReply_Value_ItemValidationError{
+						field:  fmt.Sprintf("Children[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, GetDictionaryValuesReply_Value_ItemValidationError{
+						field:  fmt.Sprintf("Children[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return GetDictionaryValuesReply_Value_ItemValidationError{
+					field:  fmt.Sprintf("Children[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
 	if m.Type != nil {
 		// no validation rules for Type
 	}
@@ -1845,6 +1881,8 @@ func (m *ListDictionaryValueReply_DictionaryValue) validate(all bool) error {
 
 	// no validation rules for DictionaryId
 
+	// no validation rules for ParentId
+
 	// no validation rules for Label
 
 	// no validation rules for Value
@@ -1852,6 +1890,40 @@ func (m *ListDictionaryValueReply_DictionaryValue) validate(all bool) error {
 	// no validation rules for CreatedAt
 
 	// no validation rules for UpdatedAt
+
+	for idx, item := range m.GetChildren() {
+		_, _ = idx, item
+
+		if all {
+			switch v := interface{}(item).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, ListDictionaryValueReply_DictionaryValueValidationError{
+						field:  fmt.Sprintf("Children[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, ListDictionaryValueReply_DictionaryValueValidationError{
+						field:  fmt.Sprintf("Children[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return ListDictionaryValueReply_DictionaryValueValidationError{
+					field:  fmt.Sprintf("Children[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
 
 	if m.Status != nil {
 		// no validation rules for Status

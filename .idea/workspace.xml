@@ -5,6 +5,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="986be327-4ef6-4fb0-b836-2023bc76be7e" name="Changes" comment="e">
+      <change afterPath="$PROJECT_DIR$/../../docs/backend/start/goland_kratosx.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../docs/backend/start/img_10.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../docs/backend/start/img_11.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../docs/backend/start/img_12.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../docs/backend/start/img_3.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../docs/backend/start/img_4.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../docs/backend/start/img_5.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../docs/backend/start/img_6.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../docs/backend/start/img_7.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../docs/backend/start/img_8.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../docs/backend/start/img_9.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../docs/backend/start/project-install.md" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../../docs/backend/study/api.md" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../../docs/backend/study/code.md" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../../docs/backend/study/designate.md" afterDir="false" />
@@ -12,8 +24,29 @@
       <change afterPath="$PROJECT_DIR$/../../docs/backend/study/study.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../docs/.vitepress/config.mts" beforeDir="false" afterPath="$PROJECT_DIR$/../../docs/.vitepress/config.mts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../docs/backend/start/kratosx-install.md" beforeDir="false" afterPath="$PROJECT_DIR$/../../docs/backend/start/kratosx-install.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../framework/kratos-layout" beforeDir="false" afterPath="$PROJECT_DIR$/../../framework/kratos-layout" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../framework/kratosx" beforeDir="false" afterPath="$PROJECT_DIR$/../../framework/kratosx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../application" beforeDir="false" afterPath="$PROJECT_DIR$/../application" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../configure" beforeDir="false" afterPath="$PROJECT_DIR$/../configure" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../cron" beforeDir="false" afterPath="$PROJECT_DIR$/../cron" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$" beforeDir="false" afterPath="$PROJECT_DIR$" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/manager/dictionary/manager_dictionary.proto" beforeDir="false" afterPath="$PROJECT_DIR$/api/manager/dictionary/manager_dictionary.proto" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/manager/dictionary/manager_dictionary_value.proto" beforeDir="false" afterPath="$PROJECT_DIR$/api/manager/dictionary/manager_dictionary_value.proto" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/manager/dictionary/v1/manager_dictionary.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/manager/dictionary/v1/manager_dictionary.pb.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/manager/dictionary/v1/manager_dictionary.pb.validate.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/manager/dictionary/v1/manager_dictionary.pb.validate.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/manager/dictionary/v1/manager_dictionary_value.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/manager/dictionary/v1/manager_dictionary_value.pb.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/manager/dictionary/v1/manager_dictionary_value.pb.validate.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/manager/dictionary/v1/manager_dictionary_value.pb.validate.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/app/dictionary.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/app/dictionary.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/domain/entity/dictionary.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/domain/entity/dictionary.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/domain/repository/dictionary.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/domain/repository/dictionary.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/domain/service/dictionary.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/domain/service/dictionary.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/infra/dbs/dictionary.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/infra/dbs/dictionary.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/types/dictionary.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/types/dictionary.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tmp/runtime/output.log" beforeDir="false" afterPath="$PROJECT_DIR$/tmp/runtime/output.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../resource" beforeDir="false" afterPath="$PROJECT_DIR$/../resource" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../web/admin-web" beforeDir="false" afterPath="$PROJECT_DIR$/../../web/admin-web" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../web/client-uniapp" beforeDir="false" afterPath="$PROJECT_DIR$/../../web/client-uniapp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -47,27 +80,27 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "DefaultGoTemplateProperty": "Go File",
-    "Go Build.go build github.com/limes-cloud/manager/cmd/manager.executor": "Debug",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.go.formatter.settings.were.checked": "true",
-    "RunOnceActivity.go.migrated.go.modules.settings": "true",
-    "RunOnceActivity.go.modules.automatic.dependencies.download": "true",
-    "RunOnceActivity.go.modules.go.list.on.any.changes.was.set": "true",
-    "git-widget-placeholder": "main",
-    "go.import.settings.migrated": "true",
-    "go.sdk.automatically.set": "true",
-    "last_opened_file_path": "/Users/fangweiye/GolandProjects/go-platform/server/manager",
-    "node.js.detected.package.eslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "watcher.settings",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;DefaultGoTemplateProperty&quot;: &quot;Go File&quot;,
+    &quot;Go Build.go build github.com/limes-cloud/manager/cmd/manager.executor&quot;: &quot;Debug&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.formatter.settings.were.checked&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.migrated.go.modules.settings&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.modules.automatic.dependencies.download&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.modules.go.list.on.any.changes.was.set&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;go.import.settings.migrated&quot;: &quot;true&quot;,
+    &quot;go.sdk.automatically.set&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/fangweiye/GolandProjects/go-platform/server/manager&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;watcher.settings&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/api/manager/login_log" />

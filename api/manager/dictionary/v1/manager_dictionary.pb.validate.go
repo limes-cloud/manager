@@ -349,6 +349,17 @@ func (m *CreateDictionaryRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
+	if utf8.RuneCountInString(m.GetType()) < 1 {
+		err := CreateDictionaryRequestValidationError{
+			field:  "Type",
+			reason: "value length must be at least 1 runes",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
 	if m.Description != nil {
 		// no validation rules for Description
 	}
@@ -570,27 +581,11 @@ func (m *UpdateDictionaryRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	if utf8.RuneCountInString(m.GetKeyword()) < 1 {
-		err := UpdateDictionaryRequestValidationError{
-			field:  "Keyword",
-			reason: "value length must be at least 1 runes",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
+	// no validation rules for Keyword
 
-	if utf8.RuneCountInString(m.GetName()) < 1 {
-		err := UpdateDictionaryRequestValidationError{
-			field:  "Name",
-			reason: "value length must be at least 1 runes",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
+	// no validation rules for Name
+
+	// no validation rules for Type
 
 	if m.Description != nil {
 		// no validation rules for Description
@@ -1153,6 +1148,8 @@ func (m *GetDictionaryReply) validate(all bool) error {
 
 	// no validation rules for Name
 
+	// no validation rules for Type
+
 	// no validation rules for CreatedAt
 
 	// no validation rules for UpdatedAt
@@ -1266,6 +1263,8 @@ func (m *ListDictionaryReply_Dictionary) validate(all bool) error {
 	// no validation rules for Id
 
 	// no validation rules for Keyword
+
+	// no validation rules for Type
 
 	// no validation rules for Name
 

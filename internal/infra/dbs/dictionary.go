@@ -4,6 +4,7 @@ import (
 	"sync"
 
 	"github.com/limes-cloud/kratosx"
+
 	"github.com/limes-cloud/manager/internal/domain/entity"
 	"github.com/limes-cloud/manager/internal/types"
 )
@@ -87,10 +88,8 @@ func (infra *Dictionary) ListDictionaryValue(ctx kratosx.Context, req *types.Lis
 		fs    = []string{"*"}
 	)
 
-	db := ctx.DB().Model(entity.DictionaryValue{}).Select(fs)
-	if req.DictionaryId != nil {
-		db = db.Where("dictionary_id = ?", *req.DictionaryId)
-	}
+	db := ctx.DB().Model(entity.DictionaryValue{}).Select(fs).Where("dictionary_id = ?", req.DictionaryId)
+
 	if req.Label != nil {
 		db = db.Where("label LIKE ?", *req.Label+"%")
 	}
@@ -129,7 +128,8 @@ func (infra *Dictionary) UpdateDictionaryValue(ctx kratosx.Context, dictValue *e
 
 // UpdateDictionaryValueStatus 更新数据状态
 func (infra *Dictionary) UpdateDictionaryValueStatus(ctx kratosx.Context, id uint32, status bool) error {
-	return ctx.DB().Model(entity.DictionaryValue{}).Where("id=?", id).Update("status", status).Error
+	// 获取字典是否为树，变更全部子节点状态
+	return ctx.DB().Model(entity.DictionaryValue{}).Where("id = ?", id).Update("status", status).Error
 }
 
 // DeleteDictionaryValue 删除数据
@@ -137,7 +137,7 @@ func (infra *Dictionary) DeleteDictionaryValue(ctx kratosx.Context, id uint32) e
 	return ctx.DB().Where("id = ?", id).Delete(&entity.DictionaryValue{}).Error
 }
 
-func (infra *Dictionary) AllDictionaryValue(ctx kratosx.Context, keyword string) ([]*entity.DictionaryValue, error) {
+func (infra *Dictionary) AllDictionaryValueByKeyword(ctx kratosx.Context, keyword string) ([]*entity.DictionaryValue, error) {
 	var (
 		m  = entity.Dictionary{}
 		ms []*entity.DictionaryValue
@@ -157,13 +157,36 @@ func (infra *Dictionary) AllDictionaryValue(ctx kratosx.Context, keyword string)
 	return ms, nil
 }
 
+func (infra *Dictionary) AllDictionaryValue(ctx kratosx.Context, req *types.AllDictionaryValueRequest) ([]*entity.DictionaryValue, error) {
+	var ms []*entity.DictionaryValue
+	db := ctx.DB().Model(entity.DictionaryValue{}).Select("*").Where("dictionary_id=?", req.DictionaryId)
+	if req.Status != nil {
+		db = db.Where("status=?", *req.Status)
+	}
+	if err := db.Find(&ms).Error; err != nil {
+		return nil, err
+	}
+	return ms, nil
+}
+
 func (infra *Dictionary) ListDictionaryValues(ctx kratosx.Context, keywords []string) ([]*types.DictionaryValue, error) {
+	var ids []uint32
+	if err := ctx.DB().Model(entity.Dictionary{}).
+		Select("id").
+		Where("keyword in ?", keywords).
+		Find(&ids).Error; err != nil {
+		return nil, err
+	}
+
 	var list []*types.DictionaryValue
+	if len(ids) == 0 {
+		return list, nil
+	}
 	if err := ctx.DB().Model(entity.DictionaryValue{}).
 		Select([]string{"keyword", "label", "value", "type", "extra"}).
-		Where("keyword in ?", keywords).
+		Where("dictionary_id in ?", ids).
 		Where("status = true").
-		Joins("Dictionary").
+		Preload("Dictionary").
 		Scan(&list).Error; err != nil {
 		return nil, err
 	}

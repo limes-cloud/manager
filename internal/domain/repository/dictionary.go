@@ -2,6 +2,7 @@ package repository
 
 import (
 	"github.com/limes-cloud/kratosx"
+
 	"github.com/limes-cloud/manager/internal/domain/entity"
 	"github.com/limes-cloud/manager/internal/types"
 )
@@ -23,7 +24,10 @@ type Dictionary interface {
 	ListDictionaryValue(ctx kratosx.Context, req *types.ListDictionaryValueRequest) ([]*entity.DictionaryValue, uint32, error)
 
 	// AllDictionaryValue 获取全部字典值目录列表
-	AllDictionaryValue(ctx kratosx.Context, keyword string) ([]*entity.DictionaryValue, error)
+	AllDictionaryValue(ctx kratosx.Context, req *types.AllDictionaryValueRequest) ([]*entity.DictionaryValue, error)
+
+	// GetDictionaryValue 获取字典值
+	GetDictionaryValue(ctx kratosx.Context, id uint32) (*entity.DictionaryValue, error)
 
 	// CreateDictionaryValue 创建字典值目录
 	CreateDictionaryValue(ctx kratosx.Context, req *entity.DictionaryValue) (uint32, error)

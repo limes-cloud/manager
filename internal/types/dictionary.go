@@ -10,7 +10,7 @@ type ListDictionaryRequest struct {
 type ListDictionaryValueRequest struct {
 	Page         uint32  `json:"page"`
 	PageSize     uint32  `json:"pageSize"`
-	DictionaryId *uint32 `json:"dictionaryId"`
+	DictionaryId uint32  `json:"dictionaryId"`
 	Label        *string `json:"label"`
 	Value        *string `json:"value"`
 	Status       *bool   `json:"status"`
@@ -27,4 +27,9 @@ type DictionaryValue struct {
 	Value   string  `json:"value"`
 	Type    *string `json:"type"`
 	Extra   *string `json:"extra"`
+}
+
+type AllDictionaryValueRequest struct {
+	DictionaryId uint32 `json:"dictionaryId"`
+	Status       *bool  `json:"status"`
 }
