@@ -29,21 +29,7 @@
       <change beforePath="$PROJECT_DIR$/../application" beforeDir="false" afterPath="$PROJECT_DIR$/../application" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../configure" beforeDir="false" afterPath="$PROJECT_DIR$/../configure" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../cron" beforeDir="false" afterPath="$PROJECT_DIR$/../cron" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$" beforeDir="false" afterPath="$PROJECT_DIR$" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/manager/dictionary/manager_dictionary.proto" beforeDir="false" afterPath="$PROJECT_DIR$/api/manager/dictionary/manager_dictionary.proto" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/manager/dictionary/manager_dictionary_value.proto" beforeDir="false" afterPath="$PROJECT_DIR$/api/manager/dictionary/manager_dictionary_value.proto" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/manager/dictionary/v1/manager_dictionary.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/manager/dictionary/v1/manager_dictionary.pb.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/manager/dictionary/v1/manager_dictionary.pb.validate.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/manager/dictionary/v1/manager_dictionary.pb.validate.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/manager/dictionary/v1/manager_dictionary_value.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/manager/dictionary/v1/manager_dictionary_value.pb.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/manager/dictionary/v1/manager_dictionary_value.pb.validate.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/manager/dictionary/v1/manager_dictionary_value.pb.validate.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/app/dictionary.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/app/dictionary.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/domain/entity/dictionary.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/domain/entity/dictionary.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/domain/repository/dictionary.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/domain/repository/dictionary.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/domain/service/dictionary.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/domain/service/dictionary.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/infra/dbs/dictionary.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/infra/dbs/dictionary.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/types/dictionary.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/types/dictionary.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tmp/runtime/output.log" beforeDir="false" afterPath="$PROJECT_DIR$/tmp/runtime/output.log" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../resource" beforeDir="false" afterPath="$PROJECT_DIR$/../resource" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../web/admin-web" beforeDir="false" afterPath="$PROJECT_DIR$/../../web/admin-web" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../web/client-uniapp" beforeDir="false" afterPath="$PROJECT_DIR$/../../web/client-uniapp" afterDir="false" />
