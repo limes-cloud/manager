@@ -15,8 +15,9 @@ message AuthRequest{
 
 message AuthReply{
   uint32 userId = 1;
-  uint32 roleId = 2;
-  string roleKeyword = 3;
-  uint32 departmentId = 4;
-  string departmentKeyword = 5;
+  string userName = 2;
+  uint32 roleId = 3;
+  string roleKeyword = 4;
+  uint32 departmentId = 5;
+  string departmentKeyword = 6;
 }

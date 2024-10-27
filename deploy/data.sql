@@ -1782,11 +1782,7 @@ CREATE TABLE `user_job` (
 -- 转存表中的数据 `user_job`
 --
 
-INSERT INTO `user_job` (`id`, `job_id`, `user_id`) VALUES
-                                                       (1, 1, 1),
-                                                       (7, 1, 3),
-                                                       (10, 1, 4),
-                                                       (9, 1, 5);
+INSERT INTO `user_job` (`id`, `job_id`, `user_id`) VALUES (1, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -1804,11 +1800,7 @@ CREATE TABLE `user_role` (
 -- 转存表中的数据 `user_role`
 --
 
-INSERT INTO `user_role` (`id`, `role_id`, `user_id`) VALUES
-                                                         (1, 1, 1),
-                                                         (4, 5, 3),
-                                                         (7, 5, 4),
-                                                         (6, 6, 5);
+INSERT INTO `user_role` (`id`, `role_id`, `user_id`) VALUES (1, 1, 1);
 
 --
 -- 转储表的索引

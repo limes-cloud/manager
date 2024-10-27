@@ -187,6 +187,8 @@ func (m *AuthReply) validate(all bool) error {
 
 	// no validation rules for UserId
 
+	// no validation rules for UserName
+
 	// no validation rules for RoleId
 
 	// no validation rules for RoleKeyword

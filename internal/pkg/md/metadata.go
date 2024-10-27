@@ -9,6 +9,7 @@ import (
 
 type Auth struct {
 	UserId            uint32 `json:"userId"`
+	UserName          string `json:"userName"`
 	RoleId            uint32 `json:"roleId"`
 	RoleKeyword       string `json:"roleKeyword"`
 	DepartmentId      uint32 `json:"departmentId"`
