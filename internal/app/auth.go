@@ -41,6 +41,7 @@ func (s *Auth) Auth(c context.Context, req *pb.AuthRequest) (*pb.AuthReply, erro
 	if err != nil {
 		return nil, err
 	}
+
 	return &pb.AuthReply{
 		UserId:            res.UserId,
 		RoleId:            res.RoleId,

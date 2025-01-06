@@ -43,8 +43,6 @@ func (m *DictionaryValue) AppendChildren(child *DictionaryValue) {
 // ChildrenNode 获取子节点
 func (m *DictionaryValue) ChildrenNode() []*DictionaryValue {
 	var list []*DictionaryValue
-	for _, item := range m.Children {
-		list = append(list, item)
-	}
+	list = append(list, m.Children...)
 	return list
 }

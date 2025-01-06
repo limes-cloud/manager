@@ -25,7 +25,9 @@ func NewRbac() *Rbac {
 }
 
 func (infra *Rbac) CreateRbacRolesApi(ctx kratosx.Context, roles []string, req types.MenuApi) error {
-	defer ctx.Authentication().Enforce().LoadPolicy()
+	defer func() {
+		_ = ctx.Authentication().Enforce().LoadPolicy()
+	}()
 
 	var list []*entity.CasbinRule
 	for _, role := range roles {
@@ -40,13 +42,17 @@ func (infra *Rbac) CreateRbacRolesApi(ctx kratosx.Context, roles []string, req t
 }
 
 func (infra *Rbac) DeleteRbacApi(ctx kratosx.Context, api, method string) error {
-	defer ctx.Authentication().Enforce().LoadPolicy()
+	defer func() {
+		_ = ctx.Authentication().Enforce().LoadPolicy()
+	}()
 
 	return ctx.DB().Where("v1=? and v2=?", api, method).Delete(entity.CasbinRule{}).Error
 }
 
 func (infra *Rbac) UpdateRbacApi(ctx kratosx.Context, old types.MenuApi, now types.MenuApi) error {
-	defer ctx.Authentication().Enforce().LoadPolicy()
+	defer func() {
+		_ = ctx.Authentication().Enforce().LoadPolicy()
+	}()
 
 	return ctx.DB().
 		Model(entity.CasbinRule{}).
@@ -68,7 +74,9 @@ func (infra *Rbac) UpdateRbacRoleApis(ctx kratosx.Context, role string, apis []*
 	}
 
 	return ctx.Transaction(func(ctx kratosx.Context) error {
-		defer ctx.Authentication().Enforce().LoadPolicy()
+		defer func() {
+			_ = ctx.Authentication().Enforce().LoadPolicy()
+		}()
 		if err := ctx.DB().Where("v0=?", role).Delete(&entity.CasbinRule{}).Error; err != nil {
 			return err
 		}
@@ -80,6 +88,8 @@ func (infra *Rbac) UpdateRbacRoleApis(ctx kratosx.Context, role string, apis []*
 }
 
 func (infra *Rbac) DeleteRbacRoles(ctx kratosx.Context, roles []string) error {
-	defer ctx.Authentication().Enforce().LoadPolicy()
+	defer func() {
+		_ = ctx.Authentication().Enforce().LoadPolicy()
+	}()
 	return ctx.DB().Where("v0 in ?", roles).Delete(&entity.CasbinRule{}).Error
 }

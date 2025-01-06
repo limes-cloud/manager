@@ -57,8 +57,6 @@ func (m *Menu) AppendChildren(child *Menu) {
 // ChildrenNode 获取子节点
 func (m *Menu) ChildrenNode() []*Menu {
 	var list []*Menu
-	for _, item := range m.Children {
-		list = append(list, item)
-	}
+	list = append(list, m.Children...)
 	return list
 }

@@ -46,8 +46,6 @@ func (m *Role) AppendChildren(child *Role) {
 // ChildrenNode 获取子节点
 func (m *Role) ChildrenNode() []*Role {
 	var list []*Role
-	for _, item := range m.Children {
-		list = append(list, item)
-	}
+	list = append(list, m.Children...)
 	return list
 }

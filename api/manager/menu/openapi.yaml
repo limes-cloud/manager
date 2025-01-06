@@ -3,8 +3,356 @@
 
 openapi: 3.0.3
 info:
-    title: ""
+    title: Menu API
     version: 0.0.1
-paths: {}
+paths:
+    /manager/api/v1/menu:
+        put:
+            tags:
+                - Menu
+            description: UpdateMenu 更新菜单信息
+            operationId: Menu_UpdateMenu
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/UpdateMenuRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/UpdateMenuReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        post:
+            tags:
+                - Menu
+            description: CreateMenu 创建菜单信息
+            operationId: Menu_CreateMenu
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/CreateMenuRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/CreateMenuReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        delete:
+            tags:
+                - Menu
+            description: DeleteMenu 删除菜单信息
+            operationId: Menu_DeleteMenu
+            parameters:
+                - name: id
+                  in: query
+                  schema:
+                    type: integer
+                    format: uint32
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/DeleteMenuReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /manager/api/v1/menus:
+        get:
+            tags:
+                - Menu
+            description: ListMenu 获取菜单信息列表
+            operationId: Menu_ListMenu
+            parameters:
+                - name: title
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ListMenuReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /manager/api/v1/menus/by/cur_role:
+        get:
+            tags:
+                - Menu
+            description: ListMenuByCurRole 获取菜单信息列表
+            operationId: Menu_ListMenuByCurRole
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ListMenuByCurRoleReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
 components:
-    schemas: {}
+    schemas:
+        CreateMenuReply:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: uint32
+        CreateMenuRequest:
+            type: object
+            properties:
+                parentId:
+                    type: integer
+                    format: uint32
+                title:
+                    type: string
+                type:
+                    type: string
+                keyword:
+                    type: string
+                icon:
+                    type: string
+                api:
+                    type: string
+                method:
+                    type: string
+                path:
+                    type: string
+                permission:
+                    type: string
+                component:
+                    type: string
+                redirect:
+                    type: string
+                weight:
+                    type: integer
+                    format: int32
+                isHidden:
+                    type: boolean
+                isCache:
+                    type: boolean
+                isHome:
+                    type: boolean
+                isAffix:
+                    type: boolean
+        DeleteMenuReply:
+            type: object
+            properties: {}
+        GoogleProtobufAny:
+            type: object
+            properties:
+                '@type':
+                    type: string
+                    description: The type of the serialized message.
+            additionalProperties: true
+            description: Contains an arbitrary serialized message along with a @type that describes the type of the serialized message.
+        ListMenuByCurRoleReply:
+            type: object
+            properties:
+                total:
+                    type: integer
+                    format: uint32
+                list:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/ListMenuByCurRoleReply_Menu'
+        ListMenuByCurRoleReply_Menu:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: uint32
+                parentId:
+                    type: integer
+                    format: uint32
+                title:
+                    type: string
+                type:
+                    type: string
+                keyword:
+                    type: string
+                icon:
+                    type: string
+                api:
+                    type: string
+                method:
+                    type: string
+                path:
+                    type: string
+                permission:
+                    type: string
+                component:
+                    type: string
+                redirect:
+                    type: string
+                weight:
+                    type: integer
+                    format: int32
+                isHidden:
+                    type: boolean
+                isCache:
+                    type: boolean
+                isHome:
+                    type: boolean
+                isAffix:
+                    type: boolean
+                createdAt:
+                    type: integer
+                    format: uint32
+                updatedAt:
+                    type: integer
+                    format: uint32
+                children:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/ListMenuByCurRoleReply_Menu'
+        ListMenuReply:
+            type: object
+            properties:
+                list:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/ListMenuReply_Menu'
+        ListMenuReply_Menu:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: uint32
+                parentId:
+                    type: integer
+                    format: uint32
+                title:
+                    type: string
+                type:
+                    type: string
+                keyword:
+                    type: string
+                icon:
+                    type: string
+                api:
+                    type: string
+                method:
+                    type: string
+                path:
+                    type: string
+                permission:
+                    type: string
+                component:
+                    type: string
+                redirect:
+                    type: string
+                weight:
+                    type: integer
+                    format: int32
+                isHidden:
+                    type: boolean
+                isCache:
+                    type: boolean
+                isHome:
+                    type: boolean
+                isAffix:
+                    type: boolean
+                createdAt:
+                    type: integer
+                    format: uint32
+                updatedAt:
+                    type: integer
+                    format: uint32
+                children:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/ListMenuReply_Menu'
+        Status:
+            type: object
+            properties:
+                code:
+                    type: integer
+                    description: The status code, which should be an enum value of [google.rpc.Code][google.rpc.Code].
+                    format: int32
+                message:
+                    type: string
+                    description: A developer-facing error message, which should be in English. Any user-facing error message should be localized and sent in the [google.rpc.Status.details][google.rpc.Status.details] field, or localized by the client.
+                details:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/GoogleProtobufAny'
+                    description: A list of messages that carry the error details.  There is a common set of message types for APIs to use.
+            description: 'The `Status` type defines a logical error model that is suitable for different programming environments, including REST APIs and RPC APIs. It is used by [gRPC](https://github.com/grpc). Each `Status` message contains three pieces of data: error code, error message, and error details. You can find out more about this error model and how to work with it in the [API Design Guide](https://cloud.google.com/apis/design/errors).'
+        UpdateMenuReply:
+            type: object
+            properties: {}
+        UpdateMenuRequest:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: uint32
+                parentId:
+                    type: integer
+                    format: uint32
+                title:
+                    type: string
+                type:
+                    type: string
+                keyword:
+                    type: string
+                icon:
+                    type: string
+                api:
+                    type: string
+                method:
+                    type: string
+                path:
+                    type: string
+                permission:
+                    type: string
+                component:
+                    type: string
+                redirect:
+                    type: string
+                weight:
+                    type: integer
+                    format: int32
+                isHidden:
+                    type: boolean
+                isCache:
+                    type: boolean
+                isHome:
+                    type: boolean
+                isAffix:
+                    type: boolean
+tags:
+    - name: Menu

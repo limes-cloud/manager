@@ -37,8 +37,6 @@ func (m *Department) AppendChildren(child *Department) {
 // ChildrenNode 获取子节点
 func (m *Department) ChildrenNode() []*Department {
 	var list []*Department
-	for _, item := range m.Children {
-		list = append(list, item)
-	}
+	list = append(list, m.Children...)
 	return list
 }
