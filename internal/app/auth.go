@@ -44,6 +44,7 @@ func (s *Auth) Auth(c context.Context, req *pb.AuthRequest) (*pb.AuthReply, erro
 
 	return &pb.AuthReply{
 		UserId:            res.UserId,
+		UserName:          res.UserName,
 		RoleId:            res.RoleId,
 		RoleKeyword:       res.RoleKeyword,
 		DepartmentId:      res.DepartmentId,

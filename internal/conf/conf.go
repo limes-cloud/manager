@@ -11,6 +11,7 @@ type Config struct {
 		Copyright string
 		Logo      string
 		Watermark string
+		PopupType string
 	}
 	DictionaryKeywords []string
 	ChangePasswordType string

@@ -26,7 +26,7 @@ func (u *System) GetSystemSetting(ctx kratosx.Context, _ *types.GetSystemSetting
 		Desc:               setting.Desc,
 		Copyright:          setting.Copyright,
 		Logo:               setting.Logo,
-		Watermark:          u.conf.Setting.Watermark,
+		Watermark:          setting.Watermark,
 		ChangePasswordType: u.conf.ChangePasswordType,
 	}
 
