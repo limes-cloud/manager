@@ -4,76 +4,111 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="986be327-4ef6-4fb0-b836-2023bc76be7e" name="Changes" comment="e">
-      <change afterPath="$PROJECT_DIR$/../notify" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../.gitmodules" beforeDir="false" afterPath="$PROJECT_DIR$/../../.gitmodules" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../framework/kratos-layout" beforeDir="false" afterPath="$PROJECT_DIR$/../../framework/kratos-layout" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../framework/kratosx" beforeDir="false" afterPath="$PROJECT_DIR$/../../framework/kratosx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../application" beforeDir="false" afterPath="$PROJECT_DIR$/../application" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../configure" beforeDir="false" afterPath="$PROJECT_DIR$/../configure" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../cron" beforeDir="false" afterPath="$PROJECT_DIR$/../cron" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../gateway" beforeDir="false" afterPath="$PROJECT_DIR$/../gateway" afterDir="false" />
+    <list default="true" id="986be327-4ef6-4fb0-b836-2023bc76be7e" name="Changes" comment="feat: upgrade version">
+      <change afterPath="$PROJECT_DIR$/.env" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/api/manager/channel/manager_channel.proto" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/api/manager/channel/manager_channel_service.proto" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/api/manager/channel/openapi.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/api/manager/department/manager_department_classify.proto" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/api/manager/feedback/manager_feedback.proto" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/api/manager/feedback/manager_feedback_category.proto" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/api/manager/feedback/manager_feedback_service.proto" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/api/manager/feedback/openapi.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/api/manager/field/manager_field.proto" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/api/manager/field/manager_field_service.proto" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/api/manager/field/openapi.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/internal/app/app.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/internal/app/channel.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/internal/app/feedback.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/internal/app/field.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/internal/domain/entity/app.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/internal/domain/entity/channel.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/internal/domain/entity/feedback.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/internal/domain/entity/field.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/internal/domain/entity/oauth.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/internal/domain/repository/address.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/internal/domain/repository/app.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/internal/domain/repository/channel.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/internal/domain/repository/feedback.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/internal/domain/repository/field.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/internal/domain/repository/oauth.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/internal/domain/repository/permission.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/internal/domain/service/app.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/internal/domain/service/channel.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/internal/domain/service/feedback.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/internal/domain/service/field.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/internal/infra/dbs/app.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/internal/infra/dbs/channel.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/internal/infra/dbs/feedback.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/internal/infra/dbs/field.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/internal/infra/oauth/oauth.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/internal/infra/oauth/wx_mini_programe.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/internal/infra/oauth/wx_official_account.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/internal/infra/oauth/yiban.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/internal/pkg/field/base.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/internal/pkg/field/bool.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/internal/pkg/field/datatime.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/internal/pkg/field/email.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/internal/pkg/field/id_card.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/internal/pkg/field/number.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/internal/pkg/field/phone.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/internal/pkg/field/text.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/internal/types/app.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/internal/types/channel.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/internal/types/feedback.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/internal/types/field.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/git_toolbox_prj.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/git_toolbox_prj.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/protoeditor.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/watcherTasks.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/watcherTasks.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/manager/auth/manager_auth.proto" beforeDir="false" afterPath="$PROJECT_DIR$/api/manager/auth/manager_auth.proto" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/manager/auth/manager_auth_service.proto" beforeDir="false" afterPath="$PROJECT_DIR$/api/manager/auth/manager_auth_service.proto" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/api/manager/auth/openapi.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/api/manager/auth/openapi.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/manager/auth/v1/manager_auth.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/manager/auth/v1/manager_auth.pb.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/manager/auth/v1/manager_auth.pb.validate.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/manager/auth/v1/manager_auth.pb.validate.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/manager/auth/v1/manager_auth_service.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/manager/auth/v1/manager_auth_service.pb.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/manager/auth/v1/manager_auth_service_grpc.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/manager/auth/v1/manager_auth_service_grpc.pb.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/manager/auth/v1/manager_auth_service_http.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/manager/auth/v1/manager_auth_service_http.pb.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/manager/department/manager_department.proto" beforeDir="false" afterPath="$PROJECT_DIR$/api/manager/department/manager_department.proto" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/manager/department/manager_department_service.proto" beforeDir="false" afterPath="$PROJECT_DIR$/api/manager/department/manager_department_service.proto" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/api/manager/department/openapi.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/api/manager/department/openapi.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/manager/dictionary/openapi.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/api/manager/dictionary/openapi.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/manager/job/openapi.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/api/manager/job/openapi.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/manager/menu/openapi.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/api/manager/menu/openapi.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/manager/resource/openapi.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/api/manager/resource/openapi.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/manager/role/openapi.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/api/manager/role/openapi.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/manager/department/v1/manager_department.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/manager/department/v1/manager_department.pb.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/manager/department/v1/manager_department.pb.validate.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/manager/department/v1/manager_department.pb.validate.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/manager/department/v1/manager_department_service.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/manager/department/v1/manager_department_service.pb.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/manager/department/v1/manager_department_service_grpc.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/manager/department/v1/manager_department_service_grpc.pb.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/manager/department/v1/manager_department_service_http.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/manager/department/v1/manager_department_service_http.pb.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/manager/errors/manager_error_reason.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/manager/errors/manager_error_reason.pb.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/manager/errors/manager_error_reason.proto" beforeDir="false" afterPath="$PROJECT_DIR$/api/manager/errors/manager_error_reason.proto" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/manager/errors/manager_error_reason_errors.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/manager/errors/manager_error_reason_errors.pb.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/manager/user/manager_user.proto" beforeDir="false" afterPath="$PROJECT_DIR$/api/manager/user/manager_user.proto" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/manager/user/manager_user_service.proto" beforeDir="false" afterPath="$PROJECT_DIR$/api/manager/user/manager_user_service.proto" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/api/manager/user/openapi.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/api/manager/user/openapi.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/manager/user/v1/manager_user.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/manager/user/v1/manager_user.pb.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/manager/user/v1/manager_user.pb.validate.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/manager/user/v1/manager_user.pb.validate.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/manager/user/v1/manager_user_service.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/manager/user/v1/manager_user_service.pb.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/manager/user/v1/manager_user_service_grpc.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/manager/user/v1/manager_user_service_grpc.pb.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/manager/user/v1/manager_user_service_http.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/manager/user/v1/manager_user_service_http.pb.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/internal/app/auth.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/app/auth.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/app/department.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/app/department.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/app/user.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/app/user.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/internal/domain/entity/department.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/domain/entity/department.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/domain/entity/dictionary.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/domain/entity/dictionary.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/domain/entity/menu.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/domain/entity/menu.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/domain/entity/role.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/domain/entity/role.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/domain/entity/user.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/domain/entity/user.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/domain/repository/department.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/domain/repository/department.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/domain/service/auth.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/domain/service/auth.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/domain/service/department.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/domain/service/department.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/domain/service/user.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/domain/service/user.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/infra/dbs/department.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/infra/dbs/department.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/internal/infra/dbs/rbac.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/infra/dbs/rbac.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/third_party/google/api/google.golang.org/genproto/googleapis/api/annotations/annotations.pb.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/third_party/google/api/google.golang.org/genproto/googleapis/api/annotations/annotations.pb.validate.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/third_party/google/api/google.golang.org/genproto/googleapis/api/annotations/client.pb.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/third_party/google/api/google.golang.org/genproto/googleapis/api/annotations/client.pb.validate.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/third_party/google/api/google.golang.org/genproto/googleapis/api/annotations/field_behavior.pb.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/third_party/google/api/google.golang.org/genproto/googleapis/api/annotations/field_behavior.pb.validate.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/third_party/google/api/google.golang.org/genproto/googleapis/api/annotations/http.pb.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/third_party/google/api/google.golang.org/genproto/googleapis/api/annotations/http.pb.validate.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/third_party/google/api/google.golang.org/genproto/googleapis/api/httpbody/httpbody.pb.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/third_party/google/api/google.golang.org/genproto/googleapis/api/httpbody/httpbody.pb.validate.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/third_party/google/protobuf/compiler/google.golang.org/protobuf/types/pluginpb/plugin.pb.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/third_party/google/protobuf/compiler/google.golang.org/protobuf/types/pluginpb/plugin.pb.validate.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/third_party/google/protobuf/google.golang.org/protobuf/types/descriptorpb/descriptor.pb.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/third_party/google/protobuf/google.golang.org/protobuf/types/descriptorpb/descriptor.pb.validate.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/third_party/google/protobuf/google.golang.org/protobuf/types/known/anypb/any.pb.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/third_party/google/protobuf/google.golang.org/protobuf/types/known/anypb/any.pb.validate.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/third_party/google/protobuf/google.golang.org/protobuf/types/known/apipb/api.pb.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/third_party/google/protobuf/google.golang.org/protobuf/types/known/apipb/api.pb.validate.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/third_party/google/protobuf/google.golang.org/protobuf/types/known/durationpb/duration.pb.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/third_party/google/protobuf/google.golang.org/protobuf/types/known/durationpb/duration.pb.validate.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/third_party/google/protobuf/google.golang.org/protobuf/types/known/emptypb/empty.pb.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/third_party/google/protobuf/google.golang.org/protobuf/types/known/emptypb/empty.pb.validate.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/third_party/google/protobuf/google.golang.org/protobuf/types/known/fieldmaskpb/field_mask.pb.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/third_party/google/protobuf/google.golang.org/protobuf/types/known/fieldmaskpb/field_mask.pb.validate.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/third_party/google/protobuf/google.golang.org/protobuf/types/known/sourcecontextpb/source_context.pb.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/third_party/google/protobuf/google.golang.org/protobuf/types/known/sourcecontextpb/source_context.pb.validate.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/third_party/google/protobuf/google.golang.org/protobuf/types/known/structpb/struct.pb.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/third_party/google/protobuf/google.golang.org/protobuf/types/known/structpb/struct.pb.validate.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/third_party/google/protobuf/google.golang.org/protobuf/types/known/timestamppb/timestamp.pb.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/third_party/google/protobuf/google.golang.org/protobuf/types/known/timestamppb/timestamp.pb.validate.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/third_party/google/protobuf/google.golang.org/protobuf/types/known/typepb/type.pb.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/third_party/google/protobuf/google.golang.org/protobuf/types/known/typepb/type.pb.validate.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/third_party/google/protobuf/google.golang.org/protobuf/types/known/wrapperspb/wrappers.pb.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/third_party/google/protobuf/google.golang.org/protobuf/types/known/wrapperspb/wrappers.pb.validate.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/third_party/openapi/v3/github.com/google/gnostic/openapiv3/annotations.pb.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/third_party/openapi/v3/github.com/google/gnostic/openapiv3/annotations.pb.validate.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/third_party/openapi/v3/github.com/google/gnostic/openapiv3/openapi.pb.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/third_party/openapi/v3/github.com/google/gnostic/openapiv3/openapi.pb.validate.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/third_party/validate/github.com/envoyproxy/protoc-gen-validate/validate/validate.pb.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/third_party/validate/github.com/envoyproxy/protoc-gen-validate/validate/validate.pb.validate.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/pkg/address/address.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/infra/apis/address.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/pkg/address/address_test.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/pkg/md/metadata.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/pkg/md/metadata.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/types/auth.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/types/auth.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/types/department.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/types/department.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/types/user.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/types/user.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tmp/runtime/output.log" beforeDir="false" afterPath="$PROJECT_DIR$/tmp/runtime/output.log" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../resource" beforeDir="false" afterPath="$PROJECT_DIR$/../resource" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../web/admin-web" beforeDir="false" afterPath="$PROJECT_DIR$/../../web/admin-web" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../web/client-uniapp" beforeDir="false" afterPath="$PROJECT_DIR$/../../web/client-uniapp" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -121,7 +156,7 @@
     "git-widget-placeholder": "main",
     "go.import.settings.migrated": "true",
     "go.sdk.automatically.set": "true",
-    "last_opened_file_path": "/Users/fangweiye/GolandProjects/go-platform/server/manager",
+    "last_opened_file_path": "/Users/fangweiye/GolandProjects/go-platform/server/manager/internal/domain/service",
     "node.js.detected.package.eslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
@@ -131,14 +166,14 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/api/manager/login_log" />
-      <recent name="$PROJECT_DIR$/internal/domain/entity" />
-      <recent name="$PROJECT_DIR$/internal/domain/repository" />
       <recent name="$PROJECT_DIR$/internal/domain/service" />
-      <recent name="$PROJECT_DIR$/internal/types" />
+      <recent name="$PROJECT_DIR$/internal/app" />
+      <recent name="$PROJECT_DIR$/api/manager" />
+      <recent name="$PROJECT_DIR$/internal/infra/oauth" />
+      <recent name="$PROJECT_DIR$/internal/infra/apis" />
     </key>
   </component>
-  <component name="RunManager" selected="OpenAPI/Swagger Code Generator.openapi.yaml">
+  <component name="RunManager" selected="Go Build.go build github.com/limes-cloud/manager/cmd/manager">
     <configuration name="go build github.com/limes-cloud/manager/cmd/manager" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
       <module name="manager" />
       <working_directory value="$PROJECT_DIR$" />
@@ -173,8 +208,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="OpenAPI/Swagger Code Generator.openapi.yaml" />
         <item itemvalue="Go Build.go build github.com/limes-cloud/manager/cmd/manager" />
+        <item itemvalue="OpenAPI/Swagger Code Generator.openapi.yaml" />
       </list>
     </recent_temporary>
   </component>
@@ -188,6 +223,11 @@
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="feat: lint 格式化检查修改 &amp; openapi生成" />
+    <MESSAGE value="feat: upgrade version" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: upgrade version" />
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>

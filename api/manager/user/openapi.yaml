@@ -255,110 +255,6 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/Status'
-    /manager/api/v1/user/login:
-        post:
-            tags:
-                - User
-            description: UserLogin 用户登陆
-            operationId: User_UserLogin
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/UserLoginRequest'
-                required: true
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/UserLoginReply'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/Status'
-    /manager/api/v1/user/login/captcha:
-        get:
-            tags:
-                - User
-            description: GetUserLoginCaptcha 获取用户登陆验证吗
-            operationId: User_GetUserLoginCaptcha
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/GetUserLoginCaptchaReply'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/Status'
-    /manager/api/v1/user/login/logs:
-        get:
-            tags:
-                - User
-            description: ListLoginLog 获取用户登陆信息列表
-            operationId: User_ListLoginLog
-            parameters:
-                - name: page
-                  in: query
-                  schema:
-                    type: integer
-                    format: uint32
-                - name: pageSize
-                  in: query
-                  schema:
-                    type: integer
-                    format: uint32
-                - name: username
-                  in: query
-                  schema:
-                    type: string
-                - name: createdAts
-                  in: query
-                  schema:
-                    type: array
-                    items:
-                        type: string
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/ListLoginLogReply'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/Status'
-    /manager/api/v1/user/logout:
-        post:
-            tags:
-                - User
-            description: UserLogout 用户退出
-            operationId: User_UserLogout
-            requestBody:
-                content:
-                    application/json: {}
-                required: true
-            responses:
-                "200":
-                    description: OK
-                    content: {}
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/Status'
     /manager/api/v1/user/password/reset:
         post:
             tags:
@@ -403,29 +299,6 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/UpdateUserStatusReply'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/Status'
-    /manager/api/v1/user/token/refresh:
-        post:
-            tags:
-                - User
-            description: UserRefreshToken 用户刷新token
-            operationId: User_UserRefreshToken
-            requestBody:
-                content:
-                    application/json: {}
-                required: true
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/UserRefreshTokenReply'
                 default:
                     description: Default error response
                     content:
@@ -535,16 +408,6 @@ components:
         DeleteUserReply:
             type: object
             properties: {}
-        GetUserLoginCaptchaReply:
-            type: object
-            properties:
-                uuid:
-                    type: string
-                captcha:
-                    type: string
-                expire:
-                    type: integer
-                    format: uint32
         GetUserReply:
             type: object
             properties:
@@ -632,39 +495,6 @@ components:
                     description: The type of the serialized message.
             additionalProperties: true
             description: Contains an arbitrary serialized message along with a @type that describes the type of the serialized message.
-        ListLoginLogReply:
-            type: object
-            properties:
-                total:
-                    type: integer
-                    format: uint32
-                list:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/ListLoginLogReply_Log'
-        ListLoginLogReply_Log:
-            type: object
-            properties:
-                username:
-                    type: string
-                type:
-                    type: string
-                ip:
-                    type: string
-                address:
-                    type: string
-                browser:
-                    type: string
-                device:
-                    type: string
-                code:
-                    type: integer
-                    format: int32
-                description:
-                    type: string
-                createdAt:
-                    type: integer
-                    format: uint32
         ListUserReply:
             type: object
             properties:
@@ -854,26 +684,5 @@ components:
                     format: uint32
                 status:
                     type: boolean
-        UserLoginReply:
-            type: object
-            properties:
-                token:
-                    type: string
-        UserLoginRequest:
-            type: object
-            properties:
-                username:
-                    type: string
-                password:
-                    type: string
-                captchaId:
-                    type: string
-                captcha:
-                    type: string
-        UserRefreshTokenReply:
-            type: object
-            properties:
-                token:
-                    type: string
 tags:
     - name: User

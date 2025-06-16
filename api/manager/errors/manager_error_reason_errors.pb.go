@@ -710,3 +710,163 @@ func ResourceServerError(args ...any) *errors.Error {
 		return errors.New(500, ErrorReason_ResourceServerError.String(), "资源服务异常:"+msg)
 	}
 }
+
+func IsNotPermissionError(err error) bool {
+	if err == nil {
+		return false
+	}
+	e := errors.FromError(err)
+	return e.Reason == ErrorReason_NotPermissionError.String() && e.Code == 500
+}
+
+func NotPermissionError(args ...any) *errors.Error {
+	switch len(args) {
+	case 0:
+		return errors.New(500, ErrorReason_NotPermissionError.String(), "无资源权限")
+	case 1:
+		return errors.New(500, ErrorReason_NotPermissionError.String(), "无资源权限:"+fmt.Sprint(args[0]))
+	default:
+		msg := fmt.Sprintf(fmt.Sprint(args[0]), args[1:]...)
+		return errors.New(500, ErrorReason_NotPermissionError.String(), "无资源权限:"+msg)
+	}
+}
+
+func IsExistFeedbackError(err error) bool {
+	if err == nil {
+		return false
+	}
+	e := errors.FromError(err)
+	return e.Reason == ErrorReason_ExistFeedbackError.String() && e.Code == 500
+}
+
+func ExistFeedbackError(args ...any) *errors.Error {
+	switch len(args) {
+	case 0:
+		return errors.New(500, ErrorReason_ExistFeedbackError.String(), "已存在重复的反馈内容")
+	case 1:
+		return errors.New(500, ErrorReason_ExistFeedbackError.String(), "已存在重复的反馈内容:"+fmt.Sprint(args[0]))
+	default:
+		msg := fmt.Sprintf(fmt.Sprint(args[0]), args[1:]...)
+		return errors.New(500, ErrorReason_ExistFeedbackError.String(), "已存在重复的反馈内容:"+msg)
+	}
+}
+
+func IsNotAppScopeError(err error) bool {
+	if err == nil {
+		return false
+	}
+	e := errors.FromError(err)
+	return e.Reason == ErrorReason_NotAppScopeError.String() && e.Code == 500
+}
+
+func NotAppScopeError(args ...any) *errors.Error {
+	switch len(args) {
+	case 0:
+		return errors.New(500, ErrorReason_NotAppScopeError.String(), "用户无应用权限")
+	case 1:
+		return errors.New(500, ErrorReason_NotAppScopeError.String(), "用户无应用权限:"+fmt.Sprint(args[0]))
+	default:
+		msg := fmt.Sprintf(fmt.Sprint(args[0]), args[1:]...)
+		return errors.New(500, ErrorReason_NotAppScopeError.String(), "用户无应用权限:"+msg)
+	}
+}
+
+func IsGetOAuthTokenError(err error) bool {
+	if err == nil {
+		return false
+	}
+	e := errors.FromError(err)
+	return e.Reason == ErrorReason_GetOAuthTokenError.String() && e.Code == 500
+}
+
+func GetOAuthTokenError(args ...any) *errors.Error {
+	switch len(args) {
+	case 0:
+		return errors.New(500, ErrorReason_GetOAuthTokenError.String(), "获取授权token失败")
+	case 1:
+		return errors.New(500, ErrorReason_GetOAuthTokenError.String(), "获取授权token失败:"+fmt.Sprint(args[0]))
+	default:
+		msg := fmt.Sprintf(fmt.Sprint(args[0]), args[1:]...)
+		return errors.New(500, ErrorReason_GetOAuthTokenError.String(), "获取授权token失败:"+msg)
+	}
+}
+
+func IsOAuthLoginError(err error) bool {
+	if err == nil {
+		return false
+	}
+	e := errors.FromError(err)
+	return e.Reason == ErrorReason_OAuthLoginError.String() && e.Code == 500
+}
+
+func OAuthLoginError(args ...any) *errors.Error {
+	switch len(args) {
+	case 0:
+		return errors.New(500, ErrorReason_OAuthLoginError.String(), "三方授权登陆失败")
+	case 1:
+		return errors.New(500, ErrorReason_OAuthLoginError.String(), "三方授权登陆失败:"+fmt.Sprint(args[0]))
+	default:
+		msg := fmt.Sprintf(fmt.Sprint(args[0]), args[1:]...)
+		return errors.New(500, ErrorReason_OAuthLoginError.String(), "三方授权登陆失败:"+msg)
+	}
+}
+
+func IsNotUserError(err error) bool {
+	if err == nil {
+		return false
+	}
+	e := errors.FromError(err)
+	return e.Reason == ErrorReason_NotUserError.String() && e.Code == 500
+}
+
+func NotUserError(args ...any) *errors.Error {
+	switch len(args) {
+	case 0:
+		return errors.New(500, ErrorReason_NotUserError.String(), "用户不存在")
+	case 1:
+		return errors.New(500, ErrorReason_NotUserError.String(), "用户不存在:"+fmt.Sprint(args[0]))
+	default:
+		msg := fmt.Sprintf(fmt.Sprint(args[0]), args[1:]...)
+		return errors.New(500, ErrorReason_NotUserError.String(), "用户不存在:"+msg)
+	}
+}
+
+func IsBindError(err error) bool {
+	if err == nil {
+		return false
+	}
+	e := errors.FromError(err)
+	return e.Reason == ErrorReason_BindError.String() && e.Code == 500
+}
+
+func BindError(args ...any) *errors.Error {
+	switch len(args) {
+	case 0:
+		return errors.New(500, ErrorReason_BindError.String(), "用户绑定失败")
+	case 1:
+		return errors.New(500, ErrorReason_BindError.String(), "用户绑定失败:"+fmt.Sprint(args[0]))
+	default:
+		msg := fmt.Sprintf(fmt.Sprint(args[0]), args[1:]...)
+		return errors.New(500, ErrorReason_BindError.String(), "用户绑定失败:"+msg)
+	}
+}
+
+func IsNotFoundReportOAuthError(err error) bool {
+	if err == nil {
+		return false
+	}
+	e := errors.FromError(err)
+	return e.Reason == ErrorReason_NotFoundReportOAuthError.String() && e.Code == 200
+}
+
+func NotFoundReportOAuthError(args ...any) *errors.Error {
+	switch len(args) {
+	case 0:
+		return errors.New(200, ErrorReason_NotFoundReportOAuthError.String(), "未查询到扫码授权信息")
+	case 1:
+		return errors.New(200, ErrorReason_NotFoundReportOAuthError.String(), "未查询到扫码授权信息:"+fmt.Sprint(args[0]))
+	default:
+		msg := fmt.Sprintf(fmt.Sprint(args[0]), args[1:]...)
+		return errors.New(200, ErrorReason_NotFoundReportOAuthError.String(), "未查询到扫码授权信息:"+msg)
+	}
+}

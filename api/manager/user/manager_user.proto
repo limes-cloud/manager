@@ -179,21 +179,6 @@ message UpdateCurrentUserSettingRequest{
 message UpdateCurrentUserSettingReply{
 }
 
-message UserLoginRequest {
-  string username = 1[(validate.rules).string = {min_len:6}];
-  string password = 2[(validate.rules).string = {min_len:6}];
-  string captchaId = 3[(validate.rules).string = {min_len:1}];
-  string captcha = 4[(validate.rules).string = {min_len:1}];
-}
-
-message UserLoginReply{
-  string token = 1;
-}
-
-message UserRefreshTokenReply{
-  string token = 1;
-}
-
 message SendCurrentUserCaptchaRequest{
   string type = 1[(validate.rules).string = {min_len:1}];
 }
@@ -202,35 +187,4 @@ message SendCurrentUserCaptchaReply{
   string uuid = 1;
   string captcha = 2;
   uint32 expire = 3;
-}
-
-message GetUserLoginCaptchaReply{
-  string uuid = 1;
-  string captcha = 2;
-  uint32 expire = 3;
-}
-
-
-message ListLoginLogRequest {
-  uint32 page = 1[(validate.rules).uint32 = {gte: 1}];
-  uint32 pageSize = 2[(validate.rules).uint32 = {gte: 1,lte:50}];
-  optional string username = 3;
-  repeated int64 createdAts = 4;
-}
-
-message ListLoginLogReply { // fixed code
-  message Log {
-    string username = 1;
-    string type = 2;
-    string ip = 3;
-    string address = 4;
-    string browser = 5;
-    string device = 6;
-    int32 code = 7;
-    string description = 8;
-    uint32 createdAt = 9;
-  }
-
-  uint32 total = 1;
-  repeated Log list = 2;
 }

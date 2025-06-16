@@ -35,6 +35,41 @@ func NewDepartment() *Department {
 	return departmentIns
 }
 
+// ListDepartmentClassify 获取列表
+func (t *Department) ListDepartmentClassify(ctx kratosx.Context, req *types.ListDepartmentClassifyRequest) ([]*entity.DepartmentClassify, uint32, error) {
+	var (
+		list  []*entity.DepartmentClassify
+		total int64
+		fs    = []string{"*"}
+	)
+
+	db := ctx.DB().Model(entity.DepartmentClassify{}).Select(fs)
+	if req.Name != nil {
+		db = db.Where("name LIKE ?", *req.Name+"%")
+	}
+	if err := db.Count(&total).Error; err != nil {
+		return nil, 0, err
+	}
+	db = db.Offset(int((req.Page - 1) * req.PageSize)).Limit(int(req.PageSize))
+
+	return list, uint32(total), db.Find(&list).Error
+}
+
+// CreateDepartmentClassify 创建数据
+func (t *Department) CreateDepartmentClassify(ctx kratosx.Context, tg *entity.DepartmentClassify) (uint32, error) {
+	return tg.Id, ctx.DB().Create(tg).Error
+}
+
+// UpdateDepartmentClassify 更新数据
+func (t *Department) UpdateDepartmentClassify(ctx kratosx.Context, tg *entity.DepartmentClassify) error {
+	return ctx.DB().Updates(tg).Error
+}
+
+// DeleteDepartmentClassify 删除数据
+func (t *Department) DeleteDepartmentClassify(ctx kratosx.Context, id uint32) error {
+	return ctx.DB().Where("id = ?", id).Delete(&entity.DepartmentClassify{}).Error
+}
+
 // GetDepartment 获取指定的数据
 func (infra *Department) GetDepartment(ctx kratosx.Context, id uint32) (*entity.Department, error) {
 	var (
@@ -60,7 +95,7 @@ func (infra *Department) ListDepartment(ctx kratosx.Context, req *types.ListDepa
 		fs = []string{"*"}
 	)
 
-	db := ctx.DB().Model(entity.Department{}).Select(fs)
+	db := ctx.DB().Model(entity.Department{}).Select(fs).Preload("Classify")
 
 	if req.Name != nil {
 		db = db.Where("name LIKE ?", *req.Name+"%")

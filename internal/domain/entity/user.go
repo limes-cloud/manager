@@ -16,6 +16,7 @@ type User struct {
 	Setting      *string     `json:"setting" gorm:"column:setting"`
 	Token        *string     `json:"token" gorm:"column:token"`
 	LoggedAt     int64       `json:"loggedAt" gorm:"column:logged_at"`
+	ExpireAt     int64       `json:"expireAt" gorm:"column:expire_at"`
 	UserJobs     []*UserJob  `json:"userJobs"`
 	UserRoles    []*UserRole `json:"userRoles"`
 	Roles        []*Role     `json:"roles" gorm:"many2many:user_role"` // fixed code

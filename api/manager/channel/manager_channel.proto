@@ -1,0 +1,106 @@
+syntax = "proto3";
+
+package manager.api.manager.channel.v1;
+
+option go_package = "./v1;v1";
+option java_multiple_files = true;
+option java_package = "manager.api.manager.channel.v1";
+option java_outer_classname = "ChannelV1";
+
+import "validate/validate.proto";
+
+
+message ListChannelTypeRequest{}
+
+message ListChannelTypeReply{
+  message Type{
+    string keyword = 1;
+    string name = 2;
+  }
+  repeated Type list = 1;
+}
+
+message ListAdminChannelRequest {
+}
+
+message ListAdminChannelReply {
+  message Channel {
+    string logo = 2;
+    string logoUrl = 3;
+    string keyword = 4;
+    string name = 5;
+  }
+
+  uint32 total = 1;
+  repeated Channel list = 2;
+}
+
+message ListChannelRequest {
+  uint32 page = 1[(validate.rules).uint32 = {gte: 1}];
+  uint32 pageSize = 2[(validate.rules).uint32 = {gte: 1 ,lte: 50}];
+  optional string order = 3[(validate.rules).string = {in: ["asc","desc"]}];
+  optional string orderBy = 4[(validate.rules).string = {in: ["id","created_at"]}];
+  optional string keyword = 5;
+  optional string name = 6;
+  optional bool status = 7;
+}
+
+message ListChannelReply {
+  message Channel {
+    uint32 id = 1;
+    string logo = 2;
+    string logoUrl = 3;
+    string keyword = 4;
+    string name = 5;
+    optional bool status = 6;
+    string ak = 7;
+    string sk = 8;
+    string extra = 9;
+    optional bool admin = 10;
+    string description = 11;
+    uint32 createdAt = 12;
+    uint32 updatedAt = 13;
+  }
+
+  uint32 total = 1;
+  repeated Channel list = 2;
+}
+
+message CreateChannelRequest {
+  string logo = 1[(validate.rules).string = {min_len: 1}];
+  string keyword = 2[(validate.rules).string = {min_len: 1}];
+  string name = 3[(validate.rules).string = {min_len: 1}];
+  string ak = 4[(validate.rules).string = {min_len: 1}];
+  string sk = 5[(validate.rules).string = {min_len: 1}];
+  string extra = 6;
+  bool admin = 7;
+  string description = 8[(validate.rules).string = {min_len: 1}];
+}
+
+message CreateChannelReply {
+  uint32 id = 1;
+}
+
+message UpdateChannelRequest {
+  uint32 id = 1[(validate.rules).uint32 = {gte: 1}];
+  string logo = 2;
+  string keyword = 3;
+  string name = 4;
+  optional bool status = 5;
+  string ak = 6;
+  string sk = 7;
+  string extra = 8;
+  optional bool admin = 9;
+  string description = 10;
+}
+
+message UpdateChannelReply {
+}
+
+message DeleteChannelRequest {
+  uint32 id = 1[(validate.rules).uint32 = {gte: 1}];
+}
+
+message DeleteChannelReply {
+}
+

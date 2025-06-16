@@ -19,17 +19,29 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	Department_ListDepartment_FullMethodName   = "/manager.api.manager.department.v1.Department/ListDepartment"
-	Department_CreateDepartment_FullMethodName = "/manager.api.manager.department.v1.Department/CreateDepartment"
-	Department_UpdateDepartment_FullMethodName = "/manager.api.manager.department.v1.Department/UpdateDepartment"
-	Department_DeleteDepartment_FullMethodName = "/manager.api.manager.department.v1.Department/DeleteDepartment"
-	Department_GetDepartment_FullMethodName    = "/manager.api.manager.department.v1.Department/GetDepartment"
+	Department_ListDepartmentClassify_FullMethodName   = "/manager.api.manager.department.v1.Department/ListDepartmentClassify"
+	Department_CreateDepartmentClassify_FullMethodName = "/manager.api.manager.department.v1.Department/CreateDepartmentClassify"
+	Department_UpdateDepartmentClassify_FullMethodName = "/manager.api.manager.department.v1.Department/UpdateDepartmentClassify"
+	Department_DeleteDepartmentClassify_FullMethodName = "/manager.api.manager.department.v1.Department/DeleteDepartmentClassify"
+	Department_ListDepartment_FullMethodName           = "/manager.api.manager.department.v1.Department/ListDepartment"
+	Department_CreateDepartment_FullMethodName         = "/manager.api.manager.department.v1.Department/CreateDepartment"
+	Department_UpdateDepartment_FullMethodName         = "/manager.api.manager.department.v1.Department/UpdateDepartment"
+	Department_DeleteDepartment_FullMethodName         = "/manager.api.manager.department.v1.Department/DeleteDepartment"
+	Department_GetDepartment_FullMethodName            = "/manager.api.manager.department.v1.Department/GetDepartment"
 )
 
 // DepartmentClient is the client API for Department service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type DepartmentClient interface {
+	// ListDepartmentClassify 获取部门分类列表
+	ListDepartmentClassify(ctx context.Context, in *ListDepartmentClassifyRequest, opts ...grpc.CallOption) (*ListDepartmentClassifyReply, error)
+	// CreateDepartmentClassify 创建部门分类
+	CreateDepartmentClassify(ctx context.Context, in *CreateDepartmentClassifyRequest, opts ...grpc.CallOption) (*CreateDepartmentClassifyReply, error)
+	// UpdateDepartmentClassify 更新部门分类
+	UpdateDepartmentClassify(ctx context.Context, in *UpdateDepartmentClassifyRequest, opts ...grpc.CallOption) (*UpdateDepartmentClassifyReply, error)
+	// DeleteDepartmentClassify 删除部门分类
+	DeleteDepartmentClassify(ctx context.Context, in *DeleteDepartmentClassifyRequest, opts ...grpc.CallOption) (*DeleteDepartmentClassifyReply, error)
 	// ListDepartment 获取部门信息列表
 	ListDepartment(ctx context.Context, in *ListDepartmentRequest, opts ...grpc.CallOption) (*ListDepartmentReply, error)
 	// CreateDepartment 创建部门信息
@@ -48,6 +60,42 @@ type departmentClient struct {
 
 func NewDepartmentClient(cc grpc.ClientConnInterface) DepartmentClient {
 	return &departmentClient{cc}
+}
+
+func (c *departmentClient) ListDepartmentClassify(ctx context.Context, in *ListDepartmentClassifyRequest, opts ...grpc.CallOption) (*ListDepartmentClassifyReply, error) {
+	out := new(ListDepartmentClassifyReply)
+	err := c.cc.Invoke(ctx, Department_ListDepartmentClassify_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *departmentClient) CreateDepartmentClassify(ctx context.Context, in *CreateDepartmentClassifyRequest, opts ...grpc.CallOption) (*CreateDepartmentClassifyReply, error) {
+	out := new(CreateDepartmentClassifyReply)
+	err := c.cc.Invoke(ctx, Department_CreateDepartmentClassify_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *departmentClient) UpdateDepartmentClassify(ctx context.Context, in *UpdateDepartmentClassifyRequest, opts ...grpc.CallOption) (*UpdateDepartmentClassifyReply, error) {
+	out := new(UpdateDepartmentClassifyReply)
+	err := c.cc.Invoke(ctx, Department_UpdateDepartmentClassify_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *departmentClient) DeleteDepartmentClassify(ctx context.Context, in *DeleteDepartmentClassifyRequest, opts ...grpc.CallOption) (*DeleteDepartmentClassifyReply, error) {
+	out := new(DeleteDepartmentClassifyReply)
+	err := c.cc.Invoke(ctx, Department_DeleteDepartmentClassify_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *departmentClient) ListDepartment(ctx context.Context, in *ListDepartmentRequest, opts ...grpc.CallOption) (*ListDepartmentReply, error) {
@@ -99,6 +147,14 @@ func (c *departmentClient) GetDepartment(ctx context.Context, in *GetDepartmentR
 // All implementations must embed UnimplementedDepartmentServer
 // for forward compatibility
 type DepartmentServer interface {
+	// ListDepartmentClassify 获取部门分类列表
+	ListDepartmentClassify(context.Context, *ListDepartmentClassifyRequest) (*ListDepartmentClassifyReply, error)
+	// CreateDepartmentClassify 创建部门分类
+	CreateDepartmentClassify(context.Context, *CreateDepartmentClassifyRequest) (*CreateDepartmentClassifyReply, error)
+	// UpdateDepartmentClassify 更新部门分类
+	UpdateDepartmentClassify(context.Context, *UpdateDepartmentClassifyRequest) (*UpdateDepartmentClassifyReply, error)
+	// DeleteDepartmentClassify 删除部门分类
+	DeleteDepartmentClassify(context.Context, *DeleteDepartmentClassifyRequest) (*DeleteDepartmentClassifyReply, error)
 	// ListDepartment 获取部门信息列表
 	ListDepartment(context.Context, *ListDepartmentRequest) (*ListDepartmentReply, error)
 	// CreateDepartment 创建部门信息
@@ -116,6 +172,18 @@ type DepartmentServer interface {
 type UnimplementedDepartmentServer struct {
 }
 
+func (UnimplementedDepartmentServer) ListDepartmentClassify(context.Context, *ListDepartmentClassifyRequest) (*ListDepartmentClassifyReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListDepartmentClassify not implemented")
+}
+func (UnimplementedDepartmentServer) CreateDepartmentClassify(context.Context, *CreateDepartmentClassifyRequest) (*CreateDepartmentClassifyReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateDepartmentClassify not implemented")
+}
+func (UnimplementedDepartmentServer) UpdateDepartmentClassify(context.Context, *UpdateDepartmentClassifyRequest) (*UpdateDepartmentClassifyReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateDepartmentClassify not implemented")
+}
+func (UnimplementedDepartmentServer) DeleteDepartmentClassify(context.Context, *DeleteDepartmentClassifyRequest) (*DeleteDepartmentClassifyReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteDepartmentClassify not implemented")
+}
 func (UnimplementedDepartmentServer) ListDepartment(context.Context, *ListDepartmentRequest) (*ListDepartmentReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListDepartment not implemented")
 }
@@ -142,6 +210,78 @@ type UnsafeDepartmentServer interface {
 
 func RegisterDepartmentServer(s grpc.ServiceRegistrar, srv DepartmentServer) {
 	s.RegisterService(&Department_ServiceDesc, srv)
+}
+
+func _Department_ListDepartmentClassify_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListDepartmentClassifyRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DepartmentServer).ListDepartmentClassify(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Department_ListDepartmentClassify_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DepartmentServer).ListDepartmentClassify(ctx, req.(*ListDepartmentClassifyRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Department_CreateDepartmentClassify_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateDepartmentClassifyRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DepartmentServer).CreateDepartmentClassify(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Department_CreateDepartmentClassify_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DepartmentServer).CreateDepartmentClassify(ctx, req.(*CreateDepartmentClassifyRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Department_UpdateDepartmentClassify_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateDepartmentClassifyRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DepartmentServer).UpdateDepartmentClassify(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Department_UpdateDepartmentClassify_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DepartmentServer).UpdateDepartmentClassify(ctx, req.(*UpdateDepartmentClassifyRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Department_DeleteDepartmentClassify_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteDepartmentClassifyRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DepartmentServer).DeleteDepartmentClassify(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Department_DeleteDepartmentClassify_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DepartmentServer).DeleteDepartmentClassify(ctx, req.(*DeleteDepartmentClassifyRequest))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _Department_ListDepartment_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -241,6 +381,22 @@ var Department_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "manager.api.manager.department.v1.Department",
 	HandlerType: (*DepartmentServer)(nil),
 	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "ListDepartmentClassify",
+			Handler:    _Department_ListDepartmentClassify_Handler,
+		},
+		{
+			MethodName: "CreateDepartmentClassify",
+			Handler:    _Department_CreateDepartmentClassify_Handler,
+		},
+		{
+			MethodName: "UpdateDepartmentClassify",
+			Handler:    _Department_UpdateDepartmentClassify_Handler,
+		},
+		{
+			MethodName: "DeleteDepartmentClassify",
+			Handler:    _Department_DeleteDepartmentClassify_Handler,
+		},
 		{
 			MethodName: "ListDepartment",
 			Handler:    _Department_ListDepartment_Handler,

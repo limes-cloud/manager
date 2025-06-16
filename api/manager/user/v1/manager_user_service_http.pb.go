@@ -24,8 +24,6 @@ const OperationUserCreateUser = "/manager.api.manager.user.v1.User/CreateUser"
 const OperationUserDeleteUser = "/manager.api.manager.user.v1.User/DeleteUser"
 const OperationUserGetCurrentUser = "/manager.api.manager.user.v1.User/GetCurrentUser"
 const OperationUserGetUser = "/manager.api.manager.user.v1.User/GetUser"
-const OperationUserGetUserLoginCaptcha = "/manager.api.manager.user.v1.User/GetUserLoginCaptcha"
-const OperationUserListLoginLog = "/manager.api.manager.user.v1.User/ListLoginLog"
 const OperationUserListUser = "/manager.api.manager.user.v1.User/ListUser"
 const OperationUserResetUserPassword = "/manager.api.manager.user.v1.User/ResetUserPassword"
 const OperationUserSendCurrentUserCaptcha = "/manager.api.manager.user.v1.User/SendCurrentUserCaptcha"
@@ -35,9 +33,6 @@ const OperationUserUpdateCurrentUserRole = "/manager.api.manager.user.v1.User/Up
 const OperationUserUpdateCurrentUserSetting = "/manager.api.manager.user.v1.User/UpdateCurrentUserSetting"
 const OperationUserUpdateUser = "/manager.api.manager.user.v1.User/UpdateUser"
 const OperationUserUpdateUserStatus = "/manager.api.manager.user.v1.User/UpdateUserStatus"
-const OperationUserUserLogin = "/manager.api.manager.user.v1.User/UserLogin"
-const OperationUserUserLogout = "/manager.api.manager.user.v1.User/UserLogout"
-const OperationUserUserRefreshToken = "/manager.api.manager.user.v1.User/UserRefreshToken"
 
 type UserHTTPServer interface {
 	// CreateUser CreateUser 创建用户信息
@@ -48,10 +43,6 @@ type UserHTTPServer interface {
 	GetCurrentUser(context.Context, *emptypb.Empty) (*GetUserReply, error)
 	// GetUser GetUser 获取指定的用户信息
 	GetUser(context.Context, *GetUserRequest) (*GetUserReply, error)
-	// GetUserLoginCaptcha GetUserLoginCaptcha 获取用户登陆验证吗
-	GetUserLoginCaptcha(context.Context, *emptypb.Empty) (*GetUserLoginCaptchaReply, error)
-	// ListLoginLog ListLoginLog 获取用户登陆信息列表
-	ListLoginLog(context.Context, *ListLoginLogRequest) (*ListLoginLogReply, error)
 	// ListUser ListUser 获取用户信息列表
 	ListUser(context.Context, *ListUserRequest) (*ListUserReply, error)
 	// ResetUserPassword ResetUserPassword 重置用户密码
@@ -70,12 +61,6 @@ type UserHTTPServer interface {
 	UpdateUser(context.Context, *UpdateUserRequest) (*UpdateUserReply, error)
 	// UpdateUserStatus UpdateUserStatus 更新用户信息状态
 	UpdateUserStatus(context.Context, *UpdateUserStatusRequest) (*UpdateUserStatusReply, error)
-	// UserLogin UserLogin 用户登陆
-	UserLogin(context.Context, *UserLoginRequest) (*UserLoginReply, error)
-	// UserLogout UserLogout 用户退出
-	UserLogout(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
-	// UserRefreshToken UserRefreshToken 用户刷新token
-	UserRefreshToken(context.Context, *emptypb.Empty) (*UserRefreshTokenReply, error)
 }
 
 func RegisterUserHTTPServer(s *http.Server, srv UserHTTPServer) {
@@ -93,11 +78,6 @@ func RegisterUserHTTPServer(s *http.Server, srv UserHTTPServer) {
 	r.PUT("/manager/api/v1/user/current/password", _User_UpdateCurrentUserPassword0_HTTP_Handler(srv))
 	r.PUT("/manager/api/v1/user/current/setting", _User_UpdateCurrentUserSetting0_HTTP_Handler(srv))
 	r.POST("/manager/api/v1/user/current/captcha", _User_SendCurrentUserCaptcha0_HTTP_Handler(srv))
-	r.GET("/manager/api/v1/user/login/captcha", _User_GetUserLoginCaptcha0_HTTP_Handler(srv))
-	r.POST("/manager/api/v1/user/login", _User_UserLogin0_HTTP_Handler(srv))
-	r.POST("/manager/api/v1/user/logout", _User_UserLogout0_HTTP_Handler(srv))
-	r.POST("/manager/api/v1/user/token/refresh", _User_UserRefreshToken0_HTTP_Handler(srv))
-	r.GET("/manager/api/v1/user/login/logs", _User_ListLoginLog0_HTTP_Handler(srv))
 }
 
 func _User_GetUser0_HTTP_Handler(srv UserHTTPServer) func(ctx http.Context) error {
@@ -374,117 +354,11 @@ func _User_SendCurrentUserCaptcha0_HTTP_Handler(srv UserHTTPServer) func(ctx htt
 	}
 }
 
-func _User_GetUserLoginCaptcha0_HTTP_Handler(srv UserHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in emptypb.Empty
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationUserGetUserLoginCaptcha)
-		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
-			return srv.GetUserLoginCaptcha(ctx, req.(*emptypb.Empty))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*GetUserLoginCaptchaReply)
-		return ctx.Result(200, reply)
-	}
-}
-
-func _User_UserLogin0_HTTP_Handler(srv UserHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in UserLoginRequest
-		if err := ctx.Bind(&in); err != nil {
-			return err
-		}
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationUserUserLogin)
-		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
-			return srv.UserLogin(ctx, req.(*UserLoginRequest))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*UserLoginReply)
-		return ctx.Result(200, reply)
-	}
-}
-
-func _User_UserLogout0_HTTP_Handler(srv UserHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in emptypb.Empty
-		if err := ctx.Bind(&in); err != nil {
-			return err
-		}
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationUserUserLogout)
-		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
-			return srv.UserLogout(ctx, req.(*emptypb.Empty))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*emptypb.Empty)
-		return ctx.Result(200, reply)
-	}
-}
-
-func _User_UserRefreshToken0_HTTP_Handler(srv UserHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in emptypb.Empty
-		if err := ctx.Bind(&in); err != nil {
-			return err
-		}
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationUserUserRefreshToken)
-		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
-			return srv.UserRefreshToken(ctx, req.(*emptypb.Empty))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*UserRefreshTokenReply)
-		return ctx.Result(200, reply)
-	}
-}
-
-func _User_ListLoginLog0_HTTP_Handler(srv UserHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in ListLoginLogRequest
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationUserListLoginLog)
-		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
-			return srv.ListLoginLog(ctx, req.(*ListLoginLogRequest))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*ListLoginLogReply)
-		return ctx.Result(200, reply)
-	}
-}
-
 type UserHTTPClient interface {
 	CreateUser(ctx context.Context, req *CreateUserRequest, opts ...http.CallOption) (rsp *CreateUserReply, err error)
 	DeleteUser(ctx context.Context, req *DeleteUserRequest, opts ...http.CallOption) (rsp *DeleteUserReply, err error)
 	GetCurrentUser(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *GetUserReply, err error)
 	GetUser(ctx context.Context, req *GetUserRequest, opts ...http.CallOption) (rsp *GetUserReply, err error)
-	GetUserLoginCaptcha(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *GetUserLoginCaptchaReply, err error)
-	ListLoginLog(ctx context.Context, req *ListLoginLogRequest, opts ...http.CallOption) (rsp *ListLoginLogReply, err error)
 	ListUser(ctx context.Context, req *ListUserRequest, opts ...http.CallOption) (rsp *ListUserReply, err error)
 	ResetUserPassword(ctx context.Context, req *ResetUserPasswordRequest, opts ...http.CallOption) (rsp *ResetUserPasswordReply, err error)
 	SendCurrentUserCaptcha(ctx context.Context, req *SendCurrentUserCaptchaRequest, opts ...http.CallOption) (rsp *SendCurrentUserCaptchaReply, err error)
@@ -494,9 +368,6 @@ type UserHTTPClient interface {
 	UpdateCurrentUserSetting(ctx context.Context, req *UpdateCurrentUserSettingRequest, opts ...http.CallOption) (rsp *UpdateCurrentUserSettingReply, err error)
 	UpdateUser(ctx context.Context, req *UpdateUserRequest, opts ...http.CallOption) (rsp *UpdateUserReply, err error)
 	UpdateUserStatus(ctx context.Context, req *UpdateUserStatusRequest, opts ...http.CallOption) (rsp *UpdateUserStatusReply, err error)
-	UserLogin(ctx context.Context, req *UserLoginRequest, opts ...http.CallOption) (rsp *UserLoginReply, err error)
-	UserLogout(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
-	UserRefreshToken(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *UserRefreshTokenReply, err error)
 }
 
 type UserHTTPClientImpl struct {
@@ -551,32 +422,6 @@ func (c *UserHTTPClientImpl) GetUser(ctx context.Context, in *GetUserRequest, op
 	pattern := "/manager/api/v1/user"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationUserGetUser))
-	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return &out, err
-}
-
-func (c *UserHTTPClientImpl) GetUserLoginCaptcha(ctx context.Context, in *emptypb.Empty, opts ...http.CallOption) (*GetUserLoginCaptchaReply, error) {
-	var out GetUserLoginCaptchaReply
-	pattern := "/manager/api/v1/user/login/captcha"
-	path := binding.EncodeURL(pattern, in, true)
-	opts = append(opts, http.Operation(OperationUserGetUserLoginCaptcha))
-	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return &out, err
-}
-
-func (c *UserHTTPClientImpl) ListLoginLog(ctx context.Context, in *ListLoginLogRequest, opts ...http.CallOption) (*ListLoginLogReply, error) {
-	var out ListLoginLogReply
-	pattern := "/manager/api/v1/user/login/logs"
-	path := binding.EncodeURL(pattern, in, true)
-	opts = append(opts, http.Operation(OperationUserListLoginLog))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {
@@ -696,45 +541,6 @@ func (c *UserHTTPClientImpl) UpdateUserStatus(ctx context.Context, in *UpdateUse
 	opts = append(opts, http.Operation(OperationUserUpdateUserStatus))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "PUT", path, in, &out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return &out, err
-}
-
-func (c *UserHTTPClientImpl) UserLogin(ctx context.Context, in *UserLoginRequest, opts ...http.CallOption) (*UserLoginReply, error) {
-	var out UserLoginReply
-	pattern := "/manager/api/v1/user/login"
-	path := binding.EncodeURL(pattern, in, false)
-	opts = append(opts, http.Operation(OperationUserUserLogin))
-	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return &out, err
-}
-
-func (c *UserHTTPClientImpl) UserLogout(ctx context.Context, in *emptypb.Empty, opts ...http.CallOption) (*emptypb.Empty, error) {
-	var out emptypb.Empty
-	pattern := "/manager/api/v1/user/logout"
-	path := binding.EncodeURL(pattern, in, false)
-	opts = append(opts, http.Operation(OperationUserUserLogout))
-	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return &out, err
-}
-
-func (c *UserHTTPClientImpl) UserRefreshToken(ctx context.Context, in *emptypb.Empty, opts ...http.CallOption) (*UserRefreshTokenReply, error) {
-	var out UserRefreshTokenReply
-	pattern := "/manager/api/v1/user/token/refresh"
-	path := binding.EncodeURL(pattern, in, false)
-	opts = append(opts, http.Operation(OperationUserUserRefreshToken))
-	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
 	if err != nil {
 		return nil, err
 	}

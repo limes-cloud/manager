@@ -37,6 +37,64 @@ func init() {
 	})
 }
 
+// ListDepartmentClassify 获取任务分组列表
+func (s *Department) ListDepartmentClassify(c context.Context, req *pb.ListDepartmentClassifyRequest) (*pb.ListDepartmentClassifyReply, error) {
+	list, total, err := s.srv.ListDepartmentClassify(kratosx.MustContext(c), &types.ListDepartmentClassifyRequest{
+		Page:     req.Page,
+		PageSize: req.PageSize,
+		Order:    req.Order,
+		OrderBy:  req.OrderBy,
+		Name:     req.Name,
+	})
+	if err != nil {
+		return nil, err
+	}
+	reply := pb.ListDepartmentClassifyReply{Total: total}
+	for _, item := range list {
+		reply.List = append(reply.List, &pb.ListDepartmentClassifyReply_DepartmentClassify{
+			Id:          item.Id,
+			Name:        item.Name,
+			Description: item.Description,
+			CreatedAt:   uint32(item.CreatedAt),
+			UpdatedAt:   uint32(item.UpdatedAt),
+		})
+	}
+	return &reply, nil
+}
+
+// CreateDepartmentClassify 创建任务分组
+func (s *Department) CreateDepartmentClassify(c context.Context, req *pb.CreateDepartmentClassifyRequest) (*pb.CreateDepartmentClassifyReply, error) {
+	id, err := s.srv.CreateDepartmentClassify(kratosx.MustContext(c), &entity.DepartmentClassify{
+		Name:        req.Name,
+		Description: req.Description,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return &pb.CreateDepartmentClassifyReply{Id: id}, nil
+}
+
+// UpdateDepartmentClassify 更新任务分组
+func (s *Department) UpdateDepartmentClassify(c context.Context, req *pb.UpdateDepartmentClassifyRequest) (*pb.UpdateDepartmentClassifyReply, error) {
+	if err := s.srv.UpdateDepartmentClassify(kratosx.MustContext(c), &entity.DepartmentClassify{
+		BaseModel:   ktypes.BaseModel{Id: req.Id},
+		Name:        req.Name,
+		Description: req.Description,
+	}); err != nil {
+		return nil, err
+	}
+	return &pb.UpdateDepartmentClassifyReply{}, nil
+}
+
+// DeleteDepartmentClassify 删除任务分组
+func (s *Department) DeleteDepartmentClassify(c context.Context, req *pb.DeleteDepartmentClassifyRequest) (*pb.DeleteDepartmentClassifyReply, error) {
+	err := s.srv.DeleteDepartmentClassify(kratosx.MustContext(c), req.Id)
+	if err != nil {
+		return nil, err
+	}
+	return &pb.DeleteDepartmentClassifyReply{}, nil
+}
+
 // GetDepartment 获取指定的部门信息
 func (s *Department) GetDepartment(c context.Context, req *pb.GetDepartmentRequest) (*pb.GetDepartmentReply, error) {
 	var (
@@ -58,11 +116,16 @@ func (s *Department) GetDepartment(c context.Context, req *pb.GetDepartmentReque
 	return &pb.GetDepartmentReply{
 		Id:          ent.Id,
 		ParentId:    ent.ParentId,
+		ClassifyId:  ent.ClassifyId,
 		Name:        ent.Name,
 		Keyword:     ent.Keyword,
 		Description: ent.Description,
-		CreatedAt:   uint32(ent.CreatedAt),
-		UpdatedAt:   uint32(ent.UpdatedAt),
+		Classify: &pb.DepartmentClassify{
+			Id:   ent.Classify.Id,
+			Name: ent.Classify.Name,
+		},
+		CreatedAt: uint32(ent.CreatedAt),
+		UpdatedAt: uint32(ent.UpdatedAt),
 	}, nil
 }
 
@@ -90,6 +153,7 @@ func (s *Department) ListDepartment(c context.Context, req *pb.ListDepartmentReq
 func (s *Department) CreateDepartment(c context.Context, req *pb.CreateDepartmentRequest) (*pb.CreateDepartmentReply, error) {
 	id, err := s.srv.CreateDepartment(kratosx.MustContext(c), &entity.Department{
 		ParentId:    req.ParentId,
+		ClassifyId:  req.ClassifyId,
 		Name:        req.Name,
 		Keyword:     req.Keyword,
 		Description: req.Description,
@@ -105,6 +169,7 @@ func (s *Department) CreateDepartment(c context.Context, req *pb.CreateDepartmen
 func (s *Department) UpdateDepartment(c context.Context, req *pb.UpdateDepartmentRequest) (*pb.UpdateDepartmentReply, error) {
 	if err := s.srv.UpdateDepartment(kratosx.MustContext(c), &entity.Department{
 		BaseModel:   ktypes.BaseModel{Id: req.Id},
+		ClassifyId:  req.ClassifyId,
 		ParentId:    req.ParentId,
 		Name:        req.Name,
 		Description: req.Description,

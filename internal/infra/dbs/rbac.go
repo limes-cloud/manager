@@ -2,6 +2,7 @@ package dbs
 
 import (
 	"sync"
+	"time"
 
 	"github.com/limes-cloud/kratosx"
 
@@ -75,7 +76,10 @@ func (infra *Rbac) UpdateRbacRoleApis(ctx kratosx.Context, role string, apis []*
 
 	return ctx.Transaction(func(ctx kratosx.Context) error {
 		defer func() {
-			_ = ctx.Authentication().Enforce().LoadPolicy()
+			go func() {
+				time.Sleep(2 * time.Second)
+				_ = ctx.Authentication().Enforce().LoadPolicy()
+			}()
 		}()
 		if err := ctx.DB().Where("v0=?", role).Delete(&entity.CasbinRule{}).Error; err != nil {
 			return err

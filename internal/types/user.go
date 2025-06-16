@@ -38,23 +38,3 @@ type SendCurrentUserCaptchaReply struct {
 	Captcha string `json:"captcha"`
 	Expire  uint32 `json:"expire"`
 }
-
-type GetUserLoginCaptchaReply struct {
-	Uuid    string `json:"uuid"`
-	Captcha string `json:"captcha"`
-	Expire  uint32 `json:"expire"`
-}
-
-type UserLoginRequest struct {
-	Username  string `json:"username"`
-	Password  string `json:"password"`
-	CaptchaId string `json:"captchaId"`
-	Captcha   string `json:"captcha"`
-}
-
-type ListLoginLogRequest struct {
-	Page       uint32  `json:"page"`
-	PageSize   uint32  `json:"pageSize"`
-	Username   *string `json:"username"`
-	CreatedAts []int64 `json:"createdAts"`
-}

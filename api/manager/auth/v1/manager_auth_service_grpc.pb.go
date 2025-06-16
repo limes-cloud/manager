@@ -11,6 +11,7 @@ import (
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
+	emptypb "google.golang.org/protobuf/types/known/emptypb"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -19,7 +20,16 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	Auth_Auth_FullMethodName = "/manager_auth.Auth/Auth"
+	Auth_Auth_FullMethodName                = "/manager_auth.Auth/Auth"
+	Auth_GetOAuthWay_FullMethodName         = "/manager_auth.Auth/GetOAuthWay"
+	Auth_ReportOAuthCode_FullMethodName     = "/manager_auth.Auth/ReportOAuthCode"
+	Auth_OAuthLogin_FullMethodName          = "/manager_auth.Auth/OAuthLogin"
+	Auth_OAuthBind_FullMethodName           = "/manager_auth.Auth/OAuthBind"
+	Auth_GetUserLoginCaptcha_FullMethodName = "/manager_auth.Auth/GetUserLoginCaptcha"
+	Auth_UserLogin_FullMethodName           = "/manager_auth.Auth/UserLogin"
+	Auth_UserLogout_FullMethodName          = "/manager_auth.Auth/UserLogout"
+	Auth_UserRefreshToken_FullMethodName    = "/manager_auth.Auth/UserRefreshToken"
+	Auth_ListLoginLog_FullMethodName        = "/manager_auth.Auth/ListLoginLog"
 )
 
 // AuthClient is the client API for Auth service.
@@ -28,6 +38,24 @@ const (
 type AuthClient interface {
 	// Auth 接口鉴权
 	Auth(ctx context.Context, in *AuthRequest, opts ...grpc.CallOption) (*AuthReply, error)
+	// GetChannelOAuthWay 获取渠道授权方式
+	GetOAuthWay(ctx context.Context, in *GetOAuthWayRequest, opts ...grpc.CallOption) (*GetOAuthWayReply, error)
+	// ReportOAuthCode 上报授权信息
+	ReportOAuthCode(ctx context.Context, in *ReportOAuthCodeRequest, opts ...grpc.CallOption) (*ReportOAuthCodeReply, error)
+	// OAuthLogin 三方授权登陆
+	OAuthLogin(ctx context.Context, in *OAuthLoginRequest, opts ...grpc.CallOption) (*OAuthLoginReply, error)
+	// OAuthBind 三方授权绑定
+	OAuthBind(ctx context.Context, in *OAuthBindRequest, opts ...grpc.CallOption) (*OAuthBindReply, error)
+	// GetUserLoginCaptcha 获取用户登陆验证吗
+	GetUserLoginCaptcha(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetUserLoginCaptchaReply, error)
+	// UserLogin 用户登陆
+	UserLogin(ctx context.Context, in *UserLoginRequest, opts ...grpc.CallOption) (*UserLoginReply, error)
+	// UserLogout 用户退出
+	UserLogout(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	// UserRefreshToken 用户刷新token
+	UserRefreshToken(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*UserRefreshTokenReply, error)
+	// ListLoginLog 获取用户登陆信息列表
+	ListLoginLog(ctx context.Context, in *ListLoginLogRequest, opts ...grpc.CallOption) (*ListLoginLogReply, error)
 }
 
 type authClient struct {
@@ -47,12 +75,111 @@ func (c *authClient) Auth(ctx context.Context, in *AuthRequest, opts ...grpc.Cal
 	return out, nil
 }
 
+func (c *authClient) GetOAuthWay(ctx context.Context, in *GetOAuthWayRequest, opts ...grpc.CallOption) (*GetOAuthWayReply, error) {
+	out := new(GetOAuthWayReply)
+	err := c.cc.Invoke(ctx, Auth_GetOAuthWay_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *authClient) ReportOAuthCode(ctx context.Context, in *ReportOAuthCodeRequest, opts ...grpc.CallOption) (*ReportOAuthCodeReply, error) {
+	out := new(ReportOAuthCodeReply)
+	err := c.cc.Invoke(ctx, Auth_ReportOAuthCode_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *authClient) OAuthLogin(ctx context.Context, in *OAuthLoginRequest, opts ...grpc.CallOption) (*OAuthLoginReply, error) {
+	out := new(OAuthLoginReply)
+	err := c.cc.Invoke(ctx, Auth_OAuthLogin_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *authClient) OAuthBind(ctx context.Context, in *OAuthBindRequest, opts ...grpc.CallOption) (*OAuthBindReply, error) {
+	out := new(OAuthBindReply)
+	err := c.cc.Invoke(ctx, Auth_OAuthBind_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *authClient) GetUserLoginCaptcha(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetUserLoginCaptchaReply, error) {
+	out := new(GetUserLoginCaptchaReply)
+	err := c.cc.Invoke(ctx, Auth_GetUserLoginCaptcha_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *authClient) UserLogin(ctx context.Context, in *UserLoginRequest, opts ...grpc.CallOption) (*UserLoginReply, error) {
+	out := new(UserLoginReply)
+	err := c.cc.Invoke(ctx, Auth_UserLogin_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *authClient) UserLogout(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, Auth_UserLogout_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *authClient) UserRefreshToken(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*UserRefreshTokenReply, error) {
+	out := new(UserRefreshTokenReply)
+	err := c.cc.Invoke(ctx, Auth_UserRefreshToken_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *authClient) ListLoginLog(ctx context.Context, in *ListLoginLogRequest, opts ...grpc.CallOption) (*ListLoginLogReply, error) {
+	out := new(ListLoginLogReply)
+	err := c.cc.Invoke(ctx, Auth_ListLoginLog_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // AuthServer is the server API for Auth service.
 // All implementations must embed UnimplementedAuthServer
 // for forward compatibility
 type AuthServer interface {
 	// Auth 接口鉴权
 	Auth(context.Context, *AuthRequest) (*AuthReply, error)
+	// GetChannelOAuthWay 获取渠道授权方式
+	GetOAuthWay(context.Context, *GetOAuthWayRequest) (*GetOAuthWayReply, error)
+	// ReportOAuthCode 上报授权信息
+	ReportOAuthCode(context.Context, *ReportOAuthCodeRequest) (*ReportOAuthCodeReply, error)
+	// OAuthLogin 三方授权登陆
+	OAuthLogin(context.Context, *OAuthLoginRequest) (*OAuthLoginReply, error)
+	// OAuthBind 三方授权绑定
+	OAuthBind(context.Context, *OAuthBindRequest) (*OAuthBindReply, error)
+	// GetUserLoginCaptcha 获取用户登陆验证吗
+	GetUserLoginCaptcha(context.Context, *emptypb.Empty) (*GetUserLoginCaptchaReply, error)
+	// UserLogin 用户登陆
+	UserLogin(context.Context, *UserLoginRequest) (*UserLoginReply, error)
+	// UserLogout 用户退出
+	UserLogout(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
+	// UserRefreshToken 用户刷新token
+	UserRefreshToken(context.Context, *emptypb.Empty) (*UserRefreshTokenReply, error)
+	// ListLoginLog 获取用户登陆信息列表
+	ListLoginLog(context.Context, *ListLoginLogRequest) (*ListLoginLogReply, error)
 	mustEmbedUnimplementedAuthServer()
 }
 
@@ -62,6 +189,33 @@ type UnimplementedAuthServer struct {
 
 func (UnimplementedAuthServer) Auth(context.Context, *AuthRequest) (*AuthReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Auth not implemented")
+}
+func (UnimplementedAuthServer) GetOAuthWay(context.Context, *GetOAuthWayRequest) (*GetOAuthWayReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetOAuthWay not implemented")
+}
+func (UnimplementedAuthServer) ReportOAuthCode(context.Context, *ReportOAuthCodeRequest) (*ReportOAuthCodeReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ReportOAuthCode not implemented")
+}
+func (UnimplementedAuthServer) OAuthLogin(context.Context, *OAuthLoginRequest) (*OAuthLoginReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method OAuthLogin not implemented")
+}
+func (UnimplementedAuthServer) OAuthBind(context.Context, *OAuthBindRequest) (*OAuthBindReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method OAuthBind not implemented")
+}
+func (UnimplementedAuthServer) GetUserLoginCaptcha(context.Context, *emptypb.Empty) (*GetUserLoginCaptchaReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetUserLoginCaptcha not implemented")
+}
+func (UnimplementedAuthServer) UserLogin(context.Context, *UserLoginRequest) (*UserLoginReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UserLogin not implemented")
+}
+func (UnimplementedAuthServer) UserLogout(context.Context, *emptypb.Empty) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UserLogout not implemented")
+}
+func (UnimplementedAuthServer) UserRefreshToken(context.Context, *emptypb.Empty) (*UserRefreshTokenReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UserRefreshToken not implemented")
+}
+func (UnimplementedAuthServer) ListLoginLog(context.Context, *ListLoginLogRequest) (*ListLoginLogReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListLoginLog not implemented")
 }
 func (UnimplementedAuthServer) mustEmbedUnimplementedAuthServer() {}
 
@@ -94,6 +248,168 @@ func _Auth_Auth_Handler(srv interface{}, ctx context.Context, dec func(interface
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Auth_GetOAuthWay_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetOAuthWayRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServer).GetOAuthWay(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Auth_GetOAuthWay_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServer).GetOAuthWay(ctx, req.(*GetOAuthWayRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Auth_ReportOAuthCode_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ReportOAuthCodeRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServer).ReportOAuthCode(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Auth_ReportOAuthCode_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServer).ReportOAuthCode(ctx, req.(*ReportOAuthCodeRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Auth_OAuthLogin_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(OAuthLoginRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServer).OAuthLogin(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Auth_OAuthLogin_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServer).OAuthLogin(ctx, req.(*OAuthLoginRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Auth_OAuthBind_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(OAuthBindRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServer).OAuthBind(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Auth_OAuthBind_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServer).OAuthBind(ctx, req.(*OAuthBindRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Auth_GetUserLoginCaptcha_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServer).GetUserLoginCaptcha(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Auth_GetUserLoginCaptcha_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServer).GetUserLoginCaptcha(ctx, req.(*emptypb.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Auth_UserLogin_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UserLoginRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServer).UserLogin(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Auth_UserLogin_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServer).UserLogin(ctx, req.(*UserLoginRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Auth_UserLogout_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServer).UserLogout(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Auth_UserLogout_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServer).UserLogout(ctx, req.(*emptypb.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Auth_UserRefreshToken_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServer).UserRefreshToken(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Auth_UserRefreshToken_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServer).UserRefreshToken(ctx, req.(*emptypb.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Auth_ListLoginLog_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListLoginLogRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServer).ListLoginLog(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Auth_ListLoginLog_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServer).ListLoginLog(ctx, req.(*ListLoginLogRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Auth_ServiceDesc is the grpc.ServiceDesc for Auth service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -104,6 +420,42 @@ var Auth_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Auth",
 			Handler:    _Auth_Auth_Handler,
+		},
+		{
+			MethodName: "GetOAuthWay",
+			Handler:    _Auth_GetOAuthWay_Handler,
+		},
+		{
+			MethodName: "ReportOAuthCode",
+			Handler:    _Auth_ReportOAuthCode_Handler,
+		},
+		{
+			MethodName: "OAuthLogin",
+			Handler:    _Auth_OAuthLogin_Handler,
+		},
+		{
+			MethodName: "OAuthBind",
+			Handler:    _Auth_OAuthBind_Handler,
+		},
+		{
+			MethodName: "GetUserLoginCaptcha",
+			Handler:    _Auth_GetUserLoginCaptcha_Handler,
+		},
+		{
+			MethodName: "UserLogin",
+			Handler:    _Auth_UserLogin_Handler,
+		},
+		{
+			MethodName: "UserLogout",
+			Handler:    _Auth_UserLogout_Handler,
+		},
+		{
+			MethodName: "UserRefreshToken",
+			Handler:    _Auth_UserRefreshToken_Handler,
+		},
+		{
+			MethodName: "ListLoginLog",
+			Handler:    _Auth_ListLoginLog_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

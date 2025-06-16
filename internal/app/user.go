@@ -3,8 +3,6 @@ package app
 import (
 	"context"
 
-	"github.com/limes-cloud/manager/internal/infra/rpc"
-
 	"github.com/go-kratos/kratos/v2/transport/grpc"
 	"github.com/go-kratos/kratos/v2/transport/http"
 	"github.com/limes-cloud/kratosx"
@@ -16,23 +14,26 @@ import (
 	"github.com/limes-cloud/manager/internal/conf"
 	"github.com/limes-cloud/manager/internal/domain/entity"
 	"github.com/limes-cloud/manager/internal/domain/service"
+	"github.com/limes-cloud/manager/internal/infra/apis"
 	"github.com/limes-cloud/manager/internal/infra/dbs"
+	"github.com/limes-cloud/manager/internal/infra/rpc"
 	"github.com/limes-cloud/manager/internal/types"
 )
 
 type User struct {
 	pb.UnimplementedUserServer
-	srv *service.Use
+	srv *service.User
 }
 
 func NewUser(conf *conf.Config) *User {
 	return &User{
-		srv: service.NewUse(
+		srv: service.NewUser(
 			conf,
 			dbs.NewUser(),
 			dbs.NewDepartment(),
 			dbs.NewRoleRepo(),
 			rpc.NewFile(),
+			apis.NewAddress(),
 		),
 	}
 }
@@ -229,36 +230,6 @@ func (s *User) UpdateCurrentUserSetting(c context.Context, req *pb.UpdateCurrent
 	return &pb.UpdateCurrentUserSettingReply{}, s.srv.UpdateCurrentUserSetting(kratosx.MustContext(c), req.Setting)
 }
 
-func (s *User) UserLogin(c context.Context, req *pb.UserLoginRequest) (*pb.UserLoginReply, error) {
-	var (
-		in  types.UserLoginRequest
-		ctx = kratosx.MustContext(c)
-	)
-
-	if err := valx.Transform(req, &in); err != nil {
-		ctx.Logger().Warnw("msg", "request transform err", "err", err.Error())
-		return nil, errors.TransformError()
-	}
-
-	token, err := s.srv.UserLogin(ctx, &in)
-	if err != nil {
-		return nil, err
-	}
-	return &pb.UserLoginReply{Token: token}, nil
-}
-
-func (s *User) UserLogout(c context.Context, _ *emptypb.Empty) (*emptypb.Empty, error) {
-	return &emptypb.Empty{}, s.srv.UserLogout(kratosx.MustContext(c))
-}
-
-func (s *User) UserRefreshToken(c context.Context, _ *emptypb.Empty) (*pb.UserRefreshTokenReply, error) {
-	token, err := s.srv.UserRefreshToken(kratosx.MustContext(c))
-	if err != nil {
-		return nil, err
-	}
-	return &pb.UserRefreshTokenReply{Token: token}, nil
-}
-
 func (s *User) SendCurrentUserCaptcha(c context.Context, req *pb.SendCurrentUserCaptchaRequest) (*pb.SendCurrentUserCaptchaReply, error) {
 	reply, err := s.srv.SendCurrentUserCaptcha(kratosx.MustContext(c), req.Type)
 	if err != nil {
@@ -269,44 +240,4 @@ func (s *User) SendCurrentUserCaptcha(c context.Context, req *pb.SendCurrentUser
 		Captcha: reply.Captcha,
 		Expire:  reply.Expire,
 	}, nil
-}
-
-func (s *User) GetUserLoginCaptcha(c context.Context, _ *emptypb.Empty) (*pb.GetUserLoginCaptchaReply, error) {
-	reply, err := s.srv.GetUserLoginCaptcha(kratosx.MustContext(c))
-	if err != nil {
-		return nil, err
-	}
-	return &pb.GetUserLoginCaptchaReply{
-		Uuid:    reply.Uuid,
-		Captcha: reply.Captcha,
-		Expire:  reply.Expire,
-	}, nil
-}
-
-func (s *User) ListLoginLog(c context.Context, req *pb.ListLoginLogRequest) (*pb.ListLoginLogReply, error) {
-	list, total, err := s.srv.ListLoginLog(kratosx.MustContext(c), &types.ListLoginLogRequest{
-		Page:       req.Page,
-		PageSize:   req.PageSize,
-		Username:   req.Username,
-		CreatedAts: req.CreatedAts,
-	})
-	if err != nil {
-		return nil, err
-	}
-	reply := &pb.ListLoginLogReply{Total: total}
-	for _, item := range list {
-		reply.List = append(reply.List, &pb.ListLoginLogReply_Log{
-			Username:    item.Username,
-			Type:        item.Type,
-			Ip:          item.IP,
-			Address:     item.Address,
-			Browser:     item.Browser,
-			Device:      item.Device,
-			Code:        int32(item.Code),
-			Description: item.Description,
-			CreatedAt:   uint32(item.CreatedAt),
-		})
-	}
-
-	return reply, nil
 }

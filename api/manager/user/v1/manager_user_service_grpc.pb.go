@@ -33,11 +33,6 @@ const (
 	User_UpdateCurrentUserPassword_FullMethodName = "/manager.api.manager.user.v1.User/UpdateCurrentUserPassword"
 	User_UpdateCurrentUserSetting_FullMethodName  = "/manager.api.manager.user.v1.User/UpdateCurrentUserSetting"
 	User_SendCurrentUserCaptcha_FullMethodName    = "/manager.api.manager.user.v1.User/SendCurrentUserCaptcha"
-	User_GetUserLoginCaptcha_FullMethodName       = "/manager.api.manager.user.v1.User/GetUserLoginCaptcha"
-	User_UserLogin_FullMethodName                 = "/manager.api.manager.user.v1.User/UserLogin"
-	User_UserLogout_FullMethodName                = "/manager.api.manager.user.v1.User/UserLogout"
-	User_UserRefreshToken_FullMethodName          = "/manager.api.manager.user.v1.User/UserRefreshToken"
-	User_ListLoginLog_FullMethodName              = "/manager.api.manager.user.v1.User/ListLoginLog"
 )
 
 // UserClient is the client API for User service.
@@ -70,16 +65,6 @@ type UserClient interface {
 	UpdateCurrentUserSetting(ctx context.Context, in *UpdateCurrentUserSettingRequest, opts ...grpc.CallOption) (*UpdateCurrentUserSettingReply, error)
 	// SendCurrentUserCaptcha 发送用户验证吗
 	SendCurrentUserCaptcha(ctx context.Context, in *SendCurrentUserCaptchaRequest, opts ...grpc.CallOption) (*SendCurrentUserCaptchaReply, error)
-	// GetUserLoginCaptcha 获取用户登陆验证吗
-	GetUserLoginCaptcha(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetUserLoginCaptchaReply, error)
-	// UserLogin 用户登陆
-	UserLogin(ctx context.Context, in *UserLoginRequest, opts ...grpc.CallOption) (*UserLoginReply, error)
-	// UserLogout 用户退出
-	UserLogout(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	// UserRefreshToken 用户刷新token
-	UserRefreshToken(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*UserRefreshTokenReply, error)
-	// ListLoginLog 获取用户登陆信息列表
-	ListLoginLog(ctx context.Context, in *ListLoginLogRequest, opts ...grpc.CallOption) (*ListLoginLogReply, error)
 }
 
 type userClient struct {
@@ -207,51 +192,6 @@ func (c *userClient) SendCurrentUserCaptcha(ctx context.Context, in *SendCurrent
 	return out, nil
 }
 
-func (c *userClient) GetUserLoginCaptcha(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetUserLoginCaptchaReply, error) {
-	out := new(GetUserLoginCaptchaReply)
-	err := c.cc.Invoke(ctx, User_GetUserLoginCaptcha_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *userClient) UserLogin(ctx context.Context, in *UserLoginRequest, opts ...grpc.CallOption) (*UserLoginReply, error) {
-	out := new(UserLoginReply)
-	err := c.cc.Invoke(ctx, User_UserLogin_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *userClient) UserLogout(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error) {
-	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, User_UserLogout_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *userClient) UserRefreshToken(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*UserRefreshTokenReply, error) {
-	out := new(UserRefreshTokenReply)
-	err := c.cc.Invoke(ctx, User_UserRefreshToken_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *userClient) ListLoginLog(ctx context.Context, in *ListLoginLogRequest, opts ...grpc.CallOption) (*ListLoginLogReply, error) {
-	out := new(ListLoginLogReply)
-	err := c.cc.Invoke(ctx, User_ListLoginLog_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 // UserServer is the server API for User service.
 // All implementations must embed UnimplementedUserServer
 // for forward compatibility
@@ -282,16 +222,6 @@ type UserServer interface {
 	UpdateCurrentUserSetting(context.Context, *UpdateCurrentUserSettingRequest) (*UpdateCurrentUserSettingReply, error)
 	// SendCurrentUserCaptcha 发送用户验证吗
 	SendCurrentUserCaptcha(context.Context, *SendCurrentUserCaptchaRequest) (*SendCurrentUserCaptchaReply, error)
-	// GetUserLoginCaptcha 获取用户登陆验证吗
-	GetUserLoginCaptcha(context.Context, *emptypb.Empty) (*GetUserLoginCaptchaReply, error)
-	// UserLogin 用户登陆
-	UserLogin(context.Context, *UserLoginRequest) (*UserLoginReply, error)
-	// UserLogout 用户退出
-	UserLogout(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
-	// UserRefreshToken 用户刷新token
-	UserRefreshToken(context.Context, *emptypb.Empty) (*UserRefreshTokenReply, error)
-	// ListLoginLog 获取用户登陆信息列表
-	ListLoginLog(context.Context, *ListLoginLogRequest) (*ListLoginLogReply, error)
 	mustEmbedUnimplementedUserServer()
 }
 
@@ -337,21 +267,6 @@ func (UnimplementedUserServer) UpdateCurrentUserSetting(context.Context, *Update
 }
 func (UnimplementedUserServer) SendCurrentUserCaptcha(context.Context, *SendCurrentUserCaptchaRequest) (*SendCurrentUserCaptchaReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SendCurrentUserCaptcha not implemented")
-}
-func (UnimplementedUserServer) GetUserLoginCaptcha(context.Context, *emptypb.Empty) (*GetUserLoginCaptchaReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetUserLoginCaptcha not implemented")
-}
-func (UnimplementedUserServer) UserLogin(context.Context, *UserLoginRequest) (*UserLoginReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UserLogin not implemented")
-}
-func (UnimplementedUserServer) UserLogout(context.Context, *emptypb.Empty) (*emptypb.Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UserLogout not implemented")
-}
-func (UnimplementedUserServer) UserRefreshToken(context.Context, *emptypb.Empty) (*UserRefreshTokenReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UserRefreshToken not implemented")
-}
-func (UnimplementedUserServer) ListLoginLog(context.Context, *ListLoginLogRequest) (*ListLoginLogReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ListLoginLog not implemented")
 }
 func (UnimplementedUserServer) mustEmbedUnimplementedUserServer() {}
 
@@ -600,96 +515,6 @@ func _User_SendCurrentUserCaptcha_Handler(srv interface{}, ctx context.Context, 
 	return interceptor(ctx, in, info, handler)
 }
 
-func _User_GetUserLoginCaptcha_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(emptypb.Empty)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(UserServer).GetUserLoginCaptcha(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: User_GetUserLoginCaptcha_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServer).GetUserLoginCaptcha(ctx, req.(*emptypb.Empty))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _User_UserLogin_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UserLoginRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(UserServer).UserLogin(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: User_UserLogin_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServer).UserLogin(ctx, req.(*UserLoginRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _User_UserLogout_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(emptypb.Empty)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(UserServer).UserLogout(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: User_UserLogout_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServer).UserLogout(ctx, req.(*emptypb.Empty))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _User_UserRefreshToken_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(emptypb.Empty)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(UserServer).UserRefreshToken(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: User_UserRefreshToken_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServer).UserRefreshToken(ctx, req.(*emptypb.Empty))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _User_ListLoginLog_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListLoginLogRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(UserServer).ListLoginLog(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: User_ListLoginLog_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserServer).ListLoginLog(ctx, req.(*ListLoginLogRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 // User_ServiceDesc is the grpc.ServiceDesc for User service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -748,26 +573,6 @@ var User_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "SendCurrentUserCaptcha",
 			Handler:    _User_SendCurrentUserCaptcha_Handler,
-		},
-		{
-			MethodName: "GetUserLoginCaptcha",
-			Handler:    _User_GetUserLoginCaptcha_Handler,
-		},
-		{
-			MethodName: "UserLogin",
-			Handler:    _User_UserLogin_Handler,
-		},
-		{
-			MethodName: "UserLogout",
-			Handler:    _User_UserLogout_Handler,
-		},
-		{
-			MethodName: "UserRefreshToken",
-			Handler:    _User_UserRefreshToken_Handler,
-		},
-		{
-			MethodName: "ListLoginLog",
-			Handler:    _User_ListLoginLog_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

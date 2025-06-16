@@ -4,12 +4,20 @@ import (
 	"github.com/limes-cloud/kratosx/types"
 )
 
+type DepartmentClassify struct {
+	Name        string  `json:"name" gorm:"column:name"`
+	Description *string `json:"description" gorm:"column:description"`
+	types.BaseModel
+}
+
 type Department struct {
-	ParentId    uint32        `json:"parentId" gorm:"column:parent_id"`
-	Name        string        `json:"name" gorm:"column:name"`
-	Keyword     string        `json:"keyword" gorm:"column:keyword"`
-	Description *string       `json:"description" gorm:"column:description"`
-	Children    []*Department `json:"children" gorm:"-"`
+	ParentId    uint32              `json:"parentId" gorm:"column:parent_id"`
+	ClassifyId  uint32              `json:"classifyId"  gorm:"column:classify_id"`
+	Name        string              `json:"name" gorm:"column:name"`
+	Keyword     string              `json:"keyword" gorm:"column:keyword"`
+	Description *string             `json:"description" gorm:"column:description"`
+	Classify    *DepartmentClassify `json:"classify"`
+	Children    []*Department       `json:"children" gorm:"-"`
 	types.BaseModel
 }
 

@@ -6,9 +6,12 @@ require (
 	github.com/envoyproxy/protoc-gen-validate v1.0.4
 	github.com/forgoer/openssl v1.6.0
 	github.com/go-kratos/kratos/v2 v2.8.4
+	github.com/go-resty/resty/v2 v2.12.0
+	github.com/google/uuid v1.6.0
+	github.com/json-iterator/go v1.1.12
 	github.com/limes-cloud/configure v1.0.49
-	github.com/limes-cloud/kratosx v1.0.61
-	github.com/limes-cloud/resource v1.0.23
+	github.com/limes-cloud/kratosx v1.1.0
+	github.com/limes-cloud/resource v1.0.27
 	go.uber.org/automaxprocs v1.5.3
 	golang.org/x/text v0.15.0
 	google.golang.org/genproto/googleapis/api v0.0.0-20240429193739-8cf5692501f6
@@ -49,14 +52,12 @@ require (
 	github.com/go-ole/go-ole v1.3.0 // indirect
 	github.com/go-playground/form/v4 v4.2.1 // indirect
 	github.com/go-redis/redis/v8 v8.11.5 // indirect
-	github.com/go-resty/resty/v2 v2.12.0 // indirect
 	github.com/go-sql-driver/mysql v1.8.1 // indirect
 	github.com/golang-jwt/jwt/v5 v5.2.1 // indirect
 	github.com/golang-sql/civil v0.0.0-20220223132316-b832511892a9 // indirect
 	github.com/golang-sql/sqlexp v0.1.0 // indirect
 	github.com/golang/freetype v0.0.0-20170609003504-e2365dfdc4a0 // indirect
 	github.com/golang/protobuf v1.5.4 // indirect
-	github.com/google/uuid v1.6.0 // indirect
 	github.com/gorilla/handlers v1.5.2 // indirect
 	github.com/gorilla/mux v1.8.1 // indirect
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.19.1 // indirect
@@ -77,7 +78,6 @@ require (
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.5 // indirect
 	github.com/joho/godotenv v1.5.1 // indirect
-	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/klauspost/compress v1.17.8 // indirect
 	github.com/lufia/plan9stats v0.0.0-20240408141607-282e7b5d6b74 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect

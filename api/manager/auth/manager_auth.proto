@@ -21,3 +21,97 @@ message AuthReply{
   uint32 departmentId = 5;
   string departmentKeyword = 6;
 }
+
+
+message GetOAuthWayRequest {
+  string keyword = 1;
+}
+
+message GetOAuthWayReply {
+  string uuid = 1;
+  string type = 2;
+  string value = 3;
+  string tip = 4;
+  string platform = 5;
+}
+
+message ReportOAuthCodeRequest {
+  string code = 1[(validate.rules).string = {min_len:1}];
+  string platform = 2[(validate.rules).string = {min_len:1}];
+  string uuid = 3[(validate.rules).string = {min_len:1}];
+}
+
+message ReportOAuthCodeReply {
+}
+
+message OAuthLoginRequest {
+  string code = 1;
+  string platform = 2[(validate.rules).string = {min_len:1}];
+  string uuid = 3[(validate.rules).string = {min_len:1}];
+}
+
+message OAuthLoginReply {
+  bool isBind = 1;
+  optional string token = 2;
+}
+
+message UserLoginRequest {
+  string username = 1[(validate.rules).string = {min_len:6}];
+  string password = 2[(validate.rules).string = {min_len:6}];
+  string captchaId = 3[(validate.rules).string = {min_len:1}];
+  string captcha = 4[(validate.rules).string = {min_len:1}];
+}
+
+message UserLoginReply{
+  string token = 1;
+}
+
+message UserRefreshTokenReply{
+  string token = 1;
+}
+
+
+message GetUserLoginCaptchaReply{
+  string uuid = 1;
+  string captcha = 2;
+  uint32 expire = 3;
+}
+
+
+message ListLoginLogRequest {
+  uint32 page = 1[(validate.rules).uint32 = {gte: 1}];
+  uint32 pageSize = 2[(validate.rules).uint32 = {gte: 1,lte:50}];
+  optional string username = 3;
+  repeated int64 createdAts = 4;
+}
+
+message ListLoginLogReply { // fixed code
+  message Log {
+    string username = 1;
+    string type = 2;
+    string ip = 3;
+    string address = 4;
+    string browser = 5;
+    string device = 6;
+    int32 code = 7;
+    string description = 8;
+    uint32 createdAt = 9;
+  }
+
+  uint32 total = 1;
+  repeated Log list = 2;
+}
+
+
+message OAuthBindRequest {
+  string username = 1[(validate.rules).string = {min_len:6}];
+  string password = 2[(validate.rules).string = {min_len:6}];
+  string captchaId = 3[(validate.rules).string = {min_len:1}];
+  string captcha = 4[(validate.rules).string = {min_len:1}];
+  string platform = 5[(validate.rules).string = {min_len:1}];
+  string uuid = 6[(validate.rules).string = {min_len:1}];
+}
+
+message OAuthBindReply{
+  string token = 1;
+}

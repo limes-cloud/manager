@@ -44,4 +44,12 @@ enum ErrorReason {
   ParseTokenError = 32[(errors.message)="token解析失败"];
   ForbiddenError = 33[(errors.code)=403,(errors.message)="无接口权限"];
   ResourceServerError = 34[(errors.message)="资源服务异常"];
+  NotPermissionError = 40[(errors.message)="无资源权限"];
+  ExistFeedbackError = 41[(errors.message)="已存在重复的反馈内容"];
+  NotAppScopeError = 42[(errors.message)="用户无应用权限"];
+  GetOAuthTokenError = 43[(errors.message)="获取授权token失败"];
+  OAuthLoginError = 44[(errors.message)="三方授权登陆失败"];
+  NotUserError = 45[(errors.message)="用户不存在"];
+  BindError = 46[(errors.message)="用户绑定失败"];
+  NotFoundReportOAuthError = 47[(errors.code)=200,(errors.message)="未查询到扫码授权信息"];
 }

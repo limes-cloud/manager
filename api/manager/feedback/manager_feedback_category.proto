@@ -1,0 +1,53 @@
+syntax = "proto3";
+
+package manager.api.manager.feedback.v1;
+
+option go_package = "./v1;v1";
+option java_multiple_files = true;
+option java_package = "manager.api.manager.feedback.v1";
+option java_outer_classname = "FeedbackV1";
+
+import "validate/validate.proto";
+
+message ListFeedbackCategoryRequest {
+  uint32 page = 1[(validate.rules).uint32 = {gte: 1}];
+  uint32 pageSize = 2[(validate.rules).uint32 = {gte: 1,lte:50}];
+  optional string order = 3[(validate.rules).string = {in: ["asc","desc"]}];
+  optional string orderBy = 4[(validate.rules).string = {in: ["id"]}];
+  optional string name = 5;
+}
+
+message ListFeedbackCategoryReply {
+  message FeedbackCategory {
+    uint32 id = 1;
+    string name = 2;
+    uint32 createdAt = 3;
+  }
+
+  uint32 total = 1;
+  repeated FeedbackCategory list = 2;
+}
+
+message CreateFeedbackCategoryRequest {
+  string name = 1[(validate.rules).string = {min_len: 1}];
+}
+
+message CreateFeedbackCategoryReply {
+  uint32 id = 1;
+}
+
+message UpdateFeedbackCategoryRequest {
+  uint32 id = 1[(validate.rules).uint32 = {gte: 1}];
+  string name = 2[(validate.rules).string = {min_len: 1}];
+}
+
+message UpdateFeedbackCategoryReply {
+}
+
+message DeleteFeedbackCategoryRequest {
+  uint32 id = 1[(validate.rules).uint32 = {gte: 1}];
+}
+
+message DeleteFeedbackCategoryReply {
+}
+

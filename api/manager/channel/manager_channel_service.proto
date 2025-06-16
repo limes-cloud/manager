@@ -1,0 +1,60 @@
+syntax = "proto3";
+
+package manager.api.manager.channel.v1;
+
+option go_package = "./v1;v1";
+option java_multiple_files = true;
+option java_package = "manager.api.manager.channel.v1";
+option java_outer_classname = "ChannelV1";
+
+import "api/manager/channel/manager_channel.proto";
+import "google/api/annotations.proto";
+
+service Channel{
+
+  // ListChannelType 获取登陆渠道可用列表
+  rpc ListChannelType (ListChannelTypeRequest) returns (ListChannelTypeReply) {
+    option (google.api.http) = {
+      get: "/manager/api/v1/channel/types",
+    };
+  }
+
+  // ListChannel 获取登陆渠道列表
+  rpc ListAdminChannel (ListAdminChannelRequest) returns (ListAdminChannelReply) {
+    option (google.api.http) = {
+      get: "/manager/api/v1/admin_channels",
+    };
+  }
+
+
+  // ListChannel 获取登陆渠道列表
+  rpc ListChannel (ListChannelRequest) returns (ListChannelReply) {
+    option (google.api.http) = {
+      get: "/manager/api/v1/channels",
+    };
+  }
+
+  // CreateChannel 创建登陆渠道
+  rpc CreateChannel (CreateChannelRequest) returns (CreateChannelReply) {
+    option (google.api.http) = {
+      post: "/manager/api/v1/channel",
+      body: "*"
+    };
+  }
+
+  // UpdateChannel 更新登陆渠道
+  rpc UpdateChannel (UpdateChannelRequest) returns (UpdateChannelReply) {
+    option (google.api.http) = {
+      put: "/manager/api/v1/channel",
+      body: "*"
+    };
+  }
+
+  // DeleteChannel 删除登陆渠道
+  rpc DeleteChannel (DeleteChannelRequest) returns (DeleteChannelReply) {
+    option (google.api.http) = {
+      delete: "/manager/api/v1/channel",
+    };
+  }
+
+}

@@ -214,6 +214,8 @@ func (m *GetDepartmentReply) validate(all bool) error {
 
 	// no validation rules for ParentId
 
+	// no validation rules for ClassifyId
+
 	// no validation rules for Name
 
 	// no validation rules for Keyword
@@ -224,6 +226,39 @@ func (m *GetDepartmentReply) validate(all bool) error {
 
 	if m.Description != nil {
 		// no validation rules for Description
+	}
+
+	if m.Classify != nil {
+
+		if all {
+			switch v := interface{}(m.GetClassify()).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, GetDepartmentReplyValidationError{
+						field:  "Classify",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, GetDepartmentReplyValidationError{
+						field:  "Classify",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(m.GetClassify()).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return GetDepartmentReplyValidationError{
+					field:  "Classify",
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
 	}
 
 	if len(errors) > 0 {
@@ -585,6 +620,17 @@ func (m *CreateDepartmentRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
+	if m.GetClassifyId() < 1 {
+		err := CreateDepartmentRequestValidationError{
+			field:  "ClassifyId",
+			reason: "value must be greater than or equal to 1",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
 	if utf8.RuneCountInString(m.GetName()) < 1 {
 		err := CreateDepartmentRequestValidationError{
 			field:  "Name",
@@ -831,6 +877,17 @@ func (m *UpdateDepartmentRequest) validate(all bool) error {
 	if m.GetParentId() < 1 {
 		err := UpdateDepartmentRequestValidationError{
 			field:  "ParentId",
+			reason: "value must be greater than or equal to 1",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if m.GetClassifyId() < 1 {
+		err := UpdateDepartmentRequestValidationError{
+			field:  "ClassifyId",
 			reason: "value must be greater than or equal to 1",
 		}
 		if !all {
@@ -1277,6 +1334,8 @@ func (m *ListDepartmentReply_Department) validate(all bool) error {
 
 	// no validation rules for ParentId
 
+	// no validation rules for ClassifyId
+
 	// no validation rules for Name
 
 	// no validation rules for Keyword
@@ -1321,6 +1380,39 @@ func (m *ListDepartmentReply_Department) validate(all bool) error {
 
 	if m.Description != nil {
 		// no validation rules for Description
+	}
+
+	if m.Classify != nil {
+
+		if all {
+			switch v := interface{}(m.GetClassify()).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, ListDepartmentReply_DepartmentValidationError{
+						field:  "Classify",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, ListDepartmentReply_DepartmentValidationError{
+						field:  "Classify",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(m.GetClassify()).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return ListDepartmentReply_DepartmentValidationError{
+					field:  "Classify",
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
 	}
 
 	if len(errors) > 0 {

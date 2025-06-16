@@ -20,31 +20,129 @@ var _ = binding.EncodeURL
 const _ = http.SupportPackageIsVersion1
 
 const OperationDepartmentCreateDepartment = "/manager.api.manager.department.v1.Department/CreateDepartment"
+const OperationDepartmentCreateDepartmentClassify = "/manager.api.manager.department.v1.Department/CreateDepartmentClassify"
 const OperationDepartmentDeleteDepartment = "/manager.api.manager.department.v1.Department/DeleteDepartment"
+const OperationDepartmentDeleteDepartmentClassify = "/manager.api.manager.department.v1.Department/DeleteDepartmentClassify"
 const OperationDepartmentGetDepartment = "/manager.api.manager.department.v1.Department/GetDepartment"
 const OperationDepartmentListDepartment = "/manager.api.manager.department.v1.Department/ListDepartment"
+const OperationDepartmentListDepartmentClassify = "/manager.api.manager.department.v1.Department/ListDepartmentClassify"
 const OperationDepartmentUpdateDepartment = "/manager.api.manager.department.v1.Department/UpdateDepartment"
+const OperationDepartmentUpdateDepartmentClassify = "/manager.api.manager.department.v1.Department/UpdateDepartmentClassify"
 
 type DepartmentHTTPServer interface {
 	// CreateDepartment CreateDepartment 创建部门信息
 	CreateDepartment(context.Context, *CreateDepartmentRequest) (*CreateDepartmentReply, error)
+	// CreateDepartmentClassify CreateDepartmentClassify 创建部门分类
+	CreateDepartmentClassify(context.Context, *CreateDepartmentClassifyRequest) (*CreateDepartmentClassifyReply, error)
 	// DeleteDepartment DeleteDepartment 删除部门信息
 	DeleteDepartment(context.Context, *DeleteDepartmentRequest) (*DeleteDepartmentReply, error)
+	// DeleteDepartmentClassify DeleteDepartmentClassify 删除部门分类
+	DeleteDepartmentClassify(context.Context, *DeleteDepartmentClassifyRequest) (*DeleteDepartmentClassifyReply, error)
 	// GetDepartment GetDepartment 获取指定的部门信息
 	GetDepartment(context.Context, *GetDepartmentRequest) (*GetDepartmentReply, error)
 	// ListDepartment ListDepartment 获取部门信息列表
 	ListDepartment(context.Context, *ListDepartmentRequest) (*ListDepartmentReply, error)
+	// ListDepartmentClassify ListDepartmentClassify 获取部门分类列表
+	ListDepartmentClassify(context.Context, *ListDepartmentClassifyRequest) (*ListDepartmentClassifyReply, error)
 	// UpdateDepartment UpdateDepartment 更新部门信息
 	UpdateDepartment(context.Context, *UpdateDepartmentRequest) (*UpdateDepartmentReply, error)
+	// UpdateDepartmentClassify UpdateDepartmentClassify 更新部门分类
+	UpdateDepartmentClassify(context.Context, *UpdateDepartmentClassifyRequest) (*UpdateDepartmentClassifyReply, error)
 }
 
 func RegisterDepartmentHTTPServer(s *http.Server, srv DepartmentHTTPServer) {
 	r := s.Route("/")
+	r.GET("/manager/api/v1/department_classifies", _Department_ListDepartmentClassify0_HTTP_Handler(srv))
+	r.POST("/manager/api/v1/department_classify", _Department_CreateDepartmentClassify0_HTTP_Handler(srv))
+	r.PUT("/manager/api/v1/department_classify", _Department_UpdateDepartmentClassify0_HTTP_Handler(srv))
+	r.DELETE("/manager/api/v1/department_classify", _Department_DeleteDepartmentClassify0_HTTP_Handler(srv))
 	r.GET("/manager/api/v1/departments", _Department_ListDepartment0_HTTP_Handler(srv))
 	r.POST("/manager/api/v1/department", _Department_CreateDepartment0_HTTP_Handler(srv))
 	r.PUT("/manager/api/v1/department", _Department_UpdateDepartment0_HTTP_Handler(srv))
 	r.DELETE("/manager/api/v1/department", _Department_DeleteDepartment0_HTTP_Handler(srv))
 	r.GET("/manager/api/v1/department", _Department_GetDepartment0_HTTP_Handler(srv))
+}
+
+func _Department_ListDepartmentClassify0_HTTP_Handler(srv DepartmentHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in ListDepartmentClassifyRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationDepartmentListDepartmentClassify)
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
+			return srv.ListDepartmentClassify(ctx, req.(*ListDepartmentClassifyRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*ListDepartmentClassifyReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Department_CreateDepartmentClassify0_HTTP_Handler(srv DepartmentHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in CreateDepartmentClassifyRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationDepartmentCreateDepartmentClassify)
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
+			return srv.CreateDepartmentClassify(ctx, req.(*CreateDepartmentClassifyRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*CreateDepartmentClassifyReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Department_UpdateDepartmentClassify0_HTTP_Handler(srv DepartmentHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in UpdateDepartmentClassifyRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationDepartmentUpdateDepartmentClassify)
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
+			return srv.UpdateDepartmentClassify(ctx, req.(*UpdateDepartmentClassifyRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*UpdateDepartmentClassifyReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Department_DeleteDepartmentClassify0_HTTP_Handler(srv DepartmentHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in DeleteDepartmentClassifyRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationDepartmentDeleteDepartmentClassify)
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
+			return srv.DeleteDepartmentClassify(ctx, req.(*DeleteDepartmentClassifyRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*DeleteDepartmentClassifyReply)
+		return ctx.Result(200, reply)
+	}
 }
 
 func _Department_ListDepartment0_HTTP_Handler(srv DepartmentHTTPServer) func(ctx http.Context) error {
@@ -150,10 +248,14 @@ func _Department_GetDepartment0_HTTP_Handler(srv DepartmentHTTPServer) func(ctx 
 
 type DepartmentHTTPClient interface {
 	CreateDepartment(ctx context.Context, req *CreateDepartmentRequest, opts ...http.CallOption) (rsp *CreateDepartmentReply, err error)
+	CreateDepartmentClassify(ctx context.Context, req *CreateDepartmentClassifyRequest, opts ...http.CallOption) (rsp *CreateDepartmentClassifyReply, err error)
 	DeleteDepartment(ctx context.Context, req *DeleteDepartmentRequest, opts ...http.CallOption) (rsp *DeleteDepartmentReply, err error)
+	DeleteDepartmentClassify(ctx context.Context, req *DeleteDepartmentClassifyRequest, opts ...http.CallOption) (rsp *DeleteDepartmentClassifyReply, err error)
 	GetDepartment(ctx context.Context, req *GetDepartmentRequest, opts ...http.CallOption) (rsp *GetDepartmentReply, err error)
 	ListDepartment(ctx context.Context, req *ListDepartmentRequest, opts ...http.CallOption) (rsp *ListDepartmentReply, err error)
+	ListDepartmentClassify(ctx context.Context, req *ListDepartmentClassifyRequest, opts ...http.CallOption) (rsp *ListDepartmentClassifyReply, err error)
 	UpdateDepartment(ctx context.Context, req *UpdateDepartmentRequest, opts ...http.CallOption) (rsp *UpdateDepartmentReply, err error)
+	UpdateDepartmentClassify(ctx context.Context, req *UpdateDepartmentClassifyRequest, opts ...http.CallOption) (rsp *UpdateDepartmentClassifyReply, err error)
 }
 
 type DepartmentHTTPClientImpl struct {
@@ -177,11 +279,37 @@ func (c *DepartmentHTTPClientImpl) CreateDepartment(ctx context.Context, in *Cre
 	return &out, err
 }
 
+func (c *DepartmentHTTPClientImpl) CreateDepartmentClassify(ctx context.Context, in *CreateDepartmentClassifyRequest, opts ...http.CallOption) (*CreateDepartmentClassifyReply, error) {
+	var out CreateDepartmentClassifyReply
+	pattern := "/manager/api/v1/department_classify"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationDepartmentCreateDepartmentClassify))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
 func (c *DepartmentHTTPClientImpl) DeleteDepartment(ctx context.Context, in *DeleteDepartmentRequest, opts ...http.CallOption) (*DeleteDepartmentReply, error) {
 	var out DeleteDepartmentReply
 	pattern := "/manager/api/v1/department"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationDepartmentDeleteDepartment))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "DELETE", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *DepartmentHTTPClientImpl) DeleteDepartmentClassify(ctx context.Context, in *DeleteDepartmentClassifyRequest, opts ...http.CallOption) (*DeleteDepartmentClassifyReply, error) {
+	var out DeleteDepartmentClassifyReply
+	pattern := "/manager/api/v1/department_classify"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationDepartmentDeleteDepartmentClassify))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "DELETE", path, nil, &out, opts...)
 	if err != nil {
@@ -216,11 +344,37 @@ func (c *DepartmentHTTPClientImpl) ListDepartment(ctx context.Context, in *ListD
 	return &out, err
 }
 
+func (c *DepartmentHTTPClientImpl) ListDepartmentClassify(ctx context.Context, in *ListDepartmentClassifyRequest, opts ...http.CallOption) (*ListDepartmentClassifyReply, error) {
+	var out ListDepartmentClassifyReply
+	pattern := "/manager/api/v1/department_classifies"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationDepartmentListDepartmentClassify))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
 func (c *DepartmentHTTPClientImpl) UpdateDepartment(ctx context.Context, in *UpdateDepartmentRequest, opts ...http.CallOption) (*UpdateDepartmentReply, error) {
 	var out UpdateDepartmentReply
 	pattern := "/manager/api/v1/department"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationDepartmentUpdateDepartment))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "PUT", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *DepartmentHTTPClientImpl) UpdateDepartmentClassify(ctx context.Context, in *UpdateDepartmentClassifyRequest, opts ...http.CallOption) (*UpdateDepartmentClassifyReply, error) {
+	var out UpdateDepartmentClassifyReply
+	pattern := "/manager/api/v1/department_classify"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationDepartmentUpdateDepartmentClassify))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "PUT", path, in, &out, opts...)
 	if err != nil {

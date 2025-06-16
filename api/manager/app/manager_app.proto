@@ -1,0 +1,130 @@
+syntax = "proto3";
+
+package manager.api.manager.app.v1;
+
+option go_package = "./v1;v1";
+option java_multiple_files = true;
+option java_package = "manager.api.manager.app.v1";
+option java_outer_classname = "AppV1";
+
+import "validate/validate.proto";
+
+message GetAppRequest {
+  optional uint32 id = 1[(validate.rules).uint32 = {gt: 0}];
+  optional string keyword = 2[(validate.rules).string = {min_len: 1}];
+}
+
+message GetAppReply {
+  message Channel {
+    uint32 id = 1;
+    string logo = 2;
+    string name = 3;
+    string keyword = 4;
+    string description = 5;
+  }
+  message Field {
+    uint32 id = 1;
+    string keyword = 2;
+    string name = 3;
+    string type = 4;
+  }
+  uint32 id = 1;
+  string logo = 2;
+  string logoUrl = 3;
+  string keyword = 4;
+  string name = 5;
+  optional bool status = 6;
+  optional string disableDesc = 7;
+  optional bool allowRegistry = 8;
+  string version = 9;
+  string copyright = 10;
+  optional string extra = 11;
+  optional string description = 12;
+  uint32 createdAt = 13;
+  uint32 updatedAt = 14;
+  repeated Channel channels = 15;
+  repeated Field fields = 16;
+}
+
+message ListAppRequest {
+  uint32 page = 1[(validate.rules).uint32 = {gt: 0}];
+  uint32 pageSize = 2[(validate.rules).uint32 = {gt: 0,lte:50}];
+  optional string order = 3[(validate.rules).string = {in: ["asc","desc"]}];
+  optional string orderBy = 4[(validate.rules).string = {in: ["id","created_at"]}];
+  optional string keyword = 5;
+  optional string name = 6;
+  optional bool status = 7;
+}
+
+message ListAppReply {
+  message App {
+    uint32 id = 1;
+    string logo = 2;
+    string logoUrl = 3;
+    string keyword = 4;
+    string name = 5;
+    optional bool status = 6;
+    optional string disableDesc = 7;
+    optional bool allowRegistry = 8;
+    string version = 9;
+    string copyright = 10;
+    optional string extra = 11;
+    optional string description = 12;
+    uint32 createdAt = 13;
+    uint32 updatedAt = 14;
+  }
+
+  uint32 total = 1;
+  repeated App list = 2;
+}
+
+message CreateAppRequest {
+  string logo = 1[(validate.rules).string = {min_len: 1}];
+  string keyword = 2[(validate.rules).string = {min_len: 1}];
+  string name = 3[(validate.rules).string = {min_len: 1}];
+  optional bool allowRegistry = 4;
+  string version = 5[(validate.rules).string = {min_len: 1}];
+  string copyright = 6[(validate.rules).string = {min_len: 1}];
+  optional string extra = 7;
+  optional string description = 8;
+  repeated uint32 channelIds = 9[(validate.rules).repeated = {min_items: 1, unique:true}];
+  repeated uint32 fieldIds = 10[(validate.rules).repeated = {min_items: 0, unique:true}];
+}
+
+message CreateAppReply {
+  uint32 id = 1;
+}
+
+message UpdateAppRequest {
+  uint32 id = 1[(validate.rules).uint32 = {gt: 0}];
+  string logo = 2[(validate.rules).string = {min_len: 1}];
+  string keyword = 3[(validate.rules).string = {min_len: 1}];
+  string name = 4[(validate.rules).string = {min_len: 1}];
+  optional bool allowRegistry = 5;
+  string version = 6[(validate.rules).string = {min_len: 1}];
+  string copyright = 7[(validate.rules).string = {min_len: 1}];
+  optional string extra = 8;
+  optional string description = 9;
+  repeated uint32 channelIds = 10[(validate.rules).repeated = {min_items: 1, unique:true}];
+  repeated uint32 fieldIds = 11[(validate.rules).repeated = {min_items: 0, unique:true}];
+}
+
+message UpdateAppReply {
+}
+
+message UpdateAppStatusRequest {
+  uint32 id = 1[(validate.rules).uint32 = {gt: 0}];
+  bool status = 2;
+  optional string disableDesc = 3;
+}
+
+message UpdateAppStatusReply {
+}
+
+message DeleteAppRequest {
+  uint32 id = 1[(validate.rules).uint32 = {gt: 0}];
+}
+
+message DeleteAppReply {
+}
+

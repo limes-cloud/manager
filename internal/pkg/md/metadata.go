@@ -8,12 +8,15 @@ import (
 )
 
 type Auth struct {
-	UserId            uint32 `json:"userId"`
-	UserName          string `json:"userName"`
-	RoleId            uint32 `json:"roleId"`
-	RoleKeyword       string `json:"roleKeyword"`
-	DepartmentId      uint32 `json:"departmentId"`
-	DepartmentKeyword string `json:"departmentKeyword"`
+	JobIds             []uint32 `json:"jobIds"`
+	RoleIds            []uint32 `json:"roleIds"`
+	UserId             uint32   `json:"userId"`
+	UserName           string   `json:"userName"`
+	RoleId             uint32   `json:"roleId"`
+	RoleKeyword        string   `json:"roleKeyword"`
+	DepartmentId       uint32   `json:"departmentId"`
+	ParentDepartmentId uint32   `json:"parentDepartmentId"`
+	DepartmentKeyword  string   `json:"departmentKeyword"`
 }
 
 func New(info *Auth) map[string]any {

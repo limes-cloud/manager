@@ -21,6 +21,41 @@ func NewDepartment(config *conf.Config, repo repository.Department) *Department 
 	return &Department{conf: config, repo: repo}
 }
 
+// ListDepartmentClassify 获取部门分类列表
+func (t *Department) ListDepartmentClassify(ctx kratosx.Context, req *types.ListDepartmentClassifyRequest) ([]*entity.DepartmentClassify, uint32, error) {
+	list, total, err := t.repo.ListDepartmentClassify(ctx, req)
+	if err != nil {
+		return nil, 0, errors.ListError(err.Error())
+	}
+	return list, total, nil
+}
+
+// CreateDepartmentClassify 创建部门分类
+func (t *Department) CreateDepartmentClassify(ctx kratosx.Context, tg *entity.DepartmentClassify) (uint32, error) {
+	id, err := t.repo.CreateDepartmentClassify(ctx, tg)
+	if err != nil {
+		return 0, errors.CreateError(err.Error())
+	}
+	return id, nil
+}
+
+// UpdateDepartmentClassify 更新部门分类
+func (t *Department) UpdateDepartmentClassify(ctx kratosx.Context, tg *entity.DepartmentClassify) error {
+	if err := t.repo.UpdateDepartmentClassify(ctx, tg); err != nil {
+		return errors.UpdateError(err.Error())
+	}
+	return nil
+}
+
+// DeleteDepartmentClassify 删除部门分类
+func (t *Department) DeleteDepartmentClassify(ctx kratosx.Context, id uint32) error {
+	err := t.repo.DeleteDepartmentClassify(ctx, id)
+	if err != nil {
+		return errors.DeleteError(err.Error())
+	}
+	return nil
+}
+
 // ListDepartment 获取部门信息列表树
 func (u *Department) ListDepartment(ctx kratosx.Context, req *types.ListDepartmentRequest) ([]*entity.Department, error) {
 	// 获取部门列表

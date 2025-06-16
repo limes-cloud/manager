@@ -8,6 +8,18 @@ import (
 )
 
 type Department interface {
+	// ListDepartmentClassify 获取部门分类列表
+	ListDepartmentClassify(ctx kratosx.Context, req *types.ListDepartmentClassifyRequest) ([]*entity.DepartmentClassify, uint32, error)
+
+	// CreateDepartmentClassify 创建部门分类
+	CreateDepartmentClassify(ctx kratosx.Context, req *entity.DepartmentClassify) (uint32, error)
+
+	// UpdateDepartmentClassify 更新部门分类
+	UpdateDepartmentClassify(ctx kratosx.Context, req *entity.DepartmentClassify) error
+
+	// DeleteDepartmentClassify 删除部门分类
+	DeleteDepartmentClassify(ctx kratosx.Context, id uint32) error
+
 	// GetDepartment 获取指定的部门信息
 	GetDepartment(ctx kratosx.Context, id uint32) (*entity.Department, error)
 

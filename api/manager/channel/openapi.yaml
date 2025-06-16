@@ -1,0 +1,329 @@
+# Generated with protoc-gen-openapi
+# https://github.com/google/gnostic/tree/master/cmd/protoc-gen-openapi
+
+openapi: 3.0.3
+info:
+    title: Channel API
+    version: 0.0.1
+paths:
+    /manager/api/v1/admin_channels:
+        get:
+            tags:
+                - Channel
+            description: ListChannel 获取登陆渠道列表
+            operationId: Channel_ListAdminChannel
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ListAdminChannelReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /manager/api/v1/channel:
+        put:
+            tags:
+                - Channel
+            description: UpdateChannel 更新登陆渠道
+            operationId: Channel_UpdateChannel
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/UpdateChannelRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/UpdateChannelReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        post:
+            tags:
+                - Channel
+            description: CreateChannel 创建登陆渠道
+            operationId: Channel_CreateChannel
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/CreateChannelRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/CreateChannelReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        delete:
+            tags:
+                - Channel
+            description: DeleteChannel 删除登陆渠道
+            operationId: Channel_DeleteChannel
+            parameters:
+                - name: id
+                  in: query
+                  schema:
+                    type: integer
+                    format: uint32
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/DeleteChannelReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /manager/api/v1/channel/types:
+        get:
+            tags:
+                - Channel
+            description: ListChannelType 获取登陆渠道可用列表
+            operationId: Channel_ListChannelType
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ListChannelTypeReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /manager/api/v1/channels:
+        get:
+            tags:
+                - Channel
+            description: ListChannel 获取登陆渠道列表
+            operationId: Channel_ListChannel
+            parameters:
+                - name: page
+                  in: query
+                  schema:
+                    type: integer
+                    format: uint32
+                - name: pageSize
+                  in: query
+                  schema:
+                    type: integer
+                    format: uint32
+                - name: order
+                  in: query
+                  schema:
+                    type: string
+                - name: orderBy
+                  in: query
+                  schema:
+                    type: string
+                - name: keyword
+                  in: query
+                  schema:
+                    type: string
+                - name: name
+                  in: query
+                  schema:
+                    type: string
+                - name: status
+                  in: query
+                  schema:
+                    type: boolean
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ListChannelReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+components:
+    schemas:
+        CreateChannelReply:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: uint32
+        CreateChannelRequest:
+            type: object
+            properties:
+                logo:
+                    type: string
+                keyword:
+                    type: string
+                name:
+                    type: string
+                ak:
+                    type: string
+                sk:
+                    type: string
+                extra:
+                    type: string
+                admin:
+                    type: boolean
+                description:
+                    type: string
+        DeleteChannelReply:
+            type: object
+            properties: {}
+        GoogleProtobufAny:
+            type: object
+            properties:
+                '@type':
+                    type: string
+                    description: The type of the serialized message.
+            additionalProperties: true
+            description: Contains an arbitrary serialized message along with a @type that describes the type of the serialized message.
+        ListAdminChannelReply:
+            type: object
+            properties:
+                total:
+                    type: integer
+                    format: uint32
+                list:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/ListAdminChannelReply_Channel'
+        ListAdminChannelReply_Channel:
+            type: object
+            properties:
+                logo:
+                    type: string
+                logoUrl:
+                    type: string
+                keyword:
+                    type: string
+                name:
+                    type: string
+        ListChannelReply:
+            type: object
+            properties:
+                total:
+                    type: integer
+                    format: uint32
+                list:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/ListChannelReply_Channel'
+        ListChannelReply_Channel:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: uint32
+                logo:
+                    type: string
+                logoUrl:
+                    type: string
+                keyword:
+                    type: string
+                name:
+                    type: string
+                status:
+                    type: boolean
+                ak:
+                    type: string
+                sk:
+                    type: string
+                extra:
+                    type: string
+                admin:
+                    type: boolean
+                description:
+                    type: string
+                createdAt:
+                    type: integer
+                    format: uint32
+                updatedAt:
+                    type: integer
+                    format: uint32
+        ListChannelTypeReply:
+            type: object
+            properties:
+                list:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/ListChannelTypeReply_Type'
+        ListChannelTypeReply_Type:
+            type: object
+            properties:
+                keyword:
+                    type: string
+                name:
+                    type: string
+        Status:
+            type: object
+            properties:
+                code:
+                    type: integer
+                    description: The status code, which should be an enum value of [google.rpc.Code][google.rpc.Code].
+                    format: int32
+                message:
+                    type: string
+                    description: A developer-facing error message, which should be in English. Any user-facing error message should be localized and sent in the [google.rpc.Status.details][google.rpc.Status.details] field, or localized by the client.
+                details:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/GoogleProtobufAny'
+                    description: A list of messages that carry the error details.  There is a common set of message types for APIs to use.
+            description: 'The `Status` type defines a logical error model that is suitable for different programming environments, including REST APIs and RPC APIs. It is used by [gRPC](https://github.com/grpc). Each `Status` message contains three pieces of data: error code, error message, and error details. You can find out more about this error model and how to work with it in the [API Design Guide](https://cloud.google.com/apis/design/errors).'
+        UpdateChannelReply:
+            type: object
+            properties: {}
+        UpdateChannelRequest:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: uint32
+                logo:
+                    type: string
+                keyword:
+                    type: string
+                name:
+                    type: string
+                status:
+                    type: boolean
+                ak:
+                    type: string
+                sk:
+                    type: string
+                extra:
+                    type: string
+                admin:
+                    type: boolean
+                description:
+                    type: string
+tags:
+    - name: Channel
