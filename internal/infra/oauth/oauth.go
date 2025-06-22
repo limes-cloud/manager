@@ -146,9 +146,9 @@ func (oa OAuth) ListOAuthorName() []types.OAuthorName {
 
 // GetOAuthor 获取指定的授权器
 func (oa OAuth) GetOAuthor(req *entity.Channel) (repository.OAuthor, error) {
-	if req == nil || ins[req.Keyword] == nil {
+	if req == nil || ins[req.Type] == nil {
 		return nil, errors.New("ot fount platform oauthor")
 	}
 
-	return ins[req.Keyword].Creator(req), nil
+	return ins[req.Type].Creator(req), nil
 }

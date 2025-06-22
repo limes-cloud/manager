@@ -18,9 +18,10 @@ service Auth {
   }
 
   // GetChannelOAuthWay 获取渠道授权方式
-  rpc GetOAuthWay (GetOAuthWayRequest) returns (GetOAuthWayReply) {
+  rpc OAuthWay (OAuthWayRequest) returns (OAuthWayReply) {
     option (google.api.http) = {
-      get: "/manager/api/v1/oauth/way",
+      post: "/manager/api/v1/oauth/way",
+      body: "*"
     };
   }
 

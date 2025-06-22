@@ -25,6 +25,7 @@ message ListAdminChannelRequest {
 
 message ListAdminChannelReply {
   message Channel {
+    string type = 1;
     string logo = 2;
     string logoUrl = 3;
     string keyword = 4;
@@ -51,6 +52,7 @@ message ListChannelReply {
     string logo = 2;
     string logoUrl = 3;
     string keyword = 4;
+    string type = 14;
     string name = 5;
     optional bool status = 6;
     string ak = 7;
@@ -72,6 +74,8 @@ message CreateChannelRequest {
   string name = 3[(validate.rules).string = {min_len: 1}];
   string ak = 4[(validate.rules).string = {min_len: 1}];
   string sk = 5[(validate.rules).string = {min_len: 1}];
+  string type = 9[(validate.rules).string = {min_len: 1}];
+
   string extra = 6;
   bool admin = 7;
   string description = 8[(validate.rules).string = {min_len: 1}];
@@ -85,6 +89,7 @@ message UpdateChannelRequest {
   uint32 id = 1[(validate.rules).uint32 = {gte: 1}];
   string logo = 2;
   string keyword = 3;
+  string type = 11;
   string name = 4;
   optional bool status = 5;
   string ak = 6;

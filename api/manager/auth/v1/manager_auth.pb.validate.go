@@ -274,22 +274,22 @@ var _ interface {
 	ErrorName() string
 } = AuthReplyValidationError{}
 
-// Validate checks the field values on GetOAuthWayRequest with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the first error encountered is returned, or nil if there are no violations.
-func (m *GetOAuthWayRequest) Validate() error {
+// Validate checks the field values on OAuthWayRequest with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// first error encountered is returned, or nil if there are no violations.
+func (m *OAuthWayRequest) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on GetOAuthWayRequest with the rules
+// ValidateAll checks the field values on OAuthWayRequest with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the result is a list of violation errors wrapped in
-// GetOAuthWayRequestMultiError, or nil if none found.
-func (m *GetOAuthWayRequest) ValidateAll() error {
+// OAuthWayRequestMultiError, or nil if none found.
+func (m *OAuthWayRequest) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *GetOAuthWayRequest) validate(all bool) error {
+func (m *OAuthWayRequest) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
@@ -298,20 +298,22 @@ func (m *GetOAuthWayRequest) validate(all bool) error {
 
 	// no validation rules for Keyword
 
+	// no validation rules for User
+
 	if len(errors) > 0 {
-		return GetOAuthWayRequestMultiError(errors)
+		return OAuthWayRequestMultiError(errors)
 	}
 
 	return nil
 }
 
-// GetOAuthWayRequestMultiError is an error wrapping multiple validation errors
-// returned by GetOAuthWayRequest.ValidateAll() if the designated constraints
+// OAuthWayRequestMultiError is an error wrapping multiple validation errors
+// returned by OAuthWayRequest.ValidateAll() if the designated constraints
 // aren't met.
-type GetOAuthWayRequestMultiError []error
+type OAuthWayRequestMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m GetOAuthWayRequestMultiError) Error() string {
+func (m OAuthWayRequestMultiError) Error() string {
 	var msgs []string
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -320,11 +322,11 @@ func (m GetOAuthWayRequestMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m GetOAuthWayRequestMultiError) AllErrors() []error { return m }
+func (m OAuthWayRequestMultiError) AllErrors() []error { return m }
 
-// GetOAuthWayRequestValidationError is the validation error returned by
-// GetOAuthWayRequest.Validate if the designated constraints aren't met.
-type GetOAuthWayRequestValidationError struct {
+// OAuthWayRequestValidationError is the validation error returned by
+// OAuthWayRequest.Validate if the designated constraints aren't met.
+type OAuthWayRequestValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -332,24 +334,22 @@ type GetOAuthWayRequestValidationError struct {
 }
 
 // Field function returns field value.
-func (e GetOAuthWayRequestValidationError) Field() string { return e.field }
+func (e OAuthWayRequestValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e GetOAuthWayRequestValidationError) Reason() string { return e.reason }
+func (e OAuthWayRequestValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e GetOAuthWayRequestValidationError) Cause() error { return e.cause }
+func (e OAuthWayRequestValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e GetOAuthWayRequestValidationError) Key() bool { return e.key }
+func (e OAuthWayRequestValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e GetOAuthWayRequestValidationError) ErrorName() string {
-	return "GetOAuthWayRequestValidationError"
-}
+func (e OAuthWayRequestValidationError) ErrorName() string { return "OAuthWayRequestValidationError" }
 
 // Error satisfies the builtin error interface
-func (e GetOAuthWayRequestValidationError) Error() string {
+func (e OAuthWayRequestValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -361,14 +361,14 @@ func (e GetOAuthWayRequestValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sGetOAuthWayRequest.%s: %s%s",
+		"invalid %sOAuthWayRequest.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = GetOAuthWayRequestValidationError{}
+var _ error = OAuthWayRequestValidationError{}
 
 var _ interface {
 	Field() string
@@ -376,24 +376,24 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = GetOAuthWayRequestValidationError{}
+} = OAuthWayRequestValidationError{}
 
-// Validate checks the field values on GetOAuthWayReply with the rules defined
-// in the proto definition for this message. If any rules are violated, the
-// first error encountered is returned, or nil if there are no violations.
-func (m *GetOAuthWayReply) Validate() error {
+// Validate checks the field values on OAuthWayReply with the rules defined in
+// the proto definition for this message. If any rules are violated, the first
+// error encountered is returned, or nil if there are no violations.
+func (m *OAuthWayReply) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on GetOAuthWayReply with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the result is a list of violation errors wrapped in
-// GetOAuthWayReplyMultiError, or nil if none found.
-func (m *GetOAuthWayReply) ValidateAll() error {
+// ValidateAll checks the field values on OAuthWayReply with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// result is a list of violation errors wrapped in OAuthWayReplyMultiError, or
+// nil if none found.
+func (m *OAuthWayReply) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *GetOAuthWayReply) validate(all bool) error {
+func (m *OAuthWayReply) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
@@ -408,22 +408,22 @@ func (m *GetOAuthWayReply) validate(all bool) error {
 
 	// no validation rules for Tip
 
-	// no validation rules for Platform
+	// no validation rules for Keyword
 
 	if len(errors) > 0 {
-		return GetOAuthWayReplyMultiError(errors)
+		return OAuthWayReplyMultiError(errors)
 	}
 
 	return nil
 }
 
-// GetOAuthWayReplyMultiError is an error wrapping multiple validation errors
-// returned by GetOAuthWayReply.ValidateAll() if the designated constraints
+// OAuthWayReplyMultiError is an error wrapping multiple validation errors
+// returned by OAuthWayReply.ValidateAll() if the designated constraints
 // aren't met.
-type GetOAuthWayReplyMultiError []error
+type OAuthWayReplyMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m GetOAuthWayReplyMultiError) Error() string {
+func (m OAuthWayReplyMultiError) Error() string {
 	var msgs []string
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -432,11 +432,11 @@ func (m GetOAuthWayReplyMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m GetOAuthWayReplyMultiError) AllErrors() []error { return m }
+func (m OAuthWayReplyMultiError) AllErrors() []error { return m }
 
-// GetOAuthWayReplyValidationError is the validation error returned by
-// GetOAuthWayReply.Validate if the designated constraints aren't met.
-type GetOAuthWayReplyValidationError struct {
+// OAuthWayReplyValidationError is the validation error returned by
+// OAuthWayReply.Validate if the designated constraints aren't met.
+type OAuthWayReplyValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -444,22 +444,22 @@ type GetOAuthWayReplyValidationError struct {
 }
 
 // Field function returns field value.
-func (e GetOAuthWayReplyValidationError) Field() string { return e.field }
+func (e OAuthWayReplyValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e GetOAuthWayReplyValidationError) Reason() string { return e.reason }
+func (e OAuthWayReplyValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e GetOAuthWayReplyValidationError) Cause() error { return e.cause }
+func (e OAuthWayReplyValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e GetOAuthWayReplyValidationError) Key() bool { return e.key }
+func (e OAuthWayReplyValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e GetOAuthWayReplyValidationError) ErrorName() string { return "GetOAuthWayReplyValidationError" }
+func (e OAuthWayReplyValidationError) ErrorName() string { return "OAuthWayReplyValidationError" }
 
 // Error satisfies the builtin error interface
-func (e GetOAuthWayReplyValidationError) Error() string {
+func (e OAuthWayReplyValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -471,14 +471,14 @@ func (e GetOAuthWayReplyValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sGetOAuthWayReply.%s: %s%s",
+		"invalid %sOAuthWayReply.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = GetOAuthWayReplyValidationError{}
+var _ error = OAuthWayReplyValidationError{}
 
 var _ interface {
 	Field() string
@@ -486,7 +486,7 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = GetOAuthWayReplyValidationError{}
+} = OAuthWayReplyValidationError{}
 
 // Validate checks the field values on ReportOAuthCodeRequest with the rules
 // defined in the proto definition for this message. If any rules are
@@ -521,9 +521,9 @@ func (m *ReportOAuthCodeRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	if utf8.RuneCountInString(m.GetPlatform()) < 1 {
+	if utf8.RuneCountInString(m.GetKeyword()) < 1 {
 		err := ReportOAuthCodeRequestValidationError{
-			field:  "Platform",
+			field:  "Keyword",
 			reason: "value length must be at least 1 runes",
 		}
 		if !all {
@@ -749,9 +749,9 @@ func (m *OAuthLoginRequest) validate(all bool) error {
 
 	// no validation rules for Code
 
-	if utf8.RuneCountInString(m.GetPlatform()) < 1 {
+	if utf8.RuneCountInString(m.GetKeyword()) < 1 {
 		err := OAuthLoginRequestValidationError{
-			field:  "Platform",
+			field:  "Keyword",
 			reason: "value length must be at least 1 runes",
 		}
 		if !all {
@@ -770,6 +770,8 @@ func (m *OAuthLoginRequest) validate(all bool) error {
 		}
 		errors = append(errors, err)
 	}
+
+	// no validation rules for User
 
 	if len(errors) > 0 {
 		return OAuthLoginRequestMultiError(errors)
@@ -1747,9 +1749,9 @@ func (m *OAuthBindRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	if utf8.RuneCountInString(m.GetPlatform()) < 1 {
+	if utf8.RuneCountInString(m.GetKeyword()) < 1 {
 		err := OAuthBindRequestValidationError{
-			field:  "Platform",
+			field:  "Keyword",
 			reason: "value length must be at least 1 runes",
 		}
 		if !all {

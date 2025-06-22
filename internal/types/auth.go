@@ -10,8 +10,9 @@ type OAuthorName interface {
 const (
 	GetOAuthWayBrowserWX = "wx"
 
-	GetOAuthWayTypeScan = "scan"
-	GetOAuthWayTypeJump = "jump"
+	GetOAuthWayTypeScan    = "scan"
+	GetOAuthWayTypeJump    = "jump"
+	GetOAuthWayTypeCaptcha = "captcha"
 )
 
 type ListOAuthRequest struct {
@@ -23,9 +24,10 @@ type ListOAuthRequest struct {
 }
 
 type OAuthLoginRequest struct {
-	Code     string
-	Platform string
-	UUID     string
+	User    string
+	Code    string
+	Keyword string
+	UUID    string
 }
 
 type OAuthLoginReply struct {
@@ -34,14 +36,21 @@ type OAuthLoginReply struct {
 	Expire *uint32 `json:"expire"`
 }
 
+type OAuthWayRequest struct {
+	Keyword string
+	User    string
+}
+
 type GetOAuthWayRequest struct {
 	UserAgent string
+	User      string
+	IP        string
 }
 
 type ReportOAuthCodeRequest struct {
-	Code     string
-	Platform string
-	UUID     string
+	Code    string
+	Keyword string
+	UUID    string
 }
 
 type GetOAuthWayReply struct {
@@ -52,6 +61,9 @@ type GetOAuthWayReply struct {
 }
 
 type GetOAuthTokenRequest struct {
+	IP   string
+	UUID string
+	User string
 	Code string
 }
 
@@ -111,6 +123,6 @@ type ListLoginLogRequest struct {
 
 type OAuthBindRequest struct {
 	*UserLoginRequest
-	UUID     string
-	Platform string
+	UUID    string
+	Keyword string
 }

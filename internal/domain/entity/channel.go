@@ -9,6 +9,7 @@ import (
 type Channel struct {
 	Logo        string `json:"logo" gorm:"column:logo"`
 	Keyword     string `json:"keyword" gorm:"column:keyword"`
+	Type        string `json:"type"  gorm:"column:type"`
 	Name        string `json:"name" gorm:"column:name"`
 	Status      *bool  `json:"status" gorm:"column:status"`
 	Admin       *bool  `json:"admin" gorm:"column:admin"`
@@ -21,7 +22,16 @@ type Channel struct {
 }
 
 type ChannelExtra struct {
-	CallBack string
+	CallBack     string `json:"callback"`
+	Host         string `json:"host"`
+	Port         int    `json:"port"`
+	Length       int    `json:"length"`
+	Limit        int    `json:"limit"`
+	Duration     int    `json:"duration"`
+	RefreshTime  int    `json:"refreshTime"`
+	Template     string `json:"template"`
+	UniqueDevice bool   `json:"uniqueDevice"`
+	Subject      string `json:"subject"`
 }
 
 func (c Channel) GetExtra() *ChannelExtra {

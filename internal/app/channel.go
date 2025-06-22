@@ -64,6 +64,7 @@ func (ch *Channel) ListAdminChannel(c context.Context, _ *pb.ListAdminChannelReq
 			LogoUrl: item.LogoUrl,
 			Keyword: item.Keyword,
 			Name:    item.Name,
+			Type:    item.Type,
 		})
 	}
 	return &reply, nil
@@ -90,6 +91,7 @@ func (ch *Channel) ListChannel(c context.Context, req *pb.ListChannelRequest) (*
 			Logo:        item.Logo,
 			LogoUrl:     item.LogoUrl,
 			Keyword:     item.Keyword,
+			Type:        item.Type,
 			Name:        item.Name,
 			Status:      item.Status,
 			Admin:       item.Admin,
@@ -109,6 +111,7 @@ func (ch *Channel) CreateChannel(c context.Context, req *pb.CreateChannelRequest
 	id, err := ch.srv.CreateChannel(kratosx.MustContext(c), &entity.Channel{
 		Logo:        req.Logo,
 		Keyword:     req.Keyword,
+		Type:        req.Type,
 		Name:        req.Name,
 		Ak:          req.Ak,
 		Status:      proto.Bool(false),
@@ -129,6 +132,7 @@ func (ch *Channel) UpdateChannel(c context.Context, req *pb.UpdateChannelRequest
 		BaseModel:   ktypes.BaseModel{Id: req.Id},
 		Logo:        req.Logo,
 		Keyword:     req.Keyword,
+		Type:        req.Type,
 		Name:        req.Name,
 		Status:      req.Status,
 		Admin:       req.Admin,

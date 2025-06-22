@@ -65,27 +65,30 @@ func (auth *Auth) Auth(c context.Context, req *pb.AuthRequest) (*pb.AuthReply, e
 	}, nil
 }
 
-// GetOAuthWay 获取渠道授权方式
-func (auth *Auth) GetOAuthWay(c context.Context, req *pb.GetOAuthWayRequest) (*pb.GetOAuthWayReply, error) {
-	resp, err := auth.srv.GetOAuthOAuthWay(kratosx.MustContext(c), req.Keyword)
+// OAuthWay 获取渠道授权方式
+func (auth *Auth) OAuthWay(c context.Context, req *pb.OAuthWayRequest) (*pb.OAuthWayReply, error) {
+	resp, err := auth.srv.OAuthOAuthWay(kratosx.MustContext(c), &types.OAuthWayRequest{
+		Keyword: req.Keyword,
+		User:    req.User,
+	})
 	if err != nil {
 		return nil, err
 	}
-	return &pb.GetOAuthWayReply{
-		Uuid:     resp.UUID,
-		Type:     resp.Type,
-		Value:    resp.Value,
-		Tip:      resp.Tip,
-		Platform: req.Keyword,
+	return &pb.OAuthWayReply{
+		Uuid:    resp.UUID,
+		Type:    resp.Type,
+		Value:   resp.Value,
+		Tip:     resp.Tip,
+		Keyword: req.Keyword,
 	}, nil
 }
 
 // ReportOAuthCode 上报登陆渠道信息
 func (auth *Auth) ReportOAuthCode(c context.Context, req *pb.ReportOAuthCodeRequest) (*pb.ReportOAuthCodeReply, error) {
 	err := auth.srv.ReportOAuthCode(kratosx.MustContext(c), &types.ReportOAuthCodeRequest{
-		Code:     req.Code,
-		Platform: req.Platform,
-		UUID:     req.Uuid,
+		Code:    req.Code,
+		Keyword: req.Keyword,
+		UUID:    req.Uuid,
 	})
 	if err != nil {
 		return nil, err
@@ -95,9 +98,10 @@ func (auth *Auth) ReportOAuthCode(c context.Context, req *pb.ReportOAuthCodeRequ
 
 func (auth *Auth) OAuthLogin(c context.Context, req *pb.OAuthLoginRequest) (*pb.OAuthLoginReply, error) {
 	resp, err := auth.srv.OAuthLogin(kratosx.MustContext(c), &types.OAuthLoginRequest{
-		Code:     req.Code,
-		Platform: req.Platform,
-		UUID:     req.Uuid,
+		Code:    req.Code,
+		User:    req.User,
+		Keyword: req.Keyword,
+		UUID:    req.Uuid,
 	})
 	if err != nil {
 		return nil, err
@@ -116,8 +120,8 @@ func (auth *Auth) OAuthBind(c context.Context, req *pb.OAuthBindRequest) (*pb.OA
 			CaptchaId: req.CaptchaId,
 			Captcha:   req.Captcha,
 		},
-		Platform: req.Platform,
-		UUID:     req.Uuid,
+		Keyword: req.Keyword,
+		UUID:    req.Uuid,
 	})
 	if err != nil {
 		return nil, err

@@ -72,10 +72,10 @@ func (u *Auth) Auth(ctx kratosx.Context, in *types.AuthRequest) (*md.Auth, error
 	return info, nil
 }
 
-// GetOAuthOAuthWay 获取渠道授权方式
-func (u *Auth) GetOAuthOAuthWay(ctx kratosx.Context, keyword string) (*types.GetOAuthWayReply, error) {
+// OAuthOAuthWay 获取渠道授权方式
+func (u *Auth) OAuthOAuthWay(ctx kratosx.Context, req *types.OAuthWayRequest) (*types.GetOAuthWayReply, error) {
 	// 获取渠道信息
-	channel, err := u.channel.GetChannelByKeyword(ctx, keyword)
+	channel, err := u.channel.GetChannelByKeyword(ctx, req.Keyword)
 	if err != nil {
 		return nil, errors.SystemError()
 	}
@@ -94,14 +94,16 @@ func (u *Auth) GetOAuthOAuthWay(ctx kratosx.Context, keyword string) (*types.Get
 	}
 
 	return author.GetOAuthWay(ctx, &types.GetOAuthWayRequest{
+		User:      req.User,
 		UserAgent: header.RequestHeader().Get("User-Agent"),
+		IP:        ctx.ClientIP(),
 	})
 }
 
 // ReportOAuthCode 上报授权code
 func (u *Auth) ReportOAuthCode(ctx kratosx.Context, req *types.ReportOAuthCodeRequest) error {
 	// 获取渠道信息
-	channel, err := u.channel.GetChannelByKeyword(ctx, req.Platform)
+	channel, err := u.channel.GetChannelByKeyword(ctx, req.Keyword)
 	if err != nil {
 		return errors.SystemError()
 	}
@@ -127,7 +129,7 @@ func (u *Auth) ReportOAuthCode(ctx kratosx.Context, req *types.ReportOAuthCodeRe
 
 func (u *Auth) OAuthLogin(ctx kratosx.Context, req *types.OAuthLoginRequest) (*types.OAuthLoginReply, error) {
 	// 获取渠道信息
-	channel, err := u.channel.GetChannelByKeyword(ctx, req.Platform)
+	channel, err := u.channel.GetChannelByKeyword(ctx, req.Keyword)
 	if err != nil {
 		return nil, errors.SystemError()
 	}
@@ -140,7 +142,12 @@ func (u *Auth) OAuthLogin(ctx kratosx.Context, req *types.OAuthLoginRequest) (*t
 	// 获取token
 	var ti *types.GetOAuthTokenReply
 	if req.Code != "" {
-		ti, err = author.GetOAuthToken(ctx, &types.GetOAuthTokenRequest{Code: req.Code})
+		ti, err = author.GetOAuthToken(ctx, &types.GetOAuthTokenRequest{
+			IP:   ctx.ClientIP(),
+			UUID: req.UUID,
+			Code: req.Code,
+			User: req.User,
+		})
 	} else {
 		ti, err = u.oauth.GetTokenByUUID(ctx, req.UUID)
 	}
@@ -159,7 +166,7 @@ func (u *Auth) OAuthLogin(ctx kratosx.Context, req *types.OAuthLoginRequest) (*t
 		Token: ti.Token,
 	})
 	if err != nil {
-		return nil, errors.OAuthLoginError()
+		return nil, errors.OAuthLoginError(err.Error())
 	}
 
 	// 判断是否绑定三方
@@ -216,7 +223,7 @@ func (u *Auth) OAuthLogin(ctx kratosx.Context, req *types.OAuthLoginRequest) (*t
 // OAuthBind 三方授权密码绑定
 func (u *Auth) OAuthBind(ctx kratosx.Context, req *types.OAuthBindRequest) (string, error) {
 	// 获取渠道信息
-	channel, err := u.channel.GetChannelByKeyword(ctx, req.Platform)
+	channel, err := u.channel.GetChannelByKeyword(ctx, req.Keyword)
 	if err != nil {
 		return "", errors.SystemError()
 	}

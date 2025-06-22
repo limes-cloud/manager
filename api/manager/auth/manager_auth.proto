@@ -23,21 +23,22 @@ message AuthReply{
 }
 
 
-message GetOAuthWayRequest {
+message OAuthWayRequest {
   string keyword = 1;
+  string user = 2;
 }
 
-message GetOAuthWayReply {
+message OAuthWayReply {
   string uuid = 1;
   string type = 2;
   string value = 3;
   string tip = 4;
-  string platform = 5;
+  string keyword = 5;
 }
 
 message ReportOAuthCodeRequest {
   string code = 1[(validate.rules).string = {min_len:1}];
-  string platform = 2[(validate.rules).string = {min_len:1}];
+  string keyword = 2[(validate.rules).string = {min_len:1}];
   string uuid = 3[(validate.rules).string = {min_len:1}];
 }
 
@@ -46,8 +47,9 @@ message ReportOAuthCodeReply {
 
 message OAuthLoginRequest {
   string code = 1;
-  string platform = 2[(validate.rules).string = {min_len:1}];
+  string keyword = 2[(validate.rules).string = {min_len:1}];
   string uuid = 3[(validate.rules).string = {min_len:1}];
+  string user = 4;
 }
 
 message OAuthLoginReply {
@@ -108,7 +110,7 @@ message OAuthBindRequest {
   string password = 2[(validate.rules).string = {min_len:6}];
   string captchaId = 3[(validate.rules).string = {min_len:1}];
   string captcha = 4[(validate.rules).string = {min_len:1}];
-  string platform = 5[(validate.rules).string = {min_len:1}];
+  string keyword = 5[(validate.rules).string = {min_len:1}];
   string uuid = 6[(validate.rules).string = {min_len:1}];
 }
 

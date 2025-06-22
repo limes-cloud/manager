@@ -902,6 +902,17 @@ func (m *CreateChannelRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
+	if utf8.RuneCountInString(m.GetType()) < 1 {
+		err := CreateChannelRequestValidationError{
+			field:  "Type",
+			reason: "value length must be at least 1 runes",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
 	// no validation rules for Extra
 
 	// no validation rules for Admin
@@ -1137,6 +1148,8 @@ func (m *UpdateChannelRequest) validate(all bool) error {
 	// no validation rules for Logo
 
 	// no validation rules for Keyword
+
+	// no validation rules for Type
 
 	// no validation rules for Name
 
@@ -1681,6 +1694,8 @@ func (m *ListAdminChannelReply_Channel) validate(all bool) error {
 
 	var errors []error
 
+	// no validation rules for Type
+
 	// no validation rules for Logo
 
 	// no validation rules for LogoUrl
@@ -1799,6 +1814,8 @@ func (m *ListChannelReply_Channel) validate(all bool) error {
 	// no validation rules for LogoUrl
 
 	// no validation rules for Keyword
+
+	// no validation rules for Type
 
 	// no validation rules for Name
 

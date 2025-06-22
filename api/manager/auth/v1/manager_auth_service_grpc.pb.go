@@ -21,7 +21,7 @@ const _ = grpc.SupportPackageIsVersion7
 
 const (
 	Auth_Auth_FullMethodName                = "/manager_auth.Auth/Auth"
-	Auth_GetOAuthWay_FullMethodName         = "/manager_auth.Auth/GetOAuthWay"
+	Auth_OAuthWay_FullMethodName            = "/manager_auth.Auth/OAuthWay"
 	Auth_ReportOAuthCode_FullMethodName     = "/manager_auth.Auth/ReportOAuthCode"
 	Auth_OAuthLogin_FullMethodName          = "/manager_auth.Auth/OAuthLogin"
 	Auth_OAuthBind_FullMethodName           = "/manager_auth.Auth/OAuthBind"
@@ -39,7 +39,7 @@ type AuthClient interface {
 	// Auth 接口鉴权
 	Auth(ctx context.Context, in *AuthRequest, opts ...grpc.CallOption) (*AuthReply, error)
 	// GetChannelOAuthWay 获取渠道授权方式
-	GetOAuthWay(ctx context.Context, in *GetOAuthWayRequest, opts ...grpc.CallOption) (*GetOAuthWayReply, error)
+	OAuthWay(ctx context.Context, in *OAuthWayRequest, opts ...grpc.CallOption) (*OAuthWayReply, error)
 	// ReportOAuthCode 上报授权信息
 	ReportOAuthCode(ctx context.Context, in *ReportOAuthCodeRequest, opts ...grpc.CallOption) (*ReportOAuthCodeReply, error)
 	// OAuthLogin 三方授权登陆
@@ -75,9 +75,9 @@ func (c *authClient) Auth(ctx context.Context, in *AuthRequest, opts ...grpc.Cal
 	return out, nil
 }
 
-func (c *authClient) GetOAuthWay(ctx context.Context, in *GetOAuthWayRequest, opts ...grpc.CallOption) (*GetOAuthWayReply, error) {
-	out := new(GetOAuthWayReply)
-	err := c.cc.Invoke(ctx, Auth_GetOAuthWay_FullMethodName, in, out, opts...)
+func (c *authClient) OAuthWay(ctx context.Context, in *OAuthWayRequest, opts ...grpc.CallOption) (*OAuthWayReply, error) {
+	out := new(OAuthWayReply)
+	err := c.cc.Invoke(ctx, Auth_OAuthWay_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -163,7 +163,7 @@ type AuthServer interface {
 	// Auth 接口鉴权
 	Auth(context.Context, *AuthRequest) (*AuthReply, error)
 	// GetChannelOAuthWay 获取渠道授权方式
-	GetOAuthWay(context.Context, *GetOAuthWayRequest) (*GetOAuthWayReply, error)
+	OAuthWay(context.Context, *OAuthWayRequest) (*OAuthWayReply, error)
 	// ReportOAuthCode 上报授权信息
 	ReportOAuthCode(context.Context, *ReportOAuthCodeRequest) (*ReportOAuthCodeReply, error)
 	// OAuthLogin 三方授权登陆
@@ -190,8 +190,8 @@ type UnimplementedAuthServer struct {
 func (UnimplementedAuthServer) Auth(context.Context, *AuthRequest) (*AuthReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Auth not implemented")
 }
-func (UnimplementedAuthServer) GetOAuthWay(context.Context, *GetOAuthWayRequest) (*GetOAuthWayReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetOAuthWay not implemented")
+func (UnimplementedAuthServer) OAuthWay(context.Context, *OAuthWayRequest) (*OAuthWayReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method OAuthWay not implemented")
 }
 func (UnimplementedAuthServer) ReportOAuthCode(context.Context, *ReportOAuthCodeRequest) (*ReportOAuthCodeReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ReportOAuthCode not implemented")
@@ -248,20 +248,20 @@ func _Auth_Auth_Handler(srv interface{}, ctx context.Context, dec func(interface
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Auth_GetOAuthWay_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetOAuthWayRequest)
+func _Auth_OAuthWay_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(OAuthWayRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AuthServer).GetOAuthWay(ctx, in)
+		return srv.(AuthServer).OAuthWay(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Auth_GetOAuthWay_FullMethodName,
+		FullMethod: Auth_OAuthWay_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuthServer).GetOAuthWay(ctx, req.(*GetOAuthWayRequest))
+		return srv.(AuthServer).OAuthWay(ctx, req.(*OAuthWayRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -422,8 +422,8 @@ var Auth_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Auth_Auth_Handler,
 		},
 		{
-			MethodName: "GetOAuthWay",
-			Handler:    _Auth_GetOAuthWay_Handler,
+			MethodName: "OAuthWay",
+			Handler:    _Auth_OAuthWay_Handler,
 		},
 		{
 			MethodName: "ReportOAuthCode",

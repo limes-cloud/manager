@@ -21,11 +21,11 @@ var _ = binding.EncodeURL
 const _ = http.SupportPackageIsVersion1
 
 const OperationAuthAuth = "/manager_auth.Auth/Auth"
-const OperationAuthGetOAuthWay = "/manager_auth.Auth/GetOAuthWay"
 const OperationAuthGetUserLoginCaptcha = "/manager_auth.Auth/GetUserLoginCaptcha"
 const OperationAuthListLoginLog = "/manager_auth.Auth/ListLoginLog"
 const OperationAuthOAuthBind = "/manager_auth.Auth/OAuthBind"
 const OperationAuthOAuthLogin = "/manager_auth.Auth/OAuthLogin"
+const OperationAuthOAuthWay = "/manager_auth.Auth/OAuthWay"
 const OperationAuthReportOAuthCode = "/manager_auth.Auth/ReportOAuthCode"
 const OperationAuthUserLogin = "/manager_auth.Auth/UserLogin"
 const OperationAuthUserLogout = "/manager_auth.Auth/UserLogout"
@@ -34,8 +34,6 @@ const OperationAuthUserRefreshToken = "/manager_auth.Auth/UserRefreshToken"
 type AuthHTTPServer interface {
 	// Auth Auth 接口鉴权
 	Auth(context.Context, *AuthRequest) (*AuthReply, error)
-	// GetOAuthWay GetChannelOAuthWay 获取渠道授权方式
-	GetOAuthWay(context.Context, *GetOAuthWayRequest) (*GetOAuthWayReply, error)
 	// GetUserLoginCaptcha GetUserLoginCaptcha 获取用户登陆验证吗
 	GetUserLoginCaptcha(context.Context, *emptypb.Empty) (*GetUserLoginCaptchaReply, error)
 	// ListLoginLog ListLoginLog 获取用户登陆信息列表
@@ -44,6 +42,8 @@ type AuthHTTPServer interface {
 	OAuthBind(context.Context, *OAuthBindRequest) (*OAuthBindReply, error)
 	// OAuthLogin OAuthLogin 三方授权登陆
 	OAuthLogin(context.Context, *OAuthLoginRequest) (*OAuthLoginReply, error)
+	// OAuthWay GetChannelOAuthWay 获取渠道授权方式
+	OAuthWay(context.Context, *OAuthWayRequest) (*OAuthWayReply, error)
 	// ReportOAuthCode ReportOAuthCode 上报授权信息
 	ReportOAuthCode(context.Context, *ReportOAuthCodeRequest) (*ReportOAuthCodeReply, error)
 	// UserLogin UserLogin 用户登陆
@@ -57,7 +57,7 @@ type AuthHTTPServer interface {
 func RegisterAuthHTTPServer(s *http.Server, srv AuthHTTPServer) {
 	r := s.Route("/")
 	r.POST("/manager/api/v1/auth", _Auth_Auth0_HTTP_Handler(srv))
-	r.GET("/manager/api/v1/oauth/way", _Auth_GetOAuthWay0_HTTP_Handler(srv))
+	r.POST("/manager/api/v1/oauth/way", _Auth_OAuthWay0_HTTP_Handler(srv))
 	r.POST("/manager/api/v1/oauth/report", _Auth_ReportOAuthCode0_HTTP_Handler(srv))
 	r.POST("/manager/api/v1/oauth/login", _Auth_OAuthLogin0_HTTP_Handler(srv))
 	r.POST("/manager/api/v1/oauth/bind", _Auth_OAuthBind0_HTTP_Handler(srv))
@@ -90,21 +90,24 @@ func _Auth_Auth0_HTTP_Handler(srv AuthHTTPServer) func(ctx http.Context) error {
 	}
 }
 
-func _Auth_GetOAuthWay0_HTTP_Handler(srv AuthHTTPServer) func(ctx http.Context) error {
+func _Auth_OAuthWay0_HTTP_Handler(srv AuthHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in GetOAuthWayRequest
+		var in OAuthWayRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationAuthGetOAuthWay)
+		http.SetOperation(ctx, OperationAuthOAuthWay)
 		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
-			return srv.GetOAuthWay(ctx, req.(*GetOAuthWayRequest))
+			return srv.OAuthWay(ctx, req.(*OAuthWayRequest))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		reply := out.(*GetOAuthWayReply)
+		reply := out.(*OAuthWayReply)
 		return ctx.Result(200, reply)
 	}
 }
@@ -281,11 +284,11 @@ func _Auth_ListLoginLog0_HTTP_Handler(srv AuthHTTPServer) func(ctx http.Context)
 
 type AuthHTTPClient interface {
 	Auth(ctx context.Context, req *AuthRequest, opts ...http.CallOption) (rsp *AuthReply, err error)
-	GetOAuthWay(ctx context.Context, req *GetOAuthWayRequest, opts ...http.CallOption) (rsp *GetOAuthWayReply, err error)
 	GetUserLoginCaptcha(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *GetUserLoginCaptchaReply, err error)
 	ListLoginLog(ctx context.Context, req *ListLoginLogRequest, opts ...http.CallOption) (rsp *ListLoginLogReply, err error)
 	OAuthBind(ctx context.Context, req *OAuthBindRequest, opts ...http.CallOption) (rsp *OAuthBindReply, err error)
 	OAuthLogin(ctx context.Context, req *OAuthLoginRequest, opts ...http.CallOption) (rsp *OAuthLoginReply, err error)
+	OAuthWay(ctx context.Context, req *OAuthWayRequest, opts ...http.CallOption) (rsp *OAuthWayReply, err error)
 	ReportOAuthCode(ctx context.Context, req *ReportOAuthCodeRequest, opts ...http.CallOption) (rsp *ReportOAuthCodeReply, err error)
 	UserLogin(ctx context.Context, req *UserLoginRequest, opts ...http.CallOption) (rsp *UserLoginReply, err error)
 	UserLogout(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
@@ -307,19 +310,6 @@ func (c *AuthHTTPClientImpl) Auth(ctx context.Context, in *AuthRequest, opts ...
 	opts = append(opts, http.Operation(OperationAuthAuth))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return &out, err
-}
-
-func (c *AuthHTTPClientImpl) GetOAuthWay(ctx context.Context, in *GetOAuthWayRequest, opts ...http.CallOption) (*GetOAuthWayReply, error) {
-	var out GetOAuthWayReply
-	pattern := "/manager/api/v1/oauth/way"
-	path := binding.EncodeURL(pattern, in, true)
-	opts = append(opts, http.Operation(OperationAuthGetOAuthWay))
-	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -370,6 +360,19 @@ func (c *AuthHTTPClientImpl) OAuthLogin(ctx context.Context, in *OAuthLoginReque
 	pattern := "/manager/api/v1/oauth/login"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationAuthOAuthLogin))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *AuthHTTPClientImpl) OAuthWay(ctx context.Context, in *OAuthWayRequest, opts ...http.CallOption) (*OAuthWayReply, error) {
+	var out OAuthWayReply
+	pattern := "/manager/api/v1/oauth/way"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationAuthOAuthWay))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
 	if err != nil {
