@@ -15,25 +15,24 @@ message GetUserRequest {
   optional string email = 3[(validate.rules).string = {min_len: 1}];
 }
 
-message GetUserReply {
-  message Role {
-    uint32 id = 1;
-    string name = 2;
-    string keyword = 3;
-  }
-  message Job {
-    uint32 id = 1;
-    string name = 2;
-    string keyword = 3;
-  }
-  message Department {
-    uint32 id = 1;
-    string name = 2;
-    string keyword = 3;
-  }
+message Role {
   uint32 id = 1;
-  uint32 departmentId = 2;
-  uint32 roleId = 3;
+  string name = 2;
+  string keyword = 3;
+}
+message Job {
+  uint32 id = 1;
+  string name = 2;
+  string keyword = 3;
+}
+message Department {
+  uint32 id = 1;
+  string name = 2;
+  string keyword = 3;
+}
+
+message GetUserReply {
+  uint32 id = 1;
   string name = 4;
   string nickname = 5;
   string gender = 6;
@@ -47,8 +46,7 @@ message GetUserReply {
   uint32 updatedAt = 14;
   repeated Role roles = 15;
   repeated Job jobs = 16;
-  optional Department department = 17;
-  optional Role role = 18;
+  repeated Department departments = 17;
 }
 
 message ListUserRequest {
@@ -65,44 +63,18 @@ message ListUserRequest {
 }
 
 message ListUserReply { // fixed code
-  message Role {
-    uint32 id = 1;
-    string name = 2;
-    string keyword = 3;
-  }
-  message Department {
-    uint32 id = 1;
-    string name = 2;
-    string keyword = 3;
-  }
-  message User {
-    uint32 id = 1;
-    string name = 2;
-    string nickname = 3;
-    string gender = 4;
-    optional string avatar = 5;
-    string phone = 6;
-    string email = 7;
-    optional bool status = 8;
-    uint32 loggedAt = 9;
-    uint32 createdAt = 10;
-    uint32 updatedAt = 11;
-    optional Department department = 17;
-    optional Role role = 18;
-  }
-
   uint32 total = 1;
-  repeated User list = 2;
+  repeated GetUserReply list = 2;
 }
 
 message CreateUserRequest { // fixed code
-  uint32 departmentId = 1[(validate.rules).uint32 = {gte: 1}];
   string name = 2[(validate.rules).string = {min_len: 1}];
   string gender = 3[(validate.rules).string = {min_len: 1}];
   string phone = 4[(validate.rules).string = {min_len: 1}];
   string email = 5[(validate.rules).string = {min_len: 1}];
-  repeated uint32 jobIds = 6[(validate.rules).repeated = {min_items: 1,unique: true}];
-  repeated uint32 roleIds = 7[(validate.rules).repeated = {min_items: 1,unique: true}];
+  repeated uint32 departmentIds = 1[(validate.rules).repeated = {min_items: 1,unique: true}];
+  repeated uint32 jobIds = 6;
+  repeated uint32 roleIds = 7;
 }
 
 message CreateUserReply {
@@ -111,13 +83,13 @@ message CreateUserReply {
 
 message UpdateUserRequest { // fixed code
   uint32 id = 1[(validate.rules).uint32 = {gte: 1}];
-  uint32 departmentId = 2[(validate.rules).uint32 = {gte: 1}];
   string name = 3[(validate.rules).string = {min_len: 1}];
   string gender = 4[(validate.rules).string = {min_len: 1}];
   string phone = 5[(validate.rules).string = {min_len: 1}];
   string email = 6[(validate.rules).string = {min_len: 1}];
-  repeated uint32 jobIds = 7[(validate.rules).repeated = {min_items: 1,unique: true}];
-  repeated uint32 roleIds = 8[(validate.rules).repeated = {min_items: 1,unique: true}];
+  repeated uint32 departmentIds = 9[(validate.rules).repeated = {min_items: 1,unique: true}];
+  repeated uint32 jobIds = 7;
+  repeated uint32 roleIds = 8;
 }
 
 message UpdateUserReply {

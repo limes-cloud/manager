@@ -40,17 +40,37 @@ func init() {
 // ListJob 获取职位信息列表
 func (s *Job) ListJob(c context.Context, req *pb.ListJobRequest) (*pb.ListJobReply, error) {
 	var ctx = kratosx.MustContext(c)
-	result, total, err := s.srv.ListJob(ctx, &types.ListJobRequest{
-		Page:     req.Page,
-		PageSize: req.PageSize,
-		Keyword:  req.Keyword,
-		Name:     req.Name,
+	result, err := s.srv.ListJob(ctx, &types.ListJobRequest{
+		Keyword: req.Keyword,
+		Name:    req.Name,
+		RootId:  req.RootId,
 	})
 	if err != nil {
 		return nil, err
 	}
 
-	reply := pb.ListJobReply{Total: total}
+	reply := pb.ListJobReply{}
+	if err := valx.Transform(result, &reply.List); err != nil {
+		ctx.Logger().Warnw("msg", "reply transform err", "err", err.Error())
+		return nil, errors.TransformError()
+	}
+
+	return &reply, nil
+}
+
+// ListCurrentJob 获取职位信息列表
+func (s *Job) ListCurrentJob(c context.Context, req *pb.ListJobRequest) (*pb.ListJobReply, error) {
+	var ctx = kratosx.MustContext(c)
+	result, err := s.srv.ListCurrentJob(ctx, &types.ListJobRequest{
+		Keyword: req.Keyword,
+		Name:    req.Name,
+		RootId:  req.RootId,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	reply := pb.ListJobReply{}
 	if err := valx.Transform(result, &reply.List); err != nil {
 		ctx.Logger().Warnw("msg", "reply transform err", "err", err.Error())
 		return nil, errors.TransformError()
@@ -62,6 +82,7 @@ func (s *Job) ListJob(c context.Context, req *pb.ListJobRequest) (*pb.ListJobRep
 // CreateJob 创建职位信息
 func (s *Job) CreateJob(c context.Context, req *pb.CreateJobRequest) (*pb.CreateJobReply, error) {
 	id, err := s.srv.CreateJob(kratosx.MustContext(c), &entity.Job{
+		ParentId:    req.ParentId,
 		Keyword:     req.Keyword,
 		Name:        req.Name,
 		Weight:      req.Weight,
@@ -78,6 +99,7 @@ func (s *Job) CreateJob(c context.Context, req *pb.CreateJobRequest) (*pb.Create
 func (s *Job) UpdateJob(c context.Context, req *pb.UpdateJobRequest) (*pb.UpdateJobReply, error) {
 	if err := s.srv.UpdateJob(kratosx.MustContext(c), &entity.Job{
 		BaseModel:   ktypes.BaseModel{Id: req.Id},
+		ParentId:    req.ParentId,
 		Keyword:     req.Keyword,
 		Name:        req.Name,
 		Weight:      req.Weight,

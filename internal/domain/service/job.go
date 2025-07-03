@@ -2,31 +2,50 @@ package service
 
 import (
 	"github.com/limes-cloud/kratosx"
+	"github.com/limes-cloud/kratosx/pkg/tree"
 
 	"github.com/limes-cloud/manager/api/manager/errors"
 	"github.com/limes-cloud/manager/internal/conf"
 	"github.com/limes-cloud/manager/internal/domain/entity"
 	"github.com/limes-cloud/manager/internal/domain/repository"
+	"github.com/limes-cloud/manager/internal/pkg/md"
 	"github.com/limes-cloud/manager/internal/types"
 )
 
 type Job struct {
 	conf *conf.Config
 	repo repository.Job
+	role repository.Role
 }
 
 func NewJob(config *conf.Config, repo repository.Job) *Job {
 	return &Job{conf: config, repo: repo}
 }
 
-// ListJob 获取职位信息列表
-func (u *Job) ListJob(ctx kratosx.Context, req *types.ListJobRequest) ([]*entity.Job, uint32, error) {
-	list, total, err := u.repo.ListJob(ctx, req)
+// ListJob 获取部门信息列表树
+func (u *Job) ListJob(ctx kratosx.Context, req *types.ListJobRequest) ([]*entity.Job, error) {
+	// 获取部门列表
+	list, err := u.repo.ListJob(ctx, req)
 	if err != nil {
-		ctx.Logger().Warnw("msg", "list job error", "err", err.Error())
-		return nil, 0, errors.ListError()
+		ctx.Logger().Warnw("msg", "list department error", "err", err.Error())
+		return nil, errors.ListError()
 	}
-	return list, total, nil
+	return tree.BuildArrayTree(list), nil
+}
+
+// ListCurrentJob 获取当前用户的部门信息列表树
+func (u *Job) ListCurrentJob(ctx kratosx.Context, req *types.ListJobRequest) ([]*entity.Job, error) {
+	all, scopes, err := u.repo.GetJobDataScope(ctx, md.UserId(ctx))
+	if err != nil {
+		ctx.Logger().Warnw("msg", "list department error", "err", err.Error())
+		return nil, errors.DatabaseError()
+	}
+
+	// 通过指定权限列表的部门
+	if !all {
+		req.Ids = scopes
+	}
+	return u.ListJob(ctx, req)
 }
 
 // CreateJob 创建职位信息

@@ -29,7 +29,7 @@ func NewApp(conf *conf.Config) *App {
 		srv: service.NewApp(
 			conf,
 			dbs.NewApp(),
-			service.NewResource(conf, dbs.NewResource(), dbs.NewDepartment()),
+			service.NewResource(conf, dbs.NewResource(), dbs.NewDepartment(), dbs.NewRole()),
 			rpc.NewFile(),
 		),
 	}

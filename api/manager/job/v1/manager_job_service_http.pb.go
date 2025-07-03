@@ -21,6 +21,7 @@ const _ = http.SupportPackageIsVersion1
 
 const OperationJobCreateJob = "/manager.api.manager.job.v1.Job/CreateJob"
 const OperationJobDeleteJob = "/manager.api.manager.job.v1.Job/DeleteJob"
+const OperationJobListCurrentJob = "/manager.api.manager.job.v1.Job/ListCurrentJob"
 const OperationJobListJob = "/manager.api.manager.job.v1.Job/ListJob"
 const OperationJobUpdateJob = "/manager.api.manager.job.v1.Job/UpdateJob"
 
@@ -29,6 +30,8 @@ type JobHTTPServer interface {
 	CreateJob(context.Context, *CreateJobRequest) (*CreateJobReply, error)
 	// DeleteJob DeleteJob 删除职位信息
 	DeleteJob(context.Context, *DeleteJobRequest) (*DeleteJobReply, error)
+	// ListCurrentJob ListJob 获取职位信息列表
+	ListCurrentJob(context.Context, *ListJobRequest) (*ListJobReply, error)
 	// ListJob ListJob 获取职位信息列表
 	ListJob(context.Context, *ListJobRequest) (*ListJobReply, error)
 	// UpdateJob UpdateJob 更新职位信息
@@ -38,6 +41,7 @@ type JobHTTPServer interface {
 func RegisterJobHTTPServer(s *http.Server, srv JobHTTPServer) {
 	r := s.Route("/")
 	r.GET("/manager/api/v1/jobs", _Job_ListJob0_HTTP_Handler(srv))
+	r.GET("/manager/api/v1/current/jobs", _Job_ListCurrentJob0_HTTP_Handler(srv))
 	r.POST("/manager/api/v1/job", _Job_CreateJob0_HTTP_Handler(srv))
 	r.PUT("/manager/api/v1/job", _Job_UpdateJob0_HTTP_Handler(srv))
 	r.DELETE("/manager/api/v1/job", _Job_DeleteJob0_HTTP_Handler(srv))
@@ -52,6 +56,25 @@ func _Job_ListJob0_HTTP_Handler(srv JobHTTPServer) func(ctx http.Context) error 
 		http.SetOperation(ctx, OperationJobListJob)
 		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
 			return srv.ListJob(ctx, req.(*ListJobRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*ListJobReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Job_ListCurrentJob0_HTTP_Handler(srv JobHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in ListJobRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationJobListCurrentJob)
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
+			return srv.ListCurrentJob(ctx, req.(*ListJobRequest))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
@@ -128,6 +151,7 @@ func _Job_DeleteJob0_HTTP_Handler(srv JobHTTPServer) func(ctx http.Context) erro
 type JobHTTPClient interface {
 	CreateJob(ctx context.Context, req *CreateJobRequest, opts ...http.CallOption) (rsp *CreateJobReply, err error)
 	DeleteJob(ctx context.Context, req *DeleteJobRequest, opts ...http.CallOption) (rsp *DeleteJobReply, err error)
+	ListCurrentJob(ctx context.Context, req *ListJobRequest, opts ...http.CallOption) (rsp *ListJobReply, err error)
 	ListJob(ctx context.Context, req *ListJobRequest, opts ...http.CallOption) (rsp *ListJobReply, err error)
 	UpdateJob(ctx context.Context, req *UpdateJobRequest, opts ...http.CallOption) (rsp *UpdateJobReply, err error)
 }
@@ -160,6 +184,19 @@ func (c *JobHTTPClientImpl) DeleteJob(ctx context.Context, in *DeleteJobRequest,
 	opts = append(opts, http.Operation(OperationJobDeleteJob))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "DELETE", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *JobHTTPClientImpl) ListCurrentJob(ctx context.Context, in *ListJobRequest, opts ...http.CallOption) (*ListJobReply, error) {
+	var out ListJobReply
+	pattern := "/manager/api/v1/current/jobs"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationJobListCurrentJob))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {
 		return nil, err
 	}

@@ -25,7 +25,7 @@ type Department struct {
 
 func NewDepartment(conf *conf.Config) *Department {
 	return &Department{
-		srv: service.NewDepartment(conf, dbs.NewDepartment()),
+		srv: service.NewDepartment(conf, dbs.NewDepartment(), dbs.NewRole()),
 	}
 }
 
@@ -133,8 +133,32 @@ func (s *Department) GetDepartment(c context.Context, req *pb.GetDepartmentReque
 func (s *Department) ListDepartment(c context.Context, req *pb.ListDepartmentRequest) (*pb.ListDepartmentReply, error) {
 	ctx := kratosx.MustContext(c)
 	result, err := s.srv.ListCurrentDepartment(ctx, &types.ListDepartmentRequest{
-		Name:    req.Name,
-		Keyword: req.Keyword,
+		Name:       req.Name,
+		Keyword:    req.Keyword,
+		RootId:     req.RootId,
+		ClassifyId: req.ClassifyId,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	reply := pb.ListDepartmentReply{}
+	if err := valx.Transform(result, &reply.List); err != nil {
+		ctx.Logger().Warnw("msg", "reply transform err", "err", err.Error())
+		return nil, errors.TransformError()
+	}
+
+	return &reply, nil
+}
+
+// ListCurrentDepartment 获取当前用户可见部门信息列表
+func (s *Department) ListCurrentDepartment(c context.Context, req *pb.ListDepartmentRequest) (*pb.ListDepartmentReply, error) {
+	ctx := kratosx.MustContext(c)
+	result, err := s.srv.ListCurrentDepartment(ctx, &types.ListDepartmentRequest{
+		Name:       req.Name,
+		Keyword:    req.Keyword,
+		RootId:     req.RootId,
+		ClassifyId: req.ClassifyId,
 	})
 	if err != nil {
 		return nil, err
@@ -151,13 +175,21 @@ func (s *Department) ListDepartment(c context.Context, req *pb.ListDepartmentReq
 
 // CreateDepartment 创建部门信息
 func (s *Department) CreateDepartment(c context.Context, req *pb.CreateDepartmentRequest) (*pb.CreateDepartmentReply, error) {
-	id, err := s.srv.CreateDepartment(kratosx.MustContext(c), &entity.Department{
+	ent := &entity.Department{
 		ParentId:    req.ParentId,
 		ClassifyId:  req.ClassifyId,
 		Name:        req.Name,
 		Keyword:     req.Keyword,
 		Description: req.Description,
-	})
+	}
+
+	for _, id := range req.RoleIds {
+		ent.DepartmentRoles = append(ent.DepartmentRoles, &entity.DepartmentRole{
+			RoleId: id,
+		})
+	}
+
+	id, err := s.srv.CreateDepartment(kratosx.MustContext(c), ent)
 	if err != nil {
 		return nil, err
 	}
@@ -167,13 +199,19 @@ func (s *Department) CreateDepartment(c context.Context, req *pb.CreateDepartmen
 
 // UpdateDepartment 更新部门信息
 func (s *Department) UpdateDepartment(c context.Context, req *pb.UpdateDepartmentRequest) (*pb.UpdateDepartmentReply, error) {
-	if err := s.srv.UpdateDepartment(kratosx.MustContext(c), &entity.Department{
+	ent := &entity.Department{
 		BaseModel:   ktypes.BaseModel{Id: req.Id},
 		ClassifyId:  req.ClassifyId,
 		ParentId:    req.ParentId,
 		Name:        req.Name,
 		Description: req.Description,
-	}); err != nil {
+	}
+	for _, id := range req.RoleIds {
+		ent.DepartmentRoles = append(ent.DepartmentRoles, &entity.DepartmentRole{
+			RoleId: id,
+		})
+	}
+	if err := s.srv.UpdateDepartment(kratosx.MustContext(c), ent); err != nil {
 		return nil, err
 	}
 

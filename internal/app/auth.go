@@ -24,22 +24,22 @@ type Auth struct {
 	srv *service.Auth
 }
 
-func NewAuth(conf *conf.Config) *Auth {
+func NewAuth() *Auth {
 	return &Auth{
 		srv: service.NewAuth(
-			conf,
 			oauth.New(),
 			dbs.NewChannel(),
 			dbs.NewApp(),
 			dbs.NewUser(),
 			apis.NewAddress(),
+			dbs.NewRole(),
 		),
 	}
 }
 
 func init() {
 	register(func(c *conf.Config, hs *http.Server, gs *grpc.Server) {
-		srv := NewAuth(c)
+		srv := NewAuth()
 		pb.RegisterAuthHTTPServer(hs, srv)
 		pb.RegisterAuthServer(gs, srv)
 	})
@@ -54,14 +54,16 @@ func (auth *Auth) Auth(c context.Context, req *pb.AuthRequest) (*pb.AuthReply, e
 	if err != nil {
 		return nil, err
 	}
+	if res == nil {
+		return &pb.AuthReply{}, nil
+	}
 
 	return &pb.AuthReply{
-		UserId:            res.UserId,
-		UserName:          res.UserName,
-		RoleId:            res.RoleId,
-		RoleKeyword:       res.RoleKeyword,
-		DepartmentId:      res.DepartmentId,
-		DepartmentKeyword: res.DepartmentKeyword,
+		UserId:        res.UserId,
+		UserName:      res.UserName,
+		RoleIds:       res.RoleIds,
+		DepartmentIds: res.DepartmentIds,
+		JobIds:        res.JobIds,
 	}, nil
 }
 
@@ -75,11 +77,12 @@ func (auth *Auth) OAuthWay(c context.Context, req *pb.OAuthWayRequest) (*pb.OAut
 		return nil, err
 	}
 	return &pb.OAuthWayReply{
-		Uuid:    resp.UUID,
-		Type:    resp.Type,
-		Value:   resp.Value,
-		Tip:     resp.Tip,
-		Keyword: req.Keyword,
+		Uuid:      resp.UUID,
+		Action:    resp.Action,
+		Value:     resp.Value,
+		Tip:       resp.Tip,
+		CodeField: resp.CodeField,
+		Keyword:   req.Keyword,
 	}, nil
 }
 

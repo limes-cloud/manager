@@ -870,3 +870,23 @@ func NotFoundReportOAuthError(args ...any) *errors.Error {
 		return errors.New(200, ErrorReason_NotFoundReportOAuthError.String(), "未查询到扫码授权信息:"+msg)
 	}
 }
+
+func IsJobPurviewError(err error) bool {
+	if err == nil {
+		return false
+	}
+	e := errors.FromError(err)
+	return e.Reason == ErrorReason_JobPurviewError.String() && e.Code == 500
+}
+
+func JobPurviewError(args ...any) *errors.Error {
+	switch len(args) {
+	case 0:
+		return errors.New(500, ErrorReason_JobPurviewError.String(), "无此职位权限")
+	case 1:
+		return errors.New(500, ErrorReason_JobPurviewError.String(), "无此职位权限:"+fmt.Sprint(args[0]))
+	default:
+		msg := fmt.Sprintf(fmt.Sprint(args[0]), args[1:]...)
+		return errors.New(500, ErrorReason_JobPurviewError.String(), "无此职位权限:"+msg)
+	}
+}

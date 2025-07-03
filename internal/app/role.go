@@ -25,7 +25,7 @@ type Role struct {
 
 func NewRole(conf *conf.Config) *Role {
 	return &Role{
-		srv: service.NewRole(conf, dbs.NewRoleRepo(), dbs.NewMenu(), dbs.NewRbac()),
+		srv: service.NewRole(conf, dbs.NewRole(), dbs.NewMenu(), dbs.NewRbac()),
 	}
 }
 
@@ -95,6 +95,26 @@ func (s *Role) ListRole(c context.Context, req *pb.ListRoleRequest) (*pb.ListRol
 	return &reply, nil
 }
 
+// ListCurrentRole 获取角色信息列表
+func (s *Role) ListCurrentRole(c context.Context, req *pb.ListRoleRequest) (*pb.ListRoleReply, error) {
+	var ctx = kratosx.MustContext(c)
+	result, err := s.srv.ListCurrentRole(ctx, &types.ListRoleRequest{
+		Name:    req.Name,
+		Keyword: req.Keyword,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	reply := pb.ListRoleReply{}
+	if err := valx.Transform(result, &reply.List); err != nil {
+		ctx.Logger().Warnw("msg", "reply transform err", "err", err.Error())
+		return nil, errors.TransformError()
+	}
+
+	return &reply, nil
+}
+
 // CreateRole 创建角色信息
 func (s *Role) CreateRole(c context.Context, req *pb.CreateRoleRequest) (*pb.CreateRoleReply, error) {
 	var ctx = kratosx.MustContext(c)
@@ -106,7 +126,9 @@ func (s *Role) CreateRole(c context.Context, req *pb.CreateRoleRequest) (*pb.Cre
 		Status:        req.Status,
 		DataScope:     req.DataScope,
 		DepartmentIds: req.DepartmentIds,
-		Description:   req.Description,
+		// JobScope:      req.JobScope,
+		// JobIds:        req.JobIds,
+		Description: req.Description,
 	})
 	if err != nil {
 		return nil, err
@@ -123,7 +145,9 @@ func (s *Role) UpdateRole(c context.Context, req *pb.UpdateRoleRequest) (*pb.Upd
 		Name:          req.Name,
 		DataScope:     req.DataScope,
 		DepartmentIds: req.DepartmentIds,
-		Description:   req.Description,
+		// JobScope:      req.JobScope,
+		// JobIds:        req.JobIds,
+		Description: req.Description,
 	}); err != nil {
 		return nil, err
 	}

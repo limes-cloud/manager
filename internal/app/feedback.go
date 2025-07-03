@@ -29,7 +29,7 @@ func NewFeedback(conf *conf.Config) *Feedback {
 		srv: service.NewFeedback(
 			conf,
 			dbs.NewFeedback(),
-			service.NewResource(conf, dbs.NewResource(), dbs.NewDepartment()),
+			service.NewResource(conf, dbs.NewResource(), dbs.NewDepartment(), dbs.NewRole()),
 			rpc.NewFile(),
 		),
 	}

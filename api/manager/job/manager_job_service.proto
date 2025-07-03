@@ -19,6 +19,13 @@ service Job{
     };
   }
 
+  // ListJob 获取职位信息列表
+  rpc ListCurrentJob (ListJobRequest) returns (ListJobReply) {
+    option (google.api.http) = {
+      get: "/manager/api/v1/current/jobs",
+    };
+  }
+
   // CreateJob 创建职位信息
   rpc CreateJob (CreateJobRequest) returns (CreateJobReply) {
     option (google.api.http) = {

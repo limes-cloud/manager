@@ -10,32 +10,33 @@ option java_outer_classname = "JobV1";
 import "validate/validate.proto";
 
 message ListJobRequest {
-  uint32 page = 1[(validate.rules).uint32 = {gte: 1}];
-  uint32 pageSize = 2[(validate.rules).uint32 = {gte: 1,lte:50}];
-  optional string keyword = 3;
-  optional string name = 4;
+  optional uint32 rootId = 1;
+  optional string keyword = 2;
+  optional string name = 3;
 }
 
 message ListJobReply {
   message Job {
     uint32 id = 1;
-    string keyword = 2;
-    string name = 3;
-    optional int32 weight = 4;
-    optional string description = 5;
-    uint32 createdAt = 6;
-    uint32 updatedAt = 7;
+    uint32 parentId = 2;
+    string keyword = 3;
+    string name = 4;
+    optional int32 weight = 5;
+    optional string description = 6;
+    repeated Job children = 7;
+    uint32 createdAt = 8;
+    uint32 updatedAt = 9;
   }
 
-  uint32 total = 1;
   repeated Job list = 2;
 }
 
 message CreateJobRequest {
-  string keyword = 1[(validate.rules).string = {min_len: 1}];
-  string name = 2[(validate.rules).string = {min_len: 1}];
-  optional int32 weight = 3;
-  optional string description = 4;
+  uint32 parentId = 1;
+  string keyword = 2[(validate.rules).string = {min_len: 1}];
+  string name = 3[(validate.rules).string = {min_len: 1}];
+  optional int32 weight = 4;
+  optional string description = 5;
 }
 
 message CreateJobReply {
@@ -48,6 +49,7 @@ message UpdateJobRequest {
   string name = 3[(validate.rules).string = {min_len: 1}];
   optional int32 weight = 4;
   optional string description = 5;
+  uint32 parentId = 6;
 }
 
 message UpdateJobReply {
@@ -71,7 +73,9 @@ message GetJobReply {
   string name = 3;
   optional int32 weight = 4;
   optional string description = 5;
+  uint32 parentId = 8;
   uint32 createdAt = 6;
   uint32 updatedAt = 7;
+
 }
 

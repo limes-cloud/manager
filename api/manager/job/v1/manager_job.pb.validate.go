@@ -57,26 +57,8 @@ func (m *ListJobRequest) validate(all bool) error {
 
 	var errors []error
 
-	if m.GetPage() < 1 {
-		err := ListJobRequestValidationError{
-			field:  "Page",
-			reason: "value must be greater than or equal to 1",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if val := m.GetPageSize(); val < 1 || val > 50 {
-		err := ListJobRequestValidationError{
-			field:  "PageSize",
-			reason: "value must be inside range [1, 50]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
+	if m.RootId != nil {
+		// no validation rules for RootId
 	}
 
 	if m.Keyword != nil {
@@ -186,8 +168,6 @@ func (m *ListJobReply) validate(all bool) error {
 	}
 
 	var errors []error
-
-	// no validation rules for Total
 
 	for idx, item := range m.GetList() {
 		_, _ = idx, item
@@ -321,6 +301,8 @@ func (m *CreateJobRequest) validate(all bool) error {
 	}
 
 	var errors []error
+
+	// no validation rules for ParentId
 
 	if utf8.RuneCountInString(m.GetKeyword()) < 1 {
 		err := CreateJobRequestValidationError{
@@ -586,6 +568,8 @@ func (m *UpdateJobRequest) validate(all bool) error {
 		}
 		errors = append(errors, err)
 	}
+
+	// no validation rules for ParentId
 
 	if m.Weight != nil {
 		// no validation rules for Weight
@@ -1142,6 +1126,8 @@ func (m *GetJobReply) validate(all bool) error {
 
 	// no validation rules for Name
 
+	// no validation rules for ParentId
+
 	// no validation rules for CreatedAt
 
 	// no validation rules for UpdatedAt
@@ -1255,9 +1241,45 @@ func (m *ListJobReply_Job) validate(all bool) error {
 
 	// no validation rules for Id
 
+	// no validation rules for ParentId
+
 	// no validation rules for Keyword
 
 	// no validation rules for Name
+
+	for idx, item := range m.GetChildren() {
+		_, _ = idx, item
+
+		if all {
+			switch v := interface{}(item).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, ListJobReply_JobValidationError{
+						field:  fmt.Sprintf("Children[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, ListJobReply_JobValidationError{
+						field:  fmt.Sprintf("Children[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return ListJobReply_JobValidationError{
+					field:  fmt.Sprintf("Children[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
 
 	// no validation rules for CreatedAt
 

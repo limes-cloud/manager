@@ -2,22 +2,12 @@ package dbs
 
 import (
 	"errors"
-	"strings"
 	"sync"
 
 	"github.com/limes-cloud/kratosx"
-	"github.com/limes-cloud/kratosx/pkg/valx"
 
 	"github.com/limes-cloud/manager/internal/domain/entity"
 	"github.com/limes-cloud/manager/internal/types"
-)
-
-const (
-	DataScopeAll         = "ALL"      // 所有部门
-	DataScopeCurrent     = "CUR"      // 当前部门
-	DataScopeCurrentDown = "CUR_DOWN" // 当前部门以及下级部门
-	DataScopeDown        = "DOWN"     // 下级部门
-	DataScopeCustom      = "CUSTOM"   // 自定义权限
 )
 
 type Department struct {
@@ -36,7 +26,7 @@ func NewDepartment() *Department {
 }
 
 // ListDepartmentClassify 获取列表
-func (t *Department) ListDepartmentClassify(ctx kratosx.Context, req *types.ListDepartmentClassifyRequest) ([]*entity.DepartmentClassify, uint32, error) {
+func (infra *Department) ListDepartmentClassify(ctx kratosx.Context, req *types.ListDepartmentClassifyRequest) ([]*entity.DepartmentClassify, uint32, error) {
 	var (
 		list  []*entity.DepartmentClassify
 		total int64
@@ -56,17 +46,17 @@ func (t *Department) ListDepartmentClassify(ctx kratosx.Context, req *types.List
 }
 
 // CreateDepartmentClassify 创建数据
-func (t *Department) CreateDepartmentClassify(ctx kratosx.Context, tg *entity.DepartmentClassify) (uint32, error) {
+func (infra *Department) CreateDepartmentClassify(ctx kratosx.Context, tg *entity.DepartmentClassify) (uint32, error) {
 	return tg.Id, ctx.DB().Create(tg).Error
 }
 
 // UpdateDepartmentClassify 更新数据
-func (t *Department) UpdateDepartmentClassify(ctx kratosx.Context, tg *entity.DepartmentClassify) error {
+func (infra *Department) UpdateDepartmentClassify(ctx kratosx.Context, tg *entity.DepartmentClassify) error {
 	return ctx.DB().Updates(tg).Error
 }
 
 // DeleteDepartmentClassify 删除数据
-func (t *Department) DeleteDepartmentClassify(ctx kratosx.Context, id uint32) error {
+func (infra *Department) DeleteDepartmentClassify(ctx kratosx.Context, id uint32) error {
 	return ctx.DB().Where("id = ?", id).Delete(&entity.DepartmentClassify{}).Error
 }
 
@@ -95,16 +85,27 @@ func (infra *Department) ListDepartment(ctx kratosx.Context, req *types.ListDepa
 		fs = []string{"*"}
 	)
 
-	db := ctx.DB().Model(entity.Department{}).Select(fs).Preload("Classify")
+	db := ctx.DB().Model(entity.Department{}).
+		Select(fs).
+		Preload("Classify").
+		Preload("Roles", "status=true")
 
 	if req.Name != nil {
-		db = db.Where("name LIKE ?", *req.Name+"%")
+		db = db.Where("name LIKE ?", "%"+*req.Name+"%")
 	}
 	if req.Keyword != nil {
 		db = db.Where("keyword = ?", *req.Keyword)
 	}
 	if req.Ids != nil {
 		db = db.Where("id in ?", req.Ids)
+	}
+	if req.RootId != nil {
+		ids, _ := infra.GetDepartmentChildrenIds(ctx, []uint32{*req.RootId})
+		db = db.Where("id in ?", ids)
+	}
+
+	if req.ClassifyId != nil {
+		db = db.Where("classify_id = ?", *req.ClassifyId)
 	}
 
 	return ms, db.Find(&ms).Error
@@ -131,6 +132,11 @@ func (infra *Department) UpdateDepartment(ctx kratosx.Context, req *entity.Depar
 	}
 
 	return ctx.Transaction(func(ctx kratosx.Context) error {
+		if len(req.DepartmentRoles) != 0 {
+			if err := ctx.DB().Where("department_id=?", req.Id).Delete(entity.DepartmentRole{}).Error; err != nil {
+				return err
+			}
+		}
 		if old.ParentId != req.ParentId {
 			if err := infra.removeDepartmentParent(ctx, req.Id); err != nil {
 				return err
@@ -145,7 +151,7 @@ func (infra *Department) UpdateDepartment(ctx kratosx.Context, req *entity.Depar
 
 // DeleteDepartment 删除数据
 func (infra *Department) DeleteDepartment(ctx kratosx.Context, id uint32) error {
-	ids, err := infra.GetDepartmentChildrenIds(ctx, id)
+	ids, err := infra.GetDepartmentChildrenIds(ctx, []uint32{id})
 	if err != nil {
 		return err
 	}
@@ -154,11 +160,11 @@ func (infra *Department) DeleteDepartment(ctx kratosx.Context, id uint32) error 
 }
 
 // GetDepartmentChildrenIds 获取指定id的所有子id
-func (infra *Department) GetDepartmentChildrenIds(ctx kratosx.Context, id uint32) ([]uint32, error) {
+func (infra *Department) GetDepartmentChildrenIds(ctx kratosx.Context, pids []uint32) ([]uint32, error) {
 	var ids []uint32
 	return ids, ctx.DB().Model(entity.DepartmentClosure{}).
 		Select("children").
-		Where("parent=?", id).
+		Where("parent in ?", pids).
 		Scan(&ids).Error
 }
 
@@ -194,76 +200,50 @@ func (infra *Department) removeDepartmentParent(ctx kratosx.Context, id uint32) 
 	return ctx.DB().Delete(&entity.DepartmentClosure{}, "children=?", id).Error
 }
 
-func (infra *Department) GetDepartmentDataScope(ctx kratosx.Context, uid uint32) (bool, []uint32, error) {
-	if uid == 1 {
-		return true, nil, nil
-	}
-	user := entity.User{}
-	if err := ctx.DB().
-		Select([]string{"role_id", "department_id"}).
-		First(&user, uid).Error; err != nil {
-		return false, nil, err
-	}
+// mergeRoleScope 合并权限
+func (infra *Department) mergeRoleScope(roles []*entity.Role) (string, []uint32) {
+	var (
+		scope = ""
+		leave = 99
+		ids   []uint32
+	)
 
-	role := entity.Role{}
-	if err := ctx.DB().
-		Select([]string{"data_scope"}).
-		First(&role, "id=?", user.RoleId).Error; err != nil {
-		return false, nil, err
+	for _, item := range roles {
+		tl, ok := entity.ScopeLeaves[item.DataScope]
+		if !ok {
+			continue
+		}
+		if item.DataScope == entity.ScopeCustom {
+			ids = append(ids, item.GetCustomDataIds()...)
+		}
+		if tl > leave {
+			continue
+		}
+		scope = item.DataScope
 	}
-
-	if role.DataScope == DataScopeAll {
-		return true, []uint32{}, nil
-	}
-
-	if role.DataScope == DataScopeCurrentDown && user.DepartmentId == 1 {
-		return true, []uint32{}, nil
-	}
-
-	switch role.DataScope {
-	case DataScopeAll:
-		ids := make([]uint32, 0)
-		if err := ctx.DB().Select("id").Model(entity.Department{}).Scan(&ids).Error; err != nil {
-			return false, nil, err
-		}
-		return false, ids, nil
-	case DataScopeCurrent:
-		return false, []uint32{user.DepartmentId}, nil
-	case DataScopeCurrentDown:
-		ids, err := infra.GetDepartmentChildrenIds(ctx, user.DepartmentId)
-		if err != nil {
-			return false, nil, err
-		}
-		ids = append(ids, user.DepartmentId)
-		return false, ids, nil
-	case DataScopeDown:
-		ids, err := infra.GetDepartmentChildrenIds(ctx, user.DepartmentId)
-		if err != nil {
-			return false, nil, err
-		}
-		return false, ids, nil
-	case DataScopeCustom:
-		if role.DepartmentIds == nil {
-			return false, []uint32{}, nil
-		}
-		ids := make([]uint32, 0)
-		arr := strings.Split(*role.DepartmentIds, ",")
-		for _, id := range arr {
-			ids = append(ids, valx.ToUint32(id))
-		}
-		return false, ids, nil
-	}
-	return false, []uint32{}, nil
+	return scope, ids
 }
 
-func (infra *Department) HasDepartmentPurview(ctx kratosx.Context, uid uint32, did uint32) (bool, error) {
-	all, scopes, err := infra.GetDepartmentDataScope(ctx, uid)
-	if err != nil {
-		return false, err
-	}
-	if all {
-		return true, nil
+// GetDepartmentRoles 获取部门角色
+func (infra *Department) GetDepartmentRoles(ctx kratosx.Context, uid uint32) ([]*entity.DepartmentRole, error) {
+	// 获取当前用户所在的所有部门
+	var depIds []uint32
+	if err := ctx.DB().
+		Model(entity.UserDepartment{}).
+		Select([]string{"department_id"}).
+		Where("user_id = ?", uid).
+		Scan(&depIds).Error; err != nil {
+		return nil, err
 	}
 
-	return valx.InList(scopes, did), nil
+	// 获取部门的所有角色
+	var drs []*entity.DepartmentRole
+	if err := ctx.DB().
+		Model(entity.DepartmentRole{}).
+		Where("department_id in ?", depIds).
+		Find(&drs).Error; err != nil {
+		return nil, err
+	}
+
+	return drs, nil
 }

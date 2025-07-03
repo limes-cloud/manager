@@ -63,7 +63,7 @@ func (u *Role) ListRole(ctx kratosx.Context, req *types.ListRoleRequest) ([]*ent
 // ListCurrentRole 获取当前角色信息列表树
 func (u *Role) ListCurrentRole(ctx kratosx.Context, req *types.ListRoleRequest) ([]*entity.Role, error) {
 	// 获取角色权限
-	all, scopes, err := u.repo.GetRoleDataScope(ctx, md.RoleId(ctx))
+	all, scopes, err := u.repo.GetRoleScope(ctx, md.RoleIds(ctx))
 	if err != nil {
 		ctx.Logger().Warnw("msg", "list role error", "err", err.Error())
 		return nil, errors.ListError()
@@ -79,7 +79,7 @@ func (u *Role) ListCurrentRole(ctx kratosx.Context, req *types.ListRoleRequest) 
 // CreateRole 创建角色信息 fixed code
 func (u *Role) CreateRole(ctx kratosx.Context, req *entity.Role) (uint32, error) {
 	// 获取是否具有父级角色权限
-	hasPurview, err := u.repo.HasRolePurview(ctx, md.UserId(ctx), req.ParentId)
+	hasPurview, err := u.repo.HasRolePurview(ctx, md.UserId(ctx), []uint32{req.ParentId})
 	if err != nil {
 		ctx.Logger().Warnw("msg", "create role repo error", "err", err.Error())
 		return 0, errors.DatabaseError()
@@ -105,22 +105,19 @@ func (u *Role) UpdateRole(ctx kratosx.Context, req *entity.Role) error {
 		return errors.EditSystemDataError()
 	}
 
-	// 获取是否具有父级角色权限
-	hasParent, err := u.repo.HasRolePurview(ctx, md.UserId(ctx), req.ParentId)
-	if err != nil {
-		ctx.Logger().Warnw("msg", "update role repo error", "err", err.Error())
-		return errors.DatabaseError()
+	if valx.InList(md.RoleIds(ctx), req.Id) {
+		return errors.UpdateError("不能修改当前用户所属角色")
 	}
 
-	// 获取是否具有当前角色权限
-	hasCurrent, err := u.repo.HasRolePurview(ctx, md.UserId(ctx), req.Id)
+	// 获取是否具有父级角色权限 & 具有当前角色权限
+	has, err := u.repo.HasRolePurview(ctx, md.UserId(ctx), []uint32{req.ParentId, req.Id})
 	if err != nil {
 		ctx.Logger().Warnw("msg", "update role repo error", "err", err.Error())
 		return errors.DatabaseError()
 	}
 
 	// 权限判断
-	if !hasParent || !hasCurrent {
+	if !has {
 		return errors.RolePurviewError()
 	}
 
@@ -139,8 +136,12 @@ func (u *Role) UpdateRoleStatus(ctx kratosx.Context, id uint32, status bool) err
 		return errors.EditSystemDataError()
 	}
 
+	if valx.InList(md.RoleIds(ctx), id) {
+		return errors.UpdateError("不能修改当前用户所属角色")
+	}
+
 	// 获取是否具有当前角色权限
-	hasCurrent, err := u.repo.HasRolePurview(ctx, md.UserId(ctx), id)
+	hasCurrent, err := u.repo.HasRolePurview(ctx, md.UserId(ctx), []uint32{id})
 	if err != nil {
 		ctx.Logger().Warnw("msg", "update role status error", "err", err.Error())
 		return errors.DatabaseError()
@@ -164,8 +165,12 @@ func (u *Role) DeleteRole(ctx kratosx.Context, id uint32) error {
 		return errors.DeleteSystemDataError()
 	}
 
+	if valx.InList(md.RoleIds(ctx), id) {
+		return errors.DeleteError("不能删除当前用户所属角色")
+	}
+
 	// 获取是否具有当前角色权限
-	hasCurrent, err := u.repo.HasRolePurview(ctx, md.UserId(ctx), id)
+	hasCurrent, err := u.repo.HasRolePurview(ctx, md.UserId(ctx), []uint32{id})
 	if err != nil {
 		ctx.Logger().Warnw("msg", "delete role  error", "err", err.Error())
 		return errors.DatabaseError()
@@ -201,7 +206,7 @@ func (u *Role) DeleteRole(ctx kratosx.Context, id uint32) error {
 // GetRoleMenuIds 获取指定角色的菜单id列表
 func (u *Role) GetRoleMenuIds(ctx kratosx.Context, id uint32) ([]uint32, error) {
 	// 获取是否具有当前角色权限
-	hasCurrent, err := u.repo.HasRolePurview(ctx, md.UserId(ctx), id)
+	hasCurrent, err := u.repo.HasRolePurview(ctx, md.UserId(ctx), []uint32{id})
 	if err != nil {
 		ctx.Logger().Warnw("msg", "get role repo error", "err", err.Error())
 		return nil, errors.DatabaseError()
@@ -213,7 +218,7 @@ func (u *Role) GetRoleMenuIds(ctx kratosx.Context, id uint32) ([]uint32, error) 
 	}
 
 	// 获取菜单id列表
-	list, err := u.repo.GetRoleMenuIds(ctx, id)
+	list, err := u.repo.GetRoleMenuIds(ctx, md.RoleIds(ctx))
 	if err != nil {
 		ctx.Logger().Warnw("msg", "get role menu ids error", "err", err.Error())
 		return nil, errors.ListError()
@@ -228,15 +233,16 @@ func (u *Role) UpdateRoleMenu(ctx kratosx.Context, roleId uint32, menuIds []uint
 		return errors.EditSystemDataError()
 	}
 
-	curRoleId := md.RoleId(ctx)
+	uid := md.UserId(ctx)
+	curRoles := md.RoleIds(ctx)
 
-	// 不能更新当前角色
-	if roleId == curRoleId {
+	// 不能修改当前角色
+	if valx.InList(curRoles, roleId) {
 		return errors.RolePurviewError()
 	}
 
 	// 获取是否具有角色权限
-	hasCurrent, err := u.repo.HasRolePurview(ctx, curRoleId, roleId)
+	hasCurrent, err := u.repo.HasRolePurview(ctx, uid, []uint32{roleId})
 	if err != nil {
 		ctx.Logger().Warnw("msg", "get role repo error", "err", err.Error())
 		return errors.DatabaseError()
@@ -248,9 +254,9 @@ func (u *Role) UpdateRoleMenu(ctx kratosx.Context, roleId uint32, menuIds []uint
 	}
 
 	// 系统数据时特殊数据，没有菜单，默认获取全部
-	if curRoleId != 1 {
+	if !valx.InList(curRoles, 1) {
 		// 获取当前角色的菜单
-		curMenuIds, err := u.repo.GetRoleMenuIds(ctx, curRoleId)
+		curMenuIds, err := u.repo.GetRoleMenuIds(ctx, curRoles)
 		if err != nil {
 			ctx.Logger().Warnw("msg", "get role menu ids error", "err", err.Error())
 			return errors.DatabaseError()

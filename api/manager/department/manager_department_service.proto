@@ -49,6 +49,13 @@ service Department{
     };
   }
 
+  // ListDepartment 获取部门信息列表
+  rpc ListCurrentDepartment (ListDepartmentRequest) returns (ListDepartmentReply) {
+    option (google.api.http) = {
+      get: "/manager/api/v1/current/departments",
+    };
+  }
+
   // CreateDepartment 创建部门信息
   rpc CreateDepartment (CreateDepartmentRequest) returns (CreateDepartmentReply) {
     option (google.api.http) = {

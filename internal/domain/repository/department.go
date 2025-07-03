@@ -37,10 +37,4 @@ type Department interface {
 
 	// DeleteDepartment 删除部门信息
 	DeleteDepartment(ctx kratosx.Context, id uint32) error
-
-	// GetDepartmentDataScope 获取指定用户的部门权限
-	GetDepartmentDataScope(ctx kratosx.Context, uid uint32) (bool, []uint32, error)
-
-	// HasDepartmentPurview 是否具有指定的部门权限
-	HasDepartmentPurview(ctx kratosx.Context, uid uint32, did uint32) (bool, error)
 }

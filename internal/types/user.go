@@ -9,8 +9,7 @@ type GetUserRequest struct {
 type ListUserRequest struct {
 	Page          uint32   `json:"page"`
 	PageSize      uint32   `json:"pageSize"`
-	DepartmentId  *uint32  `json:"departmentId"`
-	RoleId        *uint32  `json:"roleId"`
+	ID            *uint32  `json:"id"`
 	Name          *string  `json:"name"`
 	Phone         *string  `json:"phone"`
 	Email         *string  `json:"email"`
@@ -18,6 +17,7 @@ type ListUserRequest struct {
 	LoggedAts     []int64  `json:"loggedAts"`
 	CreatedAts    []int64  `json:"createdAts"`
 	DepartmentIds []uint32 `json:"departmentIds"`
+	RoleIds       []uint32 `json:"roleIds"`
 }
 
 type UpdateCurrentUserRequest struct {

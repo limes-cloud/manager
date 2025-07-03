@@ -16,10 +16,9 @@ message AuthRequest{
 message AuthReply{
   uint32 userId = 1;
   string userName = 2;
-  uint32 roleId = 3;
-  string roleKeyword = 4;
-  uint32 departmentId = 5;
-  string departmentKeyword = 6;
+  repeated uint32 roleIds = 3;
+  repeated uint32 departmentIds = 4;
+  repeated uint32 jobIds = 5;
 }
 
 
@@ -30,10 +29,11 @@ message OAuthWayRequest {
 
 message OAuthWayReply {
   string uuid = 1;
-  string type = 2;
+  string action = 2;
   string value = 3;
   string tip = 4;
   string keyword = 5;
+  string codeField = 6;
 }
 
 message ReportOAuthCodeRequest {

@@ -8,15 +8,11 @@ import (
 )
 
 type Auth struct {
-	JobIds             []uint32 `json:"jobIds"`
-	RoleIds            []uint32 `json:"roleIds"`
-	UserId             uint32   `json:"userId"`
-	UserName           string   `json:"userName"`
-	RoleId             uint32   `json:"roleId"`
-	RoleKeyword        string   `json:"roleKeyword"`
-	DepartmentId       uint32   `json:"departmentId"`
-	ParentDepartmentId uint32   `json:"parentDepartmentId"`
-	DepartmentKeyword  string   `json:"departmentKeyword"`
+	DepartmentIds []uint32 `json:"departmentIds"`
+	JobIds        []uint32 `json:"jobIds"`
+	RoleIds       []uint32 `json:"roleIds"`
+	UserId        uint32   `json:"userId"`
+	UserName      string   `json:"userName"`
 }
 
 func New(info *Auth) map[string]any {
@@ -50,18 +46,14 @@ func UserId(ctx kratosx.Context) uint32 {
 	return Get(ctx).UserId
 }
 
-func RoleId(ctx kratosx.Context) uint32 {
-	return Get(ctx).RoleId
+func RoleIds(ctx kratosx.Context) []uint32 {
+	return Get(ctx).RoleIds
 }
 
-func RoleKeyword(ctx kratosx.Context) string {
-	return Get(ctx).RoleKeyword
+func DepartmentIds(ctx kratosx.Context) []uint32 {
+	return Get(ctx).DepartmentIds
 }
 
-func DepartmentId(ctx kratosx.Context) uint32 {
-	return Get(ctx).DepartmentId
-}
-
-func DepartmentKeyword(ctx kratosx.Context) string {
-	return Get(ctx).DepartmentKeyword
+func JobIds(ctx kratosx.Context) []uint32 {
+	return Get(ctx).JobIds
 }

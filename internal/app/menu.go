@@ -24,7 +24,7 @@ type Menu struct {
 
 func NewMenu(conf *conf.Config) *Menu {
 	return &Menu{
-		srv: service.NewMenu(conf, dbs.NewMenu(), dbs.NewRoleRepo(), dbs.NewRbac()),
+		srv: service.NewMenu(conf, dbs.NewMenu(), dbs.NewRole(), dbs.NewRbac()),
 	}
 }
 

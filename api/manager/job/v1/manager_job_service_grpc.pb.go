@@ -19,10 +19,11 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	Job_ListJob_FullMethodName   = "/manager.api.manager.job.v1.Job/ListJob"
-	Job_CreateJob_FullMethodName = "/manager.api.manager.job.v1.Job/CreateJob"
-	Job_UpdateJob_FullMethodName = "/manager.api.manager.job.v1.Job/UpdateJob"
-	Job_DeleteJob_FullMethodName = "/manager.api.manager.job.v1.Job/DeleteJob"
+	Job_ListJob_FullMethodName        = "/manager.api.manager.job.v1.Job/ListJob"
+	Job_ListCurrentJob_FullMethodName = "/manager.api.manager.job.v1.Job/ListCurrentJob"
+	Job_CreateJob_FullMethodName      = "/manager.api.manager.job.v1.Job/CreateJob"
+	Job_UpdateJob_FullMethodName      = "/manager.api.manager.job.v1.Job/UpdateJob"
+	Job_DeleteJob_FullMethodName      = "/manager.api.manager.job.v1.Job/DeleteJob"
 )
 
 // JobClient is the client API for Job service.
@@ -31,6 +32,8 @@ const (
 type JobClient interface {
 	// ListJob 获取职位信息列表
 	ListJob(ctx context.Context, in *ListJobRequest, opts ...grpc.CallOption) (*ListJobReply, error)
+	// ListJob 获取职位信息列表
+	ListCurrentJob(ctx context.Context, in *ListJobRequest, opts ...grpc.CallOption) (*ListJobReply, error)
 	// CreateJob 创建职位信息
 	CreateJob(ctx context.Context, in *CreateJobRequest, opts ...grpc.CallOption) (*CreateJobReply, error)
 	// UpdateJob 更新职位信息
@@ -50,6 +53,15 @@ func NewJobClient(cc grpc.ClientConnInterface) JobClient {
 func (c *jobClient) ListJob(ctx context.Context, in *ListJobRequest, opts ...grpc.CallOption) (*ListJobReply, error) {
 	out := new(ListJobReply)
 	err := c.cc.Invoke(ctx, Job_ListJob_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *jobClient) ListCurrentJob(ctx context.Context, in *ListJobRequest, opts ...grpc.CallOption) (*ListJobReply, error) {
+	out := new(ListJobReply)
+	err := c.cc.Invoke(ctx, Job_ListCurrentJob_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -89,6 +101,8 @@ func (c *jobClient) DeleteJob(ctx context.Context, in *DeleteJobRequest, opts ..
 type JobServer interface {
 	// ListJob 获取职位信息列表
 	ListJob(context.Context, *ListJobRequest) (*ListJobReply, error)
+	// ListJob 获取职位信息列表
+	ListCurrentJob(context.Context, *ListJobRequest) (*ListJobReply, error)
 	// CreateJob 创建职位信息
 	CreateJob(context.Context, *CreateJobRequest) (*CreateJobReply, error)
 	// UpdateJob 更新职位信息
@@ -104,6 +118,9 @@ type UnimplementedJobServer struct {
 
 func (UnimplementedJobServer) ListJob(context.Context, *ListJobRequest) (*ListJobReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListJob not implemented")
+}
+func (UnimplementedJobServer) ListCurrentJob(context.Context, *ListJobRequest) (*ListJobReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListCurrentJob not implemented")
 }
 func (UnimplementedJobServer) CreateJob(context.Context, *CreateJobRequest) (*CreateJobReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateJob not implemented")
@@ -141,6 +158,24 @@ func _Job_ListJob_Handler(srv interface{}, ctx context.Context, dec func(interfa
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(JobServer).ListJob(ctx, req.(*ListJobRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Job_ListCurrentJob_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListJobRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(JobServer).ListCurrentJob(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Job_ListCurrentJob_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(JobServer).ListCurrentJob(ctx, req.(*ListJobRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -209,6 +244,10 @@ var Job_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListJob",
 			Handler:    _Job_ListJob_Handler,
+		},
+		{
+			MethodName: "ListCurrentJob",
+			Handler:    _Job_ListCurrentJob_Handler,
 		},
 		{
 			MethodName: "CreateJob",

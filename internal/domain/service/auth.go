@@ -15,7 +15,6 @@ import (
 	"google.golang.org/protobuf/proto"
 
 	"github.com/limes-cloud/manager/api/manager/errors"
-	"github.com/limes-cloud/manager/internal/conf"
 	"github.com/limes-cloud/manager/internal/domain/entity"
 	"github.com/limes-cloud/manager/internal/domain/repository"
 	"github.com/limes-cloud/manager/internal/pkg/md"
@@ -24,48 +23,70 @@ import (
 )
 
 type Auth struct {
-	conf    *conf.Config
 	oauth   repository.OAuth
 	channel repository.Channel
 	app     repository.App
 	user    repository.User
 	address repository.Address
+	role    repository.Role
 }
 
 func NewAuth(
-	conf *conf.Config,
 	oauth repository.OAuth,
 	channel repository.Channel,
 	app repository.App,
 	user repository.User,
 	address repository.Address,
+	role repository.Role,
 ) *Auth {
 	return &Auth{
-		conf:    conf,
 		oauth:   oauth,
 		channel: channel,
 		app:     app,
 		user:    user,
 		address: address,
+		role:    role,
 	}
 }
 
 // Auth 外部接口rbac鉴权
 func (u *Auth) Auth(ctx kratosx.Context, in *types.AuthRequest) (*md.Auth, error) {
-	info := md.Get(ctx)
-
-	if valx.InList(ctx.Config().App().Authentication.SkipRole, info.RoleKeyword) {
-		return info, nil
-	}
-
+	// 获取鉴权器，判断是否为白名单
 	author := ctx.Authentication()
 	if author.IsWhitelist(in.Path, in.Method) {
-		return info, nil
+		return nil, nil
 	}
 
+	info := md.Get(ctx)
+
+	// 获取当前用户的所有角色key
+	var roleKeys []string
+	list, _ := u.role.ListCacheRole(ctx)
+	for _, item := range list {
+		roleKeys = append(roleKeys, item.Keyword)
+	}
+
+	// 获取需要跳过的角色
+	skips := ctx.Config().App().Authentication.SkipRole
+	uniquer := valx.New(roleKeys)
+	for _, key := range skips {
+		if uniquer.Has(key) {
+			return info, nil
+		}
+	}
+
+	// 进行rbac鉴权
 	enforce := ctx.Authentication().Enforce()
-	isAuth, _ := enforce.Enforce(info.RoleKeyword, in.Path, in.Method)
-	if !isAuth {
+
+	isPass := false
+	for _, role := range roleKeys {
+		isAuth, _ := enforce.Enforce(role, in.Path, in.Method)
+		if isAuth {
+			isPass = true
+			break
+		}
+	}
+	if !isPass {
 		return nil, errors.ForbiddenError()
 	}
 
@@ -303,7 +324,7 @@ func (u *Auth) UserLogin(ctx kratosx.Context, in *types.UserLoginRequest) (token
 		if errors.IsUserDisableError(rerr) || errors.IsVerifyCaptchaError(rerr) {
 			return
 		}
-		u.addLoginLog(ctx, utype, user, rerr)
+		u.addLoginLog(ctx, utype, in, rerr)
 	}()
 
 	if err := ctx.Captcha().VerifyImage(loginCaptchaKey, ctx.ClientIP(), in.CaptchaId, in.Captcha); err != nil {
@@ -425,47 +446,34 @@ func (u *Auth) genToken(ctx kratosx.Context, user *entity.User) (token string, e
 	}
 
 	// 获取角色信息
-	var (
-		notSwitch     bool
-		enableRoles   []*entity.Role
-		enableRoleIds []uint32
-	)
-	for _, role := range user.Roles {
-		if role.Status != nil && *role.Status {
-			enableRoles = append(enableRoles, role)
-			enableRoleIds = append(enableRoleIds, role.Id)
-			if role.Id == user.RoleId {
-				notSwitch = true
-				user.Role = role
-			}
-		}
+	roleIds, err := u.role.GetEnableRoleIdsByUID(ctx, user.Id)
+	if err != nil {
+		return "", errors.SystemError()
 	}
-	if len(enableRoles) == 0 {
-		err = errors.RoleDisableError()
-		return
-	}
-	if !notSwitch {
-		user.RoleId = enableRoles[0].Id
-		user.Role = enableRoles[0]
+	if len(roleIds) == 0 {
+		return "", errors.SystemError("当前用户未分配部门或角色")
 	}
 
 	// 获取职位信息
-	var (
-		jobIds []uint32
-	)
-	for _, job := range user.Jobs {
-		jobIds = append(jobIds, job.Id)
+	// var (
+	//	jobIds []uint32
+	// )
+	// for _, job := range user.Jobs {
+	//	jobIds = append(jobIds, job.Id)
+	// }
+
+	// 获取部门信息
+	var depIds []uint32
+	for _, job := range user.Departments {
+		depIds = append(depIds, job.Id)
 	}
 
 	token, err = ctx.JWT().NewToken(md.New(&md.Auth{
-		JobIds:             jobIds,
-		UserId:             user.Id,
-		UserName:           user.Name,
-		RoleId:             user.RoleId,
-		RoleKeyword:        user.Role.Keyword,
-		DepartmentId:       user.DepartmentId,
-		ParentDepartmentId: user.Department.ParentId,
-		DepartmentKeyword:  user.Department.Keyword,
+		UserId:   user.Id,
+		UserName: user.Name,
+		RoleIds:  roleIds,
+		// JobIds:        jobIds,
+		DepartmentIds: depIds,
 	}))
 	if err != nil {
 		ctx.Logger().Errorw("msg", "gen user token error", "err", err.Error())
@@ -477,7 +485,6 @@ func (u *Auth) genToken(ctx kratosx.Context, user *entity.User) (token string, e
 	expired := time.Now().Unix() + int64(ctx.Config().App().JWT.Expire.Seconds())
 	data := &entity.User{
 		BaseModel: ktypes.BaseModel{Id: user.Id},
-		RoleId:    user.RoleId,
 		Token:     &token,
 		LoggedAt:  time.Now().Unix(),
 		ExpireAt:  expired,
@@ -511,7 +518,7 @@ func (u *Auth) getUserByCA(ctx kratosx.Context, cid uint32, aid string) (*entity
 	return user, nil
 }
 
-func (u *Auth) addLoginLog(ctx kratosx.Context, tp string, user *entity.User, rerr error) {
+func (u *Auth) addLoginLog(ctx kratosx.Context, tp string, user *types.UserLoginRequest, rerr error) {
 	header, ok := transport.FromServerContext(ctx)
 	if !ok {
 		return
@@ -536,7 +543,7 @@ func (u *Auth) addLoginLog(ctx kratosx.Context, tp string, user *entity.User, re
 	}
 
 	_, _ = u.user.CreateLoginLog(ctx, &entity.LoginLog{
-		Username:    user.Name,
+		Username:    user.Username,
 		Type:        tp,
 		IP:          ctx.ClientIP(),
 		Address:     u.address.GetIPAddress(ip),

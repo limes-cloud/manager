@@ -2,6 +2,7 @@ package repository
 
 import (
 	"github.com/limes-cloud/kratosx"
+
 	"github.com/limes-cloud/manager/internal/domain/entity"
 	"github.com/limes-cloud/manager/internal/types"
 )
@@ -16,8 +17,8 @@ type Menu interface {
 	// ListMenu 获取菜单信息列表
 	ListMenu(ctx kratosx.Context, req *types.ListMenuRequest) ([]*entity.Menu, error)
 
-	// ListMenuByRoleId 获取指定角色的菜单列表
-	ListMenuByRoleId(ctx kratosx.Context, id uint32) ([]*entity.Menu, error)
+	// ListMenuByRoleIds 获取指定角色的菜单列表
+	ListMenuByRoleIds(ctx kratosx.Context, ids []uint32) ([]*entity.Menu, error)
 
 	// ListMenuChildrenApi 获取指定目录下的所有api
 	ListMenuChildrenApi(ctx kratosx.Context, id uint32) ([]*entity.Menu, error)

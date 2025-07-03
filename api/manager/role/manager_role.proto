@@ -27,6 +27,8 @@ message GetRoleReply {
   optional string description = 8;
   uint32 createdAt = 9;
   uint32 updatedAt = 10;
+  string jobScope = 11;
+  optional string jobIds = 12;
 }
 
 message GetRoleMenuIdsRequest{
@@ -40,6 +42,7 @@ message GetRoleMenuIdsReply{
 message ListRoleRequest {
   optional string name = 3;
   optional string keyword = 4;
+  optional uint32 rootId  = 1;
 }
 
 message ListRoleReply {
@@ -55,6 +58,8 @@ message ListRoleReply {
     uint32 createdAt = 9;
     uint32 updatedAt = 10;
     repeated Role children = 11;
+    string jobScope = 12;
+    optional string jobIds = 13;
   }
 
   repeated Role list = 1;
@@ -68,6 +73,8 @@ message CreateRoleRequest {
   string dataScope = 5[(validate.rules).string = {in: ["ALL","CUR","CUR_DOWN","DOWN","CUSTOM"],min_len: 1}];
   optional string departmentIds = 6;
   optional string description = 7;
+//  string jobScope = 8[(validate.rules).string = {in: ["ALL","CUR","CUR_DOWN","DOWN","CUSTOM"],min_len: 1}];
+//  optional string jobIds = 9;
 }
 
 message CreateRoleReply {
@@ -81,6 +88,8 @@ message UpdateRoleRequest {
   string dataScope = 4[(validate.rules).string = {in: ["ALL","CUR","CUR_DOWN","DOWN","CUSTOM"],min_len: 1}];
   optional string departmentIds = 5;
   optional string description = 6;
+//  string jobScope = 8[(validate.rules).string = {in: ["ALL","CUR","CUR_DOWN","DOWN","CUSTOM"],min_len: 1}];
+//  optional string jobIds = 9;
 }
 
 message UpdateRoleReply {

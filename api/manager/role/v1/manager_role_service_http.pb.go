@@ -23,6 +23,7 @@ const OperationRoleCreateRole = "/manager.api.manager.role.v1.Role/CreateRole"
 const OperationRoleDeleteRole = "/manager.api.manager.role.v1.Role/DeleteRole"
 const OperationRoleGetRole = "/manager.api.manager.role.v1.Role/GetRole"
 const OperationRoleGetRoleMenuIds = "/manager.api.manager.role.v1.Role/GetRoleMenuIds"
+const OperationRoleListCurrentRole = "/manager.api.manager.role.v1.Role/ListCurrentRole"
 const OperationRoleListRole = "/manager.api.manager.role.v1.Role/ListRole"
 const OperationRoleUpdateRole = "/manager.api.manager.role.v1.Role/UpdateRole"
 const OperationRoleUpdateRoleMenu = "/manager.api.manager.role.v1.Role/UpdateRoleMenu"
@@ -37,6 +38,8 @@ type RoleHTTPServer interface {
 	GetRole(context.Context, *GetRoleRequest) (*GetRoleReply, error)
 	// GetRoleMenuIds GetRoleMenuIds 获取指定角色的菜单id列表
 	GetRoleMenuIds(context.Context, *GetRoleMenuIdsRequest) (*GetRoleMenuIdsReply, error)
+	// ListCurrentRole ListCurrentRole 获取当前用户的角色信息列表
+	ListCurrentRole(context.Context, *ListRoleRequest) (*ListRoleReply, error)
 	// ListRole ListRole 获取角色信息列表
 	ListRole(context.Context, *ListRoleRequest) (*ListRoleReply, error)
 	// UpdateRole UpdateRole 更新角色信息
@@ -51,6 +54,7 @@ func RegisterRoleHTTPServer(s *http.Server, srv RoleHTTPServer) {
 	r := s.Route("/")
 	r.GET("/manager/api/v1/role/menu_ids", _Role_GetRoleMenuIds0_HTTP_Handler(srv))
 	r.GET("/manager/api/v1/roles", _Role_ListRole0_HTTP_Handler(srv))
+	r.GET("/manager/api/v1/current/roles", _Role_ListCurrentRole0_HTTP_Handler(srv))
 	r.POST("/manager/api/v1/role", _Role_CreateRole0_HTTP_Handler(srv))
 	r.PUT("/manager/api/v1/role", _Role_UpdateRole0_HTTP_Handler(srv))
 	r.PUT("/manager/api/v1/role/menu", _Role_UpdateRoleMenu0_HTTP_Handler(srv))
@@ -87,6 +91,25 @@ func _Role_ListRole0_HTTP_Handler(srv RoleHTTPServer) func(ctx http.Context) err
 		http.SetOperation(ctx, OperationRoleListRole)
 		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
 			return srv.ListRole(ctx, req.(*ListRoleRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*ListRoleReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Role_ListCurrentRole0_HTTP_Handler(srv RoleHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in ListRoleRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationRoleListCurrentRole)
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
+			return srv.ListCurrentRole(ctx, req.(*ListRoleRequest))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
@@ -228,6 +251,7 @@ type RoleHTTPClient interface {
 	DeleteRole(ctx context.Context, req *DeleteRoleRequest, opts ...http.CallOption) (rsp *DeleteRoleReply, err error)
 	GetRole(ctx context.Context, req *GetRoleRequest, opts ...http.CallOption) (rsp *GetRoleReply, err error)
 	GetRoleMenuIds(ctx context.Context, req *GetRoleMenuIdsRequest, opts ...http.CallOption) (rsp *GetRoleMenuIdsReply, err error)
+	ListCurrentRole(ctx context.Context, req *ListRoleRequest, opts ...http.CallOption) (rsp *ListRoleReply, err error)
 	ListRole(ctx context.Context, req *ListRoleRequest, opts ...http.CallOption) (rsp *ListRoleReply, err error)
 	UpdateRole(ctx context.Context, req *UpdateRoleRequest, opts ...http.CallOption) (rsp *UpdateRoleReply, err error)
 	UpdateRoleMenu(ctx context.Context, req *UpdateRoleMenuRequest, opts ...http.CallOption) (rsp *UpdateRoleMenuReply, err error)
@@ -286,6 +310,19 @@ func (c *RoleHTTPClientImpl) GetRoleMenuIds(ctx context.Context, in *GetRoleMenu
 	pattern := "/manager/api/v1/role/menu_ids"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationRoleGetRoleMenuIds))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *RoleHTTPClientImpl) ListCurrentRole(ctx context.Context, in *ListRoleRequest, opts ...http.CallOption) (*ListRoleReply, error) {
+	var out ListRoleReply
+	pattern := "/manager/api/v1/current/roles"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationRoleListCurrentRole))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {

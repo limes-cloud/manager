@@ -30,14 +30,15 @@ func NewWXOfficialAccount(req *entity.Channel) repository.OAuthor {
 func (woa WXOfficialAccount) GetOAuthWay(_ kratosx.Context, req *types.GetOAuthWayRequest) (*types.GetOAuthWayReply, error) {
 	uid := crypto.MD5([]byte(uuid.NewString()))
 	var resp = types.GetOAuthWayReply{
-		UUID: uid,
-		Type: types.GetOAuthWayTypeJump,
-		Tip:  "点击跳转授权",
+		UUID:      uid,
+		Action:    types.GetOAuthWayActionJump,
+		Tip:       "点击跳转授权",
+		CodeField: "code",
 	}
 
 	// 不是 yiban app 打开
 	if !strings.Contains(req.UserAgent, "MicroMessenger") {
-		resp.Type = types.GetOAuthWayTypeScan
+		resp.Action = types.GetOAuthWayActionScan
 		resp.Tip = "打开微信扫码登陆"
 	}
 
@@ -47,7 +48,7 @@ func (woa WXOfficialAccount) GetOAuthWay(_ kratosx.Context, req *types.GetOAuthW
 		woa.conf.Ak,
 		woa.conf.GetExtra().CallBack,
 		woa.conf.Keyword,
-		resp.Type,
+		resp.Action,
 		uid,
 	)
 	return &resp, nil

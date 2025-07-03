@@ -21,7 +21,7 @@ type Resource struct {
 
 func NewResource(conf *conf.Config) *Resource {
 	return &Resource{
-		srv: service.NewResource(conf, dbs.NewResource(), dbs.NewDepartment()),
+		srv: service.NewResource(conf, dbs.NewResource(), dbs.NewDepartment(), dbs.NewRole()),
 	}
 }
 

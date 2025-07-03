@@ -33,14 +33,15 @@ func NewYiBan(req *entity.Channel) repository.OAuthor {
 func (y YiBan) GetOAuthWay(_ kratosx.Context, req *types.GetOAuthWayRequest) (*types.GetOAuthWayReply, error) {
 	uid := crypto.MD5([]byte(uuid.NewString()))
 	var resp = types.GetOAuthWayReply{
-		UUID: uid,
-		Type: types.GetOAuthWayTypeJump,
-		Tip:  "点击跳转授权",
+		UUID:      uid,
+		Action:    types.GetOAuthWayActionScan,
+		Tip:       "点击跳转授权",
+		CodeField: "verify_request",
 	}
 
 	// 不是 yiban app 打开
 	if !strings.Contains(req.UserAgent, "yiban") {
-		resp.Type = types.GetOAuthWayTypeScan
+		resp.Action = types.GetOAuthWayActionScan
 		resp.Tip = "打开易APP扫码登陆"
 	}
 
@@ -50,7 +51,7 @@ func (y YiBan) GetOAuthWay(_ kratosx.Context, req *types.GetOAuthWayRequest) (*t
 		y.conf.Ak,
 		y.conf.GetExtra().CallBack,
 		y.conf.Keyword,
-		resp.Type,
+		resp.Action,
 		uid,
 	)
 	return &resp, nil

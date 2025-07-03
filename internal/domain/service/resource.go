@@ -16,19 +16,22 @@ type Resource struct {
 	conf *conf.Config
 	repo repository.Resource
 	dept repository.Department
+	role repository.Role
 }
 
 func NewResource(config *conf.Config,
 	repo repository.Resource,
 	dept repository.Department,
+	role repository.Role,
+
 ) *Resource {
-	return &Resource{conf: config, repo: repo, dept: dept}
+	return &Resource{conf: config, repo: repo, dept: dept, role: role}
 }
 
 // GetResourceScopes 获取指定的资源权限
 func (u *Resource) GetResourceScopes(ctx kratosx.Context, keyword string) (bool, []uint32, error) {
 	// 获取用户当前的部门权限
-	all, scopes, err := u.dept.GetDepartmentDataScope(ctx, md.UserId(ctx))
+	all, scopes, err := u.role.GetDataScope(ctx, md.UserId(ctx))
 	if err != nil {
 		ctx.Logger().Warnw("msg", "get resource scopes error", "err", err.Error())
 		return false, nil, errors.DatabaseError()
@@ -52,7 +55,7 @@ func (u *Resource) GetResourceScopes(ctx kratosx.Context, keyword string) (bool,
 // GetResource 获取指定的资源权限
 func (u *Resource) GetResource(ctx kratosx.Context, req *types.GetResourceRequest) ([]uint32, error) {
 	// 获取用户当前的部门权限
-	all, scopes, err := u.dept.GetDepartmentDataScope(ctx, md.UserId(ctx))
+	all, scopes, err := u.role.GetDataScope(ctx, md.UserId(ctx))
 	if err != nil {
 		ctx.Logger().Warnw("msg", "get resource scopes error", "err", err.Error())
 		return nil, errors.DatabaseError()
@@ -72,7 +75,7 @@ func (u *Resource) GetResource(ctx kratosx.Context, req *types.GetResourceReques
 // UpdateResource 更新资源权限
 func (u *Resource) UpdateResource(ctx kratosx.Context, req *types.UpdateResourceRequest) error {
 	// 获取用户当前的部门权限
-	all, scopes, err := u.dept.GetDepartmentDataScope(ctx, md.UserId(ctx))
+	all, scopes, err := u.role.GetDataScope(ctx, md.UserId(ctx))
 	if err != nil {
 		ctx.Logger().Warnw("msg", "update resource scopes error", "err", err.Error())
 		return errors.DatabaseError()

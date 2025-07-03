@@ -161,10 +161,10 @@ func (e *Email) GetOAuthWay(ctx kratosx.Context, req *types.GetOAuthWayRequest) 
 	}
 
 	var resp = types.GetOAuthWayReply{
-		UUID:  e.captcha.getUUIDByUID(uid),
-		Type:  types.GetOAuthWayTypeCaptcha,
-		Tip:   "验证码登陆",
-		Value: fmt.Sprint(e.duration),
+		UUID:   e.captcha.getUUIDByUID(uid),
+		Action: types.GetOAuthWayActionCaptcha,
+		Tip:    "验证码登陆",
+		Value:  fmt.Sprint(e.duration),
 	}
 
 	return &resp, nil

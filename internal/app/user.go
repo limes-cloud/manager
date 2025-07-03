@@ -31,7 +31,8 @@ func NewUser(conf *conf.Config) *User {
 			conf,
 			dbs.NewUser(),
 			dbs.NewDepartment(),
-			dbs.NewRoleRepo(),
+			dbs.NewRole(),
+			dbs.NewJob(),
 			rpc.NewFile(),
 			apis.NewAddress(),
 		),
@@ -49,18 +50,24 @@ func init() {
 // ListUser 获取用户信息列表
 func (s *User) ListUser(c context.Context, req *pb.ListUserRequest) (*pb.ListUserReply, error) {
 	var ctx = kratosx.MustContext(c)
-	result, total, err := s.srv.ListUser(ctx, &types.ListUserRequest{
-		Page:         req.Page,
-		PageSize:     req.PageSize,
-		DepartmentId: req.DepartmentId,
-		RoleId:       req.RoleId,
-		Name:         req.Name,
-		Phone:        req.Phone,
-		Email:        req.Email,
-		Status:       req.Status,
-		LoggedAts:    req.LoggedAts,
-		CreatedAts:   req.CreatedAts,
-	})
+	in := &types.ListUserRequest{
+		Page:       req.Page,
+		PageSize:   req.PageSize,
+		Name:       req.Name,
+		Phone:      req.Phone,
+		Email:      req.Email,
+		Status:     req.Status,
+		LoggedAts:  req.LoggedAts,
+		CreatedAts: req.CreatedAts,
+	}
+	if req.DepartmentId != nil {
+		in.DepartmentIds = []uint32{*req.DepartmentId}
+	}
+	if req.DepartmentId != nil {
+		in.RoleIds = []uint32{*req.RoleId}
+	}
+
+	result, total, err := s.srv.ListUser(ctx, in)
 	if err != nil {
 		return nil, err
 	}
@@ -98,6 +105,12 @@ func (s *User) CreateUser(c context.Context, req *pb.CreateUserRequest) (*pb.Cre
 		})
 	}
 
+	for _, id := range req.DepartmentIds {
+		ent.UserDepartments = append(ent.UserDepartments, &entity.UserDepartment{
+			DepartmentId: id,
+		})
+	}
+
 	id, err := s.srv.CreateUser(ctx, &ent)
 	if err != nil {
 		return nil, err
@@ -127,6 +140,12 @@ func (s *User) UpdateUser(c context.Context, req *pb.UpdateUserRequest) (*pb.Upd
 	for _, id := range req.JobIds {
 		ent.UserJobs = append(ent.UserJobs, &entity.UserJob{
 			JobId: id,
+		})
+	}
+
+	for _, id := range req.DepartmentIds {
+		ent.UserDepartments = append(ent.UserDepartments, &entity.UserDepartment{
+			DepartmentId: id,
 		})
 	}
 
@@ -206,10 +225,6 @@ func (s *User) UpdateCurrentUser(c context.Context, req *pb.UpdateCurrentUserReq
 	}
 
 	return &pb.UpdateCurrentUserReply{}, s.srv.UpdateCurrentUser(kratosx.MustContext(c), &in)
-}
-
-func (s *User) UpdateCurrentUserRole(c context.Context, req *pb.UpdateCurrentUserRoleRequest) (*pb.UpdateCurrentUserRoleReply, error) {
-	return &pb.UpdateCurrentUserRoleReply{}, s.srv.UpdateCurrentUserRole(kratosx.MustContext(c), req.RoleId)
 }
 
 func (s *User) UpdateCurrentUserPassword(c context.Context, req *pb.UpdateCurrentUserPasswordRequest) (*pb.UpdateCurrentUserPasswordReply, error) {

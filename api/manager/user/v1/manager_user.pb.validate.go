@@ -180,6 +180,319 @@ var _ interface {
 	ErrorName() string
 } = GetUserRequestValidationError{}
 
+// Validate checks the field values on Role with the rules defined in the proto
+// definition for this message. If any rules are violated, the first error
+// encountered is returned, or nil if there are no violations.
+func (m *Role) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on Role with the rules defined in the
+// proto definition for this message. If any rules are violated, the result is
+// a list of violation errors wrapped in RoleMultiError, or nil if none found.
+func (m *Role) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *Role) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Id
+
+	// no validation rules for Name
+
+	// no validation rules for Keyword
+
+	if len(errors) > 0 {
+		return RoleMultiError(errors)
+	}
+
+	return nil
+}
+
+// RoleMultiError is an error wrapping multiple validation errors returned by
+// Role.ValidateAll() if the designated constraints aren't met.
+type RoleMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m RoleMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m RoleMultiError) AllErrors() []error { return m }
+
+// RoleValidationError is the validation error returned by Role.Validate if the
+// designated constraints aren't met.
+type RoleValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e RoleValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e RoleValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e RoleValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e RoleValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e RoleValidationError) ErrorName() string { return "RoleValidationError" }
+
+// Error satisfies the builtin error interface
+func (e RoleValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sRole.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = RoleValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = RoleValidationError{}
+
+// Validate checks the field values on Job with the rules defined in the proto
+// definition for this message. If any rules are violated, the first error
+// encountered is returned, or nil if there are no violations.
+func (m *Job) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on Job with the rules defined in the
+// proto definition for this message. If any rules are violated, the result is
+// a list of violation errors wrapped in JobMultiError, or nil if none found.
+func (m *Job) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *Job) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Id
+
+	// no validation rules for Name
+
+	// no validation rules for Keyword
+
+	if len(errors) > 0 {
+		return JobMultiError(errors)
+	}
+
+	return nil
+}
+
+// JobMultiError is an error wrapping multiple validation errors returned by
+// Job.ValidateAll() if the designated constraints aren't met.
+type JobMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m JobMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m JobMultiError) AllErrors() []error { return m }
+
+// JobValidationError is the validation error returned by Job.Validate if the
+// designated constraints aren't met.
+type JobValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e JobValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e JobValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e JobValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e JobValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e JobValidationError) ErrorName() string { return "JobValidationError" }
+
+// Error satisfies the builtin error interface
+func (e JobValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sJob.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = JobValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = JobValidationError{}
+
+// Validate checks the field values on Department with the rules defined in the
+// proto definition for this message. If any rules are violated, the first
+// error encountered is returned, or nil if there are no violations.
+func (m *Department) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on Department with the rules defined in
+// the proto definition for this message. If any rules are violated, the
+// result is a list of violation errors wrapped in DepartmentMultiError, or
+// nil if none found.
+func (m *Department) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *Department) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Id
+
+	// no validation rules for Name
+
+	// no validation rules for Keyword
+
+	if len(errors) > 0 {
+		return DepartmentMultiError(errors)
+	}
+
+	return nil
+}
+
+// DepartmentMultiError is an error wrapping multiple validation errors
+// returned by Department.ValidateAll() if the designated constraints aren't met.
+type DepartmentMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m DepartmentMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m DepartmentMultiError) AllErrors() []error { return m }
+
+// DepartmentValidationError is the validation error returned by
+// Department.Validate if the designated constraints aren't met.
+type DepartmentValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e DepartmentValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e DepartmentValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e DepartmentValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e DepartmentValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e DepartmentValidationError) ErrorName() string { return "DepartmentValidationError" }
+
+// Error satisfies the builtin error interface
+func (e DepartmentValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sDepartment.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = DepartmentValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = DepartmentValidationError{}
+
 // Validate checks the field values on GetUserReply with the rules defined in
 // the proto definition for this message. If any rules are violated, the first
 // error encountered is returned, or nil if there are no violations.
@@ -203,10 +516,6 @@ func (m *GetUserReply) validate(all bool) error {
 	var errors []error
 
 	// no validation rules for Id
-
-	// no validation rules for DepartmentId
-
-	// no validation rules for RoleId
 
 	// no validation rules for Name
 
@@ -292,6 +601,40 @@ func (m *GetUserReply) validate(all bool) error {
 
 	}
 
+	for idx, item := range m.GetDepartments() {
+		_, _ = idx, item
+
+		if all {
+			switch v := interface{}(item).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, GetUserReplyValidationError{
+						field:  fmt.Sprintf("Departments[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, GetUserReplyValidationError{
+						field:  fmt.Sprintf("Departments[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return GetUserReplyValidationError{
+					field:  fmt.Sprintf("Departments[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
 	if m.Avatar != nil {
 		// no validation rules for Avatar
 	}
@@ -302,72 +645,6 @@ func (m *GetUserReply) validate(all bool) error {
 
 	if m.Setting != nil {
 		// no validation rules for Setting
-	}
-
-	if m.Department != nil {
-
-		if all {
-			switch v := interface{}(m.GetDepartment()).(type) {
-			case interface{ ValidateAll() error }:
-				if err := v.ValidateAll(); err != nil {
-					errors = append(errors, GetUserReplyValidationError{
-						field:  "Department",
-						reason: "embedded message failed validation",
-						cause:  err,
-					})
-				}
-			case interface{ Validate() error }:
-				if err := v.Validate(); err != nil {
-					errors = append(errors, GetUserReplyValidationError{
-						field:  "Department",
-						reason: "embedded message failed validation",
-						cause:  err,
-					})
-				}
-			}
-		} else if v, ok := interface{}(m.GetDepartment()).(interface{ Validate() error }); ok {
-			if err := v.Validate(); err != nil {
-				return GetUserReplyValidationError{
-					field:  "Department",
-					reason: "embedded message failed validation",
-					cause:  err,
-				}
-			}
-		}
-
-	}
-
-	if m.Role != nil {
-
-		if all {
-			switch v := interface{}(m.GetRole()).(type) {
-			case interface{ ValidateAll() error }:
-				if err := v.ValidateAll(); err != nil {
-					errors = append(errors, GetUserReplyValidationError{
-						field:  "Role",
-						reason: "embedded message failed validation",
-						cause:  err,
-					})
-				}
-			case interface{ Validate() error }:
-				if err := v.Validate(); err != nil {
-					errors = append(errors, GetUserReplyValidationError{
-						field:  "Role",
-						reason: "embedded message failed validation",
-						cause:  err,
-					})
-				}
-			}
-		} else if v, ok := interface{}(m.GetRole()).(interface{ Validate() error }); ok {
-			if err := v.Validate(); err != nil {
-				return GetUserReplyValidationError{
-					field:  "Role",
-					reason: "embedded message failed validation",
-					cause:  err,
-				}
-			}
-		}
-
 	}
 
 	if len(errors) > 0 {
@@ -751,17 +1028,6 @@ func (m *CreateUserRequest) validate(all bool) error {
 
 	var errors []error
 
-	if m.GetDepartmentId() < 1 {
-		err := CreateUserRequestValidationError{
-			field:  "DepartmentId",
-			reason: "value must be greater than or equal to 1",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
 	if utf8.RuneCountInString(m.GetName()) < 1 {
 		err := CreateUserRequestValidationError{
 			field:  "Name",
@@ -806,9 +1072,9 @@ func (m *CreateUserRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	if len(m.GetJobIds()) < 1 {
+	if len(m.GetDepartmentIds()) < 1 {
 		err := CreateUserRequestValidationError{
-			field:  "JobIds",
+			field:  "DepartmentIds",
 			reason: "value must contain at least 1 item(s)",
 		}
 		if !all {
@@ -817,14 +1083,14 @@ func (m *CreateUserRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	_CreateUserRequest_JobIds_Unique := make(map[uint32]struct{}, len(m.GetJobIds()))
+	_CreateUserRequest_DepartmentIds_Unique := make(map[uint32]struct{}, len(m.GetDepartmentIds()))
 
-	for idx, item := range m.GetJobIds() {
+	for idx, item := range m.GetDepartmentIds() {
 		_, _ = idx, item
 
-		if _, exists := _CreateUserRequest_JobIds_Unique[item]; exists {
+		if _, exists := _CreateUserRequest_DepartmentIds_Unique[item]; exists {
 			err := CreateUserRequestValidationError{
-				field:  fmt.Sprintf("JobIds[%v]", idx),
+				field:  fmt.Sprintf("DepartmentIds[%v]", idx),
 				reason: "repeated value must contain unique items",
 			}
 			if !all {
@@ -832,42 +1098,10 @@ func (m *CreateUserRequest) validate(all bool) error {
 			}
 			errors = append(errors, err)
 		} else {
-			_CreateUserRequest_JobIds_Unique[item] = struct{}{}
+			_CreateUserRequest_DepartmentIds_Unique[item] = struct{}{}
 		}
 
-		// no validation rules for JobIds[idx]
-	}
-
-	if len(m.GetRoleIds()) < 1 {
-		err := CreateUserRequestValidationError{
-			field:  "RoleIds",
-			reason: "value must contain at least 1 item(s)",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	_CreateUserRequest_RoleIds_Unique := make(map[uint32]struct{}, len(m.GetRoleIds()))
-
-	for idx, item := range m.GetRoleIds() {
-		_, _ = idx, item
-
-		if _, exists := _CreateUserRequest_RoleIds_Unique[item]; exists {
-			err := CreateUserRequestValidationError{
-				field:  fmt.Sprintf("RoleIds[%v]", idx),
-				reason: "repeated value must contain unique items",
-			}
-			if !all {
-				return err
-			}
-			errors = append(errors, err)
-		} else {
-			_CreateUserRequest_RoleIds_Unique[item] = struct{}{}
-		}
-
-		// no validation rules for RoleIds[idx]
+		// no validation rules for DepartmentIds[idx]
 	}
 
 	if len(errors) > 0 {
@@ -1085,17 +1319,6 @@ func (m *UpdateUserRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	if m.GetDepartmentId() < 1 {
-		err := UpdateUserRequestValidationError{
-			field:  "DepartmentId",
-			reason: "value must be greater than or equal to 1",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
 	if utf8.RuneCountInString(m.GetName()) < 1 {
 		err := UpdateUserRequestValidationError{
 			field:  "Name",
@@ -1140,9 +1363,9 @@ func (m *UpdateUserRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	if len(m.GetJobIds()) < 1 {
+	if len(m.GetDepartmentIds()) < 1 {
 		err := UpdateUserRequestValidationError{
-			field:  "JobIds",
+			field:  "DepartmentIds",
 			reason: "value must contain at least 1 item(s)",
 		}
 		if !all {
@@ -1151,14 +1374,14 @@ func (m *UpdateUserRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	_UpdateUserRequest_JobIds_Unique := make(map[uint32]struct{}, len(m.GetJobIds()))
+	_UpdateUserRequest_DepartmentIds_Unique := make(map[uint32]struct{}, len(m.GetDepartmentIds()))
 
-	for idx, item := range m.GetJobIds() {
+	for idx, item := range m.GetDepartmentIds() {
 		_, _ = idx, item
 
-		if _, exists := _UpdateUserRequest_JobIds_Unique[item]; exists {
+		if _, exists := _UpdateUserRequest_DepartmentIds_Unique[item]; exists {
 			err := UpdateUserRequestValidationError{
-				field:  fmt.Sprintf("JobIds[%v]", idx),
+				field:  fmt.Sprintf("DepartmentIds[%v]", idx),
 				reason: "repeated value must contain unique items",
 			}
 			if !all {
@@ -1166,42 +1389,10 @@ func (m *UpdateUserRequest) validate(all bool) error {
 			}
 			errors = append(errors, err)
 		} else {
-			_UpdateUserRequest_JobIds_Unique[item] = struct{}{}
+			_UpdateUserRequest_DepartmentIds_Unique[item] = struct{}{}
 		}
 
-		// no validation rules for JobIds[idx]
-	}
-
-	if len(m.GetRoleIds()) < 1 {
-		err := UpdateUserRequestValidationError{
-			field:  "RoleIds",
-			reason: "value must contain at least 1 item(s)",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	_UpdateUserRequest_RoleIds_Unique := make(map[uint32]struct{}, len(m.GetRoleIds()))
-
-	for idx, item := range m.GetRoleIds() {
-		_, _ = idx, item
-
-		if _, exists := _UpdateUserRequest_RoleIds_Unique[item]; exists {
-			err := UpdateUserRequestValidationError{
-				field:  fmt.Sprintf("RoleIds[%v]", idx),
-				reason: "repeated value must contain unique items",
-			}
-			if !all {
-				return err
-			}
-			errors = append(errors, err)
-		} else {
-			_UpdateUserRequest_RoleIds_Unique[item] = struct{}{}
-		}
-
-		// no validation rules for RoleIds[idx]
+		// no validation rules for DepartmentIds[idx]
 	}
 
 	if len(errors) > 0 {
@@ -3162,735 +3353,3 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = SendCurrentUserCaptchaReplyValidationError{}
-
-// Validate checks the field values on GetUserReply_Role with the rules defined
-// in the proto definition for this message. If any rules are violated, the
-// first error encountered is returned, or nil if there are no violations.
-func (m *GetUserReply_Role) Validate() error {
-	return m.validate(false)
-}
-
-// ValidateAll checks the field values on GetUserReply_Role with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the result is a list of violation errors wrapped in
-// GetUserReply_RoleMultiError, or nil if none found.
-func (m *GetUserReply_Role) ValidateAll() error {
-	return m.validate(true)
-}
-
-func (m *GetUserReply_Role) validate(all bool) error {
-	if m == nil {
-		return nil
-	}
-
-	var errors []error
-
-	// no validation rules for Id
-
-	// no validation rules for Name
-
-	// no validation rules for Keyword
-
-	if len(errors) > 0 {
-		return GetUserReply_RoleMultiError(errors)
-	}
-
-	return nil
-}
-
-// GetUserReply_RoleMultiError is an error wrapping multiple validation errors
-// returned by GetUserReply_Role.ValidateAll() if the designated constraints
-// aren't met.
-type GetUserReply_RoleMultiError []error
-
-// Error returns a concatenation of all the error messages it wraps.
-func (m GetUserReply_RoleMultiError) Error() string {
-	var msgs []string
-	for _, err := range m {
-		msgs = append(msgs, err.Error())
-	}
-	return strings.Join(msgs, "; ")
-}
-
-// AllErrors returns a list of validation violation errors.
-func (m GetUserReply_RoleMultiError) AllErrors() []error { return m }
-
-// GetUserReply_RoleValidationError is the validation error returned by
-// GetUserReply_Role.Validate if the designated constraints aren't met.
-type GetUserReply_RoleValidationError struct {
-	field  string
-	reason string
-	cause  error
-	key    bool
-}
-
-// Field function returns field value.
-func (e GetUserReply_RoleValidationError) Field() string { return e.field }
-
-// Reason function returns reason value.
-func (e GetUserReply_RoleValidationError) Reason() string { return e.reason }
-
-// Cause function returns cause value.
-func (e GetUserReply_RoleValidationError) Cause() error { return e.cause }
-
-// Key function returns key value.
-func (e GetUserReply_RoleValidationError) Key() bool { return e.key }
-
-// ErrorName returns error name.
-func (e GetUserReply_RoleValidationError) ErrorName() string {
-	return "GetUserReply_RoleValidationError"
-}
-
-// Error satisfies the builtin error interface
-func (e GetUserReply_RoleValidationError) Error() string {
-	cause := ""
-	if e.cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.cause)
-	}
-
-	key := ""
-	if e.key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %sGetUserReply_Role.%s: %s%s",
-		key,
-		e.field,
-		e.reason,
-		cause)
-}
-
-var _ error = GetUserReply_RoleValidationError{}
-
-var _ interface {
-	Field() string
-	Reason() string
-	Key() bool
-	Cause() error
-	ErrorName() string
-} = GetUserReply_RoleValidationError{}
-
-// Validate checks the field values on GetUserReply_Job with the rules defined
-// in the proto definition for this message. If any rules are violated, the
-// first error encountered is returned, or nil if there are no violations.
-func (m *GetUserReply_Job) Validate() error {
-	return m.validate(false)
-}
-
-// ValidateAll checks the field values on GetUserReply_Job with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the result is a list of violation errors wrapped in
-// GetUserReply_JobMultiError, or nil if none found.
-func (m *GetUserReply_Job) ValidateAll() error {
-	return m.validate(true)
-}
-
-func (m *GetUserReply_Job) validate(all bool) error {
-	if m == nil {
-		return nil
-	}
-
-	var errors []error
-
-	// no validation rules for Id
-
-	// no validation rules for Name
-
-	// no validation rules for Keyword
-
-	if len(errors) > 0 {
-		return GetUserReply_JobMultiError(errors)
-	}
-
-	return nil
-}
-
-// GetUserReply_JobMultiError is an error wrapping multiple validation errors
-// returned by GetUserReply_Job.ValidateAll() if the designated constraints
-// aren't met.
-type GetUserReply_JobMultiError []error
-
-// Error returns a concatenation of all the error messages it wraps.
-func (m GetUserReply_JobMultiError) Error() string {
-	var msgs []string
-	for _, err := range m {
-		msgs = append(msgs, err.Error())
-	}
-	return strings.Join(msgs, "; ")
-}
-
-// AllErrors returns a list of validation violation errors.
-func (m GetUserReply_JobMultiError) AllErrors() []error { return m }
-
-// GetUserReply_JobValidationError is the validation error returned by
-// GetUserReply_Job.Validate if the designated constraints aren't met.
-type GetUserReply_JobValidationError struct {
-	field  string
-	reason string
-	cause  error
-	key    bool
-}
-
-// Field function returns field value.
-func (e GetUserReply_JobValidationError) Field() string { return e.field }
-
-// Reason function returns reason value.
-func (e GetUserReply_JobValidationError) Reason() string { return e.reason }
-
-// Cause function returns cause value.
-func (e GetUserReply_JobValidationError) Cause() error { return e.cause }
-
-// Key function returns key value.
-func (e GetUserReply_JobValidationError) Key() bool { return e.key }
-
-// ErrorName returns error name.
-func (e GetUserReply_JobValidationError) ErrorName() string { return "GetUserReply_JobValidationError" }
-
-// Error satisfies the builtin error interface
-func (e GetUserReply_JobValidationError) Error() string {
-	cause := ""
-	if e.cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.cause)
-	}
-
-	key := ""
-	if e.key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %sGetUserReply_Job.%s: %s%s",
-		key,
-		e.field,
-		e.reason,
-		cause)
-}
-
-var _ error = GetUserReply_JobValidationError{}
-
-var _ interface {
-	Field() string
-	Reason() string
-	Key() bool
-	Cause() error
-	ErrorName() string
-} = GetUserReply_JobValidationError{}
-
-// Validate checks the field values on GetUserReply_Department with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the first error encountered is returned, or nil if there are no violations.
-func (m *GetUserReply_Department) Validate() error {
-	return m.validate(false)
-}
-
-// ValidateAll checks the field values on GetUserReply_Department with the
-// rules defined in the proto definition for this message. If any rules are
-// violated, the result is a list of violation errors wrapped in
-// GetUserReply_DepartmentMultiError, or nil if none found.
-func (m *GetUserReply_Department) ValidateAll() error {
-	return m.validate(true)
-}
-
-func (m *GetUserReply_Department) validate(all bool) error {
-	if m == nil {
-		return nil
-	}
-
-	var errors []error
-
-	// no validation rules for Id
-
-	// no validation rules for Name
-
-	// no validation rules for Keyword
-
-	if len(errors) > 0 {
-		return GetUserReply_DepartmentMultiError(errors)
-	}
-
-	return nil
-}
-
-// GetUserReply_DepartmentMultiError is an error wrapping multiple validation
-// errors returned by GetUserReply_Department.ValidateAll() if the designated
-// constraints aren't met.
-type GetUserReply_DepartmentMultiError []error
-
-// Error returns a concatenation of all the error messages it wraps.
-func (m GetUserReply_DepartmentMultiError) Error() string {
-	var msgs []string
-	for _, err := range m {
-		msgs = append(msgs, err.Error())
-	}
-	return strings.Join(msgs, "; ")
-}
-
-// AllErrors returns a list of validation violation errors.
-func (m GetUserReply_DepartmentMultiError) AllErrors() []error { return m }
-
-// GetUserReply_DepartmentValidationError is the validation error returned by
-// GetUserReply_Department.Validate if the designated constraints aren't met.
-type GetUserReply_DepartmentValidationError struct {
-	field  string
-	reason string
-	cause  error
-	key    bool
-}
-
-// Field function returns field value.
-func (e GetUserReply_DepartmentValidationError) Field() string { return e.field }
-
-// Reason function returns reason value.
-func (e GetUserReply_DepartmentValidationError) Reason() string { return e.reason }
-
-// Cause function returns cause value.
-func (e GetUserReply_DepartmentValidationError) Cause() error { return e.cause }
-
-// Key function returns key value.
-func (e GetUserReply_DepartmentValidationError) Key() bool { return e.key }
-
-// ErrorName returns error name.
-func (e GetUserReply_DepartmentValidationError) ErrorName() string {
-	return "GetUserReply_DepartmentValidationError"
-}
-
-// Error satisfies the builtin error interface
-func (e GetUserReply_DepartmentValidationError) Error() string {
-	cause := ""
-	if e.cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.cause)
-	}
-
-	key := ""
-	if e.key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %sGetUserReply_Department.%s: %s%s",
-		key,
-		e.field,
-		e.reason,
-		cause)
-}
-
-var _ error = GetUserReply_DepartmentValidationError{}
-
-var _ interface {
-	Field() string
-	Reason() string
-	Key() bool
-	Cause() error
-	ErrorName() string
-} = GetUserReply_DepartmentValidationError{}
-
-// Validate checks the field values on ListUserReply_Role with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the first error encountered is returned, or nil if there are no violations.
-func (m *ListUserReply_Role) Validate() error {
-	return m.validate(false)
-}
-
-// ValidateAll checks the field values on ListUserReply_Role with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the result is a list of violation errors wrapped in
-// ListUserReply_RoleMultiError, or nil if none found.
-func (m *ListUserReply_Role) ValidateAll() error {
-	return m.validate(true)
-}
-
-func (m *ListUserReply_Role) validate(all bool) error {
-	if m == nil {
-		return nil
-	}
-
-	var errors []error
-
-	// no validation rules for Id
-
-	// no validation rules for Name
-
-	// no validation rules for Keyword
-
-	if len(errors) > 0 {
-		return ListUserReply_RoleMultiError(errors)
-	}
-
-	return nil
-}
-
-// ListUserReply_RoleMultiError is an error wrapping multiple validation errors
-// returned by ListUserReply_Role.ValidateAll() if the designated constraints
-// aren't met.
-type ListUserReply_RoleMultiError []error
-
-// Error returns a concatenation of all the error messages it wraps.
-func (m ListUserReply_RoleMultiError) Error() string {
-	var msgs []string
-	for _, err := range m {
-		msgs = append(msgs, err.Error())
-	}
-	return strings.Join(msgs, "; ")
-}
-
-// AllErrors returns a list of validation violation errors.
-func (m ListUserReply_RoleMultiError) AllErrors() []error { return m }
-
-// ListUserReply_RoleValidationError is the validation error returned by
-// ListUserReply_Role.Validate if the designated constraints aren't met.
-type ListUserReply_RoleValidationError struct {
-	field  string
-	reason string
-	cause  error
-	key    bool
-}
-
-// Field function returns field value.
-func (e ListUserReply_RoleValidationError) Field() string { return e.field }
-
-// Reason function returns reason value.
-func (e ListUserReply_RoleValidationError) Reason() string { return e.reason }
-
-// Cause function returns cause value.
-func (e ListUserReply_RoleValidationError) Cause() error { return e.cause }
-
-// Key function returns key value.
-func (e ListUserReply_RoleValidationError) Key() bool { return e.key }
-
-// ErrorName returns error name.
-func (e ListUserReply_RoleValidationError) ErrorName() string {
-	return "ListUserReply_RoleValidationError"
-}
-
-// Error satisfies the builtin error interface
-func (e ListUserReply_RoleValidationError) Error() string {
-	cause := ""
-	if e.cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.cause)
-	}
-
-	key := ""
-	if e.key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %sListUserReply_Role.%s: %s%s",
-		key,
-		e.field,
-		e.reason,
-		cause)
-}
-
-var _ error = ListUserReply_RoleValidationError{}
-
-var _ interface {
-	Field() string
-	Reason() string
-	Key() bool
-	Cause() error
-	ErrorName() string
-} = ListUserReply_RoleValidationError{}
-
-// Validate checks the field values on ListUserReply_Department with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the first error encountered is returned, or nil if there are no violations.
-func (m *ListUserReply_Department) Validate() error {
-	return m.validate(false)
-}
-
-// ValidateAll checks the field values on ListUserReply_Department with the
-// rules defined in the proto definition for this message. If any rules are
-// violated, the result is a list of violation errors wrapped in
-// ListUserReply_DepartmentMultiError, or nil if none found.
-func (m *ListUserReply_Department) ValidateAll() error {
-	return m.validate(true)
-}
-
-func (m *ListUserReply_Department) validate(all bool) error {
-	if m == nil {
-		return nil
-	}
-
-	var errors []error
-
-	// no validation rules for Id
-
-	// no validation rules for Name
-
-	// no validation rules for Keyword
-
-	if len(errors) > 0 {
-		return ListUserReply_DepartmentMultiError(errors)
-	}
-
-	return nil
-}
-
-// ListUserReply_DepartmentMultiError is an error wrapping multiple validation
-// errors returned by ListUserReply_Department.ValidateAll() if the designated
-// constraints aren't met.
-type ListUserReply_DepartmentMultiError []error
-
-// Error returns a concatenation of all the error messages it wraps.
-func (m ListUserReply_DepartmentMultiError) Error() string {
-	var msgs []string
-	for _, err := range m {
-		msgs = append(msgs, err.Error())
-	}
-	return strings.Join(msgs, "; ")
-}
-
-// AllErrors returns a list of validation violation errors.
-func (m ListUserReply_DepartmentMultiError) AllErrors() []error { return m }
-
-// ListUserReply_DepartmentValidationError is the validation error returned by
-// ListUserReply_Department.Validate if the designated constraints aren't met.
-type ListUserReply_DepartmentValidationError struct {
-	field  string
-	reason string
-	cause  error
-	key    bool
-}
-
-// Field function returns field value.
-func (e ListUserReply_DepartmentValidationError) Field() string { return e.field }
-
-// Reason function returns reason value.
-func (e ListUserReply_DepartmentValidationError) Reason() string { return e.reason }
-
-// Cause function returns cause value.
-func (e ListUserReply_DepartmentValidationError) Cause() error { return e.cause }
-
-// Key function returns key value.
-func (e ListUserReply_DepartmentValidationError) Key() bool { return e.key }
-
-// ErrorName returns error name.
-func (e ListUserReply_DepartmentValidationError) ErrorName() string {
-	return "ListUserReply_DepartmentValidationError"
-}
-
-// Error satisfies the builtin error interface
-func (e ListUserReply_DepartmentValidationError) Error() string {
-	cause := ""
-	if e.cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.cause)
-	}
-
-	key := ""
-	if e.key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %sListUserReply_Department.%s: %s%s",
-		key,
-		e.field,
-		e.reason,
-		cause)
-}
-
-var _ error = ListUserReply_DepartmentValidationError{}
-
-var _ interface {
-	Field() string
-	Reason() string
-	Key() bool
-	Cause() error
-	ErrorName() string
-} = ListUserReply_DepartmentValidationError{}
-
-// Validate checks the field values on ListUserReply_User with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the first error encountered is returned, or nil if there are no violations.
-func (m *ListUserReply_User) Validate() error {
-	return m.validate(false)
-}
-
-// ValidateAll checks the field values on ListUserReply_User with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the result is a list of violation errors wrapped in
-// ListUserReply_UserMultiError, or nil if none found.
-func (m *ListUserReply_User) ValidateAll() error {
-	return m.validate(true)
-}
-
-func (m *ListUserReply_User) validate(all bool) error {
-	if m == nil {
-		return nil
-	}
-
-	var errors []error
-
-	// no validation rules for Id
-
-	// no validation rules for Name
-
-	// no validation rules for Nickname
-
-	// no validation rules for Gender
-
-	// no validation rules for Phone
-
-	// no validation rules for Email
-
-	// no validation rules for LoggedAt
-
-	// no validation rules for CreatedAt
-
-	// no validation rules for UpdatedAt
-
-	if m.Avatar != nil {
-		// no validation rules for Avatar
-	}
-
-	if m.Status != nil {
-		// no validation rules for Status
-	}
-
-	if m.Department != nil {
-
-		if all {
-			switch v := interface{}(m.GetDepartment()).(type) {
-			case interface{ ValidateAll() error }:
-				if err := v.ValidateAll(); err != nil {
-					errors = append(errors, ListUserReply_UserValidationError{
-						field:  "Department",
-						reason: "embedded message failed validation",
-						cause:  err,
-					})
-				}
-			case interface{ Validate() error }:
-				if err := v.Validate(); err != nil {
-					errors = append(errors, ListUserReply_UserValidationError{
-						field:  "Department",
-						reason: "embedded message failed validation",
-						cause:  err,
-					})
-				}
-			}
-		} else if v, ok := interface{}(m.GetDepartment()).(interface{ Validate() error }); ok {
-			if err := v.Validate(); err != nil {
-				return ListUserReply_UserValidationError{
-					field:  "Department",
-					reason: "embedded message failed validation",
-					cause:  err,
-				}
-			}
-		}
-
-	}
-
-	if m.Role != nil {
-
-		if all {
-			switch v := interface{}(m.GetRole()).(type) {
-			case interface{ ValidateAll() error }:
-				if err := v.ValidateAll(); err != nil {
-					errors = append(errors, ListUserReply_UserValidationError{
-						field:  "Role",
-						reason: "embedded message failed validation",
-						cause:  err,
-					})
-				}
-			case interface{ Validate() error }:
-				if err := v.Validate(); err != nil {
-					errors = append(errors, ListUserReply_UserValidationError{
-						field:  "Role",
-						reason: "embedded message failed validation",
-						cause:  err,
-					})
-				}
-			}
-		} else if v, ok := interface{}(m.GetRole()).(interface{ Validate() error }); ok {
-			if err := v.Validate(); err != nil {
-				return ListUserReply_UserValidationError{
-					field:  "Role",
-					reason: "embedded message failed validation",
-					cause:  err,
-				}
-			}
-		}
-
-	}
-
-	if len(errors) > 0 {
-		return ListUserReply_UserMultiError(errors)
-	}
-
-	return nil
-}
-
-// ListUserReply_UserMultiError is an error wrapping multiple validation errors
-// returned by ListUserReply_User.ValidateAll() if the designated constraints
-// aren't met.
-type ListUserReply_UserMultiError []error
-
-// Error returns a concatenation of all the error messages it wraps.
-func (m ListUserReply_UserMultiError) Error() string {
-	var msgs []string
-	for _, err := range m {
-		msgs = append(msgs, err.Error())
-	}
-	return strings.Join(msgs, "; ")
-}
-
-// AllErrors returns a list of validation violation errors.
-func (m ListUserReply_UserMultiError) AllErrors() []error { return m }
-
-// ListUserReply_UserValidationError is the validation error returned by
-// ListUserReply_User.Validate if the designated constraints aren't met.
-type ListUserReply_UserValidationError struct {
-	field  string
-	reason string
-	cause  error
-	key    bool
-}
-
-// Field function returns field value.
-func (e ListUserReply_UserValidationError) Field() string { return e.field }
-
-// Reason function returns reason value.
-func (e ListUserReply_UserValidationError) Reason() string { return e.reason }
-
-// Cause function returns cause value.
-func (e ListUserReply_UserValidationError) Cause() error { return e.cause }
-
-// Key function returns key value.
-func (e ListUserReply_UserValidationError) Key() bool { return e.key }
-
-// ErrorName returns error name.
-func (e ListUserReply_UserValidationError) ErrorName() string {
-	return "ListUserReply_UserValidationError"
-}
-
-// Error satisfies the builtin error interface
-func (e ListUserReply_UserValidationError) Error() string {
-	cause := ""
-	if e.cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.cause)
-	}
-
-	key := ""
-	if e.key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %sListUserReply_User.%s: %s%s",
-		key,
-		e.field,
-		e.reason,
-		cause)
-}
-
-var _ error = ListUserReply_UserValidationError{}
-
-var _ interface {
-	Field() string
-	Reason() string
-	Key() bool
-	Cause() error
-	ErrorName() string
-} = ListUserReply_UserValidationError{}

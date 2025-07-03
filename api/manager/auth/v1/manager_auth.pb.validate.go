@@ -189,14 +189,6 @@ func (m *AuthReply) validate(all bool) error {
 
 	// no validation rules for UserName
 
-	// no validation rules for RoleId
-
-	// no validation rules for RoleKeyword
-
-	// no validation rules for DepartmentId
-
-	// no validation rules for DepartmentKeyword
-
 	if len(errors) > 0 {
 		return AuthReplyMultiError(errors)
 	}
@@ -402,13 +394,15 @@ func (m *OAuthWayReply) validate(all bool) error {
 
 	// no validation rules for Uuid
 
-	// no validation rules for Type
+	// no validation rules for Action
 
 	// no validation rules for Value
 
 	// no validation rules for Tip
 
 	// no validation rules for Keyword
+
+	// no validation rules for CodeField
 
 	if len(errors) > 0 {
 		return OAuthWayReplyMultiError(errors)

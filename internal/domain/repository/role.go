@@ -2,11 +2,15 @@ package repository
 
 import (
 	"github.com/limes-cloud/kratosx"
+
 	"github.com/limes-cloud/manager/internal/domain/entity"
 	"github.com/limes-cloud/manager/internal/types"
 )
 
 type Role interface {
+	// ListCacheRole 获取缓存的role
+	ListCacheRole(ctx kratosx.Context) ([]*entity.Role, error)
+
 	// GetRole 获取指定的角色信息
 	GetRole(ctx kratosx.Context, id uint32) (*entity.Role, error)
 
@@ -32,17 +36,28 @@ type Role interface {
 	DeleteRole(ctx kratosx.Context, id uint32) error
 
 	// GetRoleMenuIds 获取指定角色的菜单id列表
-	GetRoleMenuIds(ctx kratosx.Context, id uint32) ([]uint32, error)
+	GetRoleMenuIds(ctx kratosx.Context, rids []uint32) ([]uint32, error)
 
 	// UpdateRoleMenu 更新角色的菜单
 	UpdateRoleMenu(ctx kratosx.Context, id uint32, menuIds []uint32) error
 
-	// GetRoleDataScope 获取指定用户的角色权限
-	GetRoleDataScope(ctx kratosx.Context, rid uint32) (bool, []uint32, error)
+	// GetRoleScopeByUID 获取指定角色组的角色权限
+	GetRoleScopeByUID(ctx kratosx.Context, uid uint32) (bool, []uint32, error)
 
-	// HasRolePurview 是否具有指定的角色权限
-	HasRolePurview(ctx kratosx.Context, uid uint32, rid uint32) (bool, error)
+	// GetRoleScope 获取指定角色组的角色权限
+	GetRoleScope(ctx kratosx.Context, rids []uint32) (bool, []uint32, error)
+
+	// HasRolePurview 用户是否具有指定的角色权限
+	HasRolePurview(ctx kratosx.Context, uid uint32, rids []uint32) (bool, error)
 
 	// AllRoleKeywordByMenuId 获取指定菜单id的所有角色keyword
 	AllRoleKeywordByMenuId(ctx kratosx.Context, id uint32) ([]string, error)
+
+	// GetDataScope 获取数据权限列表
+	GetDataScope(ctx kratosx.Context, uid uint32) (bool, []uint32, error)
+
+	// HasDataPurview 用户是否具有指定的数据权限
+	HasDataPurview(ctx kratosx.Context, uid uint32, rids []uint32) (bool, error)
+
+	GetEnableRoleIdsByUID(ctx kratosx.Context, uid uint32) ([]uint32, error)
 }

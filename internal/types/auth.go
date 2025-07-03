@@ -10,9 +10,9 @@ type OAuthorName interface {
 const (
 	GetOAuthWayBrowserWX = "wx"
 
-	GetOAuthWayTypeScan    = "scan"
-	GetOAuthWayTypeJump    = "jump"
-	GetOAuthWayTypeCaptcha = "captcha"
+	GetOAuthWayActionScan    = "scan"
+	GetOAuthWayActionJump    = "jump"
+	GetOAuthWayActionCaptcha = "captcha"
 )
 
 type ListOAuthRequest struct {
@@ -54,10 +54,11 @@ type ReportOAuthCodeRequest struct {
 }
 
 type GetOAuthWayReply struct {
-	UUID  string
-	Type  string
-	Value string
-	Tip   string
+	UUID      string
+	Action    string
+	Value     string
+	Tip       string
+	CodeField string
 }
 
 type GetOAuthTokenRequest struct {

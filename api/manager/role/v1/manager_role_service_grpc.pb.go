@@ -21,6 +21,7 @@ const _ = grpc.SupportPackageIsVersion7
 const (
 	Role_GetRoleMenuIds_FullMethodName   = "/manager.api.manager.role.v1.Role/GetRoleMenuIds"
 	Role_ListRole_FullMethodName         = "/manager.api.manager.role.v1.Role/ListRole"
+	Role_ListCurrentRole_FullMethodName  = "/manager.api.manager.role.v1.Role/ListCurrentRole"
 	Role_CreateRole_FullMethodName       = "/manager.api.manager.role.v1.Role/CreateRole"
 	Role_UpdateRole_FullMethodName       = "/manager.api.manager.role.v1.Role/UpdateRole"
 	Role_UpdateRoleMenu_FullMethodName   = "/manager.api.manager.role.v1.Role/UpdateRoleMenu"
@@ -37,6 +38,8 @@ type RoleClient interface {
 	GetRoleMenuIds(ctx context.Context, in *GetRoleMenuIdsRequest, opts ...grpc.CallOption) (*GetRoleMenuIdsReply, error)
 	// ListRole 获取角色信息列表
 	ListRole(ctx context.Context, in *ListRoleRequest, opts ...grpc.CallOption) (*ListRoleReply, error)
+	// ListCurrentRole 获取当前用户的角色信息列表
+	ListCurrentRole(ctx context.Context, in *ListRoleRequest, opts ...grpc.CallOption) (*ListRoleReply, error)
 	// CreateRole 创建角色信息
 	CreateRole(ctx context.Context, in *CreateRoleRequest, opts ...grpc.CallOption) (*CreateRoleReply, error)
 	// UpdateRole 更新角色信息
@@ -71,6 +74,15 @@ func (c *roleClient) GetRoleMenuIds(ctx context.Context, in *GetRoleMenuIdsReque
 func (c *roleClient) ListRole(ctx context.Context, in *ListRoleRequest, opts ...grpc.CallOption) (*ListRoleReply, error) {
 	out := new(ListRoleReply)
 	err := c.cc.Invoke(ctx, Role_ListRole_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *roleClient) ListCurrentRole(ctx context.Context, in *ListRoleRequest, opts ...grpc.CallOption) (*ListRoleReply, error) {
+	out := new(ListRoleReply)
+	err := c.cc.Invoke(ctx, Role_ListCurrentRole_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -139,6 +151,8 @@ type RoleServer interface {
 	GetRoleMenuIds(context.Context, *GetRoleMenuIdsRequest) (*GetRoleMenuIdsReply, error)
 	// ListRole 获取角色信息列表
 	ListRole(context.Context, *ListRoleRequest) (*ListRoleReply, error)
+	// ListCurrentRole 获取当前用户的角色信息列表
+	ListCurrentRole(context.Context, *ListRoleRequest) (*ListRoleReply, error)
 	// CreateRole 创建角色信息
 	CreateRole(context.Context, *CreateRoleRequest) (*CreateRoleReply, error)
 	// UpdateRole 更新角色信息
@@ -163,6 +177,9 @@ func (UnimplementedRoleServer) GetRoleMenuIds(context.Context, *GetRoleMenuIdsRe
 }
 func (UnimplementedRoleServer) ListRole(context.Context, *ListRoleRequest) (*ListRoleReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListRole not implemented")
+}
+func (UnimplementedRoleServer) ListCurrentRole(context.Context, *ListRoleRequest) (*ListRoleReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListCurrentRole not implemented")
 }
 func (UnimplementedRoleServer) CreateRole(context.Context, *CreateRoleRequest) (*CreateRoleReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateRole not implemented")
@@ -227,6 +244,24 @@ func _Role_ListRole_Handler(srv interface{}, ctx context.Context, dec func(inter
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(RoleServer).ListRole(ctx, req.(*ListRoleRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Role_ListCurrentRole_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListRoleRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RoleServer).ListCurrentRole(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Role_ListCurrentRole_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RoleServer).ListCurrentRole(ctx, req.(*ListRoleRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -353,6 +388,10 @@ var Role_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListRole",
 			Handler:    _Role_ListRole_Handler,
+		},
+		{
+			MethodName: "ListCurrentRole",
+			Handler:    _Role_ListCurrentRole_Handler,
 		},
 		{
 			MethodName: "CreateRole",

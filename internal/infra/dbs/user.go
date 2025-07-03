@@ -28,21 +28,21 @@ func NewUser() *User {
 // GetUserByPhone 获取指定数据
 func (infra *User) GetUserByPhone(ctx kratosx.Context, phone string) (*entity.User, error) {
 	var user entity.User
-	db := ctx.DB().Preload("Roles").Preload("Jobs").Preload("Department")
+	db := ctx.DB().Preload("Roles").Preload("Jobs").Preload("Departments")
 	return &user, db.Where("phone = ?", phone).First(&user).Error
 }
 
 // GetUserByEmail 获取指定数据
 func (infra *User) GetUserByEmail(ctx kratosx.Context, email string) (*entity.User, error) {
 	var user entity.User
-	db := ctx.DB().Preload("Roles").Preload("Jobs").Preload("Department")
+	db := ctx.DB().Preload("Roles").Preload("Jobs").Preload("Departments")
 	return &user, db.Where("email = ?", email).First(&user).Error
 }
 
 // GetUser 获取指定的数据
 func (infra *User) GetUser(ctx kratosx.Context, id uint32) (*entity.User, error) {
 	var user entity.User
-	db := ctx.DB().Preload("Roles").Preload("Jobs").Preload("Department")
+	db := ctx.DB().Preload("Roles").Preload("Jobs").Preload("Departments")
 	return &user, db.First(&user, id).Error
 }
 
@@ -60,14 +60,14 @@ func (infra *User) ListUser(ctx kratosx.Context, req *types.ListUserRequest) ([]
 		list  []*entity.User
 	)
 
-	db := ctx.DB().Model(entity.User{}).Select(fs).Preload("Role").Preload("Department")
+	db := ctx.DB().Model(entity.User{}).Select(fs).
+		Preload("Roles").
+		Preload("Departments").
+		Preload("Jobs")
+	if req.ID != nil {
+		db = db.Where("id = ?", *req.ID)
+	}
 
-	if req.DepartmentId != nil {
-		db = db.Where("department_id = ?", *req.DepartmentId)
-	}
-	if req.RoleId != nil {
-		db = db.Where("role_id = ?", *req.RoleId)
-	}
 	if req.Name != nil {
 		db = db.Where("name LIKE ?", *req.Name+"%")
 	}
@@ -87,8 +87,15 @@ func (infra *User) ListUser(ctx kratosx.Context, req *types.ListUserRequest) ([]
 		db = db.Where("created_at BETWEEN ? AND ?", req.CreatedAts[0], req.CreatedAts[1])
 	}
 	if req.DepartmentIds != nil {
-		db = db.Where("department_id in ?", req.DepartmentIds)
+		db = db.Where("id in (?)",
+			ctx.DB().Select("user_id").
+				Model(entity.UserDepartment{}).
+				Where("department_id in ?", req.DepartmentIds),
+		)
 	}
+	// if req.RoleIds != nil {
+	//	db = db.Where("role_id = ?", *req.RoleIds)
+	// }
 
 	if err := db.Count(&total).Error; err != nil {
 		return nil, 0, err
@@ -105,6 +112,11 @@ func (infra *User) CreateUser(ctx kratosx.Context, user *entity.User) (uint32, e
 // UpdateUser 更新数据
 func (infra *User) UpdateUser(ctx kratosx.Context, user *entity.User) error {
 	return ctx.DB().Transaction(func(tx *gorm.DB) error {
+		if len(user.UserDepartments) != 0 {
+			if err := tx.Where("user_id=?", user.Id).Delete(entity.UserDepartment{}).Error; err != nil {
+				return err
+			}
+		}
 		if len(user.UserRoles) != 0 {
 			if err := tx.Where("user_id=?", user.Id).Delete(entity.UserRole{}).Error; err != nil {
 				return err
@@ -114,6 +126,22 @@ func (infra *User) UpdateUser(ctx kratosx.Context, user *entity.User) error {
 			if err := tx.Where("user_id=?", user.Id).Delete(entity.UserJob{}).Error; err != nil {
 				return err
 			}
+		}
+		return tx.Updates(user).Error
+	})
+}
+
+// ForceUpdateUser 强制更新数据
+func (infra *User) ForceUpdateUser(ctx kratosx.Context, user *entity.User) error {
+	return ctx.DB().Transaction(func(tx *gorm.DB) error {
+		if err := tx.Where("user_id=?", user.Id).Delete(entity.UserDepartment{}).Error; err != nil {
+			return err
+		}
+		if err := tx.Where("user_id=?", user.Id).Delete(entity.UserRole{}).Error; err != nil {
+			return err
+		}
+		if err := tx.Where("user_id=?", user.Id).Delete(entity.UserJob{}).Error; err != nil {
+			return err
 		}
 		return tx.Updates(user).Error
 	})

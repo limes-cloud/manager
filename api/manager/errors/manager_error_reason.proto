@@ -52,4 +52,5 @@ enum ErrorReason {
   NotUserError = 45[(errors.message)="用户不存在"];
   BindError = 46[(errors.message)="用户绑定失败"];
   NotFoundReportOAuthError = 47[(errors.code)=200,(errors.message)="未查询到扫码授权信息"];
+  JobPurviewError = 48[(errors.message)="无此职位权限"];
 }

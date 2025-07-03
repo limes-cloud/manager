@@ -26,6 +26,13 @@ service Role{
     };
   }
 
+  // ListCurrentRole 获取当前用户的角色信息列表
+  rpc ListCurrentRole (ListRoleRequest) returns (ListRoleReply) {
+    option (google.api.http) = {
+      get: "/manager/api/v1/current/roles",
+    };
+  }
+
   // CreateRole 创建角色信息
   rpc CreateRole (CreateRoleRequest) returns (CreateRoleReply) {
     option (google.api.http) = {

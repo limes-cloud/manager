@@ -24,6 +24,7 @@ const (
 	Department_UpdateDepartmentClassify_FullMethodName = "/manager.api.manager.department.v1.Department/UpdateDepartmentClassify"
 	Department_DeleteDepartmentClassify_FullMethodName = "/manager.api.manager.department.v1.Department/DeleteDepartmentClassify"
 	Department_ListDepartment_FullMethodName           = "/manager.api.manager.department.v1.Department/ListDepartment"
+	Department_ListCurrentDepartment_FullMethodName    = "/manager.api.manager.department.v1.Department/ListCurrentDepartment"
 	Department_CreateDepartment_FullMethodName         = "/manager.api.manager.department.v1.Department/CreateDepartment"
 	Department_UpdateDepartment_FullMethodName         = "/manager.api.manager.department.v1.Department/UpdateDepartment"
 	Department_DeleteDepartment_FullMethodName         = "/manager.api.manager.department.v1.Department/DeleteDepartment"
@@ -44,6 +45,8 @@ type DepartmentClient interface {
 	DeleteDepartmentClassify(ctx context.Context, in *DeleteDepartmentClassifyRequest, opts ...grpc.CallOption) (*DeleteDepartmentClassifyReply, error)
 	// ListDepartment 获取部门信息列表
 	ListDepartment(ctx context.Context, in *ListDepartmentRequest, opts ...grpc.CallOption) (*ListDepartmentReply, error)
+	// ListDepartment 获取部门信息列表
+	ListCurrentDepartment(ctx context.Context, in *ListDepartmentRequest, opts ...grpc.CallOption) (*ListDepartmentReply, error)
 	// CreateDepartment 创建部门信息
 	CreateDepartment(ctx context.Context, in *CreateDepartmentRequest, opts ...grpc.CallOption) (*CreateDepartmentReply, error)
 	// UpdateDepartment 更新部门信息
@@ -107,6 +110,15 @@ func (c *departmentClient) ListDepartment(ctx context.Context, in *ListDepartmen
 	return out, nil
 }
 
+func (c *departmentClient) ListCurrentDepartment(ctx context.Context, in *ListDepartmentRequest, opts ...grpc.CallOption) (*ListDepartmentReply, error) {
+	out := new(ListDepartmentReply)
+	err := c.cc.Invoke(ctx, Department_ListCurrentDepartment_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *departmentClient) CreateDepartment(ctx context.Context, in *CreateDepartmentRequest, opts ...grpc.CallOption) (*CreateDepartmentReply, error) {
 	out := new(CreateDepartmentReply)
 	err := c.cc.Invoke(ctx, Department_CreateDepartment_FullMethodName, in, out, opts...)
@@ -157,6 +169,8 @@ type DepartmentServer interface {
 	DeleteDepartmentClassify(context.Context, *DeleteDepartmentClassifyRequest) (*DeleteDepartmentClassifyReply, error)
 	// ListDepartment 获取部门信息列表
 	ListDepartment(context.Context, *ListDepartmentRequest) (*ListDepartmentReply, error)
+	// ListDepartment 获取部门信息列表
+	ListCurrentDepartment(context.Context, *ListDepartmentRequest) (*ListDepartmentReply, error)
 	// CreateDepartment 创建部门信息
 	CreateDepartment(context.Context, *CreateDepartmentRequest) (*CreateDepartmentReply, error)
 	// UpdateDepartment 更新部门信息
@@ -186,6 +200,9 @@ func (UnimplementedDepartmentServer) DeleteDepartmentClassify(context.Context, *
 }
 func (UnimplementedDepartmentServer) ListDepartment(context.Context, *ListDepartmentRequest) (*ListDepartmentReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListDepartment not implemented")
+}
+func (UnimplementedDepartmentServer) ListCurrentDepartment(context.Context, *ListDepartmentRequest) (*ListDepartmentReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListCurrentDepartment not implemented")
 }
 func (UnimplementedDepartmentServer) CreateDepartment(context.Context, *CreateDepartmentRequest) (*CreateDepartmentReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateDepartment not implemented")
@@ -302,6 +319,24 @@ func _Department_ListDepartment_Handler(srv interface{}, ctx context.Context, de
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Department_ListCurrentDepartment_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListDepartmentRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DepartmentServer).ListCurrentDepartment(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Department_ListCurrentDepartment_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DepartmentServer).ListCurrentDepartment(ctx, req.(*ListDepartmentRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Department_CreateDepartment_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(CreateDepartmentRequest)
 	if err := dec(in); err != nil {
@@ -400,6 +435,10 @@ var Department_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListDepartment",
 			Handler:    _Department_ListDepartment_Handler,
+		},
+		{
+			MethodName: "ListCurrentDepartment",
+			Handler:    _Department_ListCurrentDepartment_Handler,
 		},
 		{
 			MethodName: "CreateDepartment",

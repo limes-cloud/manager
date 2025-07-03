@@ -2,6 +2,7 @@ package repository
 
 import (
 	"github.com/limes-cloud/kratosx"
+
 	"github.com/limes-cloud/manager/internal/domain/entity"
 	"github.com/limes-cloud/manager/internal/types"
 )
@@ -27,6 +28,9 @@ type User interface {
 
 	// CreateUser 创建用户信息
 	CreateUser(ctx kratosx.Context, req *entity.User) (uint32, error)
+
+	// ForceUpdateUser 强制更新
+	ForceUpdateUser(ctx kratosx.Context, user *entity.User) error
 
 	// UpdateUser 更新用户信息
 	UpdateUser(ctx kratosx.Context, req *entity.User) error

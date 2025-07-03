@@ -32,6 +32,7 @@ type User struct {
 	repo    repository.User
 	dept    repository.Department
 	role    repository.Role
+	job     repository.Job
 	file    repository.File
 	address repository.Address
 }
@@ -41,6 +42,7 @@ func NewUser(
 	repo repository.User,
 	dept repository.Department,
 	role repository.Role,
+	job repository.Job,
 	file repository.File,
 	address repository.Address,
 ) *User {
@@ -49,6 +51,7 @@ func NewUser(
 		repo:    repo,
 		dept:    dept,
 		role:    role,
+		job:     job,
 		file:    file,
 		address: address,
 	}
@@ -60,57 +63,69 @@ func (u *User) GetUser(ctx kratosx.Context, req *types.GetUserRequest) (*entity.
 		user *entity.User
 		err  error
 	)
-
-	isPurview := func(userId uint32) error {
-		has, err := u.dept.HasDepartmentPurview(ctx, md.UserId(ctx), userId)
+	isPurview := func(ctx kratosx.Context, user *entity.User) error {
+		// 获取当前用户部门全下
+		all, scope, err := u.role.GetDataScope(ctx, md.UserId(ctx))
 		if err != nil {
-			ctx.Logger().Errorw("msg", "get dept purview error", "err", err.Error())
 			return errors.DatabaseError()
 		}
-		if !has {
-			return errors.DepartmentPurviewError()
+
+		if all {
+			return nil
 		}
-		return nil
+
+		uni := valx.New(scope)
+		for _, id := range user.GetDepartmentIds() {
+			if uni.Has(id) {
+				return nil
+			}
+		}
+		return errors.DepartmentPurviewError()
 	}
 
 	if req.Id != nil {
-		if err := isPurview(*req.Id); err != nil {
+		user, err = u.repo.GetUser(ctx, *req.Id)
+		if err != nil {
+			return nil, errors.DatabaseError()
+		}
+		if err := isPurview(ctx, user); err != nil {
 			return nil, err
 		}
-		user, err = u.repo.GetUser(ctx, *req.Id)
 	} else if req.Phone != nil {
 		user, err = u.repo.GetUserByPhone(ctx, *req.Phone)
+		if err != nil {
+			return nil, errors.DatabaseError()
+		}
+		if err := isPurview(ctx, user); err != nil {
+			return nil, err
+		}
 	} else if req.Email != nil {
 		user, err = u.repo.GetUserByEmail(ctx, *req.Email)
+		if err != nil {
+			return nil, errors.DatabaseError()
+		}
+		if err := isPurview(ctx, user); err != nil {
+			return nil, err
+		}
 	} else {
 		return nil, errors.ParamsError()
 	}
-
-	if err != nil {
-		return nil, errors.GetError(err.Error())
-	}
-
-	for _, role := range user.Roles {
-		if role.Id == user.RoleId {
-			user.Role = role
-		}
-	}
-
-	if err := isPurview(user.Id); err != nil {
-		return nil, err
-	}
-
-	return user, nil
+	return user, err
 }
 
 // ListUser 获取用户信息列表
 func (u *User) ListUser(ctx kratosx.Context, req *types.ListUserRequest) ([]*entity.User, uint32, error) {
-	all, scopes, err := u.dept.GetDepartmentDataScope(ctx, md.UserId(ctx))
+	all, scopes, err := u.role.GetDataScope(ctx, md.UserId(ctx))
 	if err != nil {
 		return nil, 0, errors.DatabaseError(err.Error())
 	}
 	if !all {
-		req.DepartmentIds = scopes
+		// 没有权限仅查看当前用户
+		if scopes == nil {
+			req.ID = proto.Uint32(md.UserId(ctx))
+		} else {
+			req.DepartmentIds = scopes
+		}
 	}
 
 	list, total, err := u.repo.ListUser(ctx, req)
@@ -130,7 +145,7 @@ func (u *User) ListUser(ctx kratosx.Context, req *types.ListUserRequest) ([]*ent
 // CreateUser 创建用户信息
 func (u *User) CreateUser(ctx kratosx.Context, req *entity.User) (uint32, error) {
 	// 判断是否具有部门权限
-	hasDeptPurview, err := u.dept.HasDepartmentPurview(ctx, md.UserId(ctx), req.DepartmentId)
+	hasDeptPurview, err := u.role.HasDataPurview(ctx, md.UserId(ctx), req.GetDepartmentIds())
 	if err != nil {
 		ctx.Logger().Warnw("msg", "get dept purview error", "err", err.Error())
 		return 0, errors.DatabaseError()
@@ -140,7 +155,7 @@ func (u *User) CreateUser(ctx kratosx.Context, req *entity.User) (uint32, error)
 	}
 
 	// 判断是否具有角色权限
-	all, scopes, err := u.role.GetRoleDataScope(ctx, md.RoleId(ctx))
+	all, scopes, err := u.role.GetRoleScope(ctx, md.RoleIds(ctx))
 	if err != nil {
 		ctx.Logger().Warnw("msg", "get role scopes error", "err", err.Error())
 		return 0, errors.DatabaseError()
@@ -158,7 +173,6 @@ func (u *User) CreateUser(ctx kratosx.Context, req *entity.User) (uint32, error)
 	req.Nickname = req.Name
 	req.Avatar = &u.conf.DefaultUserAvatar
 	req.Password = crypto.EncodePwd(u.conf.DefaultUserPassword)
-	req.RoleId = req.UserRoles[0].RoleId
 	req.Status = proto.Bool(true)
 
 	id, err := u.repo.CreateUser(ctx, req)
@@ -177,50 +191,111 @@ func (u *User) UpdateUser(ctx kratosx.Context, user *entity.User) error {
 		return errors.EditSystemDataError()
 	}
 
+	if curUserId == user.Id {
+		return errors.UpdateError("不能修改当前用户")
+	}
+
 	// 获取用户基础信息
-	oldUser, err := u.repo.GetBaseUser(ctx, user.Id)
+	oldUser, err := u.repo.GetUser(ctx, user.Id)
 	if err != nil {
 		ctx.Logger().Warnw("msg", "get base user error", "err", err.Error())
 		return errors.DatabaseError()
 	}
 
 	// 获取当前用的部门权限
-	all, scopes, err := u.dept.GetDepartmentDataScope(ctx, curUserId)
+	all, scopes, err := u.role.GetDataScope(ctx, curUserId)
 	if err != nil {
 		ctx.Logger().Warnw("msg", "get dept purview error", "err", err.Error())
 		return errors.DatabaseError()
 	}
+	if !all {
+		var (
+			inr      = valx.New(scopes)
+			hasScope = false
+		)
 
-	inr := valx.New(scopes)
-
-	// 判断是否具体操作用户权限
-	if !all && !inr.Has(oldUser.DepartmentId) {
-		return errors.DepartmentPurviewError()
-	}
-
-	// 判断是否具有变更后的部门权限
-	if !all && !inr.Has(user.DepartmentId) {
-		return errors.DepartmentPurviewError()
-	}
-
-	// 判断是否具有变更后的角色权限
-	if len(user.UserRoles) != 0 {
-		all, scopes, err = u.role.GetRoleDataScope(ctx, curUserId)
-		if err != nil {
-			ctx.Logger().Warnw("msg", "get role scopes error", "err", err.Error())
-			return errors.DatabaseError()
+		// 判断是否具有用户修改权限
+		for _, id := range oldUser.GetDepartmentIds() {
+			if inr.Has(id) {
+				hasScope = true
+				break
+			}
+		}
+		if !hasScope {
+			return errors.UserPurviewError()
 		}
 
-		rin := valx.New(scopes)
-		for _, ur := range user.UserRoles {
-			if !all && rin.Has(ur.RoleId) {
-				return errors.RolePurviewError()
+		// 判断是否具有修改后的部门权限
+		for _, id := range user.GetDepartmentIds() {
+			if !inr.Has(id) {
+				return errors.DepartmentPurviewError()
+			}
+		}
+
+		// 获取修改的用户部门在当前用户不可见的id
+		// 将不可见的ID追加到新建里面
+		oldDeptIds := oldUser.GetDepartmentIds()
+		for _, id := range oldDeptIds {
+			if !inr.Has(id) {
+				user.UserDepartments = append(user.UserDepartments, &entity.UserDepartment{
+					UserId:       curUserId,
+					DepartmentId: id,
+				})
 			}
 		}
 	}
 
+	// 获取当前的角色权限
+	all, scopes, err = u.role.GetRoleScope(ctx, md.RoleIds(ctx))
+	if !all {
+		var inr = valx.New(scopes)
+		// 判断是否具有修改后的角色权限
+		for _, id := range user.GetRoleIds() {
+			if !inr.Has(id) {
+				return errors.RolePurviewError()
+			}
+		}
+
+		// 获取修改的用户角色在当前用户不可见的id
+		// 将不可见的ID追加到新建里面
+		oldRoleIds := oldUser.GetRoleIds()
+		for _, id := range oldRoleIds {
+			if !inr.Has(id) {
+				user.UserRoles = append(user.UserRoles, &entity.UserRole{
+					UserId: curUserId,
+					RoleId: id,
+				})
+			}
+		}
+	}
+
+	// 获取当前的职位权限
+	// all, scopes, err = u.job.GetJobDataScope(ctx, curUserId)
+	// if !all {
+	//	var inr = valx.New(scopes)
+	//	// 判断是否具有修改后的职位权限
+	//	for _, id := range user.GetJobIds() {
+	//		if !inr.Has(id) {
+	//			return errors.JobPurviewError()
+	//		}
+	//	}
+	//
+	//	// 获取修改的用户部门在当前用户不可见的id
+	//	// 将不可见的ID追加到新建里面
+	//	oldJobIds := oldUser.GetJobIds()
+	//	for _, id := range oldJobIds {
+	//		if !inr.Has(id) {
+	//			user.UserJobs = append(user.UserJobs, &entity.UserJob{
+	//				UserId: curUserId,
+	//				JobId:  id,
+	//			})
+	//		}
+	//	}
+	// }
+
 	// 更新用户
-	if err := u.repo.UpdateUser(ctx, user); err != nil {
+	user.Token = proto.String("")
+	if err := u.repo.ForceUpdateUser(ctx, user); err != nil {
 		return errors.UpdateError(err.Error())
 	}
 	return nil
@@ -232,6 +307,9 @@ func (u *User) UpdateUserStatus(ctx kratosx.Context, id uint32, status bool) err
 	if id == 1 {
 		return errors.EditSystemDataError()
 	}
+	if md.UserId(ctx) == id {
+		return errors.UpdateError("不能修改当前用户")
+	}
 
 	// 获取用户基础信息
 	oldUser, err := u.repo.GetBaseUser(ctx, id)
@@ -240,16 +318,8 @@ func (u *User) UpdateUserStatus(ctx kratosx.Context, id uint32, status bool) err
 		return errors.DatabaseError()
 	}
 
-	// 获取当前用的部门权限
-	hasPurview, err := u.dept.HasDepartmentPurview(ctx, md.UserId(ctx), oldUser.DepartmentId)
-	if err != nil {
-		ctx.Logger().Warnw("msg", "get dept purview error", "err", err.Error())
-		return errors.DatabaseError()
-	}
-
-	// 判断是否具体操作用户权限
-	if !hasPurview {
-		return errors.DepartmentPurviewError()
+	if err := u.hasUserScope(ctx, id); err != nil {
+		return err
 	}
 
 	// 更新角色状态
@@ -272,24 +342,12 @@ func (u *User) DeleteUser(ctx kratosx.Context, id uint32) error {
 	if id == 1 {
 		return errors.EditSystemDataError()
 	}
-
-	// 获取用户基础信息
-	oldUser, err := u.repo.GetBaseUser(ctx, id)
-	if err != nil {
-		ctx.Logger().Warnw("msg", "get base user error", "err", err.Error())
-		return errors.DatabaseError()
+	if md.UserId(ctx) == id {
+		return errors.DeleteError("不能删除当前用户")
 	}
 
-	// 获取当前用的部门权限
-	hasPurview, err := u.dept.HasDepartmentPurview(ctx, md.UserId(ctx), oldUser.DepartmentId)
-	if err != nil {
-		ctx.Logger().Warnw("msg", "get dept purview error", "err", err.Error())
-		return errors.DatabaseError()
-	}
-
-	// 判断是否具体操作用户权限
-	if !hasPurview {
-		return errors.DepartmentPurviewError()
+	if err := u.hasUserScope(ctx, id); err != nil {
+		return err
 	}
 
 	if err := u.repo.DeleteUser(ctx, id); err != nil {
@@ -305,26 +363,11 @@ func (u *User) ResetUserPassword(ctx kratosx.Context, id uint32) error {
 		return errors.EditSystemDataError()
 	}
 
-	// 获取用户基础信息
-	oldUser, err := u.repo.GetBaseUser(ctx, id)
-	if err != nil {
-		ctx.Logger().Warnw("msg", "get base user error", "err", err.Error())
-		return errors.DatabaseError()
+	if err := u.hasUserScope(ctx, id); err != nil {
+		return err
 	}
 
-	// 获取当前用的部门权限
-	hasPurview, err := u.dept.HasDepartmentPurview(ctx, md.UserId(ctx), oldUser.DepartmentId)
-	if err != nil {
-		ctx.Logger().Warnw("msg", "get dept purview error", "err", err.Error())
-		return errors.DatabaseError()
-	}
-
-	// 判断是否具体操作用户权限
-	if !hasPurview {
-		return errors.DepartmentPurviewError()
-	}
-
-	if err = u.repo.UpdateUser(ctx, &entity.User{
+	if err := u.repo.UpdateUser(ctx, &entity.User{
 		BaseModel: ktypes.BaseModel{Id: id},
 		Password:  crypto.EncodePwd(u.conf.DefaultUserPassword),
 	}); err != nil {
@@ -339,11 +382,6 @@ func (u *User) GetCurrentUser(ctx kratosx.Context) (*entity.User, error) {
 	res, err := u.repo.GetUser(ctx, md.UserId(ctx))
 	if err != nil {
 		return nil, errors.GetError(err.Error())
-	}
-	for _, role := range res.Roles {
-		if role.Id == res.RoleId {
-			res.Role = role
-		}
 	}
 	if res.Avatar != nil {
 		url := u.file.GetFileURL(ctx, *res.Avatar)
@@ -363,26 +401,6 @@ func (u *User) UpdateCurrentUser(ctx kratosx.Context, req *types.UpdateCurrentUs
 		return errors.DatabaseError(err.Error())
 	}
 
-	return nil
-}
-
-// UpdateCurrentUserRole 切换当前用户角色
-func (u *User) UpdateCurrentUserRole(ctx kratosx.Context, rid uint32) error {
-	rids, err := u.repo.GetUserRoleIds(ctx, md.UserId(ctx))
-	if err != nil {
-		ctx.Logger().Warnw("msg", "get user roles error", "err", err.Error())
-		return errors.DatabaseError()
-	}
-	if !valx.InList(rids, rid) {
-		return errors.RolePurviewError()
-	}
-
-	if err = u.repo.UpdateUser(ctx, &entity.User{
-		BaseModel: ktypes.BaseModel{Id: md.UserId(ctx)},
-		RoleId:    rid,
-	}); err != nil {
-		return errors.DatabaseError(err.Error())
-	}
 	return nil
 }
 
@@ -451,6 +469,41 @@ func (u *User) UpdateCurrentUserPassword(ctx kratosx.Context, req *types.UpdateC
 	}
 	if err := u.repo.UpdateUser(ctx, &nu); err != nil {
 		return errors.DatabaseError(err.Error())
+	}
+	return nil
+}
+
+func (u *User) hasUserScope(ctx kratosx.Context, uid uint32) error {
+	// 获取用户基础信息
+	oldUser, err := u.repo.GetUser(ctx, uid)
+	if err != nil {
+		ctx.Logger().Warnw("msg", "get base user error", "err", err.Error())
+		return errors.DatabaseError()
+	}
+
+	// 获取当前用的部门权限
+	all, scopes, err := u.role.GetDataScope(ctx, md.UserId(ctx))
+	if err != nil {
+		ctx.Logger().Warnw("msg", "get dept purview error", "err", err.Error())
+		return errors.DatabaseError()
+	}
+
+	if !all {
+		var (
+			inr      = valx.New(scopes)
+			hasScope = false
+		)
+
+		// 判断是否具有用户修改权限
+		for _, id := range oldUser.GetDepartmentIds() {
+			if inr.Has(id) {
+				hasScope = true
+				break
+			}
+		}
+		if !hasScope {
+			return errors.UserPurviewError()
+		}
 	}
 	return nil
 }

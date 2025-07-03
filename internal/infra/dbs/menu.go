@@ -5,6 +5,8 @@ import (
 	"sync"
 
 	"github.com/limes-cloud/kratosx"
+	"github.com/limes-cloud/kratosx/pkg/valx"
+
 	"github.com/limes-cloud/manager/internal/domain/entity"
 	"github.com/limes-cloud/manager/internal/types"
 )
@@ -52,23 +54,23 @@ func (infra *Menu) ListMenu(ctx kratosx.Context, req *types.ListMenuRequest) ([]
 	return ms, db.Find(&ms).Error
 }
 
-// ListMenuByRoleId 获取指定的角色的菜单
-func (infra *Menu) ListMenuByRoleId(ctx kratosx.Context, id uint32) ([]*entity.Menu, error) {
+// ListMenuByRoleIds 获取指定的角色的菜单
+func (infra *Menu) ListMenuByRoleIds(ctx kratosx.Context, ids []uint32) ([]*entity.Menu, error) {
 	var (
 		ms []*entity.Menu
 		fs = []string{"*"}
 	)
 
 	db := ctx.DB().Model(entity.Menu{}).Select(fs).Where("type!=?", entity.MenuBasic)
-	if id != 1 {
-		var ids []uint32
+	if !valx.InList(ids, 1) {
+		var mids []uint32
 		if err := ctx.DB().Model(entity.RoleMenu{}).
 			Select("menu_id").
-			Where("role_id=?", id).
-			Scan(&ids).Error; err != nil {
+			Where("role_id in ?", ids).
+			Scan(&mids).Error; err != nil {
 			return nil, err
 		}
-		db = db.Where("id in ?", ids)
+		db = db.Where("id in ?", mids)
 	}
 
 	db = db.Order("weight desc,id asc")

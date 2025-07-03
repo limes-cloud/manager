@@ -222,6 +222,8 @@ func (m *GetRoleReply) validate(all bool) error {
 
 	// no validation rules for UpdatedAt
 
+	// no validation rules for JobScope
+
 	if m.Status != nil {
 		// no validation rules for Status
 	}
@@ -232,6 +234,10 @@ func (m *GetRoleReply) validate(all bool) error {
 
 	if m.Description != nil {
 		// no validation rules for Description
+	}
+
+	if m.JobIds != nil {
+		// no validation rules for JobIds
 	}
 
 	if len(errors) > 0 {
@@ -554,6 +560,10 @@ func (m *ListRoleRequest) validate(all bool) error {
 
 	if m.Keyword != nil {
 		// no validation rules for Keyword
+	}
+
+	if m.RootId != nil {
+		// no validation rules for RootId
 	}
 
 	if len(errors) > 0 {
@@ -2067,6 +2077,8 @@ func (m *ListRoleReply_Role) validate(all bool) error {
 
 	}
 
+	// no validation rules for JobScope
+
 	if m.Status != nil {
 		// no validation rules for Status
 	}
@@ -2077,6 +2089,10 @@ func (m *ListRoleReply_Role) validate(all bool) error {
 
 	if m.Description != nil {
 		// no validation rules for Description
+	}
+
+	if m.JobIds != nil {
+		// no validation rules for JobIds
 	}
 
 	if len(errors) > 0 {

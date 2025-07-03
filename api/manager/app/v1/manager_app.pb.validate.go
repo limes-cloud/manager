@@ -1796,6 +1796,8 @@ func (m *GetAppReply_Channel) validate(all bool) error {
 
 	// no validation rules for Description
 
+	// no validation rules for Type
+
 	if len(errors) > 0 {
 		return GetAppReply_ChannelMultiError(errors)
 	}

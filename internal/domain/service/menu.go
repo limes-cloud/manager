@@ -38,7 +38,7 @@ func NewMenu(
 
 // ListMenuByCurRole 获取当前角色的菜单树
 func (u *Menu) ListMenuByCurRole(ctx kratosx.Context) ([]*entity.Menu, error) {
-	list, err := u.repo.ListMenuByRoleId(ctx, md.RoleId(ctx))
+	list, err := u.repo.ListMenuByRoleIds(ctx, md.RoleIds(ctx))
 	if err != nil {
 		ctx.Logger().Warnw("msg", "list menu error", "err", err.Error())
 		return nil, errors.ListError()

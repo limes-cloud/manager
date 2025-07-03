@@ -2,9 +2,11 @@ package types
 
 // ListDepartmentRequest fixed code
 type ListDepartmentRequest struct {
-	Name    *string  `json:"name"`
-	Keyword *string  `json:"keyword"`
-	Ids     []uint32 `json:"ids"`
+	Name       *string  `json:"name"`
+	Keyword    *string  `json:"keyword"`
+	Ids        []uint32 `json:"ids"`
+	RootId     *uint32  `json:"rootId"`
+	ClassifyId *uint32  `json:"classifyId"`
 }
 
 type ListDepartmentClassifyRequest struct {
