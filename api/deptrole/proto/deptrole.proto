@@ -1,0 +1,79 @@
+syntax = "proto3";
+
+package manager.api.deptrole;
+
+option go_package = ".;deptrole";
+option java_multiple_files = true;
+option java_package = "manager.api.deptrole.proto";
+
+import "validate/validate.proto";
+
+message CreateDeptRolesRequest {
+  uint32 deptId = 1[(validate.rules).uint32 = {gte: 1}];
+  repeated uint32 roleIds = 2[(validate.rules).repeated = {min_items: 1}];
+}
+
+message CreateDeptRolesReply {
+}
+
+
+message CreateRoleDeptsRequest {
+  uint32 roleId = 1[(validate.rules).uint32 = {gte: 1}];
+  repeated uint32 deptIds = 2[(validate.rules).repeated = {min_items: 1}];
+}
+
+message CreateRoleDeptsReply {
+}
+
+
+message ListDeptRoleRequest {
+  uint32 page = 1[(validate.rules).uint32 = {gte: 1}];
+  uint32 pageSize = 2[(validate.rules).uint32 = {gte: 1,lte:50}];
+  uint32 deptId = 3[(validate.rules).uint32 = {gte: 1}];
+  optional string name = 4;
+}
+
+message ListDeptRoleReply {
+  message Role{
+    uint32 id = 1;
+    string name = 2;
+  }
+
+  repeated Role list = 1;
+  uint32 total = 2;
+}
+
+message ListRoleDeptRequest {
+  uint32 page = 1[(validate.rules).uint32 = {gte: 1}];
+  uint32 pageSize = 2[(validate.rules).uint32 = {gte: 1,lte:50}];
+  uint32 roleId = 3[(validate.rules).uint32 = {gte: 1}];
+  optional string name = 4;
+}
+
+message ListRoleDeptReply {
+  message Classify{
+    uint32 id = 1;
+    string name = 2;
+  }
+
+  message Data{
+    uint32 id = 1;
+    string name = 2;
+    Classify classify = 3;
+  }
+
+  repeated Data list = 1;
+  uint32 total = 2;
+}
+
+message DeleteDeptRolesRequest {
+  uint32 deptId = 1[(validate.rules).uint32 = {gte: 1}];
+  repeated uint32 roleIds = 2[(validate.rules).repeated = {min_items: 1}];
+}
+message DeleteDeptRolesReply {}
+
+message DeleteRoleDeptsRequest {
+  repeated uint32 deptIds = 1[(validate.rules).repeated = {min_items: 1}];
+  uint32 roleId = 2[(validate.rules).uint32 = {gte: 1}];
+}
+message DeleteRoleDeptsReply {}

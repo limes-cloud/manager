@@ -1,11 +1,10 @@
 package service
 
 import (
-	"github.com/limes-cloud/kratosx"
+	"github.com/limes-cloud/manager/api/errors"
+	"github.com/limes-cloud/manager/internal/core"
 	"google.golang.org/protobuf/proto"
 
-	"github.com/limes-cloud/manager/api/manager/errors"
-	"github.com/limes-cloud/manager/internal/conf"
 	"github.com/limes-cloud/manager/internal/domain/entity"
 	"github.com/limes-cloud/manager/internal/domain/repository"
 	"github.com/limes-cloud/manager/internal/pkg/field"
@@ -13,16 +12,13 @@ import (
 )
 
 type Field struct {
-	conf *conf.Config
 	repo repository.Field
 }
 
 func NewField(
-	conf *conf.Config,
 	repo repository.Field,
 ) *Field {
 	return &Field{
-		conf: conf,
 		repo: repo,
 	}
 }
@@ -39,7 +35,7 @@ func (srv *Field) ListFieldType() []*types.FieldType {
 }
 
 // ListField 获取用户字段列表
-func (srv *Field) ListField(ctx kratosx.Context, req *types.ListFieldRequest) ([]*entity.Field, uint32, error) {
+func (srv *Field) ListField(ctx core.Context, req *types.ListFieldRequest) ([]*entity.Field, uint32, error) {
 	list, total, err := srv.repo.ListField(ctx, req)
 	if err != nil {
 		ctx.Logger().Warnw("msg", "list field error", "err", err.Error())
@@ -49,7 +45,7 @@ func (srv *Field) ListField(ctx kratosx.Context, req *types.ListFieldRequest) ([
 }
 
 // CreateField 创建用户字段
-func (srv *Field) CreateField(ctx kratosx.Context, field *entity.Field) (uint32, error) {
+func (srv *Field) CreateField(ctx core.Context, field *entity.Field) (uint32, error) {
 	field.Status = proto.Bool(false)
 	id, err := srv.repo.CreateField(ctx, field)
 	if err != nil {
@@ -60,7 +56,7 @@ func (srv *Field) CreateField(ctx kratosx.Context, field *entity.Field) (uint32,
 }
 
 // UpdateField 更新用户字段
-func (srv *Field) UpdateField(ctx kratosx.Context, field *entity.Field) error {
+func (srv *Field) UpdateField(ctx core.Context, field *entity.Field) error {
 	if err := srv.repo.UpdateField(ctx, field); err != nil {
 		ctx.Logger().Warnw("msg", "update field error", "err", err.Error())
 		return errors.UpdateError(err.Error())
@@ -69,7 +65,7 @@ func (srv *Field) UpdateField(ctx kratosx.Context, field *entity.Field) error {
 }
 
 // DeleteField 删除用户字段
-func (srv *Field) DeleteField(ctx kratosx.Context, id uint32) error {
+func (srv *Field) DeleteField(ctx core.Context, id uint32) error {
 	if err := srv.repo.DeleteField(ctx, id); err != nil {
 		ctx.Logger().Warnw("msg", "delete field error", "err", err.Error())
 		return errors.DeleteError()

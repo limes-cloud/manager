@@ -1,0 +1,45 @@
+syntax = "proto3";
+
+package manager.api.roleentity;
+
+option go_package = ".;roleentity";
+option java_multiple_files = true;
+option java_package = "manager.api.roleentity";
+
+import "api/roleentity/proto/roleentity.proto";
+import "google/api/annotations.proto";
+
+service RoleEntity{
+
+  // ListRoleEntity获取角色数据列表
+  rpc ListRoleEntity(ListRoleEntityRequest) returns (ListRoleEntityReply) {
+    option (google.api.http) = {
+      get: "/manager/api/v1/role/entities",
+    };
+  }
+
+  // CreateRoleEntity 创建角色数据信息
+  rpc CreateRoleEntity (CreateRoleEntityRequest) returns (CreateRoleEntityReply) {
+    option (google.api.http) = {
+      post: "/manager/api/v1/role/entity",
+      body: "*"
+    };
+  }
+
+  // CreateRoleEntity 创建角色数据信息
+  rpc UpdateRoleEntity (UpdateRoleEntityRequest) returns (UpdateRoleEntityReply) {
+    option (google.api.http) = {
+      put: "/manager/api/v1/role/entity",
+      body: "*"
+    };
+  }
+
+  // DeleteRoleEntity 删除角色数据信息
+  rpc DeleteRoleEntity (DeleteRoleEntityRequest) returns (DeleteRoleEntityReply) {
+    option (google.api.http) = {
+      delete: "/manager/api/v1/role/entity",
+      body: "*"
+    };
+  }
+
+}

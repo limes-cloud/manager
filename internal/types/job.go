@@ -1,8 +1,10 @@
 package types
 
+import "github.com/limes-cloud/kratosx/model/page"
+
 type ListJobRequest struct {
-	Keyword *string  `json:"keyword"`
-	Name    *string  `json:"name"`
-	Ids     []uint32 `json:"ids"`
-	RootId  *uint32  `json:"rootId"`
+	page.Search
+	Keyword *string `json:"keyword"`
+	Name    *string `json:"name"`
+	Status  *bool   `json:"status"`
 }

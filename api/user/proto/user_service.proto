@@ -1,0 +1,66 @@
+syntax = "proto3";
+
+package manager.api.user;
+
+option go_package = ".;user";
+option java_multiple_files = true;
+option java_package = "manager.api.user";
+
+import "api/user/proto/user.proto";
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+
+service User{
+  // GetCurrentUser 获取当前用户信息
+  rpc GetCurrentUser (google.protobuf.Empty) returns (UserObject) {
+    option (google.api.http) = {
+      get: "/manager/api/v1/user/current",
+    };
+  }
+
+  // GetUser 获取角色信息
+  rpc GetUser (GetUserRequest) returns (UserObject) {
+    option (google.api.http) = {
+      get: "/manager/api/v1/user",
+    };
+  }
+
+  // ListUser 获取角色信息列表
+  rpc ListUser (ListUserRequest) returns (ListUserReply) {
+    option (google.api.http) = {
+      get: "/manager/api/v1/users",
+    };
+  }
+
+  // CreateUser 创建角色信息
+  rpc CreateUser (CreateUserRequest) returns (CreateUserReply) {
+    option (google.api.http) = {
+      post: "/manager/api/v1/user",
+      body: "*"
+    };
+  }
+
+  // UpdateUser 更新角色信息
+  rpc ResetPassword (ResetPasswordRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/manager/api/v1/user/password/reset",
+      body: "*"
+    };
+  }
+
+  // UpdateUser 更新角色信息
+  rpc UpdateUser (UpdateUserRequest) returns (UpdateUserReply) {
+    option (google.api.http) = {
+      put: "/manager/api/v1/user",
+      body: "*"
+    };
+  }
+
+  // DeleteUser 删除角色信息
+  rpc DeleteUser (DeleteUserRequest) returns (DeleteUserReply) {
+    option (google.api.http) = {
+      delete: "/manager/api/v1/user",
+    };
+  }
+
+}

@@ -1,0 +1,53 @@
+syntax = "proto3";
+
+package manager.api.deptrole;
+
+option go_package = ".;deptrole";
+option java_multiple_files = true;
+option java_package = "manager.api.deptrole.proto";
+
+import "google/api/annotations.proto";
+import "api/deptrole/proto/deptrole.proto";
+
+service DeptRole {
+
+	rpc ListDeptRole (ListDeptRoleRequest) returns (ListDeptRoleReply){
+		option (google.api.http) = {
+			get: "/manager/api/v1/dept/roles"
+		};
+	}
+
+	rpc CreateDeptRoles (CreateDeptRolesRequest) returns (CreateDeptRolesReply){
+		option (google.api.http) = {
+			post: "/manager/api/v1/dept/roles",
+			body: "*"
+		};
+	}
+
+	rpc DeleteDeptRoles (DeleteDeptRolesRequest) returns (DeleteDeptRolesReply){
+		option (google.api.http) = {
+			delete: "/manager/api/v1/dept/roles",
+			body: "*"
+		};
+	}
+
+	rpc ListRoleDept (ListRoleDeptRequest) returns (ListRoleDeptReply){
+		option (google.api.http) = {
+			get: "/manager/api/v1/role/depts"
+		};
+	}
+
+	rpc CreateRoleDepts (CreateRoleDeptsRequest) returns (CreateRoleDeptsReply){
+		option (google.api.http) = {
+			post: "/manager/api/v1/role/depts",
+			body: "*"
+		};
+	}
+
+	rpc DeleteRoleDepts (DeleteRoleDeptsRequest) returns (DeleteRoleDeptsReply){
+		option (google.api.http) = {
+			delete: "/manager/api/v1/role/depts",
+			body: "*"
+		};
+	}
+}

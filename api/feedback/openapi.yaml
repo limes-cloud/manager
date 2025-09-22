@@ -1,0 +1,502 @@
+# Generated with protoc-gen-openapi
+# https://github.com/google/gnostic/tree/master/cmd/protoc-gen-openapi
+
+openapi: 3.0.3
+info:
+    title: Feedback API
+    version: 0.0.1
+paths:
+    /manager/api/v1/feedback:
+        put:
+            tags:
+                - Feedback
+            description: UpdateFeedback 更新反馈建议
+            operationId: Feedback_UpdateFeedback
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/UpdateFeedbackRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/UpdateFeedbackReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        delete:
+            tags:
+                - Feedback
+            description: DeleteFeedback 删除反馈建议
+            operationId: Feedback_DeleteFeedback
+            parameters:
+                - name: id
+                  in: query
+                  schema:
+                    type: integer
+                    format: uint32
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/DeleteFeedbackReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /manager/api/v1/feedback/categories:
+        get:
+            tags:
+                - Feedback
+            description: ListFeedbackCategory 获取反馈建议分类列表
+            operationId: Feedback_ListFeedbackCategory
+            parameters:
+                - name: page
+                  in: query
+                  schema:
+                    type: integer
+                    format: uint32
+                - name: pageSize
+                  in: query
+                  schema:
+                    type: integer
+                    format: uint32
+                - name: order
+                  in: query
+                  schema:
+                    type: string
+                - name: orderBy
+                  in: query
+                  schema:
+                    type: string
+                - name: name
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ListFeedbackCategoryReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /manager/api/v1/feedback/category:
+        put:
+            tags:
+                - Feedback
+            description: UpdateFeedbackCategory 更新反馈建议分类
+            operationId: Feedback_UpdateFeedbackCategory
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/UpdateFeedbackCategoryRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/UpdateFeedbackCategoryReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        post:
+            tags:
+                - Feedback
+            description: CreateFeedbackCategory 创建反馈建议分类
+            operationId: Feedback_CreateFeedbackCategory
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/CreateFeedbackCategoryRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/CreateFeedbackCategoryReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        delete:
+            tags:
+                - Feedback
+            description: DeleteFeedbackCategory 删除反馈建议分类
+            operationId: Feedback_DeleteFeedbackCategory
+            parameters:
+                - name: id
+                  in: query
+                  schema:
+                    type: integer
+                    format: uint32
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/DeleteFeedbackCategoryReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /manager/api/v1/feedbacks:
+        get:
+            tags:
+                - Feedback
+            description: ListFeedback 获取反馈建议列表
+            operationId: Feedback_ListFeedback
+            parameters:
+                - name: page
+                  in: query
+                  schema:
+                    type: integer
+                    format: uint32
+                - name: pageSize
+                  in: query
+                  schema:
+                    type: integer
+                    format: uint32
+                - name: order
+                  in: query
+                  schema:
+                    type: string
+                - name: orderBy
+                  in: query
+                  schema:
+                    type: string
+                - name: appId
+                  in: query
+                  schema:
+                    type: integer
+                    format: uint32
+                - name: categoryId
+                  in: query
+                  schema:
+                    type: integer
+                    format: uint32
+                - name: status
+                  in: query
+                  schema:
+                    type: string
+                - name: platform
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ListFeedbackReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /manager/client/v1/feedback:
+        post:
+            tags:
+                - Feedback
+            description: CreateFeedback 创建反馈建议
+            operationId: Feedback_CreateFeedback
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/CreateFeedbackRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/CreateFeedbackReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /manager/client/v1/feedback_categories:
+        get:
+            tags:
+                - Feedback
+            description: ListFeedbackCategory 获取反馈建议分类列表
+            operationId: Feedback_ListFeedbackCategory
+            parameters:
+                - name: page
+                  in: query
+                  schema:
+                    type: integer
+                    format: uint32
+                - name: pageSize
+                  in: query
+                  schema:
+                    type: integer
+                    format: uint32
+                - name: order
+                  in: query
+                  schema:
+                    type: string
+                - name: orderBy
+                  in: query
+                  schema:
+                    type: string
+                - name: name
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ListFeedbackCategoryReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+components:
+    schemas:
+        CreateFeedbackCategoryReply:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: uint32
+        CreateFeedbackCategoryRequest:
+            type: object
+            properties:
+                name:
+                    type: string
+        CreateFeedbackReply:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: uint32
+        CreateFeedbackRequest:
+            type: object
+            properties:
+                appId:
+                    type: integer
+                    format: uint32
+                categoryId:
+                    type: integer
+                    format: uint32
+                title:
+                    type: string
+                content:
+                    type: string
+                images:
+                    type: string
+                contact:
+                    type: string
+                device:
+                    type: string
+                platform:
+                    type: string
+                version:
+                    type: string
+        DeleteFeedbackCategoryReply:
+            type: object
+            properties: {}
+        DeleteFeedbackReply:
+            type: object
+            properties: {}
+        Feedback_App:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: uint32
+                name:
+                    type: string
+        Feedback_Category:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: uint32
+                name:
+                    type: string
+        Feedback_User:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: uint32
+                realName:
+                    type: string
+                nickName:
+                    type: string
+        GoogleProtobufAny:
+            type: object
+            properties:
+                '@type':
+                    type: string
+                    description: The type of the serialized message.
+            additionalProperties: true
+            description: Contains an arbitrary serialized message along with a @type that describes the type of the serialized message.
+        ListFeedbackCategoryReply:
+            type: object
+            properties:
+                total:
+                    type: integer
+                    format: uint32
+                list:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/ListFeedbackCategoryReply_FeedbackCategory'
+        ListFeedbackCategoryReply_FeedbackCategory:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: uint32
+                name:
+                    type: string
+                createdAt:
+                    type: integer
+                    format: uint32
+        ListFeedbackReply:
+            type: object
+            properties:
+                total:
+                    type: integer
+                    format: uint32
+                list:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/ListFeedbackReply_Feedback'
+        ListFeedbackReply_Feedback:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: uint32
+                appId:
+                    type: integer
+                    format: uint32
+                userId:
+                    type: integer
+                    format: uint32
+                categoryId:
+                    type: integer
+                    format: uint32
+                title:
+                    type: string
+                content:
+                    type: string
+                status:
+                    type: string
+                images:
+                    type: string
+                contact:
+                    type: string
+                device:
+                    type: string
+                platform:
+                    type: string
+                version:
+                    type: string
+                processedBy:
+                    type: integer
+                    format: uint32
+                processedResult:
+                    type: string
+                createdAt:
+                    type: integer
+                    format: uint32
+                updatedAt:
+                    type: integer
+                    format: uint32
+                app:
+                    $ref: '#/components/schemas/Feedback_App'
+                user:
+                    $ref: '#/components/schemas/Feedback_User'
+                category:
+                    $ref: '#/components/schemas/Feedback_Category'
+                imageUrls:
+                    type: array
+                    items:
+                        type: string
+        Status:
+            type: object
+            properties:
+                code:
+                    type: integer
+                    description: The status code, which should be an enum value of [google.rpc.Code][google.rpc.Code].
+                    format: int32
+                message:
+                    type: string
+                    description: A developer-facing error message, which should be in English. Any user-facing error message should be localized and sent in the [google.rpc.Status.details][google.rpc.Status.details] field, or localized by the client.
+                details:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/GoogleProtobufAny'
+                    description: A list of messages that carry the error details.  There is a common set of message types for APIs to use.
+            description: 'The `Status` type defines a logical error model that is suitable for different programming environments, including REST APIs and RPC APIs. It is used by [gRPC](https://github.com/grpc). Each `Status` message contains three pieces of data: error code, error message, and error details. You can find out more about this error model and how to work with it in the [API Design Guide](https://cloud.google.com/apis/design/errors).'
+        UpdateFeedbackCategoryReply:
+            type: object
+            properties: {}
+        UpdateFeedbackCategoryRequest:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: uint32
+                name:
+                    type: string
+        UpdateFeedbackReply:
+            type: object
+            properties: {}
+        UpdateFeedbackRequest:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: uint32
+                status:
+                    type: string
+                processedResult:
+                    type: string
+tags:
+    - name: Feedback

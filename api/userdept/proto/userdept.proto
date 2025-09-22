@@ -1,0 +1,60 @@
+syntax = "proto3";
+
+package manager.api.userdept;
+
+option go_package = ".;userdept";
+option java_multiple_files = true;
+option java_package = "manager.api.userdept.proto";
+
+import "validate/validate.proto";
+
+message CreateUserDeptRequest {
+  uint32 userId = 1[(validate.rules).uint32 = {gte: 1}];
+  uint32 deptId = 2[(validate.rules).uint32 = {gte: 1}];
+  uint32 jobId = 3[(validate.rules).uint32 = {gte: 1}];
+}
+
+message CreateUserDeptReply {
+}
+
+
+message ListUserDeptRequest {
+  uint32 page = 1[(validate.rules).uint32 = {gte: 1}];
+  uint32 pageSize = 2[(validate.rules).uint32 = {gte: 1,lte:50}];
+  uint32 userId = 3[(validate.rules).uint32 = {gte: 1}];
+  optional string name = 4;
+}
+
+message ListUserDeptReply {
+  message Dept{
+    uint32 id = 1;
+    string name = 2;
+  }
+
+  repeated Dept list = 1;
+  uint32 total = 2;
+}
+
+message ListDeptUserRequest {
+  uint32 page = 1[(validate.rules).uint32 = {gte: 1}];
+  uint32 pageSize = 2[(validate.rules).uint32 = {gte: 1,lte:50}];
+  uint32 deptId = 3[(validate.rules).uint32 = {gte: 1}];
+  optional string name = 4;
+}
+
+message ListDeptUserReply {
+  message Data{
+    uint32 id = 1;
+    string username = 2;
+    string avatar = 3;
+  }
+
+  repeated Data list = 1;
+  uint32 total = 2;
+}
+
+message DeleteUserDeptRequest {
+  uint32 userId = 1[(validate.rules).uint32 = {gte: 1}];
+  uint32 deptId = 2[(validate.rules).uint32 = {gte: 1}];
+}
+message DeleteUserDeptReply {}

@@ -4,8 +4,7 @@ import (
 	"google.golang.org/protobuf/types/known/structpb"
 )
 
-type stringType struct {
-}
+type stringType struct{}
 
 func (t stringType) Name() string {
 	return "字符"

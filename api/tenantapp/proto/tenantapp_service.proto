@@ -1,0 +1,47 @@
+syntax = "proto3";
+
+package manager.api.tenantapp;
+
+option go_package = ".;tenantapp";
+option java_multiple_files = true;
+option java_package = "manager.api.tenantapp.proto";
+
+import "google/api/annotations.proto";
+import "api/tenantapp/proto/tenantapp.proto";
+
+service Tenant {
+
+	rpc GetTenantAppMenuIds (GetTenantAppMenuIdsRequest) returns (GetTenantAppMenuIdsReply){
+		option (google.api.http) = {
+			get: "/manager/api/v1/tenant/app/menus"
+		};
+	}
+
+	rpc ListTenantApp (ListTenantAppRequest) returns (ListTenantAppReply){
+		option (google.api.http) = {
+			get: "/manager/api/v1/tenant/apps"
+		};
+	}
+
+	rpc CreateTenantApp (CreateTenantAppRequest) returns (CreateTenantAppReply){
+		option (google.api.http) = {
+			post: "/manager/api/v1/tenant/app",
+			body: "*"
+		};
+	}
+
+	rpc UpdateTenantApp (UpdateTenantAppRequest) returns (UpdateTenantAppReply){
+		option (google.api.http) = {
+			put: "/manager/api/v1/tenant/app",
+			body: "*"
+		};
+	}
+
+	rpc DeleteTenantApp (DeleteTenantAppRequest) returns (DeleteTenantAppReply){
+		option (google.api.http) = {
+			delete: "/manager/api/v1/tenant/app",
+			body: "*"
+		};
+	}
+
+}

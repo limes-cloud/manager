@@ -3,41 +3,39 @@ package app
 import (
 	"context"
 
+	"github.com/limes-cloud/manager/internal/core"
+
+	"github.com/limes-cloud/manager/api/system"
+
 	"github.com/go-kratos/kratos/v2/transport/grpc"
 	"github.com/go-kratos/kratos/v2/transport/http"
-	"github.com/limes-cloud/kratosx"
-
-	pb "github.com/limes-cloud/manager/api/manager/system/v1"
-	"github.com/limes-cloud/manager/internal/conf"
 	"github.com/limes-cloud/manager/internal/domain/service"
-	"github.com/limes-cloud/manager/internal/infra/dbs"
-	"github.com/limes-cloud/manager/internal/types"
 )
 
 type System struct {
-	pb.UnimplementedSystemServer
+	system.UnimplementedSystemServer
 	srv *service.System
 }
 
-func NewSystem(conf *conf.Config) *System {
+func NewSystem() *System {
 	return &System{
-		srv: service.NewSystem(conf, dbs.NewDictionary()),
+		srv: service.NewSystem(),
 	}
 }
 
 func init() {
-	register(func(c *conf.Config, hs *http.Server, gs *grpc.Server) {
-		srv := NewSystem(c)
-		pb.RegisterSystemHTTPServer(hs, srv)
-		pb.RegisterSystemServer(gs, srv)
+	register(func(hs *http.Server, gs *grpc.Server) {
+		srv := NewSystem()
+		system.RegisterSystemHTTPServer(hs, srv)
+		system.RegisterSystemServer(gs, srv)
 	})
 }
 
 // GetSystemSetting 获取系统设置
-func (s *System) GetSystemSetting(c context.Context, _ *pb.GetSystemSettingRequest) (*pb.GetSystemSettingReply, error) {
-	setting := s.srv.GetSystemSetting(kratosx.MustContext(c), &types.GetSystemSettingRequest{})
+func (s *System) GetSystemSetting(c context.Context, _ *system.GetSystemSettingRequest) (*system.GetSystemSettingReply, error) {
+	setting := s.srv.GetSystemSetting(core.MustContext(c))
 
-	reply := pb.GetSystemSettingReply{
+	reply := system.GetSystemSettingReply{
 		Debug:              setting.Debug,
 		Title:              setting.Title,
 		Desc:               setting.Desc,
@@ -46,21 +44,21 @@ func (s *System) GetSystemSetting(c context.Context, _ *pb.GetSystemSettingReque
 		Watermark:          setting.Watermark,
 		ChangePasswordType: setting.ChangePasswordType,
 	}
-	if len(setting.Dictionaries) != 0 {
-		dictArr := make(map[string]*pb.GetSystemSettingReply_DictionaryValueList)
-		for _, item := range setting.Dictionaries {
-			if dictArr[item.Keyword] == nil {
-				dictArr[item.Keyword] = &pb.GetSystemSettingReply_DictionaryValueList{}
-			}
-			dv := &pb.DictionaryValue{
-				Label: item.Label,
-				Value: item.Value,
-				Type:  item.Type,
-				Extra: item.Extra,
-			}
-			dictArr[item.Keyword].List = append(dictArr[item.Keyword].List, dv)
-		}
-		reply.Dictionaries = dictArr
-	}
+	//if len(setting.Dictionaries) != 0 {
+	//	dictArr := make(map[string]*system.GetSystemSettingReply_DictionaryValueList)
+	//	for _, item := range setting.Dictionaries {
+	//		if dictArr[item.Keyword] == nil {
+	//			dictArr[item.Keyword] = &system.GetSystemSettingReply_DictionaryValueList{}
+	//		}
+	//		dv := &system.DictionaryValue{
+	//			Label: item.Label,
+	//			Value: item.Value,
+	//			Type:  item.Type,
+	//			Extra: item.Extra,
+	//		}
+	//		dictArr[item.Keyword].List = append(dictArr[item.Keyword].List, dv)
+	//	}
+	//	reply.Dictionaries = dictArr
+	//}
 	return &reply, nil
 }

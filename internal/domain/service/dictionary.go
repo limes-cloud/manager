@@ -3,10 +3,9 @@ package service
 import (
 	"github.com/limes-cloud/kratosx"
 	"github.com/limes-cloud/kratosx/pkg/tree"
+	"github.com/limes-cloud/manager/api/errors"
 	"google.golang.org/protobuf/proto"
 
-	"github.com/limes-cloud/manager/api/manager/errors"
-	"github.com/limes-cloud/manager/internal/conf"
 	"github.com/limes-cloud/manager/internal/domain/entity"
 	"github.com/limes-cloud/manager/internal/domain/repository"
 	"github.com/limes-cloud/manager/internal/types"
@@ -18,12 +17,11 @@ const (
 )
 
 type Dictionary struct {
-	conf *conf.Config
 	repo repository.Dictionary
 }
 
-func NewDictionary(config *conf.Config, repo repository.Dictionary) *Dictionary {
-	return &Dictionary{conf: config, repo: repo}
+func NewDictionary(repo repository.Dictionary) *Dictionary {
+	return &Dictionary{repo: repo}
 }
 
 // ListDictionary 获取字典目录列表
@@ -80,6 +78,8 @@ func (u *Dictionary) ListDictionaryValue(ctx kratosx.Context, req *types.ListDic
 		return list, total, nil
 	}
 	list, err := u.repo.AllDictionaryValue(ctx, &types.AllDictionaryValueRequest{
+		Label:        req.Label,
+		Value:        req.Value,
 		DictionaryId: req.DictionaryId,
 	})
 	if err != nil {
@@ -199,7 +199,7 @@ func (u *Dictionary) GetDictionary(ctx kratosx.Context, req *types.GetDictionary
 
 // GetDictionaryValues 获取字典值目录列表
 func (u *Dictionary) GetDictionaryValues(ctx kratosx.Context, keywords []string) (map[string][]*entity.DictionaryValue, error) {
-	var reply = make(map[string][]*entity.DictionaryValue)
+	reply := make(map[string][]*entity.DictionaryValue)
 	for _, key := range keywords {
 		// 获取keyword对应的id
 		dictionary, err := u.repo.GetDictionaryByKeyword(ctx, key)

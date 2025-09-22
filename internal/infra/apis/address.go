@@ -13,14 +13,13 @@ import (
 	"golang.org/x/text/transform"
 )
 
-type Address struct {
-}
+type Address struct{}
 
 func NewAddress() *Address {
 	return &Address{}
 }
 
-func (a Address) GetIPAddress(ip string) string {
+func (a Address) GetAddressByIP(ip string) string {
 	if ip == "127.0.0.1" || ip == "::1" {
 		return "本地"
 	}

@@ -1,0 +1,40 @@
+syntax = "proto3";
+
+package manager.api.userdept;
+
+option go_package = ".;userdept";
+option java_multiple_files = true;
+option java_package = "manager.api.userdept.proto";
+
+import "google/api/annotations.proto";
+import "api/userdept/proto/userdept.proto";
+
+service UserDept {
+
+	rpc ListUserDept (ListUserDeptRequest) returns (ListUserDeptReply){
+		option (google.api.http) = {
+			get: "/manager/api/v1/user/depts"
+		};
+	}
+
+	rpc CreateUserDept (CreateUserDeptRequest) returns (CreateUserDeptReply){
+		option (google.api.http) = {
+			post: "/manager/api/v1/user/dept",
+			body: "*"
+		};
+	}
+
+	rpc DeleteUserDept (DeleteUserDeptRequest) returns (DeleteUserDeptReply){
+		option (google.api.http) = {
+			delete: "/manager/api/v1/user/dept",
+			body: "*"
+		};
+	}
+
+	rpc ListDeptUser (ListDeptUserRequest) returns (ListDeptUserReply){
+		option (google.api.http) = {
+			get: "/manager/api/v1/dept/users"
+		};
+	}
+
+}

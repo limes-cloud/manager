@@ -6,8 +6,7 @@ import (
 	"google.golang.org/protobuf/types/known/structpb"
 )
 
-type datetimeType struct {
-}
+type datetimeType struct{}
 
 func (dt datetimeType) Name() string {
 	return "日期时间"

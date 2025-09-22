@@ -1,40 +1,32 @@
 package repository
 
 import (
-	"github.com/limes-cloud/kratosx"
-
+	"github.com/limes-cloud/manager/internal/core"
 	"github.com/limes-cloud/manager/internal/domain/entity"
 	"github.com/limes-cloud/manager/internal/types"
 )
 
 type Menu interface {
-	// GetMenu 获取自定菜单信息
-	GetMenu(ctx kratosx.Context, id uint32) (*entity.Menu, error)
+	GetMenuIdsByAppId(ctx core.Context, id uint32) ([]uint32, error)
 
-	// ListMenuApi 获取菜单api信息列表
-	ListMenuApi(ctx kratosx.Context) ([]*types.MenuApi, error)
+	// GetMenu 获取菜单列表
+	GetMenu(ctx core.Context, id uint32) (*entity.Menu, error)
 
 	// ListMenu 获取菜单信息列表
-	ListMenu(ctx kratosx.Context, req *types.ListMenuRequest) ([]*entity.Menu, error)
+	ListMenu(ctx core.Context, req *types.ListMenuRequest) ([]*entity.Menu, error)
 
-	// ListMenuByRoleIds 获取指定角色的菜单列表
-	ListMenuByRoleIds(ctx kratosx.Context, ids []uint32) ([]*entity.Menu, error)
-
-	// ListMenuChildrenApi 获取指定目录下的所有api
-	ListMenuChildrenApi(ctx kratosx.Context, id uint32) ([]*entity.Menu, error)
+	// GetMenuChildrenIds 获取指定目录下的id
+	GetMenuChildrenIds(ctx core.Context, id uint32) ([]uint32, error)
 
 	// CreateMenu 创建菜单信息
-	CreateMenu(ctx kratosx.Context, req *entity.Menu) (uint32, error)
+	CreateMenu(ctx core.Context, req *entity.Menu) (uint32, error)
 
 	// UpdateMenu 更新菜单信息
-	UpdateMenu(ctx kratosx.Context, req *entity.Menu) error
+	UpdateMenu(ctx core.Context, req *entity.Menu) error
 
 	// DeleteMenu 删除菜单信息
-	DeleteMenu(ctx kratosx.Context, id uint32) error
-
-	// InitBasicMenu 初始化基础菜单api
-	InitBasicMenu(ctx kratosx.Context)
+	DeleteMenu(ctx core.Context, id uint32) error
 
 	// SetHome 设置菜单首页
-	SetHome(ctx kratosx.Context, id uint32) error
+	SetHome(ctx core.Context, id uint32) error
 }

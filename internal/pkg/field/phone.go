@@ -6,8 +6,7 @@ import (
 	"google.golang.org/protobuf/types/known/structpb"
 )
 
-type phoneType struct {
-}
+type phoneType struct{}
 
 func (pt phoneType) Name() string {
 	return "手机号"

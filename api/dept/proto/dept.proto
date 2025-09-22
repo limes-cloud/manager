@@ -1,0 +1,148 @@
+syntax = "proto3";
+
+package manager.api.dept;
+
+option go_package = ".;dept";
+option java_multiple_files = true;
+option java_package = "manager.api.dept";
+option java_outer_classname = "DeptV1";
+
+import "validate/validate.proto";
+
+
+message DeptClassify{
+  uint32 id = 1;
+  string name = 2;
+}
+
+message ListDeptClassifyRequest {
+  uint32 page = 1[(validate.rules).uint32 = {gt: 0}];
+  uint32 pageSize = 2[(validate.rules).uint32 = {gt: 0,lte:50}];
+  optional string order = 3[(validate.rules).string = {in: ["asc","desc"]}];
+  optional string orderBy = 4[(validate.rules).string = {in: ["id","created_at","updated_at"]}];
+  optional string name = 5;
+}
+
+message ListDeptClassifyReply {
+  message DeptClassify {
+    uint32 id = 1;
+    string name = 2;
+    optional string description = 3;
+    optional bool status = 4;
+    uint32 weight = 5;
+    uint32 createdAt = 6;
+    uint32 updatedAt = 7;
+  }
+
+  uint32 total = 1;
+  repeated DeptClassify list = 2;
+}
+
+message CreateDeptClassifyRequest {
+  string name = 1[(validate.rules).string = {min_len: 1}];
+  optional string description = 2;
+  uint32 weight = 3;
+}
+
+message CreateDeptClassifyReply {
+  uint32 id = 1;
+}
+
+message UpdateDeptClassifyRequest {
+  uint32 id = 1[(validate.rules).uint32 = {gt: 0}];
+  optional string name = 2[(validate.rules).string = {max_len: 128}];
+  optional string description = 3;
+  optional bool status = 4;
+  optional uint32 weight = 5;
+}
+
+message UpdateDeptClassifyReply {
+}
+
+message DeleteDeptClassifyRequest {
+  uint32 id = 1[(validate.rules).uint32 = {gte:0}];
+}
+
+message DeleteDeptClassifyReply {
+}
+
+message GetDeptRequest {
+   uint32 id = 1[(validate.rules).uint32 = {gte: 1}];
+}
+
+message Role {
+  uint32 id = 1;
+  string name = 2;
+  string keyword = 3;
+}
+
+message GetDeptReply {
+  uint32 id = 1;
+  uint32 parentId = 2;
+  uint32 classifyId = 3;
+  string name = 4;
+  optional string description = 6;
+  optional DeptClassify classify = 7;
+  uint32 createdAt = 8;
+  uint32 updatedAt = 9;
+  repeated Role roles = 10;
+}
+
+message ListDeptRequest {
+  optional string name = 1;
+  optional uint32 rootId = 3;
+  optional uint32 classifyId = 4;
+  optional bool status = 5;
+}
+
+message ListDeptReply {
+  message Dept {
+    uint32 id = 1;
+    uint32 parentId = 2;
+    uint32 classifyId =9;
+    string name = 3;
+    bool status = 4;
+    optional string description = 5;
+    uint32 createdAt = 6;
+    uint32 updatedAt = 7;
+    repeated Dept children = 8;
+    optional DeptClassify classify = 10;
+    repeated Role roles = 11;
+  }
+
+  repeated Dept list = 2;
+}
+
+message CreateDeptRequest {
+  uint32 parentId = 1[(validate.rules).uint32 = {gte: 0}];
+  uint32 classifyId = 2[(validate.rules).uint32 = {gte: 1}];
+  string name = 3[(validate.rules).string = {min_len: 1, max_len: 128}];
+  optional string description = 4;
+  repeated uint32 roleIds = 5;
+}
+
+message CreateDeptReply {
+  uint32 id = 1;
+}
+
+message UpdateDeptRequest {
+  uint32 id = 1[(validate.rules).uint32 = {gte: 1}];
+  optional uint32 parentId = 2[(validate.rules).uint32 = {gte: 0}];
+  optional uint32 classifyId = 3[(validate.rules).uint32 = {gte: 1}];
+  optional string name = 4[(validate.rules).string = {min_len: 1,max_len: 128}];
+  optional string description = 5[(validate.rules).string = {min_len: 1,max_len: 256}];
+  optional bool status = 6;
+  repeated uint32 roleIds = 7;
+}
+
+message UpdateDeptReply {
+}
+
+message DeleteDeptRequest {
+  uint32 id = 1[(validate.rules).uint32 = {gte:1}];
+}
+
+message DeleteDeptReply {
+}
+
+

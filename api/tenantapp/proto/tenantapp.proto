@@ -1,0 +1,76 @@
+syntax = "proto3";
+
+package manager.api.tenantapp;
+
+option go_package = ".;tenantapp";
+option java_multiple_files = true;
+option java_package = "manager.api.tenantapp.proto";
+
+import "validate/validate.proto";
+
+message CreateTenantAppRequest {
+  uint32 tenantId = 1[(validate.rules).uint32 = {gte: 1}];
+  uint32 appId = 2[(validate.rules).uint32 = {gte: 1}];
+  uint32 expiredAt = 3[(validate.rules).uint32 = {gte: 1}];
+  repeated uint32 menuIds = 4[(validate.rules).repeated = {min_items: 1}];
+}
+
+message CreateTenantAppReply {
+  uint32 id = 1;
+}
+
+message UpdateTenantAppRequest {
+  uint32 tenantId = 1[(validate.rules).uint32 = {gte: 1}];
+  uint32 appId = 2[(validate.rules).uint32 = {gte: 1}];
+  uint32 expiredAt = 3[(validate.rules).uint32 = {gte: 1}];
+  repeated uint32 menuIds = 4[(validate.rules).repeated = {min_items: 1}];
+}
+message UpdateTenantAppReply {
+}
+
+message DeleteTenantAppRequest {
+  uint32 tenantId = 1[(validate.rules).uint32 = {gte: 1}];
+  uint32 appId = 2[(validate.rules).uint32 = {gte: 1}];
+}
+message DeleteTenantAppReply {}
+
+
+message ListTenantAppRequest {
+  uint32 page = 1[(validate.rules).uint32 = {gte: 1}];
+  uint32 pageSize = 2[(validate.rules).uint32 = {gte: 1,lte:50}];
+  optional string order = 3;
+  optional string orderBy = 4;
+  optional string appName = 5;
+  uint32 tenantId = 6[(validate.rules).uint32 = {gte: 1}];
+}
+
+message ListTenantAppReply {
+  message App{
+    uint32 id = 1;
+    string logo = 2;
+    string keyword = 3;
+    string name = 4;
+  }
+
+  message Data{
+    uint32 id = 1;
+    uint32 appId = 2;
+    uint32 tenantId = 3;
+    uint32 expiredAt = 4;
+    uint32 createdAt = 5;
+    uint32 updatedAt = 6;
+    App app = 7;
+    repeated uint32 menuIds = 8;
+  }
+  repeated Data list = 1;
+  uint32 total = 2;
+}
+
+message GetTenantAppMenuIdsRequest {
+  uint32 tenantId = 1[(validate.rules).uint32 = {gte: 1}];
+  uint32 appId = 2[(validate.rules).uint32 = {gte: 1}];
+}
+
+message GetTenantAppMenuIdsReply{
+  repeated uint32 menuIds = 1;
+}

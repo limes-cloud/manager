@@ -1,0 +1,172 @@
+syntax = "proto3";
+
+package manager.api.dictionary;
+
+option go_package = ".;dictionary";
+option java_multiple_files = true;
+option java_package = "manager.api.dictionary";
+
+import "validate/validate.proto";
+
+
+message ListDictionaryRequest {
+  uint32 page = 1[(validate.rules).uint32 = {gte: 1}];
+  uint32 pageSize = 2[(validate.rules).uint32 = {gte: 1,lte:50}];
+  optional string keyword = 3;
+  optional string name = 4;
+}
+
+message ListDictionaryReply {
+  message Dictionary {
+    uint32 id = 1;
+    string keyword = 2;
+    string type = 3;
+    string name = 4;
+    optional string description = 5;
+    uint32 createdAt = 6;
+    uint32 updatedAt = 7;
+  }
+
+  uint32 total = 1;
+  repeated Dictionary list = 2;
+}
+
+message CreateDictionaryRequest {
+  string keyword = 1[(validate.rules).string = {min_len: 1}];
+  string name = 2[(validate.rules).string = {min_len: 1}];
+  string type = 3[(validate.rules).string = {min_len: 1}];
+  optional string description = 4;
+}
+
+message CreateDictionaryReply {
+  uint32 id = 1;
+}
+
+message UpdateDictionaryRequest {
+  uint32 id = 1[(validate.rules).uint32 = {gte: 1}];
+  string keyword = 2;
+  string name = 3;
+  string type = 4;
+  optional string description = 5;
+}
+
+message UpdateDictionaryReply {
+}
+
+message DeleteDictionaryRequest {
+  uint32 id = 1[(validate.rules).uint32 = {gte: 1}];
+}
+
+message DeleteDictionaryReply {
+}
+
+message GetDictionaryRequest {
+  optional uint32 id = 1[(validate.rules).uint32 = {gte: 1}];
+  optional string keyword = 2[(validate.rules).string = {min_len: 1}];
+}
+
+message GetDictionaryReply {
+  uint32 id = 1;
+  string keyword = 2;
+  string name = 3;
+  string type = 4;
+  optional string description = 5;
+  uint32 createdAt = 6;
+  uint32 updatedAt = 7;
+}
+
+
+message GetDictionaryValuesRequest{
+  repeated string keywords = 1[(validate.rules).repeated = {min_items: 1,unique:true}];
+}
+
+message GetDictionaryValuesReply {
+  message Value {
+    message Item {
+      string label = 1;
+      string value = 2;
+      optional string type = 3;
+      optional string extra = 4;
+      optional string description = 5;
+      repeated Item children = 6;
+    }
+    repeated Item list = 1;
+  }
+  map<string,Value> dict = 1;
+}
+
+message ListDictionaryValueRequest {
+  uint32 page = 1[(validate.rules).uint32 = {gte: 1}];
+  uint32 pageSize = 2[(validate.rules).uint32 = {gte: 1,lte:50}];
+  uint32 dictionaryId = 3;
+  optional string label = 4;
+  optional string value = 5;
+  optional bool status = 6;
+}
+
+message ListDictionaryValueReply {
+  message DictionaryValue {
+    uint32 id = 1;
+    uint32 dictionaryId = 2;
+    uint32 parentId = 3;
+    string label = 4;
+    string value = 5;
+    optional bool status = 6;
+    optional int32 weight = 7;
+    optional string type = 8;
+    optional string extra = 9;
+    optional string description = 10;
+    uint32 createdAt = 11;
+    uint32 updatedAt = 12;
+    repeated DictionaryValue children = 13;
+  }
+
+  uint32 total = 1;
+  repeated DictionaryValue list = 2;
+}
+
+message CreateDictionaryValueRequest {
+  uint32 dictionaryId = 1[(validate.rules).uint32 = {gte: 1}];
+  string label = 2[(validate.rules).string = {min_len: 1}];
+  string value = 3[(validate.rules).string = {min_len: 1}];
+  uint32 parentId = 4;
+  optional bool status = 5;
+  optional int32 weight = 6;
+  optional string type = 7;
+  optional string extra = 8;
+  optional string description = 9;
+}
+
+message CreateDictionaryValueReply {
+  uint32 id = 1;
+}
+
+message UpdateDictionaryValueRequest {
+  uint32 id = 1[(validate.rules).uint32 = {gte: 1}];
+  uint32 dictionaryId = 2[(validate.rules).uint32 = {gte: 1}];
+  string label = 3[(validate.rules).string = {min_len: 1}];
+  string value = 4[(validate.rules).string = {min_len: 1}];
+  uint32 parentId = 5;
+  optional int32 weight = 6;
+  optional string type = 7;
+  optional string extra = 8;
+  optional string description = 9;
+}
+
+message UpdateDictionaryValueReply {
+}
+
+message UpdateDictionaryValueStatusRequest {
+  uint32 id = 1[(validate.rules).uint32 = {gte: 1}];
+  bool status = 2;
+}
+
+message UpdateDictionaryValueStatusReply {
+}
+
+message DeleteDictionaryValueRequest {
+  uint32 id = 1[(validate.rules).uint32 = {gte: 1}];
+}
+
+message DeleteDictionaryValueReply {
+}

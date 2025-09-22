@@ -6,8 +6,7 @@ import (
 	"google.golang.org/protobuf/types/known/structpb"
 )
 
-type emailType struct {
-}
+type emailType struct{}
 
 func (et emailType) Name() string {
 	return "邮箱"

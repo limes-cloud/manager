@@ -1,7 +1,7 @@
 package entity
 
 import (
-	"github.com/limes-cloud/kratosx/types"
+	"github.com/limes-cloud/kratosx/model"
 )
 
 type Field struct {
@@ -10,5 +10,5 @@ type Field struct {
 	Name        string  `json:"name" gorm:"column:name"`
 	Status      *bool   `json:"status" gorm:"column:status"`
 	Description *string `json:"description" gorm:"column:description"`
-	types.BaseModel
+	model.BaseTenantModel
 }

@@ -1,0 +1,101 @@
+syntax = "proto3";
+
+package manager.api.app;
+
+option go_package = ".;app";
+option java_multiple_files = true;
+option java_package = "manager.api.app";
+
+import "api/app/proto/app.proto";
+import "google/api/annotations.proto";
+
+service App{
+  // GetApp 获取指定的应用信息
+  rpc GetApp (GetAppRequest) returns (GetAppReply) {
+    option (google.api.http) = {
+      get: "/manager/api/v1/app"
+    };
+  }
+
+  // ListApp 获取应用信息列表
+  rpc ListCurrentApp (ListAppRequest) returns (ListAppReply) {
+    option (google.api.http) = {
+      get: "/manager/api/v1/current/apps",
+    };
+  }
+
+  // ListApp 获取应用信息列表
+  rpc ListApp (ListAppRequest) returns (ListAppReply) {
+    option (google.api.http) = {
+      get: "/manager/api/v1/apps",
+    };
+  }
+
+  // CreateApp 创建应用信息
+  rpc CreateApp (CreateAppRequest) returns (CreateAppReply) {
+    option (google.api.http) = {
+      post: "/manager/api/v1/app",
+      body: "*"
+    };
+  }
+
+  // UpdateApp 更新应用信息
+  rpc UpdateApp (UpdateAppRequest) returns (UpdateAppReply) {
+    option (google.api.http) = {
+      put: "/manager/api/v1/app",
+      body: "*"
+    };
+  }
+
+  // DeleteApp 删除应用信息
+  rpc DeleteApp (DeleteAppRequest) returns (DeleteAppReply) {
+    option (google.api.http) = {
+      delete: "/manager/api/v1/app",
+    };
+  }
+
+
+  // ListAppOAuthChannel 获取应用渠道信息
+  rpc ListAppOAuthChannel (ListAppOAuthChannelRequest) returns (ListAppOAuthChannelReply) {
+    option (google.api.http) = {
+      get: "/manager/api/v1/app/channels",
+    };
+  }
+
+  // CreateApp 创建应用渠道信息
+  rpc CreateAppOAuthChannel (CreateAppOAuthChannelRequest) returns (CreateAppOAuthChannelReply) {
+    option (google.api.http) = {
+      post: "/manager/api/v1/app/channel",
+      body: "*"
+    };
+  }
+
+  // DeleteApp 删除应用渠道信息
+  rpc DeleteAppOAuthChannel (DeleteAppOAuthChannelRequest) returns (DeleteAppOAuthChannelReply) {
+    option (google.api.http) = {
+      delete: "/manager/api/v1/app/channel",
+    };
+  }
+
+  // ListAppField 获取应用字段信息
+  rpc ListAppField (ListAppFieldRequest) returns (ListAppFieldReply) {
+    option (google.api.http) = {
+      get: "/manager/api/v1/app/fields",
+    };
+  }
+
+  // CreateApp 创建应用字段信息
+  rpc CreateAppField (CreateAppFieldRequest) returns (CreateAppFieldReply) {
+    option (google.api.http) = {
+      post: "/manager/api/v1/app/field",
+      body: "*"
+    };
+  }
+
+  // DeleteApp 删除应用字段信息
+  rpc DeleteAppField (DeleteAppFieldRequest) returns (DeleteAppFieldReply) {
+    option (google.api.http) = {
+      delete: "/manager/api/v1/app/field",
+    };
+  }
+}

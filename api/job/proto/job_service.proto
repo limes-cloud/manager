@@ -1,0 +1,43 @@
+syntax = "proto3";
+
+package manager.api.job;
+
+option go_package = ".;job";
+option java_multiple_files = true;
+option java_package = "manager.api.job";
+
+import "api/job/proto/job.proto";
+import "google/api/annotations.proto";
+
+service Job{
+  // ListJob 获取部门列表
+  rpc ListJob (ListJobRequest) returns (ListJobReply) {
+    option (google.api.http) = {
+      get: "/manager/api/v1/jobs",
+    };
+  }
+
+  // CreateJob 创建部门
+  rpc CreateJob (CreateJobRequest) returns (CreateJobReply) {
+    option (google.api.http) = {
+      post: "/manager/api/v1/job",
+      body: "*"
+    };
+  }
+
+  // UpdateJob 更新部门
+  rpc UpdateJob (UpdateJobRequest) returns (UpdateJobReply) {
+    option (google.api.http) = {
+      put: "/manager/api/v1/job",
+      body: "*"
+    };
+  }
+
+  // DeleteJob 删除部门
+  rpc DeleteJob (DeleteJobRequest) returns (DeleteJobReply) {
+    option (google.api.http) = {
+      delete: "/manager/api/v1/job",
+    };
+  }
+
+}

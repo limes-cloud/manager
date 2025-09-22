@@ -30,6 +30,8 @@ type DictionaryValue struct {
 }
 
 type AllDictionaryValueRequest struct {
-	DictionaryId uint32 `json:"dictionaryId"`
-	Status       *bool  `json:"status"`
+	DictionaryId uint32  `json:"dictionaryId"`
+	Label        *string `json:"label"`
+	Value        *string `json:"value"`
+	Status       *bool   `json:"status"`
 }

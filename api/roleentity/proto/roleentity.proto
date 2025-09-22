@@ -1,0 +1,79 @@
+syntax = "proto3";
+
+package manager.api.roleentity;
+
+option go_package = ".;roleentity";
+option java_multiple_files = true;
+option java_package = "manager.api.roleentity";
+
+import "validate/validate.proto";
+
+message CreateRoleEntityRequest {
+  uint32 roleId = 1[(validate.rules).uint32 = {gte: 1}];
+  uint32 entityId = 2[(validate.rules).uint32 = {gte: 1}];
+  string action = 3[(validate.rules).string = {min_len: 1}];
+  string scope = 4[(validate.rules).string = {min_len: 1}];
+  optional string fields = 5[(validate.rules).string = {min_len: 1}];
+  optional string rules = 6[(validate.rules).string = {min_len: 1}];
+}
+
+message CreateRoleEntityReply {
+  uint32 id = 1;
+}
+
+message ListRoleEntityRequest {
+  uint32 page = 1[(validate.rules).uint32 = {gte: 1}];
+  uint32 pageSize = 2[(validate.rules).uint32 = {gte: 1 ,lte: 50}];
+  uint32 roleId = 3[(validate.rules).uint32 = {gte: 1}];
+  optional uint32 entityId = 4[(validate.rules).uint32 = {gte: 1}];
+}
+
+message ListRoleEntityReply {
+  message App{
+    uint32 id = 1;
+    string name = 2;
+  }
+  message Entity{
+    uint32 id = 1;
+    string name = 2;
+    string comment = 3;
+    App app = 4;
+  }
+  message Data{
+    uint32 id = 1;
+    uint32 roleId = 2;
+    uint32 entityId = 3;
+    string action = 4;
+    string scope = 5;
+    string fields = 6;
+    string rules = 7;
+    uint32 createdAt = 11;
+    uint32 updatedAt = 12;
+    Entity entity = 13;
+  }
+  repeated Data list = 1;
+  uint32 total = 2;
+}
+
+message UpdateRoleEntityRequest {
+  uint32 id = 1[(validate.rules).uint32 = {gte: 1}];
+  optional uint32 roleId = 2[(validate.rules).uint32 = {gte: 1}];
+  optional uint32 entityId = 3[(validate.rules).uint32 = {gte: 1}];
+  optional string action = 4[(validate.rules).string = {min_len: 1}];
+  optional string scope = 5[(validate.rules).string = {min_len: 1}];
+  optional string fields = 6[(validate.rules).string = {min_len: 1}];
+  optional string rules = 7[(validate.rules).string = {min_len: 1}];
+}
+
+message UpdateRoleEntityReply {
+}
+
+
+message DeleteRoleEntityRequest {
+  uint32 id = 1[(validate.rules).uint32 = {gte: 1}];
+}
+
+message DeleteRoleEntityReply {
+}
+
+

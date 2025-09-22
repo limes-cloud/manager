@@ -1,13 +1,15 @@
 package entity
 
-import "github.com/limes-cloud/kratosx/types"
+import (
+	"github.com/limes-cloud/kratosx/model"
+)
 
 type Dictionary struct {
 	Keyword     string  `json:"keyword" gorm:"column:keyword"`
 	Name        string  `json:"name" gorm:"column:name"`
 	Type        string  `json:"type" gorm:"column:type"`
 	Description *string `json:"description" gorm:"column:description"`
-	types.BaseModel
+	model.BaseTenantModel
 }
 
 type DictionaryValue struct {
@@ -22,7 +24,7 @@ type DictionaryValue struct {
 	Description  *string            `json:"description" gorm:"column:description"`
 	Dictionary   *Dictionary        `json:"dictionary"`
 	Children     []*DictionaryValue `json:"children" gorm:"-"`
-	types.BaseModel
+	model.BaseModel
 }
 
 // ID 获取ID

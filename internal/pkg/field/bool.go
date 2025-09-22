@@ -6,8 +6,7 @@ import (
 	"google.golang.org/protobuf/types/known/structpb"
 )
 
-type boolType struct {
-}
+type boolType struct{}
 
 func (boolType boolType) Name() string {
 	return "布尔"

@@ -7,8 +7,7 @@ import (
 	"google.golang.org/protobuf/types/known/structpb"
 )
 
-type numberType struct {
-}
+type numberType struct{}
 
 func (nt numberType) Name() string {
 	return "数字"

@@ -1,0 +1,670 @@
+# Generated with protoc-gen-openapi
+# https://github.com/google/gnostic/tree/master/cmd/protoc-gen-openapi
+
+openapi: 3.0.3
+info:
+    title: App API
+    version: 0.0.1
+paths:
+    /manager/api/v1/app:
+        get:
+            tags:
+                - App
+            description: GetApp 获取指定的应用信息
+            operationId: App_GetApp
+            parameters:
+                - name: id
+                  in: query
+                  schema:
+                    type: integer
+                    format: uint32
+                - name: keyword
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GetAppReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        put:
+            tags:
+                - App
+            description: UpdateApp 更新应用信息
+            operationId: App_UpdateApp
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/UpdateAppRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/UpdateAppReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        post:
+            tags:
+                - App
+            description: CreateApp 创建应用信息
+            operationId: App_CreateApp
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/CreateAppRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/CreateAppReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        delete:
+            tags:
+                - App
+            description: DeleteApp 删除应用信息
+            operationId: App_DeleteApp
+            parameters:
+                - name: id
+                  in: query
+                  schema:
+                    type: integer
+                    format: uint32
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/DeleteAppReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /manager/api/v1/app/channel:
+        post:
+            tags:
+                - App
+            description: CreateApp 创建应用渠道信息
+            operationId: App_CreateAppOAuthChannel
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/CreateAppOAuthChannelRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/CreateAppOAuthChannelReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        delete:
+            tags:
+                - App
+            description: DeleteApp 删除应用渠道信息
+            operationId: App_DeleteAppOAuthChannel
+            parameters:
+                - name: id
+                  in: query
+                  schema:
+                    type: integer
+                    format: uint32
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/DeleteAppOAuthChannelReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /manager/api/v1/app/channels:
+        get:
+            tags:
+                - App
+            description: ListAppOAuthChannel 获取应用渠道信息
+            operationId: App_ListAppOAuthChannel
+            parameters:
+                - name: page
+                  in: query
+                  schema:
+                    type: integer
+                    format: uint32
+                - name: pageSize
+                  in: query
+                  schema:
+                    type: integer
+                    format: uint32
+                - name: order
+                  in: query
+                  schema:
+                    type: string
+                - name: orderBy
+                  in: query
+                  schema:
+                    type: string
+                - name: keyword
+                  in: query
+                  schema:
+                    type: string
+                - name: name
+                  in: query
+                  schema:
+                    type: string
+                - name: appId
+                  in: query
+                  schema:
+                    type: integer
+                    format: uint32
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ListAppOAuthChannelReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /manager/api/v1/app/field:
+        post:
+            tags:
+                - App
+            description: CreateApp 创建应用字段信息
+            operationId: App_CreateAppField
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/CreateAppFieldRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/CreateAppFieldReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        delete:
+            tags:
+                - App
+            description: DeleteApp 删除应用字段信息
+            operationId: App_DeleteAppField
+            parameters:
+                - name: id
+                  in: query
+                  schema:
+                    type: integer
+                    format: uint32
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/DeleteAppFieldReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /manager/api/v1/app/fields:
+        get:
+            tags:
+                - App
+            description: ListAppField 获取应用字段信息
+            operationId: App_ListAppField
+            parameters:
+                - name: page
+                  in: query
+                  schema:
+                    type: integer
+                    format: uint32
+                - name: pageSize
+                  in: query
+                  schema:
+                    type: integer
+                    format: uint32
+                - name: order
+                  in: query
+                  schema:
+                    type: string
+                - name: orderBy
+                  in: query
+                  schema:
+                    type: string
+                - name: keyword
+                  in: query
+                  schema:
+                    type: string
+                - name: name
+                  in: query
+                  schema:
+                    type: string
+                - name: appId
+                  in: query
+                  schema:
+                    type: integer
+                    format: uint32
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ListAppFieldReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /manager/api/v1/apps:
+        get:
+            tags:
+                - App
+            description: ListApp 获取应用信息列表
+            operationId: App_ListApp
+            parameters:
+                - name: page
+                  in: query
+                  schema:
+                    type: integer
+                    format: uint32
+                - name: pageSize
+                  in: query
+                  schema:
+                    type: integer
+                    format: uint32
+                - name: order
+                  in: query
+                  schema:
+                    type: string
+                - name: orderBy
+                  in: query
+                  schema:
+                    type: string
+                - name: keyword
+                  in: query
+                  schema:
+                    type: string
+                - name: name
+                  in: query
+                  schema:
+                    type: string
+                - name: status
+                  in: query
+                  schema:
+                    type: boolean
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ListAppReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /manager/api/v1/current/apps:
+        get:
+            tags:
+                - App
+            description: ListApp 获取应用信息列表
+            operationId: App_ListCurrentApp
+            parameters:
+                - name: page
+                  in: query
+                  schema:
+                    type: integer
+                    format: uint32
+                - name: pageSize
+                  in: query
+                  schema:
+                    type: integer
+                    format: uint32
+                - name: order
+                  in: query
+                  schema:
+                    type: string
+                - name: orderBy
+                  in: query
+                  schema:
+                    type: string
+                - name: keyword
+                  in: query
+                  schema:
+                    type: string
+                - name: name
+                  in: query
+                  schema:
+                    type: string
+                - name: status
+                  in: query
+                  schema:
+                    type: boolean
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ListAppReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+components:
+    schemas:
+        CreateAppFieldReply:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: uint32
+        CreateAppFieldRequest:
+            type: object
+            properties:
+                appId:
+                    type: integer
+                    format: uint32
+                fieldId:
+                    type: integer
+                    format: uint32
+        CreateAppOAuthChannelReply:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: uint32
+        CreateAppOAuthChannelRequest:
+            type: object
+            properties:
+                appId:
+                    type: integer
+                    format: uint32
+                channelId:
+                    type: integer
+                    format: uint32
+        CreateAppReply:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: uint32
+        CreateAppRequest:
+            type: object
+            properties:
+                logo:
+                    type: string
+                keyword:
+                    type: string
+                name:
+                    type: string
+                private:
+                    type: boolean
+                extra:
+                    type: string
+                description:
+                    type: string
+        DeleteAppFieldReply:
+            type: object
+            properties: {}
+        DeleteAppOAuthChannelReply:
+            type: object
+            properties: {}
+        DeleteAppReply:
+            type: object
+            properties: {}
+        GetAppReply:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: uint32
+                logo:
+                    type: string
+                keyword:
+                    type: string
+                name:
+                    type: string
+                status:
+                    type: boolean
+                reason:
+                    type: string
+                private:
+                    type: boolean
+                extra:
+                    type: string
+                description:
+                    type: string
+                createdAt:
+                    type: integer
+                    format: uint32
+                updatedAt:
+                    type: integer
+                    format: uint32
+        GoogleProtobufAny:
+            type: object
+            properties:
+                '@type':
+                    type: string
+                    description: The type of the serialized message.
+            additionalProperties: true
+            description: Contains an arbitrary serialized message along with a @type that describes the type of the serialized message.
+        ListAppFieldReply:
+            type: object
+            properties:
+                total:
+                    type: integer
+                    format: uint32
+                list:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/ListAppFieldReply_Data'
+        ListAppFieldReply_Data:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: uint32
+                appId:
+                    type: integer
+                    format: uint32
+                fieldId:
+                    type: integer
+                    format: uint32
+                createdAt:
+                    type: integer
+                    format: uint32
+                updatedAt:
+                    type: integer
+                    format: uint32
+                field:
+                    $ref: '#/components/schemas/ListAppFieldReply_Field'
+        ListAppFieldReply_Field:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: uint32
+                name:
+                    type: string
+                keyword:
+                    type: string
+                type:
+                    type: string
+        ListAppOAuthChannelReply:
+            type: object
+            properties:
+                total:
+                    type: integer
+                    format: uint32
+                list:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/ListAppOAuthChannelReply_Data'
+        ListAppOAuthChannelReply_Channel:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: uint32
+                logo:
+                    type: string
+                name:
+                    type: string
+                keyword:
+                    type: string
+        ListAppOAuthChannelReply_Data:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: uint32
+                appId:
+                    type: integer
+                    format: uint32
+                channelId:
+                    type: integer
+                    format: uint32
+                createdAt:
+                    type: integer
+                    format: uint32
+                updatedAt:
+                    type: integer
+                    format: uint32
+                channel:
+                    $ref: '#/components/schemas/ListAppOAuthChannelReply_Channel'
+        ListAppReply:
+            type: object
+            properties:
+                total:
+                    type: integer
+                    format: uint32
+                list:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/ListAppReply_App'
+        ListAppReply_App:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: uint32
+                logo:
+                    type: string
+                keyword:
+                    type: string
+                name:
+                    type: string
+                status:
+                    type: boolean
+                reason:
+                    type: string
+                private:
+                    type: boolean
+                extra:
+                    type: string
+                description:
+                    type: string
+                createdAt:
+                    type: integer
+                    format: uint32
+                updatedAt:
+                    type: integer
+                    format: uint32
+        Status:
+            type: object
+            properties:
+                code:
+                    type: integer
+                    description: The status code, which should be an enum value of [google.rpc.Code][google.rpc.Code].
+                    format: int32
+                message:
+                    type: string
+                    description: A developer-facing error message, which should be in English. Any user-facing error message should be localized and sent in the [google.rpc.Status.details][google.rpc.Status.details] field, or localized by the client.
+                details:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/GoogleProtobufAny'
+                    description: A list of messages that carry the error details.  There is a common set of message types for APIs to use.
+            description: 'The `Status` type defines a logical error model that is suitable for different programming environments, including REST APIs and RPC APIs. It is used by [gRPC](https://github.com/grpc). Each `Status` message contains three pieces of data: error code, error message, and error details. You can find out more about this error model and how to work with it in the [API Design Guide](https://cloud.google.com/apis/design/errors).'
+        UpdateAppReply:
+            type: object
+            properties: {}
+        UpdateAppRequest:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: uint32
+                logo:
+                    type: string
+                keyword:
+                    type: string
+                name:
+                    type: string
+                status:
+                    type: boolean
+                private:
+                    type: boolean
+                extra:
+                    type: string
+                description:
+                    type: string
+tags:
+    - name: App

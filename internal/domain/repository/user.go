@@ -1,49 +1,27 @@
 package repository
 
 import (
-	"github.com/limes-cloud/kratosx"
-
+	"github.com/limes-cloud/manager/internal/core"
 	"github.com/limes-cloud/manager/internal/domain/entity"
 	"github.com/limes-cloud/manager/internal/types"
 )
 
 type User interface {
 	// GetUser 获取指定的用户信息
-	GetUser(ctx kratosx.Context, id uint32) (*entity.User, error)
+	GetUser(ctx core.Context, id uint32) (*entity.User, error)
 
-	// GetBaseUser 获取指定的用户基础信息
-	GetBaseUser(ctx kratosx.Context, id uint32) (*entity.User, error)
-
-	// GetUserByPhone 获取指定的用户信息
-	GetUserByPhone(ctx kratosx.Context, phone string) (*entity.User, error)
-
-	// GetUserByEmail 获取指定的用户信息
-	GetUserByEmail(ctx kratosx.Context, email string) (*entity.User, error)
-
-	// GetUserRoleIds 获取用户的角色id
-	GetUserRoleIds(ctx kratosx.Context, id uint32) ([]uint32, error)
+	// GetUserByUsername 获取指定的用户信息
+	GetUserByUsername(ctx core.Context, un string) (*entity.User, error)
 
 	// ListUser 获取用户信息列表
-	ListUser(ctx kratosx.Context, req *types.ListUserRequest) ([]*entity.User, uint32, error)
+	ListUser(ctx core.Context, req *types.ListUserRequest) ([]*entity.User, uint32, error)
 
 	// CreateUser 创建用户信息
-	CreateUser(ctx kratosx.Context, req *entity.User) (uint32, error)
-
-	// ForceUpdateUser 强制更新
-	ForceUpdateUser(ctx kratosx.Context, user *entity.User) error
+	CreateUser(ctx core.Context, req *entity.User) (uint32, error)
 
 	// UpdateUser 更新用户信息
-	UpdateUser(ctx kratosx.Context, req *entity.User) error
-
-	// UpdateUserStatus 更新用户信息状态
-	UpdateUserStatus(ctx kratosx.Context, id uint32, status bool) error
+	UpdateUser(ctx core.Context, req *entity.User) error
 
 	// DeleteUser 删除用户信息
-	DeleteUser(ctx kratosx.Context, id uint32) error
-
-	// ListLoginLog 获取登陆信息列表
-	ListLoginLog(ctx kratosx.Context, req *types.ListLoginLogRequest) ([]*entity.LoginLog, uint32, error)
-
-	// CreateLoginLog 创建登陆信息
-	CreateLoginLog(ctx kratosx.Context, req *entity.LoginLog) (uint32, error)
+	DeleteUser(ctx core.Context, id uint32) error
 }

@@ -2,101 +2,303 @@ package service
 
 import (
 	"encoding/base64"
+	"encoding/json"
 	"time"
+
+	midauth "github.com/limes-cloud/manager/internal/domain/middleware/auth"
 
 	"github.com/forgoer/openssl"
 	kerrors "github.com/go-kratos/kratos/v2/errors"
 	"github.com/go-kratos/kratos/v2/transport"
-	json "github.com/json-iterator/go"
-	"github.com/limes-cloud/kratosx"
+	"github.com/limes-cloud/kratosx/library/captcha"
+	"github.com/limes-cloud/kratosx/model"
 	"github.com/limes-cloud/kratosx/pkg/crypto"
-	"github.com/limes-cloud/kratosx/pkg/valx"
-	ktypes "github.com/limes-cloud/kratosx/types"
+	"github.com/limes-cloud/kratosx/pkg/ua"
+	"github.com/limes-cloud/manager/api/errors"
+	"github.com/limes-cloud/manager/internal/core"
 	"google.golang.org/protobuf/proto"
 
-	"github.com/limes-cloud/manager/api/manager/errors"
 	"github.com/limes-cloud/manager/internal/domain/entity"
 	"github.com/limes-cloud/manager/internal/domain/repository"
-	"github.com/limes-cloud/manager/internal/pkg/md"
-	"github.com/limes-cloud/manager/internal/pkg/ua"
 	"github.com/limes-cloud/manager/internal/types"
+	bc "github.com/mojocn/base64Captcha"
+)
+
+const (
+	captchaName  = "login"
+	captchaScene = "userLogin"
+
+	passwordCert = "login"
 )
 
 type Auth struct {
-	oauth   repository.OAuth
-	channel repository.Channel
-	app     repository.App
+	auth    repository.Auth
 	user    repository.User
 	address repository.Address
-	role    repository.Role
+	oauth   repository.OAuth
 }
 
 func NewAuth(
-	oauth repository.OAuth,
-	channel repository.Channel,
-	app repository.App,
+	auth repository.Auth,
 	user repository.User,
 	address repository.Address,
-	role repository.Role,
 ) *Auth {
 	return &Auth{
-		oauth:   oauth,
-		channel: channel,
-		app:     app,
+		auth:    auth,
 		user:    user,
 		address: address,
-		role:    role,
 	}
 }
 
 // Auth 外部接口rbac鉴权
-func (u *Auth) Auth(ctx kratosx.Context, in *types.AuthRequest) (*md.Auth, error) {
-	// 获取鉴权器，判断是否为白名单
-	author := ctx.Authentication()
-	if author.IsWhitelist(in.Path, in.Method) {
-		return nil, nil
+//func (u *Auth) Auth(ctx core.Context, in *types.AuthRequest) (*auth.AuthReply, error) {
+//	// 获取鉴权器，判断是否为白名单
+//	author := ctx.Authentication()
+//	if author.IsWhitelist(in.Path, in.Method) {
+//		return nil, nil
+//	}
+//
+//	info := auth.Get(ctx)
+//
+//	// 进行rbac鉴权
+//	enforce := ctx.Authentication().Enforce()
+//
+//	isPass := false
+//	for _, role := range roleKeys {
+//		isAuth, _ := enforce.Enforce(role, in.Path, in.Method)
+//		if isAuth {
+//			isPass = true
+//			break
+//		}
+//	}
+//	if !isPass {
+//		return nil, errors.ForbiddenError()
+//	}
+//
+//	return info, nil
+//}
+
+// GetUserLoginCaptcha 获取用户登陆验证吗
+func (u *Auth) GetUserLoginCaptcha(ctx core.Context) (*types.GetUserLoginCaptchaReply, error) {
+	cpt, err := ctx.Captcha().Get(ctx, captchaName)
+	if err != nil {
+		ctx.Logger().Warnw("msg", "captcha verify error", "err", err.Error())
+		return nil, errors.VerifyCaptchaError()
+	}
+	resp, err := cpt.GetCaptcha(&captcha.GetCaptchaRequest{
+		Scene:    captchaScene,
+		ClientIP: ctx.ClientIP(),
+	})
+	if err != nil {
+		return nil, errors.GenCaptchaError(err.Error())
 	}
 
-	info := md.Get(ctx)
-
-	// 获取当前用户的所有角色key
-	var roleKeys []string
-	list, _ := u.role.ListCacheRole(ctx)
-	for _, item := range list {
-		roleKeys = append(roleKeys, item.Keyword)
+	// 生成验证码图片
+	dt := bc.NewDriverDigit(80, 200, 6, 0.7, 80)
+	item, err := dt.DrawCaptcha(resp.VerifyCode)
+	if err != nil {
+		return nil, errors.GenCaptchaError(err.Error())
 	}
 
-	// 获取需要跳过的角色
-	skips := ctx.Config().App().Authentication.SkipRole
-	uniquer := valx.New(roleKeys)
-	for _, key := range skips {
-		if uniquer.Has(key) {
-			return info, nil
-		}
-	}
-
-	// 进行rbac鉴权
-	enforce := ctx.Authentication().Enforce()
-
-	isPass := false
-	for _, role := range roleKeys {
-		isAuth, _ := enforce.Enforce(role, in.Path, in.Method)
-		if isAuth {
-			isPass = true
-			break
-		}
-	}
-	if !isPass {
-		return nil, errors.ForbiddenError()
-	}
-
-	return info, nil
+	return &types.GetUserLoginCaptchaReply{
+		Uuid:    resp.UUID,
+		Expire:  uint32(resp.Expire.Seconds()),
+		Captcha: item.EncodeB64string(),
+	}, nil
 }
 
-// OAuthOAuthWay 获取渠道授权方式
-func (u *Auth) OAuthOAuthWay(ctx kratosx.Context, req *types.OAuthWayRequest) (*types.GetOAuthWayReply, error) {
+// UserLogin 用户登陆
+func (u *Auth) UserLogin(ctx core.Context, req *types.UserLoginRequest) (token string, err error) {
+	var user *entity.User
+	defer func() {
+		if errors.IsUserDisableError(err) || errors.IsVerifyCaptchaError(err) {
+			return
+		}
+		if user == nil {
+			return
+		}
+		u.addLoginLog(ctx, user, err)
+	}()
+
+	// 判断验证码
+	cpt, err := ctx.Captcha().Get(ctx, captchaName)
+	if err != nil {
+		ctx.Logger().Warnw("msg", "captcha verify error", "err", err.Error())
+		err = errors.VerifyCaptchaError()
+		return
+	}
+	if err = cpt.VerifyCaptcha(&captcha.VerifyCaptchaRequest{
+		Scene:      captchaScene,
+		ClientIP:   ctx.ClientIP(),
+		UUID:       req.CaptchaId,
+		VerifyCode: req.Captcha,
+	}); err != nil {
+		ctx.Logger().Warnw("msg", "captcha verify error", "err", err.Error())
+		err = errors.VerifyCaptchaError()
+		return
+	}
+
+	// 判断密码
+	passByte, _ := base64.StdEncoding.DecodeString(req.Password)
+	decryptData, err := openssl.RSADecrypt(passByte, ctx.Loader(passwordCert))
+	if err != nil {
+		ctx.Logger().Warnw("msg", "rsa decode error", "err", err.Error())
+		err = errors.VerifyCaptchaError()
+		return
+	}
+	pw := struct {
+		Password string `json:"password"`
+		Time     int64  `json:"time"`
+	}{}
+	if json.Unmarshal(decryptData, &pw) != nil {
+		ctx.Logger().Errorw("msg", "password format error", "err", err.Error())
+		err = errors.PasswordError()
+		return
+	}
+	if time.Now().UnixMilli()-pw.Time > 10*1000 {
+		ctx.Logger().Errorw(
+			"msg", "login pwd timeout",
+			"current", time.Now().UnixMilli(),
+			"submit", pw.Time,
+			"dt", time.Now().UnixMilli()-pw.Time,
+		)
+		err = errors.PasswordExpireError()
+		return
+	}
+
+	// 获取用户信息
+	user, err = u.user.GetUserByUsername(ctx, req.Username)
+	if err != nil {
+		ctx.Logger().Errorw("msg", "get user info error", "err", err.Error())
+		err = errors.UsernameNotExistError()
+		return
+	}
+
+	// 判断密码
+	if !crypto.CompareHashPwd(user.Password, pw.Password) {
+		err = errors.PasswordError()
+		return
+	}
+
+	// 生产token
+	return u.genToken(ctx, user)
+}
+
+// UserLogout 退出登陆
+func (u *Auth) UserLogout(ctx core.Context) error {
+	token := ctx.Token()
+	if token != "" {
+		ctx.JWT().AddBlacklist(token)
+	}
+	return nil
+}
+
+// UserRefreshToken 用户刷新token
+func (u *Auth) UserRefreshToken(ctx core.Context) (string, error) {
+	token, err := ctx.JWT().Renewal(ctx)
+	if err != nil {
+		return "", errors.RefreshTokenError(err.Error())
+	}
+
+	uid := ctx.Auth().UserId
+
+	// 更新用户表token信息
+	if err := u.user.UpdateUser(ctx, &entity.User{
+		BaseTenantDeptModel: model.BaseTenantDeptModel{Id: uid},
+		Token:               proto.String(token),
+	}); err != nil {
+		ctx.Logger().Errorw("refresh token error", "err", err.Error())
+		return "", errors.SystemError()
+	}
+
+	return token, nil
+}
+
+func (u *Auth) genToken(ctx core.Context, user *entity.User) (token string, err error) {
+	if user.Status != nil && !*user.Status {
+		err = errors.UserDisableError()
+		return
+	}
+
+	// 判断用户token是否可用,可用直接返回当前token
+	if user.Token != nil && *user.Token != "" && user.ExpireAt > (time.Now().Unix()+600) {
+		return *user.Token, nil
+	}
+
+	// 构建token信息
+	info := midauth.Info{
+		TenantId: user.TenantId,
+		UserId:   user.Id,
+		Username: user.Username,
+		DeptId:   user.DeptId,
+	}
+	token, err = ctx.JWT().NewToken(info.ToMap())
+	if err != nil {
+		ctx.Logger().Errorw("msg", "gen user token error", "err", err.Error())
+		err = errors.GenTokenError()
+		return
+	}
+
+	// 更新用户token信息
+	expired := time.Now().Unix() + int64(ctx.JWT().Config().Expire)
+	data := &entity.User{
+		BaseTenantDeptModel: model.BaseTenantDeptModel{Id: user.Id},
+		Token:               &token,
+		LoggedAt:            time.Now().Unix(),
+		ExpireAt:            expired,
+	}
+	if err = u.user.UpdateUser(ctx, data); err != nil {
+		ctx.Logger().Errorw("msg", "update user login info error", "err", err.Error())
+		err = errors.SystemError()
+		return
+	}
+
+	return token, nil
+}
+
+func (u *Auth) addLoginLog(ctx core.Context, user *entity.User, err error) {
+	header, ok := transport.FromServerContext(ctx)
+	if !ok {
+		return
+	}
+
+	var (
+		ip   = ctx.ClientIP()
+		ug   = ua.Parse(header.RequestHeader().Get("User-Agent"))
+		code = 200
+		desc = "登陆成功"
+	)
+
+	if err != nil {
+		var er *kerrors.Error
+		if ok := kerrors.As(err, &er); ok {
+			code = int(er.GetCode())
+			desc = er.Error()
+		} else {
+			code = 400
+			desc = err.Error()
+		}
+	}
+
+	_, _ = u.auth.CreateLoginLog(ctx, &entity.LoginLog{
+		CreateTenantUserModel: model.CreateTenantUserModel{
+			UserId:   user.Id,
+			DeptId:   user.DeptId,
+			TenantId: user.TenantId,
+		},
+		IP:          ctx.ClientIP(),
+		Address:     u.address.GetAddressByIP(ip),
+		Browser:     ug.Name + " " + ug.Version,
+		Device:      ug.OS + " " + ug.OSVersion,
+		Code:        code,
+		Description: desc,
+	})
+}
+
+// OAuthHandler 获取渠道授权方式
+func (u *Auth) OAuthHandler(ctx core.Context, req *types.OAuthHandlerRequest) (*types.OAuthHandlerReply, error) {
 	// 获取渠道信息
-	channel, err := u.channel.GetChannelByKeyword(ctx, req.Keyword)
+	channel, err := u.oauth.GetOAuthChannelByKeyword(ctx, req.Keyword)
 	if err != nil {
 		return nil, errors.SystemError()
 	}
@@ -114,7 +316,7 @@ func (u *Auth) OAuthOAuthWay(ctx kratosx.Context, req *types.OAuthWayRequest) (*
 		return nil, errors.SystemError()
 	}
 
-	return author.GetOAuthWay(ctx, &types.GetOAuthWayRequest{
+	return author.OAuthHandler(ctx, &types.OAuthHandlerRequest{
 		User:      req.User,
 		UserAgent: header.RequestHeader().Get("User-Agent"),
 		IP:        ctx.ClientIP(),
@@ -122,9 +324,9 @@ func (u *Auth) OAuthOAuthWay(ctx kratosx.Context, req *types.OAuthWayRequest) (*
 }
 
 // ReportOAuthCode 上报授权code
-func (u *Auth) ReportOAuthCode(ctx kratosx.Context, req *types.ReportOAuthCodeRequest) error {
+func (u *Auth) ReportOAuthCode(ctx core.Context, req *types.ReportOAuthCodeRequest) error {
 	// 获取渠道信息
-	channel, err := u.channel.GetChannelByKeyword(ctx, req.Keyword)
+	channel, err := u.oauth.GetOAuthChannelByKeyword(ctx, req.Keyword)
 	if err != nil {
 		return errors.SystemError()
 	}
@@ -148,9 +350,9 @@ func (u *Auth) ReportOAuthCode(ctx kratosx.Context, req *types.ReportOAuthCodeRe
 	return u.oauth.SetTokenByUUID(ctx, req.UUID, token)
 }
 
-func (u *Auth) OAuthLogin(ctx kratosx.Context, req *types.OAuthLoginRequest) (*types.OAuthLoginReply, error) {
+func (u *Auth) OAuthLogin(ctx core.Context, req *types.OAuthLoginRequest) (*types.OAuthLoginReply, error) {
 	// 获取渠道信息
-	channel, err := u.channel.GetChannelByKeyword(ctx, req.Keyword)
+	channel, err := u.oauth.GetOAuthChannelByKeyword(ctx, req.Keyword)
 	if err != nil {
 		return nil, errors.SystemError()
 	}
@@ -211,9 +413,9 @@ func (u *Auth) OAuthLogin(ctx kratosx.Context, req *types.OAuthLoginRequest) (*t
 
 	reply := types.OAuthLoginReply{
 		IsBind: true,
-		Expire: proto.Uint32(uint32(time.Now().Unix() + int64(ctx.Config().App().JWT.Expire.Seconds()))),
+		Expire: proto.Uint32(uint32(time.Now().Unix() + int64(ctx.JWT().Config().Expire.Seconds()))),
 	}
-	if err := ctx.Transaction(func(ctx kratosx.Context) error {
+	if err := ctx.Transaction(func(ctx core.Context) error {
 		// 生成token
 		token, err := u.genToken(ctx, user)
 		if err != nil {
@@ -242,9 +444,9 @@ func (u *Auth) OAuthLogin(ctx kratosx.Context, req *types.OAuthLoginRequest) (*t
 }
 
 // OAuthBind 三方授权密码绑定
-func (u *Auth) OAuthBind(ctx kratosx.Context, req *types.OAuthBindRequest) (string, error) {
+func (u *Auth) OAuthBind(ctx core.Context, req *types.OAuthBindRequest) (string, error) {
 	// 获取渠道信息
-	channel, err := u.channel.GetChannelByKeyword(ctx, req.Keyword)
+	channel, err := u.oauth.GetOAuthChannelByKeyword(ctx, req.Keyword)
 	if err != nil {
 		return "", errors.SystemError()
 	}
@@ -275,7 +477,7 @@ func (u *Auth) OAuthBind(ctx kratosx.Context, req *types.OAuthBindRequest) (stri
 	}
 
 	// 获取token中的用户信息
-	user := md.Auth{}
+	user := midauth.Info{}
 	_ = ctx.JWT().ParseByToken(token, &user)
 	if user.UserId == 0 {
 		return "", errors.BindError()
@@ -300,206 +502,7 @@ func (u *Auth) OAuthBind(ctx kratosx.Context, req *types.OAuthBindRequest) (stri
 	return token, nil
 }
 
-// GetUserLoginCaptcha 获取用户登陆验证吗
-func (u *Auth) GetUserLoginCaptcha(ctx kratosx.Context) (*types.GetUserLoginCaptchaReply, error) {
-	resp, err := ctx.Captcha().Image(loginCaptchaKey, ctx.ClientIP())
-	if err != nil {
-		return nil, errors.GenCaptchaError(err.Error())
-	}
-
-	return &types.GetUserLoginCaptchaReply{
-		Uuid:    resp.ID(),
-		Expire:  uint32(resp.Expire().Seconds()),
-		Captcha: resp.Base64String(),
-	}, nil
-}
-
-func (u *Auth) UserLogin(ctx kratosx.Context, in *types.UserLoginRequest) (token string, rerr error) {
-	var (
-		user  *entity.User
-		utype string
-	)
-
-	defer func() {
-		if errors.IsUserDisableError(rerr) || errors.IsVerifyCaptchaError(rerr) {
-			return
-		}
-		u.addLoginLog(ctx, utype, in, rerr)
-	}()
-
-	if err := ctx.Captcha().VerifyImage(loginCaptchaKey, ctx.ClientIP(), in.CaptchaId, in.Captcha); err != nil {
-		ctx.Logger().Warnw("msg", "captcha verify error", "err", err.Error())
-		rerr = errors.VerifyCaptchaError()
-		return
-	}
-
-	passByte, _ := base64.StdEncoding.DecodeString(in.Password)
-	decryptData, err := openssl.RSADecrypt(passByte, ctx.Loader(passwordCert))
-	if err != nil {
-		ctx.Logger().Errorw("msg", "rsa decode error", "err", err.Error())
-		rerr = errors.VerifyCaptchaError()
-		return
-	}
-
-	pw := struct {
-		Password string `json:"password"`
-		Time     int64  `json:"time"`
-	}{}
-	if json.Unmarshal(decryptData, &pw) != nil {
-		ctx.Logger().Errorw("msg", "password format error", "err", err.Error())
-		rerr = errors.PasswordError()
-		return
-	}
-
-	if time.Now().UnixMilli()-pw.Time > 10*1000 {
-		ctx.Logger().Errorw(
-			"msg", "login pwd timeout",
-			"current", time.Now().UnixMilli(),
-			"submit", pw.Time,
-			"dt", time.Now().UnixMilli()-pw.Time,
-		)
-		rerr = errors.PasswordExpireError()
-		return
-	}
-
-	// 获取用户信息
-	if valx.IsPhone(in.Username) {
-		utype = "phone"
-		user, err = u.user.GetUserByPhone(ctx, in.Username)
-	} else if valx.IsEmail(in.Username) {
-		utype = "email"
-		user, err = u.user.GetUserByEmail(ctx, in.Username)
-	} else {
-		rerr = errors.UsernameFormatError()
-		return
-	}
-
-	if err != nil {
-		ctx.Logger().Errorw("msg", "get user info error", "err", err.Error())
-		rerr = errors.UsernameNotExistError()
-		return
-	}
-
-	// 判断密码
-	if !crypto.CompareHashPwd(user.Password, pw.Password) {
-		rerr = errors.PasswordError()
-		return
-	}
-
-	// 生产token
-	token, rerr = u.genToken(ctx, user)
-	if rerr != nil {
-		return
-	}
-
-	return token, nil
-}
-
-// UserLogout 退出登陆
-func (u *Auth) UserLogout(ctx kratosx.Context) error {
-	token := ctx.Token()
-	if token != "" {
-		ctx.JWT().AddBlacklist(token)
-	}
-	return nil
-}
-
-// UserRefreshToken 用户刷新token
-func (u *Auth) UserRefreshToken(ctx kratosx.Context) (string, error) {
-	token, err := ctx.JWT().Renewal(ctx)
-	if err != nil {
-		return "", errors.RefreshTokenError(err.Error())
-	}
-
-	uid := md.UserId(ctx)
-
-	// 更新用户表token信息
-	if err := u.user.UpdateUser(ctx, &entity.User{
-		BaseModel: ktypes.BaseModel{Id: uid},
-		Token:     proto.String(token),
-	}); err != nil {
-		ctx.Logger().Errorw("refresh token error", "err", err.Error())
-		return "", errors.SystemError()
-	}
-
-	return token, nil
-}
-
-// ListLoginLog 获取用户登陆日志
-func (u *Auth) ListLoginLog(ctx kratosx.Context, req *types.ListLoginLogRequest) ([]*entity.LoginLog, uint32, error) {
-	list, total, err := u.user.ListLoginLog(ctx, req)
-	if err != nil {
-		return nil, 0, errors.ListError()
-	}
-	return list, total, nil
-}
-
-func (u *Auth) genToken(ctx kratosx.Context, user *entity.User) (token string, err error) {
-	if user.Status != nil && !*user.Status {
-		err = errors.UserDisableError()
-		return
-	}
-
-	// 判断用户token是否可用,可用直接返回当前token
-	if user.Token != nil && *user.Token != "" && user.ExpireAt > (time.Now().Unix()+600) {
-		return *user.Token, nil
-	}
-
-	// 获取角色信息
-	roleIds, err := u.role.GetEnableRoleIdsByUID(ctx, user.Id)
-	if err != nil {
-		return "", errors.SystemError()
-	}
-	if len(roleIds) == 0 {
-		return "", errors.SystemError("当前用户未分配部门或角色")
-	}
-
-	// 获取职位信息
-	// var (
-	//	jobIds []uint32
-	// )
-	// for _, job := range user.Jobs {
-	//	jobIds = append(jobIds, job.Id)
-	// }
-
-	// 获取部门信息
-	var depIds []uint32
-	for _, job := range user.Departments {
-		depIds = append(depIds, job.Id)
-	}
-
-	token, err = ctx.JWT().NewToken(md.New(&md.Auth{
-		UserId:   user.Id,
-		UserName: user.Name,
-		RoleIds:  roleIds,
-		// JobIds:        jobIds,
-		DepartmentIds: depIds,
-	}))
-	if err != nil {
-		ctx.Logger().Errorw("msg", "gen user token error", "err", err.Error())
-		err = errors.GenTokenError()
-		return
-	}
-
-	// 保存登陆信息
-	expired := time.Now().Unix() + int64(ctx.Config().App().JWT.Expire.Seconds())
-	data := &entity.User{
-		BaseModel: ktypes.BaseModel{Id: user.Id},
-		Token:     &token,
-		LoggedAt:  time.Now().Unix(),
-		ExpireAt:  expired,
-	}
-
-	if err = u.user.UpdateUser(ctx, data); err != nil {
-		ctx.Logger().Errorw("msg", "update user login info error", "err", err.Error())
-		err = errors.SystemError()
-		return
-	}
-
-	return token, nil
-}
-
-func (u *Auth) getUserByCA(ctx kratosx.Context, cid uint32, aid string) (*entity.User, error) {
+func (u *Auth) getUserByCA(ctx core.Context, cid uint32, aid string) (*entity.User, error) {
 	oauth, err := u.oauth.GetOAuthByCO(ctx, cid, aid)
 	if err != nil {
 		ctx.Logger().Warnw("msg", "get oauth by ca error", "err", err.Error())
@@ -518,38 +521,20 @@ func (u *Auth) getUserByCA(ctx kratosx.Context, cid uint32, aid string) (*entity
 	return user, nil
 }
 
-func (u *Auth) addLoginLog(ctx kratosx.Context, tp string, user *types.UserLoginRequest, rerr error) {
-	header, ok := transport.FromServerContext(ctx)
-	if !ok {
-		return
+// ListLoginLog 获取用户登陆日志
+func (u *Auth) ListLoginLog(ctx core.Context, req *types.ListLoginLogRequest) ([]*entity.LoginLog, uint32, error) {
+	list, total, err := u.auth.ListLoginLog(ctx, req)
+	if err != nil {
+		return nil, 0, errors.ListError()
 	}
+	return list, total, nil
+}
 
-	var (
-		ip   = ctx.ClientIP()
-		ug   = ua.Parse(header.RequestHeader().Get("User-Agent"))
-		code = 200
-		desc = "登陆成功"
-	)
-
-	if rerr != nil {
-		var er *kerrors.Error
-		if ok := kerrors.As(rerr, &er); ok {
-			code = int(er.GetCode())
-			desc = er.Error()
-		} else {
-			code = 400
-			desc = rerr.Error()
-		}
+// ListAuthLog 获取用户登陆日志
+func (u *Auth) ListAuthLog(ctx core.Context, req *types.ListAuthLogRequest) ([]*entity.AuthLog, uint32, error) {
+	list, total, err := u.auth.ListAuthLog(ctx, req)
+	if err != nil {
+		return nil, 0, errors.ListError()
 	}
-
-	_, _ = u.user.CreateLoginLog(ctx, &entity.LoginLog{
-		Username:    user.Username,
-		Type:        tp,
-		IP:          ctx.ClientIP(),
-		Address:     u.address.GetIPAddress(ip),
-		Browser:     ug.Name + " " + ug.Version,
-		Device:      ug.OS + " " + ug.OSVersion,
-		Code:        code,
-		Description: desc,
-	})
+	return list, total, nil
 }

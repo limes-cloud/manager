@@ -1,0 +1,187 @@
+syntax = "proto3";
+
+package manager.api.app;
+
+option go_package = ".;app";
+option java_multiple_files = true;
+option java_package = "manager.api.app";
+
+import "validate/validate.proto";
+
+message GetAppRequest {
+  optional uint32 id = 1[(validate.rules).uint32 = {gte: 1}];
+  optional string keyword = 2[(validate.rules).string = {min_len: 1}];
+}
+
+message GetAppReply {
+  uint32 id = 1;
+  string logo = 2;
+  string keyword = 3;
+  string name = 4;
+  optional bool status = 5;
+  optional string reason = 6;
+  optional bool private = 7;
+  optional string extra = 8;
+  optional string description = 9;
+  uint32 createdAt = 10;
+  uint32 updatedAt = 11;
+}
+
+message ListAppRequest {
+  uint32 page = 1[(validate.rules).uint32 = {gt: 0}];
+  uint32 pageSize = 2[(validate.rules).uint32 = {gt: 0,lte:50}];
+  optional string order = 3[(validate.rules).string = {in: ["asc","desc"]}];
+  optional string orderBy = 4[(validate.rules).string = {in: ["id","created_at","updated_at"]}];
+  optional string keyword = 5;
+  optional string name = 6;
+  optional bool status = 7;
+}
+
+message ListAppReply {
+  message App {
+    uint32 id = 1;
+    string logo = 2;
+    string keyword = 3;
+    string name = 4;
+    optional bool status = 5;
+    optional string reason = 6;
+    optional bool private = 7;
+    optional string extra = 8;
+    optional string description = 9;
+    uint32 createdAt = 10;
+    uint32 updatedAt = 11;
+  }
+
+  uint32 total = 1;
+  repeated App list = 2;
+}
+
+message CreateAppRequest {
+  string logo = 1[(validate.rules).string = {min_len: 1, max_len: 128}];
+  string keyword = 2[(validate.rules).string = {min_len: 1, max_len: 32}];
+  string name = 3[(validate.rules).string = {min_len: 1, max_len: 64}];
+  optional bool private = 4;
+  optional string extra = 5;
+  optional string description = 6;
+}
+
+message CreateAppReply {
+  uint32 id = 1;
+}
+
+message UpdateAppRequest {
+  uint32 id = 1[(validate.rules).uint32 = {gte: 1}];
+  optional string logo = 2[(validate.rules).string = {max_len: 128}];
+  optional string keyword = 3[(validate.rules).string = {max_len: 32}];
+  optional string name = 4[(validate.rules).string = {max_len: 64}];
+  optional bool status = 5;
+  optional bool private = 6;
+  optional string extra = 7;
+  optional string description = 8;
+}
+
+message UpdateAppReply {
+}
+
+
+message DeleteAppRequest {
+  uint32 id = 1[(validate.rules).uint32 = {gt: 0}];
+}
+
+message DeleteAppReply {
+}
+
+
+message ListAppOAuthChannelRequest {
+  uint32 page = 1[(validate.rules).uint32 = {gte: 1}];
+  uint32 pageSize = 2[(validate.rules).uint32 = {gte: 1,lte:50}];
+  optional string order = 3[(validate.rules).string = {in: ["asc","desc"]}];
+  optional string orderBy = 4[(validate.rules).string = {in: ["id","created_at","updated_at"]}];
+  optional string keyword = 5;
+  optional string name = 6;
+  uint32 appId = 7[(validate.rules).uint32 = {gte: 1}];
+}
+
+message ListAppOAuthChannelReply {
+  message Channel {
+    uint32 id = 1;
+    string logo = 2;
+    string name = 3;
+    string keyword = 4;
+  }
+
+  message Data {
+    uint32 id = 1;
+    uint32 appId = 2;
+    uint32 channelId = 3;
+    uint32 createdAt = 4;
+    uint32 updatedAt = 5;
+    Channel channel = 6;
+  }
+
+  uint32 total = 1;
+  repeated Data list = 2;
+}
+
+message CreateAppOAuthChannelRequest {
+  uint32 appId = 1[(validate.rules).uint32 = {gte: 1}];
+  uint32 channelId = 2[(validate.rules).uint32 = {gte: 1}];
+}
+
+message CreateAppOAuthChannelReply {
+  uint32 id = 1;
+}
+
+message DeleteAppOAuthChannelRequest {
+  uint32 id = 1[(validate.rules).uint32 = {gt: 0}];
+}
+
+message DeleteAppOAuthChannelReply {
+}
+
+message ListAppFieldRequest {
+  uint32 page = 1[(validate.rules).uint32 = {gte: 1}];
+  uint32 pageSize = 2[(validate.rules).uint32 = {gte: 1,lte:50}];
+  optional string order = 3[(validate.rules).string = {in: ["asc","desc"]}];
+  optional string orderBy = 4[(validate.rules).string = {in: ["id","created_at","updated_at"]}];
+  optional string keyword = 5;
+  optional string name = 6;
+  uint32 appId = 7[(validate.rules).uint32 = {gte: 1}];
+}
+
+message ListAppFieldReply {
+  message Field {
+    uint32 id = 1;
+    string name = 2;
+    string keyword = 3;
+    string type = 4;
+  }
+
+  message Data {
+    uint32 id = 1;
+    uint32 appId = 2;
+    uint32 fieldId = 3;
+    uint32 createdAt = 4;
+    uint32 updatedAt = 5;
+    Field field = 6;
+  }
+
+  uint32 total = 1;
+  repeated Data list = 2;
+}
+
+message CreateAppFieldRequest {
+  uint32 appId = 1[(validate.rules).uint32 = {gte: 1}];
+  uint32 fieldId = 2[(validate.rules).uint32 = {gte: 1}];
+}
+
+message CreateAppFieldReply {
+  uint32 id = 1;
+}
+
+message DeleteAppFieldRequest {
+  uint32 id = 1[(validate.rules).uint32 = {gt: 0}];
+}
+
+message DeleteAppFieldReply {
+}

@@ -1,0 +1,54 @@
+syntax = "proto3";
+
+package errors;
+
+import "errorsx/errors.proto";
+option go_package = "./;errors";
+
+enum ErrorReason {
+	// 设置缺省错误码
+	option (errors.default_code) = 500;
+
+	ParamsError = 0[(errors.message)="参数错误"];
+	SystemError = 1[(errors.message)="系统错误"];
+	DatabaseError = 2[(errors.message)="数据库错误"];
+	TransformError = 3[(errors.message)="数据转换失败"];
+	GetError = 4[(errors.message)="获取数据失败"];
+	ListError = 5[(errors.message)="获取列表数据失败"];
+	CreateError = 6[(errors.message)="创建数据失败"];
+	ImportError = 7[(errors.message)="导入数据失败"];
+	ExportError = 8[(errors.message)="导出数据失败"];
+	UpdateError = 9[(errors.message)="更新数据失败"];
+	DeleteError = 10[(errors.message)="删除数据失败"];
+
+	AppScopeError = 14[(errors.message)="无应用权限"];
+	DeptScopeError = 15[(errors.message)="无部门权限"];
+	RoleScopeError = 16[(errors.message)="无角色权限"];
+	UserScopeError = 17[(errors.message)="无用户权限"];
+	MenuScopeError = 18[(errors.message)="无菜单权限"];
+
+	EditSystemDataError = 19[(errors.message)="系统数据，不允许修改"];
+	GenCaptchaError = 20[(errors.message)="生成验证码失败"];
+	SendCaptchaError = 21[(errors.message)="发送验证码失败"];
+	DeleteSystemDataError = 22[(errors.message)="系统数据，不允许删除"];
+	VerifyCaptchaError = 23[(errors.message)="验证码错误"];
+	PasswordError = 24[(errors.message)="密码错误"];
+	PasswordExpireError = 25[(errors.message)="密码已过期"];
+	RefreshTokenError = 26[(errors.code)=401,(errors.message)="刷新token失败"];
+	UsernameFormatError = 27[(errors.message)="用户名格式错误"];
+	UsernameNotExistError = 28[(errors.message)="用户不存在"];
+	UserDisableError = 29[(errors.message)="用户已被禁用"];
+	RoleDisableError = 30[(errors.message)="角色已被禁用"];
+	GenTokenError = 31[(errors.message)="token生成失败"];
+	ParseTokenError = 32[(errors.message)="token解析失败"];
+	ForbiddenError = 33[(errors.code)=403,(errors.message)="无接口权限"];
+	ResourceServerError = 34[(errors.message)="资源服务异常"];
+	NotPermissionError = 40[(errors.message)="无资源权限"];
+	ExistFeedbackError = 41[(errors.message)="已存在重复的反馈内容"];
+	GetOAuthTokenError = 43[(errors.message)="获取授权token失败"];
+	OAuthLoginError = 44[(errors.message)="三方授权登陆失败"];
+	NotUserError = 45[(errors.message)="用户不存在"];
+	BindError = 46[(errors.message)="用户绑定失败"];
+	NotFoundReportOAuthError = 47[(errors.code)=200,(errors.message)="未查询到扫码授权信息"];
+	JobPurviewError = 48[(errors.message)="无此职位权限"];
+}

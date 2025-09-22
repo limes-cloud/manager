@@ -3,115 +3,144 @@ package app
 import (
 	"context"
 
-	"github.com/go-kratos/kratos/v2/transport/grpc"
-	"github.com/go-kratos/kratos/v2/transport/http"
-	"github.com/limes-cloud/kratosx"
-	"github.com/limes-cloud/kratosx/pkg/valx"
+	"github.com/limes-cloud/manager/internal/infra/dbs"
 
-	"github.com/limes-cloud/manager/api/manager/errors"
-	pb "github.com/limes-cloud/manager/api/manager/menu/v1"
-	"github.com/limes-cloud/manager/internal/conf"
+	"github.com/limes-cloud/manager/api/menu"
+
+	"github.com/limes-cloud/manager/internal/core"
+
+	"github.com/limes-cloud/kratosx/pkg/value"
+
+	"github.com/limes-cloud/manager/api/errors"
 	"github.com/limes-cloud/manager/internal/domain/entity"
 	"github.com/limes-cloud/manager/internal/domain/service"
-	"github.com/limes-cloud/manager/internal/infra/dbs"
 	"github.com/limes-cloud/manager/internal/types"
+
+	"github.com/go-kratos/kratos/v2/transport/grpc"
+	"github.com/go-kratos/kratos/v2/transport/http"
 )
 
 type Menu struct {
-	pb.UnimplementedMenuServer
+	menu.UnimplementedMenuServer
 	srv *service.Menu
 }
 
-func NewMenu(conf *conf.Config) *Menu {
+func NewMenu() *Menu {
 	return &Menu{
-		srv: service.NewMenu(conf, dbs.NewMenu(), dbs.NewRole(), dbs.NewRbac()),
+		srv: service.NewMenu(
+			dbs.NewMenu(),
+			dbs.NewApp(),
+			dbs.NewRoleMenu(),
+			dbs.NewScope(),
+		),
 	}
 }
 
 func init() {
-	register(func(c *conf.Config, hs *http.Server, gs *grpc.Server) {
-		srv := NewMenu(c)
-		pb.RegisterMenuHTTPServer(hs, srv)
-		pb.RegisterMenuServer(gs, srv)
+	register(func(hs *http.Server, gs *grpc.Server) {
+		srv := NewMenu()
+		menu.RegisterMenuHTTPServer(hs, srv)
+		menu.RegisterMenuServer(gs, srv)
 	})
 }
 
-// ListMenu 获取菜单信息列表
-func (s *Menu) ListMenu(c context.Context, req *pb.ListMenuRequest) (*pb.ListMenuReply, error) {
-	var ctx = kratosx.MustContext(c)
-	result, err := s.srv.ListMenu(ctx, &types.ListMenuRequest{
-		Title: req.Title,
-	})
+// ListCurrentMenu 获取应用信息列表
+func (s *Menu) ListCurrentMenu(c context.Context, req *menu.ListCurrentMenuRequest) (*menu.ListMenuReply, error) {
+	ctx := core.MustContext(c)
+
+	// 调用服务
+	in := &types.ListMenuRequest{
+		AppId:      req.AppId,
+		FilterRoot: req.FilterRoot,
+	}
+	if req.GetFilterBaseApi() {
+		in.NotInTypes = []string{entity.MenuTypeBasic}
+	}
+	list, err := s.srv.ListCurrentMenu(ctx, in)
 	if err != nil {
 		return nil, err
 	}
 
-	reply := pb.ListMenuReply{}
-	if err := valx.Transform(result, &reply.List); err != nil {
-		ctx.Logger().Warnw("msg", "reply transform err", "err", err.Error())
+	// 处理返回数据
+	reply := menu.ListMenuReply{}
+	if err := value.Transform(list, &reply.List); err != nil {
+		ctx.Logger().Errorw("msg", "list menu resp transform error", "err", err)
 		return nil, errors.TransformError()
 	}
 
 	return &reply, nil
 }
 
-// ListMenuByCurRole 获取当前角色的菜单信息列表
-func (s *Menu) ListMenuByCurRole(c context.Context, _ *pb.ListMenuByCurRoleRequest) (*pb.ListMenuByCurRoleReply, error) {
-	var ctx = kratosx.MustContext(c)
-	result, err := s.srv.ListMenuByCurRole(ctx)
+// ListMenu 获取应用信息列表
+func (s *Menu) ListMenu(c context.Context, req *menu.ListMenuRequest) (*menu.ListMenuReply, error) {
+	ctx := core.MustContext(c)
+
+	// 调用服务
+	in := &types.ListMenuRequest{
+		AppId: &req.AppId,
+	}
+	if req.GetFilterBaseApi() {
+		in.NotInTypes = []string{entity.MenuTypeBasic}
+	}
+	list, err := s.srv.ListMenu(ctx, in)
 	if err != nil {
 		return nil, err
 	}
 
-	reply := pb.ListMenuByCurRoleReply{}
-	if err := valx.Transform(result, &reply.List); err != nil {
-		ctx.Logger().Warnw("msg", "reply transform err", "err", err.Error())
+	// 处理返回数据
+	reply := menu.ListMenuReply{}
+	if err := value.Transform(list, &reply.List); err != nil {
+		ctx.Logger().Errorw("msg", "list menu resp transform error", "err", err)
 		return nil, errors.TransformError()
 	}
 
 	return &reply, nil
 }
 
-// CreateMenu 创建菜单信息
-func (s *Menu) CreateMenu(c context.Context, req *pb.CreateMenuRequest) (*pb.CreateMenuReply, error) {
+// CreateMenu 创建应用信息
+func (s *Menu) CreateMenu(c context.Context, req *menu.CreateMenuRequest) (*menu.CreateMenuReply, error) {
 	var (
-		ctx = kratosx.MustContext(c)
-		ent = entity.Menu{}
+		ctx = core.MustContext(c)
+		in  = entity.Menu{}
 	)
 
-	if err := valx.Transform(req, &ent); err != nil {
-		ctx.Logger().Warnw("msg", "req transform err", "err", err.Error())
+	// 处理请求参数
+	if err := value.Transform(req, &in); err != nil {
+		ctx.Logger().Errorw("msg", "create menu req transform error", "err", err)
 		return nil, errors.TransformError()
 	}
 
-	id, err := s.srv.CreateMenu(ctx, &ent)
+	// 调用服务
+	id, err := s.srv.CreateMenu(ctx, &in)
 	if err != nil {
 		return nil, err
 	}
 
-	return &pb.CreateMenuReply{Id: id}, nil
+	return &menu.CreateMenuReply{Id: id}, nil
 }
 
-// UpdateMenu 更新菜单信息
-func (s *Menu) UpdateMenu(c context.Context, req *pb.UpdateMenuRequest) (*pb.UpdateMenuReply, error) {
+// UpdateMenu 更新应用信息
+func (s *Menu) UpdateMenu(c context.Context, req *menu.UpdateMenuRequest) (*menu.UpdateMenuReply, error) {
 	var (
-		ctx = kratosx.MustContext(c)
-		ent = entity.Menu{}
+		ctx = core.MustContext(c)
+		in  = entity.Menu{}
 	)
 
-	if err := valx.Transform(req, &ent); err != nil {
-		ctx.Logger().Warnw("msg", "req transform err", "err", err.Error())
+	// 处理请求参数
+	if err := value.Transform(req, &in); err != nil {
+		ctx.Logger().Errorw("msg", "update menu req transform error", "err", err)
 		return nil, errors.TransformError()
 	}
 
-	if err := s.srv.UpdateMenu(ctx, &ent); err != nil {
+	// 调用服务
+	if err := s.srv.UpdateMenu(ctx, &in); err != nil {
 		return nil, err
 	}
 
-	return &pb.UpdateMenuReply{}, nil
+	return &menu.UpdateMenuReply{}, nil
 }
 
-// DeleteMenu 删除菜单信息
-func (s *Menu) DeleteMenu(c context.Context, req *pb.DeleteMenuRequest) (*pb.DeleteMenuReply, error) {
-	return &pb.DeleteMenuReply{}, s.srv.DeleteMenu(kratosx.MustContext(c), req.Id)
+// DeleteMenu 删除应用信息
+func (s *Menu) DeleteMenu(c context.Context, req *menu.DeleteMenuRequest) (*menu.DeleteMenuReply, error) {
+	return &menu.DeleteMenuReply{}, s.srv.DeleteMenu(core.MustContext(c), req.Id)
 }

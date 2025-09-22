@@ -1,12 +1,11 @@
 package entity
 
 import (
-	"github.com/limes-cloud/kratosx/types"
+	"github.com/limes-cloud/kratosx/model"
 )
 
 type Feedback struct {
 	AppId           uint32            `json:"appId" gorm:"column:app_id"`
-	UserId          uint32            `json:"userId" gorm:"column:user_id"`
 	CategoryId      uint32            `json:"categoryId" gorm:"column:category_id"`
 	Title           string            `json:"title" gorm:"column:title"`
 	Content         string            `json:"content" gorm:"column:content"`
@@ -23,10 +22,10 @@ type Feedback struct {
 	User            *User             `json:"user"`
 	Category        *FeedbackCategory `json:"category" gorm:"foreignKey:category_id;references:id"`
 	ImageUrls       []string          `json:"imageUrls" gorm:"-"`
-	types.BaseModel
+	model.BaseTenantUserModel
 }
 
 type FeedbackCategory struct {
 	Name string `json:"name" gorm:"column:name"`
-	types.CreateModel
+	model.BaseTenantModel
 }

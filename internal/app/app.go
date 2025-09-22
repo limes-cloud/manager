@@ -3,178 +3,260 @@ package app
 import (
 	"context"
 
-	"github.com/go-kratos/kratos/v2/transport/grpc"
-	"github.com/go-kratos/kratos/v2/transport/http"
-	"github.com/limes-cloud/kratosx"
-	"github.com/limes-cloud/kratosx/pkg/valx"
-	ktypes "github.com/limes-cloud/kratosx/types"
+	"github.com/limes-cloud/manager/internal/core"
 
-	pb "github.com/limes-cloud/manager/api/manager/app/v1"
-	"github.com/limes-cloud/manager/api/manager/errors"
-	"github.com/limes-cloud/manager/internal/conf"
+	"github.com/limes-cloud/kratosx/pkg/value"
+
+	"github.com/limes-cloud/manager/api/app"
+	"github.com/limes-cloud/manager/api/errors"
 	"github.com/limes-cloud/manager/internal/domain/entity"
 	"github.com/limes-cloud/manager/internal/domain/service"
 	"github.com/limes-cloud/manager/internal/infra/dbs"
-	"github.com/limes-cloud/manager/internal/infra/rpc"
 	"github.com/limes-cloud/manager/internal/types"
+
+	"github.com/go-kratos/kratos/v2/transport/grpc"
+	"github.com/go-kratos/kratos/v2/transport/http"
 )
 
 type App struct {
-	pb.UnimplementedAppServer
+	app.UnimplementedAppServer
 	srv *service.App
 }
 
-func NewApp(conf *conf.Config) *App {
+func NewApp() *App {
 	return &App{
 		srv: service.NewApp(
-			conf,
 			dbs.NewApp(),
-			service.NewResource(conf, dbs.NewResource(), dbs.NewDepartment(), dbs.NewRole()),
-			rpc.NewFile(),
+			dbs.NewTenantApp(),
 		),
 	}
 }
 
 func init() {
-	register(func(c *conf.Config, hs *http.Server, gs *grpc.Server) {
-		srv := NewApp(c)
-		pb.RegisterAppHTTPServer(hs, srv)
-		pb.RegisterAppServer(gs, srv)
+	register(func(hs *http.Server, gs *grpc.Server) {
+		srv := NewApp()
+		app.RegisterAppHTTPServer(hs, srv)
+		app.RegisterAppServer(gs, srv)
 	})
 }
 
 // GetApp 获取指定的应用信息
-func (s *App) GetApp(c context.Context, req *pb.GetAppRequest) (*pb.GetAppReply, error) {
-	result, err := s.srv.GetApp(kratosx.MustContext(c), &types.GetAppRequest{
+func (s *App) GetApp(c context.Context, req *app.GetAppRequest) (*app.GetAppReply, error) {
+	ctx := core.MustContext(c)
+	data, err := s.srv.GetApp(ctx, &types.GetAppRequest{
 		Id:      req.Id,
 		Keyword: req.Keyword,
 	})
 	if err != nil {
 		return nil, err
 	}
-	reply := pb.GetAppReply{}
-	if err := valx.Transform(result, &reply); err != nil {
+	reply := app.GetAppReply{}
+	if err := value.Transform(data, &reply); err != nil {
 		return nil, errors.TransformError()
 	}
 	return &reply, nil
 }
 
 // ListApp 获取应用信息列表
-func (s *App) ListApp(c context.Context, req *pb.ListAppRequest) (*pb.ListAppReply, error) {
-	list, total, err := s.srv.ListApp(kratosx.MustContext(c), &types.ListAppRequest{
-		Page:     req.Page,
-		PageSize: req.PageSize,
-		Order:    req.Order,
-		OrderBy:  req.OrderBy,
-		Keyword:  req.Keyword,
-		Name:     req.Name,
-		Status:   req.Status,
-	})
+func (s *App) ListCurrentApp(c context.Context, req *app.ListAppRequest) (*app.ListAppReply, error) {
+	var (
+		ctx = core.MustContext(c)
+		in  = types.ListAppRequest{}
+	)
+
+	// 处理请求参数
+	if err := value.Transform(req, &in); err != nil {
+		ctx.Logger().Errorw("msg", "list app req transform error", "err", err)
+		return nil, errors.TransformError()
+	}
+
+	// 调用服务
+	list, total, err := s.srv.ListCurrentApp(ctx, &in)
 	if err != nil {
 		return nil, err
 	}
 
-	reply := pb.ListAppReply{Total: total}
-	for _, item := range list {
-		reply.List = append(reply.List, &pb.ListAppReply_App{
-			Id:            item.Id,
-			Logo:          item.Logo,
-			LogoUrl:       item.LogoUrl,
-			Keyword:       item.Keyword,
-			Name:          item.Name,
-			Status:        item.Status,
-			DisableDesc:   item.DisableDesc,
-			AllowRegistry: item.AllowRegistry,
-			Version:       item.Version,
-			Copyright:     item.Copyright,
-			Extra:         item.Extra,
-			Description:   item.Description,
-			CreatedAt:     uint32(item.CreatedAt),
-			UpdatedAt:     uint32(item.UpdatedAt),
-		})
+	// 处理返回数据
+	reply := app.ListAppReply{Total: total}
+	if err := value.Transform(list, &reply.List); err != nil {
+		ctx.Logger().Errorw("msg", "list app resp transform error", "err", err)
+		return nil, errors.TransformError()
 	}
+
+	return &reply, nil
+}
+
+// ListApp 获取应用信息列表
+func (s *App) ListApp(c context.Context, req *app.ListAppRequest) (*app.ListAppReply, error) {
+	var (
+		ctx = core.MustContext(c)
+		in  = types.ListAppRequest{}
+	)
+
+	// 处理请求参数
+	if err := value.Transform(req, &in); err != nil {
+		ctx.Logger().Errorw("msg", "list app req transform error", "err", err)
+		return nil, errors.TransformError()
+	}
+
+	// 调用服务
+	list, total, err := s.srv.ListApp(ctx, &in)
+	if err != nil {
+		return nil, err
+	}
+
+	// 处理返回数据
+	reply := app.ListAppReply{Total: total}
+	if err := value.Transform(list, &reply.List); err != nil {
+		ctx.Logger().Errorw("msg", "list app resp transform error", "err", err)
+		return nil, errors.TransformError()
+	}
+
 	return &reply, nil
 }
 
 // CreateApp 创建应用信息
-func (s *App) CreateApp(c context.Context, req *pb.CreateAppRequest) (*pb.CreateAppReply, error) {
-	app := entity.App{
-		Logo:          req.Logo,
-		Keyword:       req.Keyword,
-		Name:          req.Name,
-		AllowRegistry: req.AllowRegistry,
-		Version:       req.Version,
-		Copyright:     req.Copyright,
-		Extra:         req.Extra,
-		Description:   req.Description,
+func (s *App) CreateApp(c context.Context, req *app.CreateAppRequest) (*app.CreateAppReply, error) {
+	var (
+		ctx = core.MustContext(c)
+		in  = entity.App{}
+	)
+
+	// 处理请求参数
+	if err := value.Transform(req, &in); err != nil {
+		ctx.Logger().Errorw("msg", "create app req transform error", "err", err)
+		return nil, errors.TransformError()
 	}
 
-	for _, item := range req.ChannelIds {
-		app.AppChannels = append(app.AppChannels, &entity.AppChannel{
-			ChannelId: item,
-		})
-	}
-
-	for _, item := range req.FieldIds {
-		app.AppFields = append(app.AppFields, &entity.AppField{
-			FieldId: item,
-		})
-	}
-
-	id, err := s.srv.CreateApp(kratosx.MustContext(c), &app)
+	// 调用服务
+	id, err := s.srv.CreateApp(ctx, &in)
 	if err != nil {
 		return nil, err
 	}
 
-	return &pb.CreateAppReply{Id: id}, nil
+	return &app.CreateAppReply{Id: id}, nil
 }
 
 // UpdateApp 更新应用信息
-func (s *App) UpdateApp(c context.Context, req *pb.UpdateAppRequest) (*pb.UpdateAppReply, error) {
-	app := entity.App{
-		BaseModel:     ktypes.BaseModel{Id: req.Id},
-		Logo:          req.Logo,
-		Keyword:       req.Keyword,
-		Name:          req.Name,
-		AllowRegistry: req.AllowRegistry,
-		Version:       req.Version,
-		Copyright:     req.Copyright,
-		Extra:         req.Extra,
-		Description:   req.Description,
+func (s *App) UpdateApp(c context.Context, req *app.UpdateAppRequest) (*app.UpdateAppReply, error) {
+	var (
+		ctx = core.MustContext(c)
+		in  = entity.App{}
+	)
+
+	// 处理请求参数
+	if err := value.Transform(req, &in); err != nil {
+		ctx.Logger().Errorw("msg", "update app req transform error", "err", err)
+		return nil, errors.TransformError()
 	}
 
-	for _, item := range req.ChannelIds {
-		app.AppChannels = append(app.AppChannels, &entity.AppChannel{
-			ChannelId: item,
-		})
-	}
-
-	for _, item := range req.FieldIds {
-		app.AppFields = append(app.AppFields, &entity.AppField{
-			FieldId: item,
-		})
-	}
-
-	if err := s.srv.UpdateApp(kratosx.MustContext(c), &app); err != nil {
+	// 调用服务
+	if err := s.srv.UpdateApp(ctx, &in); err != nil {
 		return nil, err
 	}
 
-	return &pb.UpdateAppReply{}, nil
-}
-
-// UpdateAppStatus 更新应用信息状态
-func (s *App) UpdateAppStatus(c context.Context, req *pb.UpdateAppStatusRequest) (*pb.UpdateAppStatusReply, error) {
-	return &pb.UpdateAppStatusReply{}, s.srv.UpdateAppStatus(kratosx.MustContext(c), &types.UpdateAppStatusRequest{
-		Id:          req.Id,
-		Status:      req.Status,
-		DisableDesc: req.DisableDesc,
-	})
+	return &app.UpdateAppReply{}, nil
 }
 
 // DeleteApp 删除应用信息
-func (s *App) DeleteApp(c context.Context, req *pb.DeleteAppRequest) (*pb.DeleteAppReply, error) {
-	if err := s.srv.DeleteApp(kratosx.MustContext(c), req.Id); err != nil {
+func (s *App) DeleteApp(c context.Context, req *app.DeleteAppRequest) (*app.DeleteAppReply, error) {
+	return &app.DeleteAppReply{}, s.srv.DeleteApp(core.MustContext(c), req.Id)
+}
+
+// ListAppOAuthChannel 获取应用渠道信息
+func (s *App) ListAppOAuthChannel(c context.Context, req *app.ListAppOAuthChannelRequest) (*app.ListAppOAuthChannelReply, error) {
+	// 调用服务
+	var (
+		ctx = core.MustContext(c)
+		in  = types.ListAppOAuthChannelRequest{}
+	)
+
+	// 处理请求参数
+	if err := value.Transform(req, &in); err != nil {
+		ctx.Logger().Errorw("msg", "list app req transform error", "err", err)
+		return nil, errors.TransformError()
+	}
+
+	// 调用服务
+	list, total, err := s.srv.ListAppOAuthChannel(ctx, &in)
+	if err != nil {
 		return nil, err
 	}
-	return &pb.DeleteAppReply{}, nil
+
+	// 处理返回数据
+	reply := app.ListAppOAuthChannelReply{Total: total}
+	if err := value.Transform(list, &reply.List); err != nil {
+		ctx.Logger().Errorw("msg", "list app resp transform error", "err", err)
+		return nil, errors.TransformError()
+	}
+
+	return &reply, nil
+}
+
+// CreateAppOAuthChannel 创建应用渠道信息
+func (s *App) CreateAppOAuthChannel(c context.Context, req *app.CreateAppOAuthChannelRequest) (*app.CreateAppOAuthChannelReply, error) {
+	// 调用服务
+	id, err := s.srv.CreateAppOAuthChannel(core.MustContext(c), &entity.AppOAuthChannel{
+		AppId:     req.AppId,
+		ChannelId: req.ChannelId,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	return &app.CreateAppOAuthChannelReply{Id: id}, nil
+}
+
+// DeleteAppOAuthChannel 删除应用信息
+func (s *App) DeleteAppOAuthChannel(c context.Context, req *app.DeleteAppOAuthChannelRequest) (*app.DeleteAppOAuthChannelReply, error) {
+	return &app.DeleteAppOAuthChannelReply{}, s.srv.DeleteAppOAuthChannel(core.MustContext(c), req.Id)
+}
+
+// ListAppField 获取应用字段信息
+func (s *App) ListAppField(c context.Context, req *app.ListAppFieldRequest) (*app.ListAppFieldReply, error) {
+	// 调用服务
+	var (
+		ctx = core.MustContext(c)
+		in  = types.ListAppFieldRequest{}
+	)
+
+	// 处理请求参数
+	if err := value.Transform(req, &in); err != nil {
+		ctx.Logger().Errorw("msg", "list app req transform error", "err", err)
+		return nil, errors.TransformError()
+	}
+
+	// 调用服务
+	list, total, err := s.srv.ListAppField(ctx, &in)
+	if err != nil {
+		return nil, err
+	}
+
+	// 处理返回数据
+	reply := app.ListAppFieldReply{Total: total}
+	if err := value.Transform(list, &reply.List); err != nil {
+		ctx.Logger().Errorw("msg", "list app resp transform error", "err", err)
+		return nil, errors.TransformError()
+	}
+
+	return &reply, nil
+}
+
+// CreateAppField 创建应用字段信息
+func (s *App) CreateAppField(c context.Context, req *app.CreateAppFieldRequest) (*app.CreateAppFieldReply, error) {
+	// 调用服务
+	id, err := s.srv.CreateAppField(core.MustContext(c), &entity.AppField{
+		AppId:   req.AppId,
+		FieldId: req.FieldId,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	return &app.CreateAppFieldReply{Id: id}, nil
+}
+
+// DeleteAppField 删除应用信息
+func (s *App) DeleteAppField(c context.Context, req *app.DeleteAppFieldRequest) (*app.DeleteAppFieldReply, error) {
+	return &app.DeleteAppFieldReply{}, s.srv.DeleteAppField(core.MustContext(c), req.Id)
 }

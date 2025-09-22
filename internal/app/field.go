@@ -3,13 +3,16 @@ package app
 import (
 	"context"
 
+	"github.com/limes-cloud/manager/internal/core"
+
+	"github.com/limes-cloud/kratosx/model"
+
+	"github.com/limes-cloud/kratosx/model/page"
+
+	"github.com/limes-cloud/manager/api/field"
+
 	"github.com/go-kratos/kratos/v2/transport/grpc"
 	"github.com/go-kratos/kratos/v2/transport/http"
-	"github.com/limes-cloud/kratosx"
-	ktypes "github.com/limes-cloud/kratosx/types"
-
-	pb "github.com/limes-cloud/manager/api/manager/field/v1"
-	"github.com/limes-cloud/manager/internal/conf"
 	"github.com/limes-cloud/manager/internal/domain/entity"
 	"github.com/limes-cloud/manager/internal/domain/service"
 	"github.com/limes-cloud/manager/internal/infra/dbs"
@@ -17,33 +20,32 @@ import (
 )
 
 type Field struct {
-	pb.UnimplementedFieldServer
+	field.UnimplementedFieldServer
 	srv *service.Field
 }
 
-func NewField(conf *conf.Config) *Field {
+func NewField() *Field {
 	return &Field{
 		srv: service.NewField(
-			conf,
 			dbs.NewField(),
 		),
 	}
 }
 
 func init() {
-	register(func(c *conf.Config, hs *http.Server, gs *grpc.Server) {
-		srv := NewField(c)
-		pb.RegisterFieldHTTPServer(hs, srv)
-		pb.RegisterFieldServer(gs, srv)
+	register(func(hs *http.Server, gs *grpc.Server) {
+		srv := NewField()
+		field.RegisterFieldHTTPServer(hs, srv)
+		field.RegisterFieldServer(gs, srv)
 	})
 }
 
 // ListFieldType 获取字段类型列表
-func (fd *Field) ListFieldType(c context.Context, req *pb.ListFieldTypeRequest) (*pb.ListFieldTypeReply, error) {
+func (fd *Field) ListFieldType(c context.Context, req *field.ListFieldTypeRequest) (*field.ListFieldTypeReply, error) {
 	list := fd.srv.ListFieldType()
-	var reply = pb.ListFieldTypeReply{}
+	reply := field.ListFieldTypeReply{}
 	for _, item := range list {
-		reply.List = append(reply.List, &pb.ListFieldTypeReply_Type{
+		reply.List = append(reply.List, &field.ListFieldTypeReply_Type{
 			Name: item.Name,
 			Type: item.Type,
 		})
@@ -53,22 +55,24 @@ func (fd *Field) ListFieldType(c context.Context, req *pb.ListFieldTypeRequest) 
 }
 
 // ListField 获取用户字段列表
-func (fd *Field) ListField(c context.Context, req *pb.ListFieldRequest) (*pb.ListFieldReply, error) {
-	list, total, err := fd.srv.ListField(kratosx.MustContext(c), &types.ListFieldRequest{
-		Page:     req.Page,
-		PageSize: req.PageSize,
-		Order:    req.Order,
-		OrderBy:  req.OrderBy,
-		Keyword:  req.Keyword,
-		Name:     req.Name,
-		Status:   req.Status,
+func (fd *Field) ListField(c context.Context, req *field.ListFieldRequest) (*field.ListFieldReply, error) {
+	list, total, err := fd.srv.ListField(core.MustContext(c), &types.ListFieldRequest{
+		Search: page.Search{
+			Page:     req.Page,
+			PageSize: req.PageSize,
+			Order:    req.Order,
+			OrderBy:  req.OrderBy,
+		},
+		Keyword: req.Keyword,
+		Name:    req.Name,
+		Status:  req.Status,
 	})
 	if err != nil {
 		return nil, err
 	}
-	reply := pb.ListFieldReply{Total: total}
+	reply := field.ListFieldReply{Total: total}
 	for _, item := range list {
-		reply.List = append(reply.List, &pb.ListFieldReply_Field{
+		reply.List = append(reply.List, &field.ListFieldReply_Field{
 			Id:          item.Id,
 			Keyword:     item.Keyword,
 			Type:        item.Type,
@@ -83,8 +87,8 @@ func (fd *Field) ListField(c context.Context, req *pb.ListFieldRequest) (*pb.Lis
 }
 
 // CreateField 创建用户字段
-func (fd *Field) CreateField(c context.Context, req *pb.CreateFieldRequest) (*pb.CreateFieldReply, error) {
-	id, err := fd.srv.CreateField(kratosx.MustContext(c), &entity.Field{
+func (fd *Field) CreateField(c context.Context, req *field.CreateFieldRequest) (*field.CreateFieldReply, error) {
+	id, err := fd.srv.CreateField(core.MustContext(c), &entity.Field{
 		Keyword:     req.Keyword,
 		Type:        req.Type,
 		Name:        req.Name,
@@ -93,28 +97,28 @@ func (fd *Field) CreateField(c context.Context, req *pb.CreateFieldRequest) (*pb
 	if err != nil {
 		return nil, err
 	}
-	return &pb.CreateFieldReply{Id: id}, nil
+	return &field.CreateFieldReply{Id: id}, nil
 }
 
 // UpdateField 更新用户字段
-func (fd *Field) UpdateField(c context.Context, req *pb.UpdateFieldRequest) (*pb.UpdateFieldReply, error) {
-	if err := fd.srv.UpdateField(kratosx.MustContext(c), &entity.Field{
-		BaseModel:   ktypes.BaseModel{Id: req.Id},
-		Keyword:     req.Keyword,
-		Type:        req.Type,
-		Name:        req.Name,
-		Status:      req.Status,
-		Description: req.Description,
+func (fd *Field) UpdateField(c context.Context, req *field.UpdateFieldRequest) (*field.UpdateFieldReply, error) {
+	if err := fd.srv.UpdateField(core.MustContext(c), &entity.Field{
+		BaseTenantModel: model.BaseTenantModel{Id: req.Id},
+		Keyword:         req.Keyword,
+		Type:            req.Type,
+		Name:            req.Name,
+		Status:          req.Status,
+		Description:     req.Description,
 	}); err != nil {
 		return nil, err
 	}
-	return &pb.UpdateFieldReply{}, nil
+	return &field.UpdateFieldReply{}, nil
 }
 
 // DeleteField 删除用户字段
-func (fd *Field) DeleteField(c context.Context, req *pb.DeleteFieldRequest) (*pb.DeleteFieldReply, error) {
-	if err := fd.srv.DeleteField(kratosx.MustContext(c), req.Id); err != nil {
+func (fd *Field) DeleteField(c context.Context, req *field.DeleteFieldRequest) (*field.DeleteFieldReply, error) {
+	if err := fd.srv.DeleteField(core.MustContext(c), req.Id); err != nil {
 		return nil, err
 	}
-	return &pb.DeleteFieldReply{}, nil
+	return &field.DeleteFieldReply{}, nil
 }

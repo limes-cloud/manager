@@ -1,0 +1,59 @@
+syntax = "proto3";
+
+package manager.api.rolemenu;
+
+option go_package = ".;rolemenu";
+option java_multiple_files = true;
+option java_package = "manager.api.rolemenu";
+
+import "api/rolemenu/proto/rolemenu.proto";
+import "google/api/annotations.proto";
+
+service RoleMenu{
+  // GetRoleMenuIds 获取角色的菜单列表
+  rpc GetRoleMenuIds (GetRoleMenuIdsRequest) returns (GetRoleMenuIdsReply) {
+    option (google.api.http) = {
+      get: "/manager/api/v1/role/menuids",
+    };
+  }
+
+  // GetMenuRoleIds 获取菜单的角色列表
+  rpc GetMenuRoleIds (GetMenuRoleIdsRequest) returns (GetMenuRoleIdsReply) {
+    option (google.api.http) = {
+      get: "/manager/api/v1/menu/roleids",
+    };
+  }
+
+  // CreateRoleMenus 创建角色菜单信息
+  rpc CreateRoleMenus (CreateRoleMenusRequest) returns (CreateRoleMenusReply) {
+    option (google.api.http) = {
+      post: "/manager/api/v1/role/menus",
+      body: "*"
+    };
+  }
+
+  // CreateMenuRoles 创建菜单的菜单信息
+  rpc CreateMenuRoles (CreateMenuRolesRequest) returns (CreateMenuRolesReply) {
+    option (google.api.http) = {
+      post: "/manager/api/v1/menu/roles",
+      body: "*"
+    };
+  }
+
+  // DeleteMenuRoles 删除菜单角色信息
+  rpc DeleteMenuRoles (DeleteMenuRolesRequest) returns (DeleteMenuRolesReply) {
+    option (google.api.http) = {
+      delete: "/manager/api/v1/role/menus",
+      body: "*"
+    };
+  }
+
+  // DeleteRoleMenus 删除角色菜单信息
+  rpc DeleteRoleMenus (DeleteRoleMenusRequest) returns (DeleteRoleMenusReply) {
+    option (google.api.http) = {
+      delete: "/manager/api/v1/role/menus",
+      body: "*"
+    };
+  }
+
+}

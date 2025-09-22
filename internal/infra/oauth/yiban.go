@@ -6,10 +6,11 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/limes-cloud/manager/internal/core"
+
 	"github.com/forgoer/openssl"
 	"github.com/google/uuid"
 	json "github.com/json-iterator/go"
-	"github.com/limes-cloud/kratosx"
 	"github.com/limes-cloud/kratosx/pkg/crypto"
 
 	"github.com/limes-cloud/manager/internal/domain/entity"
@@ -22,17 +23,17 @@ func init() {
 }
 
 type YiBan struct {
-	conf *entity.Channel
+	conf *entity.OAuthChannel
 }
 
-func NewYiBan(req *entity.Channel) repository.OAuthor {
+func NewYiBan(req *entity.OAuthChannel) repository.OAuthor {
 	return &YiBan{conf: req}
 }
 
-// GetOAuthWay 获取鉴权方式
-func (y YiBan) GetOAuthWay(_ kratosx.Context, req *types.GetOAuthWayRequest) (*types.GetOAuthWayReply, error) {
+// OAuthHandler 获取鉴权方式
+func (y YiBan) OAuthHandler(_ core.Context, req *types.OAuthHandlerRequest) (*types.OAuthHandlerReply, error) {
 	uid := crypto.MD5([]byte(uuid.NewString()))
-	var resp = types.GetOAuthWayReply{
+	resp := types.OAuthHandlerReply{
 		UUID:      uid,
 		Action:    types.GetOAuthWayActionScan,
 		Tip:       "点击跳转授权",
@@ -57,7 +58,7 @@ func (y YiBan) GetOAuthWay(_ kratosx.Context, req *types.GetOAuthWayRequest) (*t
 	return &resp, nil
 }
 
-func (y YiBan) GetOAuthToken(_ kratosx.Context, req *types.GetOAuthTokenRequest) (*types.GetOAuthTokenReply, error) {
+func (y YiBan) GetOAuthToken(_ core.Context, req *types.GetOAuthTokenRequest) (*types.GetOAuthTokenReply, error) {
 	res := struct {
 		VisitOauth struct {
 			AccessToken  string `json:"access_token"`
@@ -85,7 +86,7 @@ func (y YiBan) GetOAuthToken(_ kratosx.Context, req *types.GetOAuthTokenRequest)
 	}, nil
 }
 
-func (y YiBan) GetOAuthInfo(ctx kratosx.Context, req *types.GetOAuthInfoRequest) (*types.GetOAuthInfoReply, error) {
+func (y YiBan) GetOAuthInfo(ctx core.Context, req *types.GetOAuthInfoRequest) (*types.GetOAuthInfoReply, error) {
 	res := struct {
 		Status string `json:"status"`
 		Info   struct {
@@ -105,7 +106,7 @@ func (y YiBan) GetOAuthInfo(ctx kratosx.Context, req *types.GetOAuthInfoRequest)
 	}{}
 
 	url := "https://openapi.yiban.cn/user/me?access_token=" + req.Token
-	resp, err := ctx.Http().Get(url)
+	resp, err := ctx.Request().Get(url)
 	if err != nil {
 		return nil, err
 	}

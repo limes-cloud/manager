@@ -1,0 +1,532 @@
+# Generated with protoc-gen-openapi
+# https://github.com/google/gnostic/tree/master/cmd/protoc-gen-openapi
+
+openapi: 3.0.3
+info:
+    title: Dept API
+    version: 0.0.1
+paths:
+    /manager/api/v1/current/depts:
+        get:
+            tags:
+                - Dept
+            description: ListCurrentDept 获取当前的部门信息列表
+            operationId: Dept_ListCurrentDept
+            parameters:
+                - name: name
+                  in: query
+                  schema:
+                    type: string
+                - name: rootId
+                  in: query
+                  schema:
+                    type: integer
+                    format: uint32
+                - name: classifyId
+                  in: query
+                  schema:
+                    type: integer
+                    format: uint32
+                - name: status
+                  in: query
+                  schema:
+                    type: boolean
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ListDeptReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /manager/api/v1/dept:
+        get:
+            tags:
+                - Dept
+            description: GetDept 获取指定的部门信息
+            operationId: Dept_GetDept
+            parameters:
+                - name: id
+                  in: query
+                  schema:
+                    type: integer
+                    format: uint32
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/GetDeptReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        put:
+            tags:
+                - Dept
+            description: UpdateDept 更新部门信息
+            operationId: Dept_UpdateDept
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/UpdateDeptRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/UpdateDeptReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        post:
+            tags:
+                - Dept
+            description: CreateDept 创建部门信息
+            operationId: Dept_CreateDept
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/CreateDeptRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/CreateDeptReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        delete:
+            tags:
+                - Dept
+            description: DeleteDept 删除部门信息
+            operationId: Dept_DeleteDept
+            parameters:
+                - name: id
+                  in: query
+                  schema:
+                    type: integer
+                    format: uint32
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/DeleteDeptReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /manager/api/v1/dept/classifies:
+        get:
+            tags:
+                - Dept
+            description: ListDeptClassify 获取部门分类列表
+            operationId: Dept_ListDeptClassify
+            parameters:
+                - name: page
+                  in: query
+                  schema:
+                    type: integer
+                    format: uint32
+                - name: pageSize
+                  in: query
+                  schema:
+                    type: integer
+                    format: uint32
+                - name: order
+                  in: query
+                  schema:
+                    type: string
+                - name: orderBy
+                  in: query
+                  schema:
+                    type: string
+                - name: name
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ListDeptClassifyReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /manager/api/v1/dept/classify:
+        put:
+            tags:
+                - Dept
+            description: UpdateDeptClassify 更新部门分类
+            operationId: Dept_UpdateDeptClassify
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/UpdateDeptClassifyRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/UpdateDeptClassifyReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        post:
+            tags:
+                - Dept
+            description: CreateDeptClassify 创建部门分类
+            operationId: Dept_CreateDeptClassify
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/CreateDeptClassifyRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/CreateDeptClassifyReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        delete:
+            tags:
+                - Dept
+            description: DeleteDeptClassify 删除部门分类
+            operationId: Dept_DeleteDeptClassify
+            parameters:
+                - name: id
+                  in: query
+                  schema:
+                    type: integer
+                    format: uint32
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/DeleteDeptClassifyReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /manager/api/v1/depts:
+        get:
+            tags:
+                - Dept
+            description: ListDept 获取部门信息列表
+            operationId: Dept_ListDept
+            parameters:
+                - name: name
+                  in: query
+                  schema:
+                    type: string
+                - name: rootId
+                  in: query
+                  schema:
+                    type: integer
+                    format: uint32
+                - name: classifyId
+                  in: query
+                  schema:
+                    type: integer
+                    format: uint32
+                - name: status
+                  in: query
+                  schema:
+                    type: boolean
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/ListDeptReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+components:
+    schemas:
+        CreateDeptClassifyReply:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: uint32
+        CreateDeptClassifyRequest:
+            type: object
+            properties:
+                name:
+                    type: string
+                description:
+                    type: string
+                weight:
+                    type: integer
+                    format: uint32
+        CreateDeptReply:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: uint32
+        CreateDeptRequest:
+            type: object
+            properties:
+                parentId:
+                    type: integer
+                    format: uint32
+                classifyId:
+                    type: integer
+                    format: uint32
+                name:
+                    type: string
+                description:
+                    type: string
+                roleIds:
+                    type: array
+                    items:
+                        type: integer
+                        format: uint32
+        DeleteDeptClassifyReply:
+            type: object
+            properties: {}
+        DeleteDeptReply:
+            type: object
+            properties: {}
+        DeptClassify:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: uint32
+                name:
+                    type: string
+        GetDeptReply:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: uint32
+                parentId:
+                    type: integer
+                    format: uint32
+                classifyId:
+                    type: integer
+                    format: uint32
+                name:
+                    type: string
+                description:
+                    type: string
+                classify:
+                    $ref: '#/components/schemas/DeptClassify'
+                createdAt:
+                    type: integer
+                    format: uint32
+                updatedAt:
+                    type: integer
+                    format: uint32
+                roles:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Role'
+        GoogleProtobufAny:
+            type: object
+            properties:
+                '@type':
+                    type: string
+                    description: The type of the serialized message.
+            additionalProperties: true
+            description: Contains an arbitrary serialized message along with a @type that describes the type of the serialized message.
+        ListDeptClassifyReply:
+            type: object
+            properties:
+                total:
+                    type: integer
+                    format: uint32
+                list:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/ListDeptClassifyReply_DeptClassify'
+        ListDeptClassifyReply_DeptClassify:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: uint32
+                name:
+                    type: string
+                description:
+                    type: string
+                status:
+                    type: boolean
+                weight:
+                    type: integer
+                    format: uint32
+                createdAt:
+                    type: integer
+                    format: uint32
+                updatedAt:
+                    type: integer
+                    format: uint32
+        ListDeptReply:
+            type: object
+            properties:
+                list:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/ListDeptReply_Dept'
+        ListDeptReply_Dept:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: uint32
+                parentId:
+                    type: integer
+                    format: uint32
+                classifyId:
+                    type: integer
+                    format: uint32
+                name:
+                    type: string
+                status:
+                    type: boolean
+                description:
+                    type: string
+                createdAt:
+                    type: integer
+                    format: uint32
+                updatedAt:
+                    type: integer
+                    format: uint32
+                children:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/ListDeptReply_Dept'
+                classify:
+                    $ref: '#/components/schemas/DeptClassify'
+                roles:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Role'
+        Role:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: uint32
+                name:
+                    type: string
+                keyword:
+                    type: string
+        Status:
+            type: object
+            properties:
+                code:
+                    type: integer
+                    description: The status code, which should be an enum value of [google.rpc.Code][google.rpc.Code].
+                    format: int32
+                message:
+                    type: string
+                    description: A developer-facing error message, which should be in English. Any user-facing error message should be localized and sent in the [google.rpc.Status.details][google.rpc.Status.details] field, or localized by the client.
+                details:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/GoogleProtobufAny'
+                    description: A list of messages that carry the error details.  There is a common set of message types for APIs to use.
+            description: 'The `Status` type defines a logical error model that is suitable for different programming environments, including REST APIs and RPC APIs. It is used by [gRPC](https://github.com/grpc). Each `Status` message contains three pieces of data: error code, error message, and error details. You can find out more about this error model and how to work with it in the [API Design Guide](https://cloud.google.com/apis/design/errors).'
+        UpdateDeptClassifyReply:
+            type: object
+            properties: {}
+        UpdateDeptClassifyRequest:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: uint32
+                name:
+                    type: string
+                description:
+                    type: string
+                status:
+                    type: boolean
+                weight:
+                    type: integer
+                    format: uint32
+        UpdateDeptReply:
+            type: object
+            properties: {}
+        UpdateDeptRequest:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: uint32
+                parentId:
+                    type: integer
+                    format: uint32
+                classifyId:
+                    type: integer
+                    format: uint32
+                name:
+                    type: string
+                description:
+                    type: string
+                status:
+                    type: boolean
+                roleIds:
+                    type: array
+                    items:
+                        type: integer
+                        format: uint32
+tags:
+    - name: Dept

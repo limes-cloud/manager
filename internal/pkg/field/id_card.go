@@ -6,8 +6,7 @@ import (
 	"google.golang.org/protobuf/types/known/structpb"
 )
 
-type idCardType struct {
-}
+type idCardType struct{}
 
 func (it idCardType) Name() string {
 	return "身份证"

@@ -1,19 +1,18 @@
 package dbs
 
 import (
-	"fmt"
 	"sync"
 
-	"github.com/limes-cloud/kratosx"
-	"google.golang.org/protobuf/proto"
-	"gorm.io/gorm"
+	"github.com/limes-cloud/kratosx/model/page"
 
+	"github.com/limes-cloud/manager/internal/core"
 	"github.com/limes-cloud/manager/internal/domain/entity"
 	"github.com/limes-cloud/manager/internal/types"
+
+	"gorm.io/gorm"
 )
 
-type App struct {
-}
+type App struct{}
 
 var (
 	appIns  *App
@@ -28,31 +27,27 @@ func NewApp() *App {
 }
 
 // GetAppByKeyword 获取指定数据
-func (r App) GetAppByKeyword(ctx kratosx.Context, keyword string) (*entity.App, error) {
+func (r App) GetAppByKeyword(ctx core.Context, keyword string) (*entity.App, error) {
 	var (
 		app = entity.App{}
 		fs  = []string{"*"}
 	)
-	db := ctx.DB().Select(fs).
-		Preload("Channels", "status=true").
-		Preload("Fields", "status=true")
+	db := ctx.DB().Select(fs)
 	return &app, db.Where("keyword = ?", keyword).First(&app).Error
 }
 
 // GetApp 获取指定的数据
-func (r App) GetApp(ctx kratosx.Context, id uint32) (*entity.App, error) {
+func (r App) GetApp(ctx core.Context, id uint32) (*entity.App, error) {
 	var (
 		app = entity.App{}
 		fs  = []string{"*"}
 	)
-	db := ctx.DB().Select(fs).
-		Preload("Channels", "status=true").
-		Preload("Fields", "status=true")
+	db := ctx.DB().Select(fs)
 	return &app, db.Where("id = ?", id).First(&app).Error
 }
 
 // ListApp 获取列表
-func (r App) ListApp(ctx kratosx.Context, req *types.ListAppRequest) ([]*entity.App, uint32, error) {
+func (r App) ListApp(ctx core.Context, req *types.ListAppRequest) ([]*entity.App, uint32, error) {
 	var (
 		list  []*entity.App
 		total int64
@@ -60,8 +55,11 @@ func (r App) ListApp(ctx kratosx.Context, req *types.ListAppRequest) ([]*entity.
 	)
 
 	db := ctx.DB().Model(entity.App{}).Select(fs)
+	if req.InIds != nil {
+		db = db.Where("id IN ?", req.InIds)
+	}
 	if req.Keyword != nil {
-		db = db.Where("keyword = ?", *req.Keyword)
+		db = db.Where("keyword LIKE ?", *req.Keyword+"%")
 	}
 	if req.Name != nil {
 		db = db.Where("name LIKE ?", *req.Name+"%")
@@ -69,67 +67,134 @@ func (r App) ListApp(ctx kratosx.Context, req *types.ListAppRequest) ([]*entity.
 	if req.Status != nil {
 		db = db.Where("status = ?", *req.Status)
 	}
-	if req.Ids != nil {
-		db = db.Where("id in ?", req.Ids)
+
+	if req.Search != nil {
+		// 查询条件下数据总数
+		if err := db.Count(&total).Error; err != nil {
+			return nil, 0, err
+		}
+		// 分页排序
+		db = page.SearchScopes(db, req.Search)
+		if err := db.Find(&list).Error; err != nil {
+			return nil, 0, err
+		}
+	} else {
+		if err := db.Find(&list).Error; err != nil {
+			return nil, 0, err
+		}
+		total = int64(len(list))
 	}
 
-	if err := db.Count(&total).Error; err != nil {
-		return nil, 0, err
-	}
-	db = db.Offset(int((req.Page - 1) * req.PageSize)).Limit(int(req.PageSize))
-
-	if req.OrderBy == nil || *req.OrderBy == "" {
-		req.OrderBy = proto.String("id")
-	}
-	if req.Order == nil || *req.Order == "" {
-		req.Order = proto.String("asc")
-	}
-	db = db.Order(fmt.Sprintf("%s %s", *req.OrderBy, *req.Order))
-	if *req.OrderBy != "id" {
-		db = db.Order("id asc")
-	}
-
-	if err := db.Find(&list).Error; err != nil {
-		return nil, 0, err
-	}
 	return list, uint32(total), nil
 }
 
 // CreateApp 创建数据
-func (r App) CreateApp(ctx kratosx.Context, app *entity.App) (uint32, error) {
+func (r App) CreateApp(ctx core.Context, app *entity.App) (uint32, error) {
 	return app.Id, ctx.DB().Create(app).Error
 }
 
 // UpdateApp 更新数据
-func (r App) UpdateApp(ctx kratosx.Context, app *entity.App) error {
+func (r App) UpdateApp(ctx core.Context, app *entity.App) error {
 	return ctx.DB().Transaction(func(tx *gorm.DB) error {
-		if len(app.AppChannels) != 0 {
-			if err := tx.Where("app_id=?", app.Id).Delete(entity.AppChannel{}).Error; err != nil {
-				return err
-			}
-		}
-
-		if len(app.AppFields) != 0 {
-			if err := tx.Where("app_id=?", app.Id).Delete(entity.AppField{}).Error; err != nil {
-				return err
-			}
-		}
+		//if len(app.AppChannels) != 0 {
+		//	if err := tx.Where("app_id=?", app.Id).Delete(entity.AppChannel{}).Error; err != nil {
+		//		return err
+		//	}
+		//}
+		//
+		//if len(app.AppFields) != 0 {
+		//	if err := tx.Where("app_id=?", app.Id).Delete(entity.AppField{}).Error; err != nil {
+		//		return err
+		//	}
+		//}
 
 		return tx.Updates(app).Error
 	})
 }
 
-// UpdateAppStatus 更新数据状态
-func (r App) UpdateAppStatus(ctx kratosx.Context, req *types.UpdateAppStatusRequest) error {
-	return ctx.DB().Model(entity.App{}).
-		Where("id=?", req.Id).
-		Updates(map[string]any{
-			"status":       req.Status,
-			"disable_desc": req.DisableDesc,
-		}).Error
+// DeleteApp 删除数据
+func (r App) DeleteApp(ctx core.Context, id uint32) error {
+	return ctx.DB().Where("id = ?", id).Delete(&entity.App{}).Error
 }
 
-// DeleteApp 删除数据
-func (r App) DeleteApp(ctx kratosx.Context, id uint32) error {
-	return ctx.DB().Where("id = ?", id).Delete(&entity.App{}).Error
+// ListAppOAuthChannel 创建数据
+func (r App) ListAppOAuthChannel(ctx core.Context, req *types.ListAppOAuthChannelRequest) ([]*entity.AppOAuthChannel, uint32, error) {
+	var (
+		list  []*entity.AppOAuthChannel
+		total int64
+	)
+
+	db := ctx.DB().Model(entity.AppOAuthChannel{}).Where("app_id = ?", req.AppId)
+
+	join := ctx.DB().Where("Channel.status = true")
+	if req.Keyword != nil {
+		join = join.Where("keyword LIKE ?", *req.Keyword+"%")
+	}
+	if req.Name != nil {
+		join = join.Where("name LIKE ?", *req.Name+"%")
+	}
+	db = db.Joins("Channel", join)
+	db = db.Where("Channel.status is not null")
+
+	// 查询条件下数据总数
+	if err := db.Count(&total).Error; err != nil {
+		return nil, 0, err
+	}
+	db = page.SearchScopes(db, &req.Search)
+	if err := db.Find(&list).Error; err != nil {
+		return nil, 0, err
+	}
+
+	return list, uint32(total), nil
+}
+
+// CreateAppOAuthChannel 创建数据
+func (r App) CreateAppOAuthChannel(ctx core.Context, aoc *entity.AppOAuthChannel) (uint32, error) {
+	return aoc.Id, ctx.DB().Create(aoc).Error
+}
+
+// DeleteAppOAuthChannel 删除数据
+func (r App) DeleteAppOAuthChannel(ctx core.Context, id uint32) error {
+	return ctx.DB().Where("id = ?", id).Delete(&entity.AppOAuthChannel{}).Error
+}
+
+// ListAppField 创建数据
+func (r App) ListAppField(ctx core.Context, req *types.ListAppFieldRequest) ([]*entity.AppField, uint32, error) {
+	var (
+		list  []*entity.AppField
+		total int64
+	)
+
+	db := ctx.DB().Model(entity.AppField{}).Where("app_id = ?", req.AppId)
+
+	join := ctx.DB().Where("Field.status = true")
+	if req.Keyword != nil {
+		join = join.Where("keyword LIKE ?", *req.Keyword+"%")
+	}
+	if req.Name != nil {
+		join = join.Where("name LIKE ?", *req.Name+"%")
+	}
+	db = db.Joins("Field", join)
+	db = db.Where("Field.status is not null")
+
+	// 查询条件下数据总数
+	if err := db.Count(&total).Error; err != nil {
+		return nil, 0, err
+	}
+	db = page.SearchScopes(db, &req.Search)
+	if err := db.Find(&list).Error; err != nil {
+		return nil, 0, err
+	}
+
+	return list, uint32(total), nil
+}
+
+// CreateAppField 创建数据
+func (r App) CreateAppField(ctx core.Context, aoc *entity.AppField) (uint32, error) {
+	return aoc.Id, ctx.DB().Create(aoc).Error
+}
+
+// DeleteAppField 删除数据
+func (r App) DeleteAppField(ctx core.Context, id uint32) error {
+	return ctx.DB().Where("id = ?", id).Delete(&entity.AppField{}).Error
 }

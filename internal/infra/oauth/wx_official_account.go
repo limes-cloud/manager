@@ -5,9 +5,10 @@ import (
 	"strings"
 	"time"
 
+	"github.com/limes-cloud/manager/internal/core"
+
 	"github.com/go-resty/resty/v2"
 	"github.com/google/uuid"
-	"github.com/limes-cloud/kratosx"
 	"github.com/limes-cloud/kratosx/pkg/crypto"
 
 	"github.com/limes-cloud/manager/internal/domain/entity"
@@ -20,23 +21,23 @@ func init() {
 }
 
 type WXOfficialAccount struct {
-	conf *entity.Channel
+	conf *entity.OAuthChannel
 }
 
-func NewWXOfficialAccount(req *entity.Channel) repository.OAuthor {
+func NewWXOfficialAccount(req *entity.OAuthChannel) repository.OAuthor {
 	return &WXOfficialAccount{conf: req}
 }
 
-func (woa WXOfficialAccount) GetOAuthWay(_ kratosx.Context, req *types.GetOAuthWayRequest) (*types.GetOAuthWayReply, error) {
+func (woa WXOfficialAccount) OAuthHandler(_ core.Context, req *types.OAuthHandlerRequest) (*types.OAuthHandlerReply, error) {
 	uid := crypto.MD5([]byte(uuid.NewString()))
-	var resp = types.GetOAuthWayReply{
+	resp := types.OAuthHandlerReply{
 		UUID:      uid,
 		Action:    types.GetOAuthWayActionJump,
 		Tip:       "点击跳转授权",
 		CodeField: "code",
 	}
 
-	// 不是 yiban app 打开
+	// 不是微信打开
 	if !strings.Contains(req.UserAgent, "MicroMessenger") {
 		resp.Action = types.GetOAuthWayActionScan
 		resp.Tip = "打开微信扫码登陆"
@@ -54,14 +55,14 @@ func (woa WXOfficialAccount) GetOAuthWay(_ kratosx.Context, req *types.GetOAuthW
 	return &resp, nil
 }
 
-func (woa WXOfficialAccount) GetOAuthToken(ctx kratosx.Context, req *types.GetOAuthTokenRequest) (*types.GetOAuthTokenReply, error) {
+func (woa WXOfficialAccount) GetOAuthToken(ctx core.Context, req *types.GetOAuthTokenRequest) (*types.GetOAuthTokenReply, error) {
 	res := struct {
 		AccessToken string `json:"access_token"`
 		ExpiresIn   int    `json:"expires_in"`
 		OpenId      string `json:"openid"`
 	}{}
 
-	response, err := ctx.Http().Option(func(request *resty.Request) {
+	response, err := ctx.Request().Option(func(request *resty.Request) {
 		request.SetQueryParam("appid", woa.conf.Ak).
 			SetQueryParam("secret", woa.conf.Sk).
 			SetQueryParam("grant_type", "authorization_code").
@@ -82,7 +83,7 @@ func (woa WXOfficialAccount) GetOAuthToken(ctx kratosx.Context, req *types.GetOA
 	}, nil
 }
 
-func (woa WXOfficialAccount) GetOAuthInfo(ctx kratosx.Context, req *types.GetOAuthInfoRequest) (*types.GetOAuthInfoReply, error) {
+func (woa WXOfficialAccount) GetOAuthInfo(ctx core.Context, req *types.GetOAuthInfoRequest) (*types.GetOAuthInfoReply, error) {
 	res := struct {
 		Openid     string `json:"openid"`
 		Nickname   string `json:"nickname"`
@@ -94,7 +95,7 @@ func (woa WXOfficialAccount) GetOAuthInfo(ctx kratosx.Context, req *types.GetOAu
 		Unionid    string `json:"unionid"`
 	}{}
 
-	response, err := ctx.Http().Option(func(request *resty.Request) {
+	response, err := ctx.Request().Option(func(request *resty.Request) {
 		request.SetQueryParam("access_token", req.Token).
 			SetQueryParam("openid", req.OID).
 			SetQueryParam("lang", "zh_CN")

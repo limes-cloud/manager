@@ -1,0 +1,53 @@
+syntax = "proto3";
+
+package manager.api.jobrole;
+
+option go_package = ".;jobrole";
+option java_multiple_files = true;
+option java_package = "manager.api.jobrole.proto";
+
+import "google/api/annotations.proto";
+import "api/jobrole/proto/jobrole.proto";
+
+service JobRole {
+
+	rpc ListJobRole (ListJobRoleRequest) returns (ListJobRoleReply){
+		option (google.api.http) = {
+			get: "/manager/api/v1/job/roles"
+		};
+	}
+
+	rpc CreateJobRoles (CreateJobRolesRequest) returns (CreateJobRolesReply){
+		option (google.api.http) = {
+			post: "/manager/api/v1/job/roles",
+			body: "*"
+		};
+	}
+
+	rpc DeleteJobRoles (DeleteJobRolesRequest) returns (DeleteJobRolesReply){
+		option (google.api.http) = {
+			delete: "/manager/api/v1/job/roles",
+			body: "*"
+		};
+	}
+
+	rpc ListRoleJob (ListRoleJobRequest) returns (ListRoleJobReply){
+		option (google.api.http) = {
+			get: "/manager/api/v1/role/jobs"
+		};
+	}
+
+	rpc CreateRoleJobs (CreateRoleJobsRequest) returns (CreateRoleJobsReply){
+		option (google.api.http) = {
+			post: "/manager/api/v1/role/jobs",
+			body: "*"
+		};
+	}
+
+	rpc DeleteRoleJobs (DeleteRoleJobsRequest) returns (DeleteRoleJobsReply){
+		option (google.api.http) = {
+			delete: "/manager/api/v1/role/jobs",
+			body: "*"
+		};
+	}
+}

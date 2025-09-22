@@ -1,0 +1,63 @@
+syntax = "proto3";
+
+package manager.api.rolemenu;
+
+option go_package = ".;rolemenu";
+option java_multiple_files = true;
+option java_package = "manager.api.rolemenu";
+
+import "validate/validate.proto";
+
+
+message GetRoleMenuIdsRequest {
+  uint32 roleId = 1[(validate.rules).uint32 = {gte: 1}];
+  optional uint32 appId = 2[(validate.rules).uint32 = {gte: 1}];
+}
+
+message GetRoleMenuIdsReply {
+  repeated uint32 menuIds = 1;
+}
+
+
+message GetMenuRoleIdsRequest {
+  uint32 menuId = 1[(validate.rules).uint32 = {gte: 1}];
+}
+
+message GetMenuRoleIdsReply {
+  repeated uint32 roleIds = 1;
+}
+
+message CreateMenuRolesRequest {
+  uint32 menuId = 1[(validate.rules).uint32 = {gte: 1}];
+  repeated uint32 roleIds = 2[(validate.rules).repeated = {min_items: 1}];
+}
+
+message CreateMenuRolesReply {
+}
+
+message DeleteMenuRolesRequest {
+  uint32 menuId = 1[(validate.rules).uint32 = {gte: 1}];
+  repeated uint32 roleIds = 2[(validate.rules).repeated = {min_items: 1}];
+}
+
+message DeleteMenuRolesReply {
+}
+
+message CreateRoleMenusRequest {
+  uint32 appId = 1[(validate.rules).uint32 = {gte: 1}];
+  uint32 roleId = 2[(validate.rules).uint32 = {gte: 1}];
+  repeated uint32 menuIds = 3[(validate.rules).repeated = {min_items: 1}];
+}
+
+message CreateRoleMenusReply {
+}
+
+message DeleteRoleMenusRequest {
+  uint32 roleId = 1[(validate.rules).uint32 = {gte: 1}];
+  repeated uint32 menuIds = 2[(validate.rules).repeated = {min_items: 1}];
+}
+
+message DeleteRoleMenusReply {
+}
+
+

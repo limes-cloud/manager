@@ -1,0 +1,45 @@
+syntax = "proto3";
+
+package manager.api.tenant;
+
+option go_package = ".;tenant";
+option java_multiple_files = true;
+option java_package = "manager.api.tenant.proto";
+
+import "google/api/annotations.proto";
+import "api/tenant/proto/tenant.proto";
+
+service Tenant {
+	rpc GetTenant (GetTenantRequest) returns (GetTenantReply){
+		option (google.api.http) = {
+			get: "/manager/api/v1/tenant"
+		};
+	}
+
+	rpc ListTenant (ListTenantRequest) returns (ListTenantReply){
+		option (google.api.http) = {
+			get: "/manager/api/v1/tenants"
+		};
+	}
+
+	rpc CreateTenant (CreateTenantRequest) returns (CreateTenantReply){
+		option (google.api.http) = {
+			post: "/manager/api/v1/tenant",
+			body: "*"
+		};
+	}
+
+	rpc UpdateTenant (UpdateTenantRequest) returns (UpdateTenantReply){
+		option (google.api.http) = {
+			put: "/manager/api/v1/tenant",
+			body: "*"
+		};
+	}
+
+	rpc DeleteTenant (DeleteTenantRequest) returns (DeleteTenantReply){
+		option (google.api.http) = {
+			delete: "/manager/api/v1/tenant"
+		};
+	}
+
+}

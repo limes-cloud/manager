@@ -9,8 +9,7 @@ import (
 	"github.com/limes-cloud/manager/internal/types"
 )
 
-type Dictionary struct {
-}
+type Dictionary struct{}
 
 var (
 	dictionaryIns  *Dictionary
@@ -162,6 +161,12 @@ func (infra *Dictionary) AllDictionaryValue(ctx kratosx.Context, req *types.AllD
 	db := ctx.DB().Model(entity.DictionaryValue{}).Select("*").Where("dictionary_id=?", req.DictionaryId)
 	if req.Status != nil {
 		db = db.Where("status=?", *req.Status)
+	}
+	if req.Label != nil {
+		db = db.Where("label LIKE ?", *req.Label+"%")
+	}
+	if req.Value != nil {
+		db = db.Where("value = ?", *req.Value)
 	}
 	if err := db.Find(&ms).Error; err != nil {
 		return nil, err

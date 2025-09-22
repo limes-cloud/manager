@@ -1,17 +1,13 @@
 package service
 
 import (
-	json "github.com/json-iterator/go"
-	"github.com/limes-cloud/kratosx"
 	"github.com/limes-cloud/kratosx/pkg/crypto"
-	"github.com/limes-cloud/kratosx/pkg/valx"
+	"github.com/limes-cloud/kratosx/pkg/value"
+	"github.com/limes-cloud/manager/api/errors"
+	"github.com/limes-cloud/manager/internal/core"
 
-	"github.com/limes-cloud/manager/api/manager/auth"
-	"github.com/limes-cloud/manager/api/manager/errors"
-	"github.com/limes-cloud/manager/internal/conf"
 	"github.com/limes-cloud/manager/internal/domain/entity"
 	"github.com/limes-cloud/manager/internal/domain/repository"
-	"github.com/limes-cloud/manager/internal/pkg/md"
 	"github.com/limes-cloud/manager/internal/types"
 )
 
@@ -22,28 +18,19 @@ const (
 )
 
 type Feedback struct {
-	conf       *conf.Config
-	repo       repository.Feedback
-	permission repository.Permission
-	file       repository.File
+	repo repository.Feedback
 }
 
 func NewFeedback(
-	conf *conf.Config,
 	repo repository.Feedback,
-	permission repository.Permission,
-	file repository.File,
 ) *Feedback {
 	return &Feedback{
-		conf:       conf,
-		repo:       repo,
-		permission: permission,
-		file:       file,
+		repo: repo,
 	}
 }
 
 // ListFeedbackCategory 获取反馈建议分类列表
-func (u *Feedback) ListFeedbackCategory(ctx kratosx.Context, req *types.ListFeedbackCategoryRequest) ([]*entity.FeedbackCategory, uint32, error) {
+func (u *Feedback) ListFeedbackCategory(ctx core.Context, req *types.ListFeedbackCategoryRequest) ([]*entity.FeedbackCategory, uint32, error) {
 	list, total, err := u.repo.ListFeedbackCategory(ctx, req)
 	if err != nil {
 		ctx.Logger().Warnw("msg", "list feedback category error", "err", err.Error())
@@ -53,7 +40,7 @@ func (u *Feedback) ListFeedbackCategory(ctx kratosx.Context, req *types.ListFeed
 }
 
 // CreateFeedbackCategory 创建反馈建议分类
-func (u *Feedback) CreateFeedbackCategory(ctx kratosx.Context, req *entity.FeedbackCategory) (uint32, error) {
+func (u *Feedback) CreateFeedbackCategory(ctx core.Context, req *entity.FeedbackCategory) (uint32, error) {
 	id, err := u.repo.CreateFeedbackCategory(ctx, req)
 	if err != nil {
 		ctx.Logger().Warnw("msg", "create feedback category error", "err", err.Error())
@@ -63,7 +50,7 @@ func (u *Feedback) CreateFeedbackCategory(ctx kratosx.Context, req *entity.Feedb
 }
 
 // UpdateFeedbackCategory 更新反馈建议分类
-func (u *Feedback) UpdateFeedbackCategory(ctx kratosx.Context, req *entity.FeedbackCategory) error {
+func (u *Feedback) UpdateFeedbackCategory(ctx core.Context, req *entity.FeedbackCategory) error {
 	if err := u.repo.UpdateFeedbackCategory(ctx, req); err != nil {
 		ctx.Logger().Warnw("msg", "update feedback category error", "err", err.Error())
 		return errors.UpdateError(err.Error())
@@ -72,7 +59,7 @@ func (u *Feedback) UpdateFeedbackCategory(ctx kratosx.Context, req *entity.Feedb
 }
 
 // DeleteFeedbackCategory 删除反馈建议分类
-func (u *Feedback) DeleteFeedbackCategory(ctx kratosx.Context, id uint32) error {
+func (u *Feedback) DeleteFeedbackCategory(ctx core.Context, id uint32) error {
 	if err := u.repo.DeleteFeedbackCategory(ctx, id); err != nil {
 		ctx.Logger().Warnw("msg", "delete feedback category error", "err", err.Error())
 		return errors.DeleteError(err.Error())
@@ -81,42 +68,18 @@ func (u *Feedback) DeleteFeedbackCategory(ctx kratosx.Context, id uint32) error 
 }
 
 // ListFeedback 获取反馈建议列表
-func (u *Feedback) ListFeedback(ctx kratosx.Context, req *types.ListFeedbackRequest) ([]*entity.Feedback, uint32, error) {
-	all, scopes, err := u.permission.GetResourceScopes(ctx, permissionApp)
-	if err != nil {
-		ctx.Logger().Warnw("msg", "get app permission error", "err", err.Error())
-		return nil, 0, errors.SystemError()
-	}
-	if !all {
-		req.AppIds = scopes
-	}
-
+func (u *Feedback) ListFeedback(ctx core.Context, req *types.ListFeedbackRequest) ([]*entity.Feedback, uint32, error) {
 	list, total, err := u.repo.ListFeedback(ctx, req)
 	if err != nil {
 		ctx.Logger().Warnw("msg", "list feedback error", "err", err.Error())
 		return nil, 0, errors.ListError(err.Error())
-	}
-	for _, item := range list {
-		if item.Images == nil {
-			continue
-		}
-		var arr []string
-		if json.Unmarshal([]byte(*item.Images), &arr) != nil {
-			continue
-		}
-		for _, image := range arr {
-			url := u.file.GetFileURL(ctx, image)
-			if url != "" {
-				item.ImageUrls = append(item.ImageUrls, url)
-			}
-		}
 	}
 
 	return list, total, nil
 }
 
 // CreateFeedback 创建反馈建议
-func (u *Feedback) CreateFeedback(ctx kratosx.Context, feedback *entity.Feedback) (uint32, error) {
+func (u *Feedback) CreateFeedback(ctx core.Context, feedback *entity.Feedback) (uint32, error) {
 	content := feedback.Title + feedback.Content + feedback.Device
 	if feedback.Images != nil {
 		content += *feedback.Images
@@ -124,7 +87,7 @@ func (u *Feedback) CreateFeedback(ctx kratosx.Context, feedback *entity.Feedback
 	if feedback.Contact != nil {
 		content += *feedback.Contact
 	}
-	feedback.UserId = md.UserId(ctx)
+
 	feedback.Status = StatusUntreated
 	feedback.Md5 = crypto.MD5([]byte(content))
 
@@ -141,16 +104,7 @@ func (u *Feedback) CreateFeedback(ctx kratosx.Context, feedback *entity.Feedback
 }
 
 // DeleteFeedback 删除反馈建议
-func (u *Feedback) DeleteFeedback(ctx kratosx.Context, id uint32) error {
-	feedback, err := u.repo.GetFeedback(ctx, id)
-	if err != nil {
-		ctx.Logger().Warnw("msg", "get feedback error", "err", err.Error())
-		return errors.DatabaseError()
-	}
-	if !u.HasApp(ctx, feedback.AppId) {
-		return errors.NotAppScopeError()
-	}
-
+func (u *Feedback) DeleteFeedback(ctx core.Context, id uint32) error {
 	if err := u.repo.DeleteFeedback(ctx, id); err != nil {
 		ctx.Logger().Warnw("msg", "delete feedback error", "err", err.Error())
 		return errors.DeleteError(err.Error())
@@ -159,40 +113,18 @@ func (u *Feedback) DeleteFeedback(ctx kratosx.Context, id uint32) error {
 }
 
 // UpdateFeedback 更新反馈建议
-func (u *Feedback) UpdateFeedback(ctx kratosx.Context, feedback *entity.Feedback) error {
-	if feedback.Status != "" && valx.InList([]string{
+func (u *Feedback) UpdateFeedback(ctx core.Context, feedback *entity.Feedback) error {
+	if feedback.Status != "" && value.InList([]string{
 		StatusUntreated,
 		StatusProcessing,
 		StatusProcessed,
 	}, feedback.Status) {
 		return errors.ParamsError()
 	}
-
-	if !u.HasApp(ctx, feedback.AppId) {
-		return errors.NotAppScopeError()
-	}
-
-	adminInfo, err := auth.GetAuthInfo(ctx)
-	if err != nil {
-		ctx.Logger().Warnw("msg", "get auth info error", "err", err.Error())
-		return errors.SystemError()
-	}
-	feedback.ProcessedBy = &adminInfo.UserId
+	feedback.ProcessedBy = &ctx.Auth().UserId
 	if err := u.repo.UpdateFeedback(ctx, feedback); err != nil {
 		ctx.Logger().Warnw("msg", "update feedback error", "err", err.Error())
 		return errors.UpdateError(err.Error())
 	}
 	return nil
-}
-
-// HasApp 获取当前用户是否具有指定env的权限
-func (u *Feedback) HasApp(ctx kratosx.Context, id uint32) bool {
-	all, ids, err := u.permission.GetResourceScopes(ctx, permissionApp)
-	if err != nil {
-		return false
-	}
-	if all {
-		return true
-	}
-	return valx.InList(ids, id)
 }

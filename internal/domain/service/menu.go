@@ -1,67 +1,139 @@
 package service
 
 import (
-	"context"
-	"sync"
-
-	"github.com/limes-cloud/kratosx"
 	"github.com/limes-cloud/kratosx/pkg/tree"
+	"github.com/limes-cloud/kratosx/pkg/value"
+	"github.com/limes-cloud/manager/api/errors"
+	"github.com/limes-cloud/manager/internal/core"
+	"github.com/samber/lo"
 
-	"github.com/limes-cloud/manager/api/manager/errors"
-	"github.com/limes-cloud/manager/internal/conf"
 	"github.com/limes-cloud/manager/internal/domain/entity"
 	"github.com/limes-cloud/manager/internal/domain/repository"
-	"github.com/limes-cloud/manager/internal/pkg/md"
 	"github.com/limes-cloud/manager/internal/types"
 )
 
 type Menu struct {
-	once sync.Once
-	conf *conf.Config
-	repo repository.Menu
-	role repository.Role
-	rbac repository.Rbac
+	repo  repository.Menu
+	app   repository.App
+	rm    repository.RoleMenu
+	scope repository.Scope
 }
 
 func NewMenu(
-	config *conf.Config,
 	repo repository.Menu,
-	role repository.Role,
-	rbac repository.Rbac,
+	app repository.App,
+	rm repository.RoleMenu,
+	scope repository.Scope,
 ) *Menu {
-	uc := &Menu{conf: config, repo: repo, role: role, rbac: rbac}
-	uc.once.Do(func() {
-		uc.repo.InitBasicMenu(kratosx.MustContext(context.Background()))
-	})
+	uc := &Menu{
+		repo:  repo,
+		app:   app,
+		rm:    rm,
+		scope: scope,
+	}
 	return uc
 }
 
-// ListMenuByCurRole 获取当前角色的菜单树
-func (u *Menu) ListMenuByCurRole(ctx kratosx.Context) ([]*entity.Menu, error) {
-	list, err := u.repo.ListMenuByRoleIds(ctx, md.RoleIds(ctx))
+// ListCurrentMenu 获取当前的菜单信息列表树
+func (u *Menu) ListCurrentMenu(ctx core.Context, req *types.ListMenuRequest) ([]*entity.Menu, error) {
+	// 获取当前的角色列表
+	if !u.scope.IsSuperAdmin(ctx) {
+		rids := u.scope.RoleScopes(ctx)
+		req.InIds = u.rm.GetMenuIdsByRoleIds(rids)
+	}
+
+	// 获取当前角色有权限的菜单ID
+	list, err := u.ListMenu(ctx, req)
 	if err != nil {
-		ctx.Logger().Warnw("msg", "list menu error", "err", err.Error())
+		ctx.Logger().Warnw("msg", "get menu ids error", "err", err.Error())
 		return nil, errors.ListError()
 	}
-	return tree.BuildArrayTree(list), nil
+
+	// 构建树
+	if req.FilterRoot {
+		return list, nil
+	}
+
+	// 获取应用，设置为顶级菜单
+	var (
+		appIds []uint32
+		mb     = map[uint32][]*entity.Menu{}
+		nm     []*entity.Menu
+	)
+	for _, menu := range list {
+		appIds = append(appIds, menu.AppId)
+		mb[menu.AppId] = append(mb[menu.AppId], menu)
+	}
+	apps, _, err := u.app.ListApp(ctx, &types.ListAppRequest{
+		InIds: lo.Uniq(appIds),
+	})
+	if err != nil {
+		ctx.Logger().Warnw("msg", "list app error", "err", err.Error())
+		return nil, errors.ListError()
+	}
+
+	for _, app := range apps {
+		menu := entity.Menu{
+			Title:     app.Name,
+			Icon:      &app.Logo,
+			Keyword:   &app.Keyword,
+			Type:      entity.MenuTypeRoot,
+			AppId:     app.Id,
+			Children:  mb[app.Id],
+			Component: value.Pointer("Layout"),
+			Path:      value.Pointer("/" + app.Keyword),
+		}
+		nm = append(nm, &menu)
+	}
+
+	return nm, nil
 }
 
 // ListMenu 获取菜单信息列表树
-func (u *Menu) ListMenu(ctx kratosx.Context, req *types.ListMenuRequest) ([]*entity.Menu, error) {
+func (u *Menu) ListMenu(ctx core.Context, req *types.ListMenuRequest) ([]*entity.Menu, error) {
 	list, err := u.repo.ListMenu(ctx, req)
 	if err != nil {
 		ctx.Logger().Warnw("msg", "list menu error", "err", err.Error())
 		return nil, errors.ListError()
 	}
+
+	var (
+		gms = map[uint32]int{}
+		mb  = map[uint32][]uint32{}
+	)
+
+	for index, item := range list {
+		if item.Type == entity.MenuTypeGroup {
+			gms[item.Id] = index
+		}
+		mb[item.ParentId] = append(mb[item.ParentId], item.Id)
+	}
+
+	// 如果是G，但是没有子节点，则去除G
+	for id, ind := range gms {
+		if len(mb[id]) == 0 {
+			list = append(list[:ind], list[ind+1:]...)
+		}
+	}
+
 	return tree.BuildArrayTree(list), nil
 }
 
 // CreateMenu 创建菜单信息
-func (u *Menu) CreateMenu(ctx kratosx.Context, menu *entity.Menu) (uint32, error) {
-	var id uint32
-	if err := ctx.Transaction(func(ctx kratosx.Context) error {
+func (u *Menu) CreateMenu(ctx core.Context, menu *entity.Menu) (uint32, error) {
+	var (
+		id  uint32
+		err error
+	)
+
+	// 判断是否具有应用权限
+	if !u.scope.HasAppScope(ctx, menu.AppId) {
+		return 0, errors.AppScopeError()
+	}
+
+	// 开启事务
+	if err = ctx.Transaction(func(ctx core.Context) error {
 		// 创建菜单
-		var err error
 		id, err = u.repo.CreateMenu(ctx, menu)
 		if err != nil {
 			return err
@@ -74,11 +146,6 @@ func (u *Menu) CreateMenu(ctx kratosx.Context, menu *entity.Menu) (uint32, error
 			}
 		}
 
-		// 添加到白名单
-		if menu.Type == entity.MenuBasic {
-			ctx.Authentication().AddWhitelist(*menu.Api, *menu.Method)
-		}
-
 		return nil
 	}); err != nil {
 		return 0, errors.CreateError(err.Error())
@@ -87,84 +154,57 @@ func (u *Menu) CreateMenu(ctx kratosx.Context, menu *entity.Menu) (uint32, error
 }
 
 // UpdateMenu 更新菜单信息
-func (u *Menu) UpdateMenu(ctx kratosx.Context, menu *entity.Menu) error {
+func (u *Menu) UpdateMenu(ctx core.Context, menu *entity.Menu) error {
+	// 获取之前的菜单信息
 	old, err := u.repo.GetMenu(ctx, menu.Id)
 	if err != nil {
 		return err
 	}
 
-	err = ctx.Transaction(func(ctx kratosx.Context) error {
-		// 之前是api，现在不是
-		if old.Type == entity.MenuApi && menu.Type != entity.MenuApi {
-			if err := u.rbac.DeleteRbacApi(ctx, *old.Api, *old.Method); err != nil {
-				return err
-			}
-		}
+	// 判断是否具有应用权限
+	if !u.scope.HasAppScope(ctx, old.AppId) {
+		return errors.AppScopeError()
+	}
 
-		// 之前是api，现在也是，但是接口/方法出现变化
-		if old.Type == entity.MenuApi && menu.Type == entity.MenuApi && (*old.Method != *menu.Method || *old.Api != *menu.Api) {
-			if err := u.rbac.UpdateRbacApi(ctx,
-				types.MenuApi{Api: *old.Api, Method: *old.Method},
-				types.MenuApi{Api: *menu.Api, Method: *menu.Method},
-			); err != nil {
-				return err
-			}
-		}
+	// 置空应用ID,不允许修改为其他的应用ID
+	menu.AppId = 0
 
-		// 之前不是api，现在是，将api添加到所有已拥有的用户
-		if old.Type != entity.MenuApi && menu.Type == entity.MenuApi {
-			roles, err := u.role.AllRoleKeywordByMenuId(ctx, menu.Id)
-			if err != nil {
-				return err
-			}
-			if err := u.rbac.CreateRbacRolesApi(ctx, roles, types.MenuApi{Api: *old.Api, Method: *old.Method}); err != nil {
-				return err
-			}
-		}
-
-		if old.Type == entity.MenuBasic {
-			ctx.Authentication().RemoveWhitelist(*old.Api, *old.Method)
-		}
-
-		if menu.Type == entity.MenuBasic {
-			ctx.Authentication().AddWhitelist(*menu.Api, *menu.Method)
-		}
-
-		return u.repo.UpdateMenu(ctx, menu)
-	})
-
-	if err != nil {
+	// 变更菜单
+	if err := u.repo.UpdateMenu(ctx, menu); err != nil {
 		return errors.UpdateError(err.Error())
 	}
+
 	return nil
 }
 
 // DeleteMenu 删除菜单信息
-func (u *Menu) DeleteMenu(ctx kratosx.Context, id uint32) error {
-	apis, err := u.repo.ListMenuChildrenApi(ctx, id)
+func (u *Menu) DeleteMenu(ctx core.Context, id uint32) error {
+	// 获取之前的菜单信息
+	old, err := u.repo.GetMenu(ctx, id)
 	if err != nil {
-		ctx.Logger().Warnw("msg", "delete menu api error", "err", err.Error())
-		return errors.DatabaseError()
+		return err
 	}
 
-	if err := ctx.Transaction(func(ctx kratosx.Context) error {
-		for _, item := range apis {
-			// 移除白名单
-			if item.Type == entity.MenuBasic {
-				ctx.Authentication().RemoveWhitelist(*item.Api, *item.Method)
-			}
+	// 判断是否具有应用权限
+	if !u.scope.HasAppScope(ctx, old.AppId) {
+		return errors.AppScopeError()
+	}
 
-			// 移除api
-			if item.Type == entity.MenuApi {
-				if err := u.rbac.DeleteRbacApi(ctx, *item.Api, *item.Method); err != nil {
-					return err
-				}
-			}
+	// 查询下级菜单
+	mids, err := u.repo.GetMenuChildrenIds(ctx, id)
+	if err != nil {
+		return err
+	}
+
+	mids = append(mids, id)
+
+	return ctx.Transaction(func(ctx core.Context) error {
+		// 删除角色
+		if err = u.repo.DeleteMenu(ctx, id); err != nil {
+			return err
 		}
-		// 删除
-		return u.repo.DeleteMenu(ctx, id)
-	}); err != nil {
-		return errors.DeleteError(err.Error())
-	}
-	return nil
+
+		// 删除权限
+		return u.rm.DeleteMenus(ctx, mids)
+	})
 }

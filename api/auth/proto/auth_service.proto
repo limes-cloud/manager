@@ -1,0 +1,94 @@
+syntax = "proto3";
+
+
+package manager.api.auth;
+
+option go_package = ".;auth";
+option java_multiple_files = true;
+option java_package = "manager.api.auth";
+
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+import "api/auth/proto/auth.proto";
+
+
+service Auth {
+  // Auth 接口鉴权
+  rpc Auth(AuthRequest) returns(AuthReply){
+    option (google.api.http) = {
+      post: "/manager/api/v1/auth",
+      body: "*"
+    };
+  }
+
+  // GetUserLoginCaptcha 获取用户登陆验证吗
+  rpc GetUserLoginCaptcha(google.protobuf.Empty) returns(GetUserLoginCaptchaReply){
+    option (google.api.http) = {
+      get: "/manager/api/v1/login/captcha",
+    };
+  }
+
+  // UserLogin 用户登陆
+  rpc UserLogin(UserLoginRequest) returns(UserLoginReply){
+    option (google.api.http) = {
+      post: "/manager/api/v1/login",
+      body: "*"
+    };
+  }
+
+  // UserLogout 用户退出
+  rpc UserLogout(google.protobuf.Empty) returns(google.protobuf.Empty){
+    option (google.api.http) = {
+      post: "/manager/api/v1/logout",
+      body: "*"
+    };
+  }
+
+  // UserRefreshToken 用户刷新token
+  rpc UserRefreshToken(google.protobuf.Empty) returns(UserRefreshTokenReply){
+    option (google.api.http) = {
+      post: "/manager/api/v1/token/refresh",
+      body: "*"
+    };
+  }
+
+  // ListLoginLog 获取用户登陆信息列表
+  rpc ListLoginLog (ListLoginLogRequest) returns (ListLoginLogReply) {
+    option (google.api.http) = {
+      get: "/manager/api/v1/login/logs",
+    };
+  }
+
+    // OAuthHandler 渠道授权处理
+    rpc OAuthHandler (OAuthHandlerRequest) returns (OAuthHandlerReply) {
+      option (google.api.http) = {
+        post: "/manager/api/v1/oauth/handler",
+        body: "*"
+      };
+    }
+
+    // ReportOAuthCode 上报授权信息
+    rpc ReportOAuthCode (ReportOAuthCodeRequest) returns (ReportOAuthCodeReply) {
+      option (google.api.http) = {
+        post: "/manager/api/v1/oauth/report",
+        body: "*"
+      };
+    }
+
+    // OAuthLogin 三方授权登陆
+    rpc OAuthLogin (OAuthLoginRequest) returns (OAuthLoginReply) {
+      option (google.api.http) = {
+        post: "/manager/api/v1/oauth/login",
+        body: "*"
+      };
+    }
+
+    // OAuthBind 三方授权绑定
+    rpc OAuthBind (OAuthBindRequest) returns (OAuthBindReply) {
+      option (google.api.http) = {
+        post: "/manager/api/v1/oauth/bind",
+        body: "*"
+      };
+    }
+
+}
