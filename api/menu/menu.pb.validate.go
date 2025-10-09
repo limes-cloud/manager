@@ -61,6 +61,8 @@ func (m *ListCurrentMenuRequest) validate(all bool) error {
 
 	// no validation rules for FilterBaseApi
 
+	// no validation rules for FilterTenant
+
 	if m.AppId != nil {
 		if m.GetAppId() < 1 {
 			err := ListCurrentMenuRequestValidationError{

@@ -2,7 +2,6 @@ package entity
 
 import (
 	"github.com/limes-cloud/kratosx/model"
-	"gorm.io/gorm"
 )
 
 type Entity struct {
@@ -13,10 +12,6 @@ type Entity struct {
 	Fields   []*EntityField `json:"fields" gorm:"foreignKey:entity_id;references:Id"`
 	App      *App           `json:"app" gorm:"foreignKey:AppId;references:Id"`
 	model.BaseModel
-}
-
-func (e *Entity) GormHook(db *gorm.DB) {
-	// return m.Id
 }
 
 type EntityField struct {

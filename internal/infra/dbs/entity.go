@@ -1,8 +1,13 @@
 package dbs
 
 import (
+	"context"
 	"fmt"
 	"sync"
+
+	"dario.cat/mergo"
+
+	"github.com/limes-cloud/kratosx"
 
 	"github.com/limes-cloud/kratosx/pkg/cache"
 
@@ -12,21 +17,59 @@ import (
 )
 
 type Entity struct {
-	entCache *cache.Cache[string, *entity.Entity]
+	entCache   *cache.Cache[string, uint32]
+	fieldCache *cache.Cache[uint32, string]
+	ruleCache  *cache.Cache[uint32, string]
 }
 
 var (
-	entityIns          *Entity
-	entityOnce         sync.Once
-	entityCacheKey     = "entity"
-	entityRuleCacheKey = "entityrule"
+	entityIns           *Entity
+	entityOnce          sync.Once
+	entityCacheKey      = "entity"
+	entityFieldCacheKey = "entityfield"
+	entityRuleCacheKey  = "entityrule"
 )
 
 func NewEntity() *Entity {
 	entityOnce.Do(func() {
 		entityIns = &Entity{}
+		ctx := core.MustContext(
+			context.Background(),
+			kratosx.WithTrace("cache", "entity"),
+			kratosx.WithSkipDBHook(),
+		)
+		ctx.BeforeStart("load entity", func() {
+			entityIns.entCache = cache.NewCacheAndInit[string, uint32](
+				ctx,
+				ctx.Redis(),
+				entityCacheKey,
+				cache.HookLoad(func() (map[string]uint32, error) {
+					return entityIns.loadEntity(ctx)
+				}),
+			)
+			entityIns.fieldCache = cache.NewCacheAndInit[uint32, string](
+				ctx,
+				ctx.Redis(),
+				entityFieldCacheKey,
+				cache.HookLoad(func() (map[uint32]string, error) {
+					return entityIns.loadEntityField(ctx)
+				}),
+			)
+			entityIns.ruleCache = cache.NewCacheAndInit[uint32, string](
+				ctx,
+				ctx.Redis(),
+				entityRuleCacheKey,
+				cache.HookLoad(func() (map[uint32]string, error) {
+					return entityIns.loadEntityRule(ctx)
+				}),
+			)
+		})
 	})
 	return entityIns
+}
+
+func (infra *Entity) GetEntityRuleById(id uint32) (string, bool) {
+	return infra.ruleCache.Get(id)
 }
 
 func (infra *Entity) GetEntityRule(ctx core.Context, id uint32, name string) (*entity.EntityRule, error) {
@@ -58,17 +101,58 @@ func (infra *Entity) ListEntityRule(ctx core.Context, req *types.ListEntityRuleR
 
 // CreateEntityRule 创建数据
 func (infra *Entity) CreateEntityRule(ctx core.Context, tg *entity.EntityRule) (uint32, error) {
-	return tg.Id, ctx.DB().Create(tg).Error
+	op := infra.ruleCache.OP(ctx)
+	err := ctx.Transaction(func(ctx core.Context) error {
+		if err := ctx.DB().Create(tg).Error; err != nil {
+			return err
+		}
+		return op.Put(tg.Id, tg.Expression).Do()
+	})
+	if err != nil {
+		return 0, err
+	}
+	return tg.Id, nil
 }
 
 // UpdateEntityRule 更新数据
 func (infra *Entity) UpdateEntityRule(ctx core.Context, tg *entity.EntityRule) error {
-	return ctx.DB().Updates(tg).Error
+	op := infra.ruleCache.OP(ctx)
+	return ctx.Transaction(func(ctx core.Context) error {
+		if err := ctx.DB().Updates(tg).Error; err != nil {
+			return err
+		}
+		if tg.Expression != "" {
+			return op.Put(tg.Id, tg.Expression).Do()
+		}
+		return nil
+	})
 }
 
 // DeleteEntityRule 删除数据
 func (infra *Entity) DeleteEntityRule(ctx core.Context, id uint32) error {
-	return ctx.DB().Where("id = ?", id).Delete(&entity.EntityRule{}).Error
+	op := infra.ruleCache.OP(ctx)
+	return ctx.Transaction(func(ctx core.Context) error {
+		if err := ctx.DB().Where("id = ?", id).Delete(&entity.EntityRule{}).Error; err != nil {
+			return err
+		}
+		return op.Delete(id).Do()
+	})
+}
+
+func (infra *Entity) loadEntityRule(ctx core.Context) (map[uint32]string, error) {
+	var list []*entity.EntityRule
+	if err := ctx.DB().Find(&list).Error; err != nil {
+		return nil, err
+	}
+	bucket := map[uint32]string{}
+	for _, item := range list {
+		bucket[item.Id] = item.Expression
+	}
+	return bucket, nil
+}
+
+func (infra *Entity) GetEntityFieldName(id uint32) (string, bool) {
+	return infra.fieldCache.Get(id)
 }
 
 func (infra *Entity) GetEntityField(ctx core.Context, id uint32, name string) (*entity.EntityField, error) {
@@ -100,28 +184,54 @@ func (infra *Entity) ListEntityField(ctx core.Context, req *types.ListEntityFiel
 
 // CreateEntityField 创建数据
 func (infra *Entity) CreateEntityField(ctx core.Context, tg *entity.EntityField) (uint32, error) {
-	return tg.Id, ctx.DB().Create(tg).Error
+	op := infra.fieldCache.OP(ctx)
+	err := ctx.Transaction(func(ctx core.Context) error {
+		if err := ctx.DB().Create(tg).Error; err != nil {
+			return err
+		}
+		return op.Put(tg.Id, tg.Name).Do()
+	})
+	if err != nil {
+		return 0, err
+	}
+	return tg.Id, nil
 }
 
 // UpdateEntityField 更新数据
 func (infra *Entity) UpdateEntityField(ctx core.Context, tg *entity.EntityField) error {
-	return ctx.DB().Updates(tg).Error
+	op := infra.fieldCache.OP(ctx)
+	return ctx.Transaction(func(ctx core.Context) error {
+		if err := ctx.DB().Updates(tg).Error; err != nil {
+			return err
+		}
+		if tg.Name != "" {
+			return op.Put(tg.Id, tg.Name).Do()
+		}
+		return nil
+	})
 }
 
 // DeleteEntityField 删除数据
 func (infra *Entity) DeleteEntityField(ctx core.Context, id uint32) error {
-	return ctx.DB().Where("id = ?", id).Delete(&entity.EntityField{}).Error
+	op := infra.fieldCache.OP(ctx)
+	return ctx.Transaction(func(ctx core.Context) error {
+		if err := ctx.DB().Where("id = ?", id).Delete(&entity.EntityField{}).Error; err != nil {
+			return err
+		}
+		return op.Delete(id).Do()
+	})
 }
 
-func (infra *Entity) GetEntityByName(ctx core.Context, db string, name string) (*entity.Entity, error) {
-	var (
-		ent = entity.Entity{}
-		fs  = []string{"*"}
-	)
-	return &ent, ctx.DB().
-		Select(fs).
-		Where("`database` = ? and `name` = ?", db, name).
-		First(&ent).Error
+func (infra *Entity) loadEntityField(ctx core.Context) (map[uint32]string, error) {
+	var list []*entity.EntityField
+	if err := ctx.DB().Find(&list).Error; err != nil {
+		return nil, err
+	}
+	bucket := map[uint32]string{}
+	for _, item := range list {
+		bucket[item.Id] = item.Name
+	}
+	return bucket, nil
 }
 
 // GetEntity 获取指定的数据
@@ -131,15 +241,6 @@ func (infra *Entity) GetEntity(ctx core.Context, id uint32) (*entity.Entity, err
 		fs  = []string{"*"}
 	)
 	return &ent, ctx.DB().Select(fs).First(&ent, id).Error
-}
-
-// GetEntityByKeyword 获取指定数据
-func (infra *Entity) GetEntityByKeyword(ctx core.Context, keyword string) (*entity.Entity, error) {
-	var (
-		m  = entity.Entity{}
-		fs = []string{"*"}
-	)
-	return &m, ctx.DB().Select(fs).Where("keyword = ?", keyword).First(&m).Error
 }
 
 // ListEntity 获取列表 fixed code
@@ -159,35 +260,40 @@ func (infra *Entity) ListEntity(ctx core.Context, req *types.ListEntityRequest) 
 
 // CreateEntity 创建数据
 func (infra *Entity) CreateEntity(ctx core.Context, req *entity.Entity) (uint32, error) {
-	return req.Id, ctx.DB().Create(req).Error
+	op := infra.entCache.OP(ctx)
+	err := ctx.Transaction(func(ctx core.Context) error {
+		if err := ctx.DB().Create(req).Error; err != nil {
+			return err
+		}
+		return op.Put(infra.getEntityCacheKey(req.Database, req.Name), req.Id).Do()
+	})
+	if err != nil {
+		return 0, err
+	}
+	return req.Id, nil
 }
 
 // UpdateEntity 更新数据
 func (infra *Entity) UpdateEntity(ctx core.Context, req *entity.Entity) error {
 	// 查询当前id的详细数据
 	var ent entity.Entity
-	if err := ctx.DB().Model(&entity.Entity{}).First(&ent, req.Id).Error; err != nil {
+	if err := ctx.DB().First(&ent, req.Id).Error; err != nil {
 		return err
 	}
 
-	// 修改
+	newReq := *req
+	_ = mergo.Merge(&newReq, ent)
+
 	op := infra.entCache.OP(ctx)
 	return ctx.Transaction(func(ctx core.Context) error {
-		if err := ctx.DB().Model(&entity.Entity{}).Updates(req).Error; err != nil {
+		if err := ctx.DB().Updates(req).Error; err != nil {
 			return err
 		}
-		if ent.Database != req.Database || ent.Name != req.Name {
-			if err := op.Delete(infra.getEntityCacheKey(ent.Database, ent.Name)).Do(); err != nil {
-				return err
-			}
+		if newReq.Database != ent.Database || newReq.Name != ent.Name {
+			return op.Delete(infra.getEntityCacheKey(ent.Database, ent.Name)).
+				Put(infra.getEntityCacheKey(newReq.Database, newReq.Name), newReq.Id).Do()
 		}
-
-		ent.Database = req.Database
-		ent.Name = req.Name
-
-		return op.Puts(map[string]*entity.Entity{
-			infra.getEntityCacheKey(ent.Database, ent.Name): &ent,
-		}).Do()
+		return nil
 	})
 }
 
@@ -195,7 +301,7 @@ func (infra *Entity) UpdateEntity(ctx core.Context, req *entity.Entity) error {
 func (infra *Entity) DeleteEntity(ctx core.Context, id uint32) error {
 	// 查询当前id的详细数据
 	var ent entity.Entity
-	if err := ctx.DB().Model(&entity.Entity{}).First(&ent, id).Error; err != nil {
+	if err := ctx.DB().First(&ent, id).Error; err != nil {
 		return err
 	}
 
@@ -209,15 +315,19 @@ func (infra *Entity) DeleteEntity(ctx core.Context, id uint32) error {
 	})
 }
 
+func (infra *Entity) GetEntityIdByName(db string, name string) (uint32, bool) {
+	return infra.entCache.Get(infra.getEntityCacheKey(db, name))
+}
+
 // load 加载全量的数据
-func (infra *Entity) loadEntity(ctx core.Context) (map[string]*entity.Entity, error) {
+func (infra *Entity) loadEntity(ctx core.Context) (map[string]uint32, error) {
 	var list []*entity.Entity
-	if err := ctx.DB().Model(&entity.Entity{}).Find(&list).Error; err != nil {
+	if err := ctx.DB().Find(&list).Error; err != nil {
 		return nil, err
 	}
-	bucket := map[string]*entity.Entity{}
+	bucket := map[string]uint32{}
 	for _, item := range list {
-		bucket[infra.getEntityCacheKey(item.Database, item.Name)] = item
+		bucket[infra.getEntityCacheKey(item.Database, item.Name)] = item.Id
 	}
 	return bucket, nil
 }

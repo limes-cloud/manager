@@ -32,32 +32,23 @@ var (
 func NewDeptRole() *DeptRole {
 	drOnce.Do(func() {
 		// 监听变更时间
-		ctx := core.MustContext(context.Background(), kratosx.WithTrace("cache", "dept role"))
-
-		// 初始化属性
 		drIns = &DeptRole{}
+		ctx := core.MustContext(
+			context.Background(),
+			kratosx.WithTrace("cache", "dept role"),
+			kratosx.WithSkipDBHook(),
+		)
 
-		// 缓存相关操作
-		{
-			lc := cache.NewCache[string, struct{}](
+		ctx.BeforeStart("load cache dept role", func() {
+			drIns.cache = cache.NewCacheAndInit[string, struct{}](
+				ctx,
 				ctx.Redis(),
 				drCacheKey,
 				cache.HookLoad(func() (map[string]struct{}, error) {
 					return drIns.load(ctx)
 				}),
 			)
-
-			// 加载缓存,加载失败则直接报错，避免线上隐式错误。
-			if err := lc.Init(ctx); err != nil {
-				panic(err)
-			}
-			// 监听缓存变更
-			go lc.Subscribe(ctx)
-			// 定期修复缓存
-			go lc.Repair(ctx)
-
-			drIns.cache = lc
-		}
+		})
 	})
 	return drIns
 }
@@ -146,10 +137,29 @@ func (dr *DeptRole) DeleteDeptRoles(ctx core.Context, drs []*entity.DeptRole) er
 	})
 }
 
+// GetDeptRolesByDeptIds 获取指定部门绑定的所有角色ID
+func (dr *DeptRole) GetDeptRolesByDeptIds(deptIds []uint32) []*entity.DeptRole {
+	var (
+		list []*entity.DeptRole
+		keys = dr.cache.Keys()
+	)
+
+	for _, key := range keys {
+		did, rid := dr.splitCacheKey(key)
+		if rid != 0 && value.InList(deptIds, did) {
+			list = append(list, &entity.DeptRole{
+				DeptId: did,
+				RoleId: rid,
+			})
+		}
+	}
+	return list
+}
+
 // GetRoleIdsByDeptIds 获取指定部门绑定的所有角色ID
 func (dr *DeptRole) GetRoleIdsByDeptIds(deptIds []uint32) []uint32 {
 	var (
-		ids  []uint32
+		ids  = make([]uint32, 0)
 		keys = dr.cache.Keys()
 	)
 
@@ -165,7 +175,7 @@ func (dr *DeptRole) GetRoleIdsByDeptIds(deptIds []uint32) []uint32 {
 // GetDeptIdsByRoleIds 获取指定角色绑定的所有部门ID
 func (dr *DeptRole) GetDeptIdsByRoleIds(roleIds []uint32) []uint32 {
 	var (
-		ids  []uint32
+		ids  = make([]uint32, 0)
 		keys = dr.cache.Keys()
 	)
 

@@ -45,7 +45,7 @@ type MenuHTTPServer interface {
 
 func RegisterMenuHTTPServer(s *http.Server, srv MenuHTTPServer) {
 	r := s.Route("/")
-	r.GET("/manager/api/v1/current_menus", _Menu_ListCurrentMenu0_HTTP_Handler(srv))
+	r.GET("/manager/api/v1/current/menus", _Menu_ListCurrentMenu0_HTTP_Handler(srv))
 	r.GET("/manager/api/v1/menus", _Menu_ListMenu0_HTTP_Handler(srv))
 	r.POST("/manager/api/v1/menu", _Menu_CreateMenu0_HTTP_Handler(srv))
 	r.PUT("/manager/api/v1/menu", _Menu_UpdateMenu0_HTTP_Handler(srv))
@@ -197,7 +197,7 @@ func (c *MenuHTTPClientImpl) DeleteMenu(ctx context.Context, in *DeleteMenuReque
 
 func (c *MenuHTTPClientImpl) ListCurrentMenu(ctx context.Context, in *ListCurrentMenuRequest, opts ...http.CallOption) (*ListMenuReply, error) {
 	var out ListMenuReply
-	pattern := "/manager/api/v1/current_menus"
+	pattern := "/manager/api/v1/current/menus"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationMenuListCurrentMenu))
 	opts = append(opts, http.PathTemplate(pattern))

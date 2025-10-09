@@ -7,3 +7,9 @@ type ListRoleEntityRequest struct {
 	RoleId   uint32  `json:"roleId"`
 	EntityId *uint32 `json:"entityId"`
 }
+
+type AllRoleEntityRequest struct {
+	RoleIds  []uint32 `json:"roleId"`
+	EntityId *uint32  `json:"entityId"`
+	Action   string   `json:"action"`
+}

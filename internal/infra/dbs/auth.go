@@ -29,11 +29,10 @@ func NewAuth() *Auth {
 func (auth *Auth) ListLoginLog(ctx core.Context, req *types.ListLoginLogRequest) ([]*entity.LoginLog, uint32, error) {
 	var (
 		total int64
-		fs    = []string{"*"}
 		list  []*entity.LoginLog
 	)
 
-	db := ctx.DB().Model(entity.LoginLog{}).Select(fs)
+	db := ctx.DB().Model(entity.LoginLog{}).Preload("User")
 
 	if req.Username != nil {
 		db = db.Where("username = ?", *req.Username)
@@ -55,17 +54,19 @@ func (auth *Auth) CreateLoginLog(ctx core.Context, log *entity.LoginLog) (uint32
 func (auth *Auth) ListAuthLog(ctx core.Context, req *types.ListAuthLogRequest) ([]*entity.AuthLog, uint32, error) {
 	var (
 		total int64
-		fs    = []string{"*"}
 		list  []*entity.AuthLog
 	)
 
-	db := ctx.DB().Model(entity.LoginLog{}).Select(fs)
+	db := ctx.DB().Model(entity.AuthLog{}).Preload("User").Preload("Menu")
 
-	if req.Username != nil {
-		db = db.Where("username = ?", *req.Username)
+	if req.UserId != nil {
+		db = db.Where("user_id = ?", *req.UserId)
 	}
 	if len(req.CreatedAts) == 2 {
 		db = db.Where("created_at BETWEEN ? AND ?", req.CreatedAts[0], req.CreatedAts[1])
+	}
+	if err := db.Count(&total).Error; err != nil {
+		return nil, 0, err
 	}
 
 	db = page.SearchScopes(db, &req.Search)

@@ -31,33 +31,22 @@ var (
 
 func NewJobRole() *JobRole {
 	jrOnce.Do(func() {
-		// 监听变更时间
-		ctx := core.MustContext(context.Background(), kratosx.WithTrace("cache", "job role"))
-
-		// 初始化属性
 		jrIns = &JobRole{}
-
-		// 缓存相关操作
-		{
-			lc := cache.NewCache[string, struct{}](
+		ctx := core.MustContext(
+			context.Background(),
+			kratosx.WithTrace("cache", "job role"),
+			kratosx.WithSkipDBHook(),
+		)
+		ctx.BeforeStart("load cache job role", func() {
+			jrIns.cache = cache.NewCacheAndInit[string, struct{}](
+				ctx,
 				ctx.Redis(),
 				jrCacheKey,
 				cache.HookLoad(func() (map[string]struct{}, error) {
 					return jrIns.load(ctx)
 				}),
 			)
-
-			// 加载缓存,加载失败则直接报错，避免线上隐式错误。
-			if err := lc.Init(ctx); err != nil {
-				panic(err)
-			}
-			// 监听缓存变更
-			go lc.Subscribe(ctx)
-			// 定期修复缓存
-			go lc.Repair(ctx)
-
-			jrIns.cache = lc
-		}
+		})
 	})
 	return jrIns
 }
@@ -149,7 +138,7 @@ func (jr *JobRole) DeleteJobRoles(ctx core.Context, jrs []*entity.JobRole) error
 // GetRoleIdsByJobIds 获取指定部门绑定的所有角色ID
 func (jr *JobRole) GetRoleIdsByJobIds(jobIds []uint32) []uint32 {
 	var (
-		ids  []uint32
+		ids  = make([]uint32, 0)
 		keys = jr.cache.Keys()
 	)
 
@@ -165,7 +154,7 @@ func (jr *JobRole) GetRoleIdsByJobIds(jobIds []uint32) []uint32 {
 // GetJobIdsByRoleIds 获取指定角色绑定的所有部门ID
 func (jr *JobRole) GetJobIdsByRoleIds(roleIds []uint32) []uint32 {
 	var (
-		ids  []uint32
+		ids  = make([]uint32, 0)
 		keys = jr.cache.Keys()
 	)
 
@@ -176,6 +165,25 @@ func (jr *JobRole) GetJobIdsByRoleIds(roleIds []uint32) []uint32 {
 		}
 	}
 	return ids
+}
+
+// GetJobRolesByJobIds 获取指定角色绑定的所有部门ID
+func (jr *JobRole) GetJobRolesByJobIds(jobIds []uint32) []*entity.JobRole {
+	var (
+		list []*entity.JobRole
+		keys = jr.cache.Keys()
+	)
+
+	for _, key := range keys {
+		did, rid := jr.splitCacheKey(key)
+		if did != 0 && value.InList(jobIds, rid) {
+			list = append(list, &entity.JobRole{
+				JobId:  did,
+				RoleId: rid,
+			})
+		}
+	}
+	return list
 }
 
 func (jr *JobRole) transvals(jrs []*entity.JobRole) map[string]struct{} {

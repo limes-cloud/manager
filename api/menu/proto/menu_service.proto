@@ -15,7 +15,7 @@ service Menu{
   // ListMenu 获取菜单信息列表
   rpc ListCurrentMenu (ListCurrentMenuRequest) returns (ListMenuReply) {
     option (google.api.http) = {
-      get: "/manager/api/v1/current_menus",
+      get: "/manager/api/v1/current/menus",
     };
   }
 

@@ -7,8 +7,8 @@ import (
 )
 
 type Entity interface {
-	// GetEntityByName 查询部门信息
-	GetEntityByName(ctx core.Context, db string, name string) (*entity.Entity, error)
+	// GetEntityIdByName 查询部门信息
+	GetEntityIdByName(db string, name string) (uint32, bool)
 
 	// GetEntity 查询部门信息
 	GetEntity(ctx core.Context, id uint32) (*entity.Entity, error)

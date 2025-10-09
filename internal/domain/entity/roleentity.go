@@ -7,6 +7,7 @@ type RoleEntity struct {
 	EntityId uint32  `json:"entityId" gorm:"column:entity_id"`
 	Action   string  `json:"action" gorm:"column:action"`
 	Scope    string  `json:"scope" gorm:"column:scope"`
+	Depts    string  `json:"depts" gorm:"column:depts"`
 	Fields   string  `json:"fields" gorm:"column:fields"`
 	Rules    string  `json:"rules" gorm:"column:rules"`
 	Entity   *Entity `json:"entity" gorm:"foreignKey:EntityId;references:Id"`

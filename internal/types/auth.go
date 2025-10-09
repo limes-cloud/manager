@@ -2,7 +2,7 @@ package types
 
 import "github.com/limes-cloud/kratosx/model/page"
 
-type AuthRequest struct {
+type ApiAuthRequest struct {
 	Path   string `json:"path"`
 	Method string `json:"method"`
 }
@@ -14,6 +14,7 @@ type GetUserLoginCaptchaReply struct {
 }
 
 type UserLoginRequest struct {
+	Tenant    string `json:"tenant"`
 	Username  string `json:"username"`
 	Password  string `json:"password"`
 	CaptchaId string `json:"captchaId"`
@@ -28,6 +29,7 @@ type ListLoginLogRequest struct {
 
 type ListAuthLogRequest struct {
 	page.Search
-	Username   *string `json:"username"`
+	Username   string  `json:"username"`
+	UserId     *uint32 `json:"userId"`
 	CreatedAts []int64 `json:"createdAts"`
 }

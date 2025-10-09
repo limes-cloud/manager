@@ -26,7 +26,7 @@ func NewJobRole(
 
 // ListJobRole 获取指定的部门角色列表
 func (rm *JobRole) ListJobRole(ctx core.Context, req *types.ListJobRoleRequest) ([]*entity.Role, uint32, error) {
-	if !rm.scope.IsSuperAdmin(ctx) {
+	if !ctx.IsSuperAdmin() {
 		// 获取当前有权限的角色
 		req.InRoleIds = rm.scope.RoleScopes(ctx)
 	}
@@ -43,7 +43,7 @@ func (rm *JobRole) ListJobRole(ctx core.Context, req *types.ListJobRoleRequest) 
 
 // ListRoleJob 获取指定角色的所有部门列表
 func (rm *JobRole) ListRoleJob(ctx core.Context, req *types.ListRoleJobRequest) ([]*entity.Job, uint32, error) {
-	if !rm.scope.IsSuperAdmin(ctx) {
+	if !ctx.IsSuperAdmin() {
 		// 获取当前的角色id
 		if !rm.scope.HasRoleScope(ctx, req.RoleId) {
 			return nil, 0, errors.RoleScopeError()
@@ -60,7 +60,7 @@ func (rm *JobRole) ListRoleJob(ctx core.Context, req *types.ListRoleJobRequest) 
 
 // CreateJobRoles 批量创建指定部门的角色
 func (rm *JobRole) CreateJobRoles(ctx core.Context, req *types.CreateJobRolesRequest) error {
-	if !rm.scope.IsSuperAdmin(ctx) {
+	if !ctx.IsSuperAdmin() {
 		// 获取当前有权限的角色ID
 		rids := rm.scope.RoleScopes(ctx)
 		if len(rids) == 0 {
@@ -90,7 +90,7 @@ func (rm *JobRole) CreateJobRoles(ctx core.Context, req *types.CreateJobRolesReq
 
 // CreateRoleJobs 角色批量授权给菜单
 func (rm *JobRole) CreateRoleJobs(ctx core.Context, req *types.CreateRoleJobsRequest) error {
-	if !rm.scope.IsSuperAdmin(ctx) {
+	if !ctx.IsSuperAdmin() {
 		// 判断是否拥有角色权限
 		if !rm.scope.HasRoleScope(ctx, req.RoleId) {
 			return errors.RoleScopeError()
@@ -112,7 +112,7 @@ func (rm *JobRole) CreateRoleJobs(ctx core.Context, req *types.CreateRoleJobsReq
 }
 
 func (rm *JobRole) DeleteJobRoles(ctx core.Context, req *types.DeleteJobRolesRequest) error {
-	if !rm.scope.IsSuperAdmin(ctx) {
+	if !ctx.IsSuperAdmin() {
 
 		// 获取当前有权限的角色ID
 		rids := rm.scope.RoleScopes(ctx)
@@ -142,7 +142,7 @@ func (rm *JobRole) DeleteJobRoles(ctx core.Context, req *types.DeleteJobRolesReq
 }
 
 func (rm *JobRole) DeleteRoleJobs(ctx core.Context, req *types.DeleteRoleJobsRequest) error {
-	if !rm.scope.IsSuperAdmin(ctx) {
+	if !ctx.IsSuperAdmin() {
 		// 判断是否拥有角色权限
 		if !rm.scope.HasRoleScope(ctx, req.RoleId) {
 			return errors.RoleScopeError()

@@ -31,33 +31,24 @@ var (
 
 func NewRoleMenu() *RoleMenu {
 	rmOnce.Do(func() {
-		// 监听变更时间
-		ctx := core.MustContext(context.Background(), kratosx.WithTrace("watch role_menu policy", ""))
-
 		// 初始化属性
 		rmIns = &RoleMenu{}
 
-		// 缓存相关操作
-		{
-			lc := cache.NewCache[string, struct{}](
+		ctx := core.MustContext(
+			context.Background(),
+			kratosx.WithTrace("watch role_menu policy", ""),
+			kratosx.WithSkipDBHook(),
+		)
+		ctx.BeforeStart("load cache role menu", func() {
+			rmIns.cache = cache.NewCacheAndInit[string, struct{}](
+				ctx,
 				ctx.Redis(),
 				rmCacheKey,
 				cache.HookLoad(func() (map[string]struct{}, error) {
 					return rmIns.load(ctx)
 				}),
 			)
-
-			// 加载缓存,加载失败则直接报错，避免线上隐式错误。
-			if err := lc.Init(ctx); err != nil {
-				panic(err)
-			}
-			// 监听缓存变更
-			go lc.Subscribe(ctx)
-			// 定期修复缓存
-			go lc.Repair(ctx)
-
-			rmIns.cache = lc
-		}
+		})
 	})
 	return rmIns
 }
@@ -95,7 +86,7 @@ func (rm *RoleMenu) DeleteRoleMenus(ctx core.Context, rms []*entity.RoleMenu) er
 
 func (rm *RoleMenu) GetMenuIdsByRoleIds(rids []uint32) []uint32 {
 	var (
-		ids  []uint32
+		ids  = make([]uint32, 0)
 		keys = rm.cache.Keys()
 	)
 
@@ -111,7 +102,7 @@ func (rm *RoleMenu) GetMenuIdsByRoleIds(rids []uint32) []uint32 {
 
 func (rm *RoleMenu) GetRoleIdsByMenuIds(mids []uint32) []uint32 {
 	var (
-		ids  []uint32
+		ids  = make([]uint32, 0)
 		keys = rm.cache.Keys()
 	)
 
@@ -123,6 +114,11 @@ func (rm *RoleMenu) GetRoleIdsByMenuIds(mids []uint32) []uint32 {
 		}
 	}
 	return ids
+}
+
+func (rm *RoleMenu) hasRoleMenu(rid uint32, mid uint32) bool {
+	_, ok := rm.cache.Get(rm.getCacheKey(rid, mid))
+	return ok
 }
 
 func (rm *RoleMenu) DeleteRoles(ctx core.Context, rids []uint32) error {

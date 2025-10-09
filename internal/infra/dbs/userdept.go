@@ -29,33 +29,24 @@ var (
 
 func NewUserDept() *UserDept {
 	udOnce.Do(func() {
-		// 监听变更时间
-		ctx := core.MustContext(context.Background(), kratosx.WithTrace("cache", "user dept"))
-
 		// 初始化属性
 		udIns = &UserDept{}
 
-		// 缓存相关操作
-		{
-			lc := cache.NewCache[string, struct{}](
+		ctx := core.MustContext(
+			context.Background(),
+			kratosx.WithTrace("cache", "user dept"),
+			kratosx.WithSkipDBHook(),
+		)
+		ctx.BeforeStart("load cache user dept", func() {
+			udIns.cache = cache.NewCacheAndInit[string, struct{}](
+				ctx,
 				ctx.Redis(),
 				udCacheKey,
 				cache.HookLoad(func() (map[string]struct{}, error) {
 					return udIns.load(ctx)
 				}),
 			)
-
-			// 加载缓存,加载失败则直接报错，避免线上隐式错误。
-			if err := lc.Init(ctx); err != nil {
-				panic(err)
-			}
-			// 监听缓存变更
-			go lc.Subscribe(ctx)
-			// 定期修复缓存
-			go lc.Repair(ctx)
-
-			udIns.cache = lc
-		}
+		})
 	})
 	return udIns
 }
@@ -140,7 +131,7 @@ func (ud *UserDept) DeleteUserDept(ctx core.Context, ent *entity.UserDept) error
 // GetDeptIdsByUserId 获取指定部门绑定的所有角色ID
 func (ud *UserDept) GetDeptIdsByUserId(userId uint32) []uint32 {
 	var (
-		ids  []uint32
+		ids  = make([]uint32, 0)
 		keys = ud.cache.Keys()
 	)
 
@@ -154,29 +145,31 @@ func (ud *UserDept) GetDeptIdsByUserId(userId uint32) []uint32 {
 	return ids
 }
 
-// GetDeptsAndRolesByUserId 获取指定部门绑定的所有角色ID
-func (ud *UserDept) GetDeptsAndRolesByUserId(id uint32) ([]uint32, []uint32) {
+// ListUserDeptByUserId 获取指定部门绑定的所有角色ID
+func (ud *UserDept) ListUserDeptByUserId(id uint32) []*entity.UserDept {
 	var (
-		dids []uint32
-		jids []uint32
+		list []*entity.UserDept
 		keys = ud.cache.Keys()
 	)
 
 	for _, key := range keys {
 		uid, did, jid := ud.splitCacheKey(key)
 		if uid == id {
-			dids = append(dids, did)
-			jids = append(jids, jid)
+			list = append(list, &entity.UserDept{
+				UserId: uid,
+				DeptId: did,
+				JobId:  jid,
+			})
 		}
 
 	}
-	return dids, jids
+	return list
 }
 
 // GetUserIdsByDeptId 获取指定角色绑定的所有部门ID
 func (ud *UserDept) GetUserIdsByDeptId(deptId uint32) []uint32 {
 	var (
-		ids  []uint32
+		ids  = make([]uint32, 0)
 		keys = ud.cache.Keys()
 	)
 

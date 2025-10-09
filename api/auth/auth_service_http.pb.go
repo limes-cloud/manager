@@ -24,24 +24,36 @@ var (
 const _ = http.SupportPackageIsVersion1
 
 const (
-	OperationAuthAuth                = "/manager.api.auth.Auth/Auth"
+	OperationAuthApiAuth             = "/manager.api.auth.Auth/ApiAuth"
 	OperationAuthGetUserLoginCaptcha = "/manager.api.auth.Auth/GetUserLoginCaptcha"
+	OperationAuthListAuthLog         = "/manager.api.auth.Auth/ListAuthLog"
 	OperationAuthListLoginLog        = "/manager.api.auth.Auth/ListLoginLog"
+	OperationAuthOAuthBind           = "/manager.api.auth.Auth/OAuthBind"
 	OperationAuthOAuthHandler        = "/manager.api.auth.Auth/OAuthHandler"
+	OperationAuthOAuthLogin          = "/manager.api.auth.Auth/OAuthLogin"
+	OperationAuthReportOAuthCode     = "/manager.api.auth.Auth/ReportOAuthCode"
 	OperationAuthUserLogin           = "/manager.api.auth.Auth/UserLogin"
 	OperationAuthUserLogout          = "/manager.api.auth.Auth/UserLogout"
 	OperationAuthUserRefreshToken    = "/manager.api.auth.Auth/UserRefreshToken"
 )
 
 type AuthHTTPServer interface {
-	// Auth Auth 接口鉴权
-	Auth(context.Context, *AuthRequest) (*AuthReply, error)
+	// ApiAuth Auth 接口鉴权
+	ApiAuth(context.Context, *ApiAuthRequest) (*ApiAuthReply, error)
 	// GetUserLoginCaptcha GetUserLoginCaptcha 获取用户登陆验证吗
 	GetUserLoginCaptcha(context.Context, *emptypb.Empty) (*GetUserLoginCaptchaReply, error)
+	// ListAuthLog ListAuthLog 获取用户登陆信息列表
+	ListAuthLog(context.Context, *ListAuthLogRequest) (*ListAuthLogReply, error)
 	// ListLoginLog ListLoginLog 获取用户登陆信息列表
 	ListLoginLog(context.Context, *ListLoginLogRequest) (*ListLoginLogReply, error)
+	// OAuthBind OAuthBind 三方授权绑定
+	OAuthBind(context.Context, *OAuthBindRequest) (*OAuthBindReply, error)
 	// OAuthHandler OAuthHandler 渠道授权处理
 	OAuthHandler(context.Context, *OAuthHandlerRequest) (*OAuthHandlerReply, error)
+	// OAuthLogin OAuthLogin 三方授权登陆
+	OAuthLogin(context.Context, *OAuthLoginRequest) (*OAuthLoginReply, error)
+	// ReportOAuthCode ReportOAuthCode 上报授权信息
+	ReportOAuthCode(context.Context, *ReportOAuthCodeRequest) (*ReportOAuthCodeReply, error)
 	// UserLogin UserLogin 用户登陆
 	UserLogin(context.Context, *UserLoginRequest) (*UserLoginReply, error)
 	// UserLogout UserLogout 用户退出
@@ -52,33 +64,37 @@ type AuthHTTPServer interface {
 
 func RegisterAuthHTTPServer(s *http.Server, srv AuthHTTPServer) {
 	r := s.Route("/")
-	r.POST("/manager/api/v1/auth", _Auth_Auth0_HTTP_Handler(srv))
+	r.POST("/manager/api/v1/auth", _Auth_ApiAuth0_HTTP_Handler(srv))
 	r.GET("/manager/api/v1/login/captcha", _Auth_GetUserLoginCaptcha0_HTTP_Handler(srv))
 	r.POST("/manager/api/v1/login", _Auth_UserLogin0_HTTP_Handler(srv))
 	r.POST("/manager/api/v1/logout", _Auth_UserLogout0_HTTP_Handler(srv))
 	r.POST("/manager/api/v1/token/refresh", _Auth_UserRefreshToken0_HTTP_Handler(srv))
 	r.GET("/manager/api/v1/login/logs", _Auth_ListLoginLog0_HTTP_Handler(srv))
+	r.GET("/manager/api/v1/auth/logs", _Auth_ListAuthLog0_HTTP_Handler(srv))
 	r.POST("/manager/api/v1/oauth/handler", _Auth_OAuthHandler0_HTTP_Handler(srv))
+	r.POST("/manager/api/v1/oauth/report", _Auth_ReportOAuthCode0_HTTP_Handler(srv))
+	r.POST("/manager/api/v1/oauth/login", _Auth_OAuthLogin0_HTTP_Handler(srv))
+	r.POST("/manager/api/v1/oauth/bind", _Auth_OAuthBind0_HTTP_Handler(srv))
 }
 
-func _Auth_Auth0_HTTP_Handler(srv AuthHTTPServer) func(ctx http.Context) error {
+func _Auth_ApiAuth0_HTTP_Handler(srv AuthHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in AuthRequest
+		var in ApiAuthRequest
 		if err := ctx.Bind(&in); err != nil {
 			return err
 		}
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationAuthAuth)
+		http.SetOperation(ctx, OperationAuthApiAuth)
 		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
-			return srv.Auth(ctx, req.(*AuthRequest))
+			return srv.ApiAuth(ctx, req.(*ApiAuthRequest))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		reply := out.(*AuthReply)
+		reply := out.(*ApiAuthReply)
 		return ctx.Result(200, reply)
 	}
 }
@@ -187,6 +203,25 @@ func _Auth_ListLoginLog0_HTTP_Handler(srv AuthHTTPServer) func(ctx http.Context)
 	}
 }
 
+func _Auth_ListAuthLog0_HTTP_Handler(srv AuthHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in ListAuthLogRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationAuthListAuthLog)
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
+			return srv.ListAuthLog(ctx, req.(*ListAuthLogRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*ListAuthLogReply)
+		return ctx.Result(200, reply)
+	}
+}
+
 func _Auth_OAuthHandler0_HTTP_Handler(srv AuthHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in OAuthHandlerRequest
@@ -209,11 +244,81 @@ func _Auth_OAuthHandler0_HTTP_Handler(srv AuthHTTPServer) func(ctx http.Context)
 	}
 }
 
+func _Auth_ReportOAuthCode0_HTTP_Handler(srv AuthHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in ReportOAuthCodeRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationAuthReportOAuthCode)
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
+			return srv.ReportOAuthCode(ctx, req.(*ReportOAuthCodeRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*ReportOAuthCodeReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Auth_OAuthLogin0_HTTP_Handler(srv AuthHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in OAuthLoginRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationAuthOAuthLogin)
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
+			return srv.OAuthLogin(ctx, req.(*OAuthLoginRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*OAuthLoginReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Auth_OAuthBind0_HTTP_Handler(srv AuthHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in OAuthBindRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationAuthOAuthBind)
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
+			return srv.OAuthBind(ctx, req.(*OAuthBindRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*OAuthBindReply)
+		return ctx.Result(200, reply)
+	}
+}
+
 type AuthHTTPClient interface {
-	Auth(ctx context.Context, req *AuthRequest, opts ...http.CallOption) (rsp *AuthReply, err error)
+	ApiAuth(ctx context.Context, req *ApiAuthRequest, opts ...http.CallOption) (rsp *ApiAuthReply, err error)
 	GetUserLoginCaptcha(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *GetUserLoginCaptchaReply, err error)
+	ListAuthLog(ctx context.Context, req *ListAuthLogRequest, opts ...http.CallOption) (rsp *ListAuthLogReply, err error)
 	ListLoginLog(ctx context.Context, req *ListLoginLogRequest, opts ...http.CallOption) (rsp *ListLoginLogReply, err error)
+	OAuthBind(ctx context.Context, req *OAuthBindRequest, opts ...http.CallOption) (rsp *OAuthBindReply, err error)
 	OAuthHandler(ctx context.Context, req *OAuthHandlerRequest, opts ...http.CallOption) (rsp *OAuthHandlerReply, err error)
+	OAuthLogin(ctx context.Context, req *OAuthLoginRequest, opts ...http.CallOption) (rsp *OAuthLoginReply, err error)
+	ReportOAuthCode(ctx context.Context, req *ReportOAuthCodeRequest, opts ...http.CallOption) (rsp *ReportOAuthCodeReply, err error)
 	UserLogin(ctx context.Context, req *UserLoginRequest, opts ...http.CallOption) (rsp *UserLoginReply, err error)
 	UserLogout(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	UserRefreshToken(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *UserRefreshTokenReply, err error)
@@ -227,11 +332,11 @@ func NewAuthHTTPClient(client *http.Client) AuthHTTPClient {
 	return &AuthHTTPClientImpl{client}
 }
 
-func (c *AuthHTTPClientImpl) Auth(ctx context.Context, in *AuthRequest, opts ...http.CallOption) (*AuthReply, error) {
-	var out AuthReply
+func (c *AuthHTTPClientImpl) ApiAuth(ctx context.Context, in *ApiAuthRequest, opts ...http.CallOption) (*ApiAuthReply, error) {
+	var out ApiAuthReply
 	pattern := "/manager/api/v1/auth"
 	path := binding.EncodeURL(pattern, in, false)
-	opts = append(opts, http.Operation(OperationAuthAuth))
+	opts = append(opts, http.Operation(OperationAuthApiAuth))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
 	if err != nil {
@@ -253,6 +358,19 @@ func (c *AuthHTTPClientImpl) GetUserLoginCaptcha(ctx context.Context, in *emptyp
 	return &out, err
 }
 
+func (c *AuthHTTPClientImpl) ListAuthLog(ctx context.Context, in *ListAuthLogRequest, opts ...http.CallOption) (*ListAuthLogReply, error) {
+	var out ListAuthLogReply
+	pattern := "/manager/api/v1/auth/logs"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationAuthListAuthLog))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
 func (c *AuthHTTPClientImpl) ListLoginLog(ctx context.Context, in *ListLoginLogRequest, opts ...http.CallOption) (*ListLoginLogReply, error) {
 	var out ListLoginLogReply
 	pattern := "/manager/api/v1/login/logs"
@@ -266,11 +384,50 @@ func (c *AuthHTTPClientImpl) ListLoginLog(ctx context.Context, in *ListLoginLogR
 	return &out, err
 }
 
+func (c *AuthHTTPClientImpl) OAuthBind(ctx context.Context, in *OAuthBindRequest, opts ...http.CallOption) (*OAuthBindReply, error) {
+	var out OAuthBindReply
+	pattern := "/manager/api/v1/oauth/bind"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationAuthOAuthBind))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
 func (c *AuthHTTPClientImpl) OAuthHandler(ctx context.Context, in *OAuthHandlerRequest, opts ...http.CallOption) (*OAuthHandlerReply, error) {
 	var out OAuthHandlerReply
 	pattern := "/manager/api/v1/oauth/handler"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationAuthOAuthHandler))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *AuthHTTPClientImpl) OAuthLogin(ctx context.Context, in *OAuthLoginRequest, opts ...http.CallOption) (*OAuthLoginReply, error) {
+	var out OAuthLoginReply
+	pattern := "/manager/api/v1/oauth/login"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationAuthOAuthLogin))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *AuthHTTPClientImpl) ReportOAuthCode(ctx context.Context, in *ReportOAuthCodeRequest, opts ...http.CallOption) (*ReportOAuthCodeReply, error) {
+	var out ReportOAuthCodeReply
+	pattern := "/manager/api/v1/oauth/report"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationAuthReportOAuthCode))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
 	if err != nil {

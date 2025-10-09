@@ -3,9 +3,13 @@ package main
 import (
 	"context"
 
+	"github.com/limes-cloud/manager/internal/middleware"
+
+	"github.com/limes-cloud/manager/internal/domain/service"
+	"github.com/limes-cloud/manager/internal/infra/dbs"
+
 	"github.com/limes-cloud/kratosx/library"
 	"github.com/limes-cloud/kratosx/library/db"
-	"github.com/limes-cloud/manager/internal/domain/hook"
 
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/limes-cloud/kratosx"
@@ -23,8 +27,9 @@ func main() {
 			return errors.ParamsError()
 		}),
 		kratosx.WithLibraryOptions(
-			library.WithDBOptions(db.WithHookScope(hook.New().Hook)),
+			library.WithDBOptions(db.WithHookScope(service.NewScope(dbs.NewScope(), dbs.NewUser()).Hook)),
 		),
+		kratosx.WithMiddleware(middleware.Middleware()...),
 	)
 
 	if err := srv.App().Run(); err != nil {

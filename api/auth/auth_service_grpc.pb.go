@@ -21,13 +21,17 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	Auth_Auth_FullMethodName                = "/manager.api.auth.Auth/Auth"
+	Auth_ApiAuth_FullMethodName             = "/manager.api.auth.Auth/ApiAuth"
 	Auth_GetUserLoginCaptcha_FullMethodName = "/manager.api.auth.Auth/GetUserLoginCaptcha"
 	Auth_UserLogin_FullMethodName           = "/manager.api.auth.Auth/UserLogin"
 	Auth_UserLogout_FullMethodName          = "/manager.api.auth.Auth/UserLogout"
 	Auth_UserRefreshToken_FullMethodName    = "/manager.api.auth.Auth/UserRefreshToken"
 	Auth_ListLoginLog_FullMethodName        = "/manager.api.auth.Auth/ListLoginLog"
+	Auth_ListAuthLog_FullMethodName         = "/manager.api.auth.Auth/ListAuthLog"
 	Auth_OAuthHandler_FullMethodName        = "/manager.api.auth.Auth/OAuthHandler"
+	Auth_ReportOAuthCode_FullMethodName     = "/manager.api.auth.Auth/ReportOAuthCode"
+	Auth_OAuthLogin_FullMethodName          = "/manager.api.auth.Auth/OAuthLogin"
+	Auth_OAuthBind_FullMethodName           = "/manager.api.auth.Auth/OAuthBind"
 )
 
 // AuthClient is the client API for Auth service.
@@ -35,7 +39,7 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type AuthClient interface {
 	// Auth 接口鉴权
-	Auth(ctx context.Context, in *AuthRequest, opts ...grpc.CallOption) (*AuthReply, error)
+	ApiAuth(ctx context.Context, in *ApiAuthRequest, opts ...grpc.CallOption) (*ApiAuthReply, error)
 	// GetUserLoginCaptcha 获取用户登陆验证吗
 	GetUserLoginCaptcha(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetUserLoginCaptchaReply, error)
 	// UserLogin 用户登陆
@@ -46,8 +50,16 @@ type AuthClient interface {
 	UserRefreshToken(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*UserRefreshTokenReply, error)
 	// ListLoginLog 获取用户登陆信息列表
 	ListLoginLog(ctx context.Context, in *ListLoginLogRequest, opts ...grpc.CallOption) (*ListLoginLogReply, error)
+	// ListAuthLog 获取用户登陆信息列表
+	ListAuthLog(ctx context.Context, in *ListAuthLogRequest, opts ...grpc.CallOption) (*ListAuthLogReply, error)
 	// OAuthHandler 渠道授权处理
 	OAuthHandler(ctx context.Context, in *OAuthHandlerRequest, opts ...grpc.CallOption) (*OAuthHandlerReply, error)
+	// ReportOAuthCode 上报授权信息
+	ReportOAuthCode(ctx context.Context, in *ReportOAuthCodeRequest, opts ...grpc.CallOption) (*ReportOAuthCodeReply, error)
+	// OAuthLogin 三方授权登陆
+	OAuthLogin(ctx context.Context, in *OAuthLoginRequest, opts ...grpc.CallOption) (*OAuthLoginReply, error)
+	// OAuthBind 三方授权绑定
+	OAuthBind(ctx context.Context, in *OAuthBindRequest, opts ...grpc.CallOption) (*OAuthBindReply, error)
 }
 
 type authClient struct {
@@ -58,9 +70,9 @@ func NewAuthClient(cc grpc.ClientConnInterface) AuthClient {
 	return &authClient{cc}
 }
 
-func (c *authClient) Auth(ctx context.Context, in *AuthRequest, opts ...grpc.CallOption) (*AuthReply, error) {
-	out := new(AuthReply)
-	err := c.cc.Invoke(ctx, Auth_Auth_FullMethodName, in, out, opts...)
+func (c *authClient) ApiAuth(ctx context.Context, in *ApiAuthRequest, opts ...grpc.CallOption) (*ApiAuthReply, error) {
+	out := new(ApiAuthReply)
+	err := c.cc.Invoke(ctx, Auth_ApiAuth_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -112,9 +124,45 @@ func (c *authClient) ListLoginLog(ctx context.Context, in *ListLoginLogRequest, 
 	return out, nil
 }
 
+func (c *authClient) ListAuthLog(ctx context.Context, in *ListAuthLogRequest, opts ...grpc.CallOption) (*ListAuthLogReply, error) {
+	out := new(ListAuthLogReply)
+	err := c.cc.Invoke(ctx, Auth_ListAuthLog_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *authClient) OAuthHandler(ctx context.Context, in *OAuthHandlerRequest, opts ...grpc.CallOption) (*OAuthHandlerReply, error) {
 	out := new(OAuthHandlerReply)
 	err := c.cc.Invoke(ctx, Auth_OAuthHandler_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *authClient) ReportOAuthCode(ctx context.Context, in *ReportOAuthCodeRequest, opts ...grpc.CallOption) (*ReportOAuthCodeReply, error) {
+	out := new(ReportOAuthCodeReply)
+	err := c.cc.Invoke(ctx, Auth_ReportOAuthCode_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *authClient) OAuthLogin(ctx context.Context, in *OAuthLoginRequest, opts ...grpc.CallOption) (*OAuthLoginReply, error) {
+	out := new(OAuthLoginReply)
+	err := c.cc.Invoke(ctx, Auth_OAuthLogin_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *authClient) OAuthBind(ctx context.Context, in *OAuthBindRequest, opts ...grpc.CallOption) (*OAuthBindReply, error) {
+	out := new(OAuthBindReply)
+	err := c.cc.Invoke(ctx, Auth_OAuthBind_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -126,7 +174,7 @@ func (c *authClient) OAuthHandler(ctx context.Context, in *OAuthHandlerRequest, 
 // for forward compatibility
 type AuthServer interface {
 	// Auth 接口鉴权
-	Auth(context.Context, *AuthRequest) (*AuthReply, error)
+	ApiAuth(context.Context, *ApiAuthRequest) (*ApiAuthReply, error)
 	// GetUserLoginCaptcha 获取用户登陆验证吗
 	GetUserLoginCaptcha(context.Context, *emptypb.Empty) (*GetUserLoginCaptchaReply, error)
 	// UserLogin 用户登陆
@@ -137,16 +185,24 @@ type AuthServer interface {
 	UserRefreshToken(context.Context, *emptypb.Empty) (*UserRefreshTokenReply, error)
 	// ListLoginLog 获取用户登陆信息列表
 	ListLoginLog(context.Context, *ListLoginLogRequest) (*ListLoginLogReply, error)
+	// ListAuthLog 获取用户登陆信息列表
+	ListAuthLog(context.Context, *ListAuthLogRequest) (*ListAuthLogReply, error)
 	// OAuthHandler 渠道授权处理
 	OAuthHandler(context.Context, *OAuthHandlerRequest) (*OAuthHandlerReply, error)
+	// ReportOAuthCode 上报授权信息
+	ReportOAuthCode(context.Context, *ReportOAuthCodeRequest) (*ReportOAuthCodeReply, error)
+	// OAuthLogin 三方授权登陆
+	OAuthLogin(context.Context, *OAuthLoginRequest) (*OAuthLoginReply, error)
+	// OAuthBind 三方授权绑定
+	OAuthBind(context.Context, *OAuthBindRequest) (*OAuthBindReply, error)
 	mustEmbedUnimplementedAuthServer()
 }
 
 // UnimplementedAuthServer must be embedded to have forward compatible implementations.
 type UnimplementedAuthServer struct{}
 
-func (UnimplementedAuthServer) Auth(context.Context, *AuthRequest) (*AuthReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Auth not implemented")
+func (UnimplementedAuthServer) ApiAuth(context.Context, *ApiAuthRequest) (*ApiAuthReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ApiAuth not implemented")
 }
 
 func (UnimplementedAuthServer) GetUserLoginCaptcha(context.Context, *emptypb.Empty) (*GetUserLoginCaptchaReply, error) {
@@ -169,8 +225,24 @@ func (UnimplementedAuthServer) ListLoginLog(context.Context, *ListLoginLogReques
 	return nil, status.Errorf(codes.Unimplemented, "method ListLoginLog not implemented")
 }
 
+func (UnimplementedAuthServer) ListAuthLog(context.Context, *ListAuthLogRequest) (*ListAuthLogReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListAuthLog not implemented")
+}
+
 func (UnimplementedAuthServer) OAuthHandler(context.Context, *OAuthHandlerRequest) (*OAuthHandlerReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method OAuthHandler not implemented")
+}
+
+func (UnimplementedAuthServer) ReportOAuthCode(context.Context, *ReportOAuthCodeRequest) (*ReportOAuthCodeReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ReportOAuthCode not implemented")
+}
+
+func (UnimplementedAuthServer) OAuthLogin(context.Context, *OAuthLoginRequest) (*OAuthLoginReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method OAuthLogin not implemented")
+}
+
+func (UnimplementedAuthServer) OAuthBind(context.Context, *OAuthBindRequest) (*OAuthBindReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method OAuthBind not implemented")
 }
 func (UnimplementedAuthServer) mustEmbedUnimplementedAuthServer() {}
 
@@ -185,20 +257,20 @@ func RegisterAuthServer(s grpc.ServiceRegistrar, srv AuthServer) {
 	s.RegisterService(&Auth_ServiceDesc, srv)
 }
 
-func _Auth_Auth_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(AuthRequest)
+func _Auth_ApiAuth_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ApiAuthRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AuthServer).Auth(ctx, in)
+		return srv.(AuthServer).ApiAuth(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Auth_Auth_FullMethodName,
+		FullMethod: Auth_ApiAuth_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuthServer).Auth(ctx, req.(*AuthRequest))
+		return srv.(AuthServer).ApiAuth(ctx, req.(*ApiAuthRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -293,6 +365,24 @@ func _Auth_ListLoginLog_Handler(srv interface{}, ctx context.Context, dec func(i
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Auth_ListAuthLog_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListAuthLogRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServer).ListAuthLog(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Auth_ListAuthLog_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServer).ListAuthLog(ctx, req.(*ListAuthLogRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Auth_OAuthHandler_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(OAuthHandlerRequest)
 	if err := dec(in); err != nil {
@@ -311,6 +401,60 @@ func _Auth_OAuthHandler_Handler(srv interface{}, ctx context.Context, dec func(i
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Auth_ReportOAuthCode_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ReportOAuthCodeRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServer).ReportOAuthCode(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Auth_ReportOAuthCode_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServer).ReportOAuthCode(ctx, req.(*ReportOAuthCodeRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Auth_OAuthLogin_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(OAuthLoginRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServer).OAuthLogin(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Auth_OAuthLogin_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServer).OAuthLogin(ctx, req.(*OAuthLoginRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Auth_OAuthBind_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(OAuthBindRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServer).OAuthBind(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Auth_OAuthBind_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServer).OAuthBind(ctx, req.(*OAuthBindRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Auth_ServiceDesc is the grpc.ServiceDesc for Auth service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -319,8 +463,8 @@ var Auth_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*AuthServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "Auth",
-			Handler:    _Auth_Auth_Handler,
+			MethodName: "ApiAuth",
+			Handler:    _Auth_ApiAuth_Handler,
 		},
 		{
 			MethodName: "GetUserLoginCaptcha",
@@ -343,8 +487,24 @@ var Auth_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Auth_ListLoginLog_Handler,
 		},
 		{
+			MethodName: "ListAuthLog",
+			Handler:    _Auth_ListAuthLog_Handler,
+		},
+		{
 			MethodName: "OAuthHandler",
 			Handler:    _Auth_OAuthHandler_Handler,
+		},
+		{
+			MethodName: "ReportOAuthCode",
+			Handler:    _Auth_ReportOAuthCode_Handler,
+		},
+		{
+			MethodName: "OAuthLogin",
+			Handler:    _Auth_OAuthLogin_Handler,
+		},
+		{
+			MethodName: "OAuthBind",
+			Handler:    _Auth_OAuthBind_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -30,6 +30,7 @@ func init() {
 	register("number", &numberType{})
 	register("phone", &phoneType{})
 	register("string", &stringType{})
+	register("gender", &genderType{})
 }
 
 func (f field) GetType(tp string) Type {

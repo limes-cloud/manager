@@ -32,6 +32,9 @@ func NewUser() *User {
 		srv: service.NewUser(
 			dbs.NewUser(),
 			dbs.NewScope(),
+			dbs.NewApp(),
+			dbs.NewUserinfo(),
+			dbs.NewUserSetting(),
 		),
 	}
 }
@@ -45,10 +48,12 @@ func init() {
 	})
 }
 
-func (app *User) GetCurrentUser(c context.Context, _ *emptypb.Empty) (*user.UserObject, error) {
+func (app *User) GetCurrentUser(c context.Context, req *user.GetCurrentUserRequest) (*user.UserObject, error) {
 	ctx := core.MustContext(c)
 
-	result, err := app.srv.GetCurrentUser(ctx)
+	result, err := app.srv.GetCurrentUser(ctx, &types.GetCurrentUserRequest{
+		App: req.App,
+	})
 	if err != nil {
 		return nil, err
 	}
@@ -59,6 +64,30 @@ func (app *User) GetCurrentUser(c context.Context, _ *emptypb.Empty) (*user.User
 		return nil, errors.TransformError()
 	}
 	return &reply, nil
+}
+
+func (app *User) UpdateCurrentUserSetting(c context.Context, req *user.UpdateCurrentUserSettingRequest) (*emptypb.Empty, error) {
+	ctx := core.MustContext(c)
+	err := app.srv.UpdateCurrentUserSetting(ctx, &types.UpdateCurrentUserSettingRequest{
+		App:     req.App,
+		Setting: req.Setting,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return &emptypb.Empty{}, nil
+}
+
+func (app *User) UpdateCurrentUser(c context.Context, req *user.UpdateCurrentUserRequest) (*emptypb.Empty, error) {
+	ctx := core.MustContext(c)
+	err := app.srv.UpdateCurrentUser(ctx, &types.UpdateCurrentUserRequest{
+		Avatar:   req.GetAvatar(),
+		Nickname: req.GetNickname(),
+	})
+	if err != nil {
+		return nil, err
+	}
+	return &emptypb.Empty{}, nil
 }
 
 // GetUser 获取指定角色信息

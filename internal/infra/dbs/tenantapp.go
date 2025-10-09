@@ -7,8 +7,6 @@ import (
 	"strings"
 	"sync"
 
-	"gorm.io/gorm/clause"
-
 	"github.com/limes-cloud/kratosx/pkg/cache"
 
 	"github.com/limes-cloud/kratosx"
@@ -19,25 +17,29 @@ import (
 )
 
 type TenantApp struct {
-	cache *cache.Cache[string, struct{}]
+	cache     *cache.Cache[string, struct{}]
+	cacheMenu *cache.Cache[string, struct{}]
 }
 
 var (
-	taIns      *TenantApp
-	taOnce     sync.Once
-	taCacheKey = "tenantapp"
+	taIns          *TenantApp
+	taOnce         sync.Once
+	taCacheKey     = "tenantapp"
+	taMenuCacheKey = "tenantappmenu"
 )
 
 func NewTenantApp() *TenantApp {
 	taOnce.Do(func() {
-		// 监听变更时间
-		ctx := core.MustContext(context.Background(), kratosx.WithTrace("cache", "tenant app"))
-
 		taIns = &TenantApp{}
+		ctx := core.MustContext(
+			context.Background(),
+			kratosx.WithTrace("cache", "tenant app"),
+			kratosx.WithSkipDBHook(),
+		)
 
-		// 缓存相关操作
-		{
-			lc := cache.NewCache[string, struct{}](
+		ctx.BeforeStart("load cache tenant app", func() {
+			taIns.cache = cache.NewCacheAndInit[string, struct{}](
+				ctx,
 				ctx.Redis(),
 				taCacheKey,
 				cache.HookLoad(func() (map[string]struct{}, error) {
@@ -45,17 +47,15 @@ func NewTenantApp() *TenantApp {
 				}),
 			)
 
-			// 加载缓存,加载失败则直接报错，避免线上隐式错误。
-			if err := lc.Init(ctx); err != nil {
-				panic(err)
-			}
-			// 监听缓存变更
-			go lc.Subscribe(ctx)
-			// 定期修复缓存
-			go lc.Repair(ctx)
-
-			taIns.cache = lc
-		}
+			taIns.cacheMenu = cache.NewCacheAndInit[string, struct{}](
+				ctx,
+				ctx.Redis(),
+				taMenuCacheKey,
+				cache.HookLoad(func() (map[string]struct{}, error) {
+					return taIns.loadMenu(ctx)
+				}),
+			)
+		})
 	})
 	return taIns
 }
@@ -129,30 +129,45 @@ func (ta *TenantApp) DeleteTenantApp(ctx core.Context, tenantId uint32, appId ui
 	})
 }
 
-func (ta *TenantApp) GetTenantAppMenuIds(ctx core.Context, tid, aid uint32) ([]uint32, error) {
+func (ta *TenantApp) GetTenantAppMenuIds(ctx core.Context, tid uint32, aid uint32) ([]uint32, error) {
 	var menuIds []uint32
-	if err := ctx.DB().
-		Model(&entity.TenantAppMenu{}).
-		Where("tenant_id=? AND app_id=?", tid, aid).
-		Pluck("menu_id", &menuIds).Error; err != nil {
-		return nil, err
+	return menuIds, ctx.DB().Model(entity.TenantAppMenu{}).
+		Where("tenant_id = ? and app_id = ?", tid, aid).
+		Pluck("menu_id", &menuIds).Error
+}
+
+func (ta *TenantApp) GetTenantMenuIds(tid uint32) []uint32 {
+	var (
+		menuIds = make([]uint32, 0)
+		keys    = ta.cacheMenu.Keys()
+	)
+	for _, key := range keys {
+		ot, _, om := ta.splitMenuCacheKey(key)
+		if ot == tid {
+			menuIds = append(menuIds, om)
+		}
 	}
-	return menuIds, nil
+
+	return menuIds
 }
 
 func (ta *TenantApp) CreateTenantAppMenuIds(ctx core.Context, tid, aid uint32, mids []uint32) error {
-	var list []entity.TenantAppMenu
+	var (
+		list []entity.TenantAppMenu
+		op   = ta.cacheMenu.OP(ctx)
+	)
 	for _, mid := range mids {
 		list = append(list, entity.TenantAppMenu{
 			TenantId: tid,
 			AppId:    aid,
 			MenuId:   mid,
 		})
+		op = op.Put(ta.getMenuCacheKey(tid, aid, mid), struct{}{})
 	}
-	if err := ctx.DB().Clauses(clause.OnConflict{UpdateAll: true}).Create(&list).Error; err != nil {
+	if err := ctx.DB().Create(&list).Error; err != nil {
 		return err
 	}
-	return nil
+	return op.Do()
 }
 
 func (ta *TenantApp) DeleteTenantAppMenuIds(ctx core.Context, tid, aid uint32, mids []uint32) error {
@@ -161,7 +176,11 @@ func (ta *TenantApp) DeleteTenantAppMenuIds(ctx core.Context, tid, aid uint32, m
 		Delete(&entity.TenantAppMenu{}).Error; err != nil {
 		return err
 	}
-	return nil
+	op := ta.cacheMenu.OP(ctx)
+	for _, mid := range mids {
+		op = op.Delete(ta.getMenuCacheKey(tid, aid, mid))
+	}
+	return op.Do()
 }
 
 // load 加载全量的数据
@@ -179,6 +198,26 @@ func (ta *TenantApp) load(ctx core.Context) (map[string]struct{}, error) {
 	return bucket, nil
 }
 
+// loadMenu 加载菜单的数据
+func (ta *TenantApp) loadMenu(ctx core.Context) (map[string]struct{}, error) {
+	var list []*entity.TenantAppMenu
+	if err := ctx.DB().Model(&entity.TenantAppMenu{}).Find(&list).Error; err != nil {
+		return nil, err
+	}
+
+	bucket := map[string]struct{}{}
+	for _, item := range list {
+		bucket[ta.getMenuCacheKey(item.TenantId, item.AppId, item.MenuId)] = struct{}{}
+	}
+
+	return bucket, nil
+}
+
+// getCacheKey 获取缓存的key
+func (ta *TenantApp) getMenuCacheKey(tid uint32, aid uint32, mid uint32) string {
+	return fmt.Sprintf("%d:%d:%d", tid, aid, mid)
+}
+
 // getCacheKey 获取缓存的key
 func (ta *TenantApp) getCacheKey(tid uint32, aid uint32) string {
 	return fmt.Sprintf("%d:%d", tid, aid)
@@ -189,6 +228,18 @@ func (ta *TenantApp) HasAppScope(tid uint32, aid uint32) bool {
 	key := ta.getCacheKey(tid, aid)
 	_, ok := ta.cache.Get(key)
 	return ok
+}
+
+// splitCacheKey 通过key获取id
+func (ta *TenantApp) splitMenuCacheKey(key string) (uint32, uint32, uint32) {
+	arr := strings.Split(key, ":")
+	if len(arr) != 3 {
+		return 0, 0, 0
+	}
+	tid, _ := strconv.Atoi(arr[0])
+	aid, _ := strconv.Atoi(arr[1])
+	mid, _ := strconv.Atoi(arr[2])
+	return uint32(tid), uint32(aid), uint32(mid)
 }
 
 // splitCacheKey 通过key获取id
@@ -204,7 +255,7 @@ func (ta *TenantApp) splitCacheKey(key string) (uint32, uint32) {
 
 func (ta *TenantApp) GetAppIds(tid uint32) []uint32 {
 	var (
-		ids  []uint32
+		ids  = make([]uint32, 0)
 		keys = ta.cache.Keys()
 	)
 

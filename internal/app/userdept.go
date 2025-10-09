@@ -28,6 +28,7 @@ func NewUserDept() *UserDept {
 		srv: service.NewUserDept(
 			dbs.NewUserDept(),
 			dbs.NewScope(),
+			dbs.NewUser(),
 		),
 	}
 }

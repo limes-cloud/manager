@@ -12,6 +12,7 @@ message ListCurrentMenuRequest {
   optional uint32 appId = 1[(validate.rules).uint32 = {gte: 1}];
   bool filterRoot= 2;
   bool filterBaseApi = 3;
+  bool filterTenant = 4;
 }
 
 

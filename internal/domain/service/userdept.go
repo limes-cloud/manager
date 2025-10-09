@@ -17,22 +17,24 @@ type UserDept struct {
 func NewUserDept(
 	repo repository.UserDept,
 	scope repository.Scope,
+	user repository.User,
 ) *UserDept {
 	return &UserDept{
 		repo:  repo,
 		scope: scope,
+		user:  user,
 	}
 }
 
 // ListUserDept 获取指定的部门角色列表
 func (rm *UserDept) ListUserDept(ctx core.Context, req *types.ListUserDeptRequest) ([]*entity.Dept, uint32, error) {
-	if !rm.scope.IsSuperAdmin(ctx) {
-		// 获取当前有权限的角色
-		all, ids := rm.scope.DeptScopes(ctx, entity.UserEntityName)
-		if !all {
-			req.InDeptIds = ids
-		}
-	}
+	//if !ctx.IsSuperAdmin() {
+	//	// 获取当前有权限的角色
+	//	all, ids := rm.scope.DeptScopes(ctx, entity.UserEntityName)
+	//	if !all {
+	//		req.InDeptIds = ids
+	//	}
+	//}
 
 	// 获取当前角色有权限的菜单ID
 	list, total, err := rm.repo.ListUserDept(ctx, req)
@@ -46,13 +48,13 @@ func (rm *UserDept) ListUserDept(ctx core.Context, req *types.ListUserDeptReques
 
 // ListDeptUser 获取指定角色的所有部门列表
 func (rm *UserDept) ListDeptUser(ctx core.Context, req *types.ListDeptUserRequest) ([]*entity.User, uint32, error) {
-	if !rm.scope.IsSuperAdmin(ctx) {
-		// 获取当前有权限的角色
-		has := rm.scope.HasDeptScope(ctx, entity.UserEntityName, req.DeptId)
-		if !has {
-			return nil, 0, errors.DeptScopeError()
-		}
-	}
+	//if !ctx.IsSuperAdmin() {
+	//	// 获取当前有权限的角色
+	//	has := rm.scope.HasDeptScope(ctx, entity.UserEntityName, req.DeptId)
+	//	if !has {
+	//		return nil, 0, errors.DeptScopeError()
+	//	}
+	//}
 
 	// 获取菜单对应的角色列表
 	list, total, err := rm.repo.ListDeptUser(ctx, req)
@@ -64,23 +66,23 @@ func (rm *UserDept) ListDeptUser(ctx core.Context, req *types.ListDeptUserReques
 
 // CreateUserDept 创建指定部门的角色
 func (rm *UserDept) CreateUserDept(ctx core.Context, req *entity.UserDept) error {
-	if !rm.scope.IsSuperAdmin(ctx) {
-		// 获取当前有权限的角色
-		has := rm.scope.HasDeptScope(ctx, entity.UserEntityName, req.DeptId)
-		if !has {
-			return errors.DeptScopeError()
-		}
-
-		// 获取当前用户的部门
-		user, err := rm.user.GetUser(ctx, req.UserId)
-		if err != nil {
-			return errors.GetError()
-		}
-		has = rm.scope.HasDeptScope(ctx, entity.UserEntityName, user.DeptId)
-		if !has {
-			return errors.DeptScopeError()
-		}
-	}
+	//if !ctx.IsSuperAdmin() {
+	//	// 获取当前有权限的角色
+	//	has := rm.scope.HasDeptScope(ctx, entity.UserEntityName, req.DeptId)
+	//	if !has {
+	//		return errors.DeptScopeError()
+	//	}
+	//
+	//	// 获取当前用户的部门
+	//	user, err := rm.user.GetUser(ctx, req.UserId)
+	//	if err != nil {
+	//		return errors.GetError()
+	//	}
+	//	has = rm.scope.HasDeptScope(ctx, entity.UserEntityName, user.DeptId)
+	//	if !has {
+	//		return errors.DeptScopeError()
+	//	}
+	//}
 
 	if err := rm.repo.CreateUserDept(ctx, req); err != nil {
 		return errors.CreateError()
@@ -89,23 +91,23 @@ func (rm *UserDept) CreateUserDept(ctx core.Context, req *entity.UserDept) error
 }
 
 func (rm *UserDept) DeleteUserDept(ctx core.Context, req *entity.UserDept) error {
-	if !rm.scope.IsSuperAdmin(ctx) {
-		// 获取当前有权限的角色
-		has := rm.scope.HasDeptScope(ctx, entity.UserEntityName, req.DeptId)
-		if !has {
-			return errors.DeptScopeError()
-		}
-
-		// 获取当前用户的部门
-		user, err := rm.user.GetUser(ctx, req.UserId)
-		if err != nil {
-			return errors.GetError()
-		}
-		has = rm.scope.HasDeptScope(ctx, entity.UserEntityName, user.DeptId)
-		if !has {
-			return errors.DeptScopeError()
-		}
-	}
+	//if !ctx.IsSuperAdmin() {
+	//	// 获取当前有权限的角色
+	//	has := rm.scope.HasDeptScope(ctx, entity.UserEntityName, req.DeptId)
+	//	if !has {
+	//		return errors.DeptScopeError()
+	//	}
+	//
+	//	// 获取当前用户的部门
+	//	user, err := rm.user.GetUser(ctx, req.UserId)
+	//	if err != nil {
+	//		return errors.GetError()
+	//	}
+	//	has = rm.scope.HasDeptScope(ctx, entity.UserEntityName, user.DeptId)
+	//	if !has {
+	//		return errors.DeptScopeError()
+	//	}
+	//}
 
 	if err := rm.repo.DeleteUserDept(ctx, req); err != nil {
 		return errors.DeleteError()

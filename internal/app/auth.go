@@ -3,6 +3,10 @@ package app
 import (
 	"context"
 
+	"github.com/limes-cloud/manager/internal/infra/oauth"
+
+	"github.com/limes-cloud/kratosx"
+
 	"github.com/golang/protobuf/ptypes/empty"
 
 	"github.com/limes-cloud/kratosx/pkg/value"
@@ -29,6 +33,10 @@ func NewAuth() *Auth {
 			dbs.NewAuth(),
 			dbs.NewUser(),
 			apis.NewAddress(),
+			oauth.New(),
+			dbs.NewMenu(),
+			dbs.NewScope(),
+			dbs.NewTenant(),
 		),
 	}
 }
@@ -42,25 +50,8 @@ func init() {
 }
 
 // Auth 接口鉴权
-func (a *Auth) Auth(c context.Context, req *auth.AuthRequest) (*auth.AuthReply, error) {
-	//res, err := a.srv.Auth(core.MustContext(c), &types.AuthRequest{
-	//	Path:   req.Path,
-	//	Method: req.Method,
-	//})
-	//if err != nil {
-	//	return nil, err
-	//}
-	//if res == nil {
-	//	return &auth.AuthReply{}, nil
-	//}
-
-	return &auth.AuthReply{
-		// UserId:        res.UserId,
-		// Username:      res.UserName,
-		// RoleIds:       res.RoleIds,
-		// DepartmentIds: res.DepartmentIds,
-		// JobIds:        res.JobIds,
-	}, nil
+func (a *Auth) ApiAuth(c context.Context, req *auth.ApiAuthRequest) (*auth.ApiAuthReply, error) {
+	return a.srv.ApiAuth(core.MustContext(c), req)
 }
 
 func (a *Auth) GetUserLoginCaptcha(c context.Context, _ *empty.Empty) (*auth.GetUserLoginCaptchaReply, error) {
@@ -78,7 +69,7 @@ func (a *Auth) GetUserLoginCaptcha(c context.Context, _ *empty.Empty) (*auth.Get
 func (a *Auth) UserLogin(c context.Context, req *auth.UserLoginRequest) (*auth.UserLoginReply, error) {
 	var (
 		in  types.UserLoginRequest
-		ctx = core.MustContext(c)
+		ctx = core.MustContext(c, kratosx.WithSkipDBHook())
 	)
 
 	if err := value.Transform(req, &in); err != nil {
@@ -212,10 +203,15 @@ func (a *Auth) ListAuthLog(c context.Context, req *auth.ListAuthLogRequest) (*au
 		return nil, err
 	}
 	reply := &auth.ListAuthLogReply{Total: total}
-
-	if err := value.Transform(list, &reply.List); err != nil {
-		ctx.Logger().Warnw("msg", "resp transform err", "err", err.Error())
-		return nil, errors.TransformError()
+	for _, v := range list {
+		reply.List = append(reply.List, &auth.ListAuthLogReply_Log{
+			Username:  v.User.Username,
+			Api:       v.Menu.GetApi(),
+			Method:    v.Menu.GetMethod(),
+			Name:      v.Menu.Title,
+			CreatedAt: uint32(v.CreatedAt),
+		})
 	}
+
 	return reply, nil
 }

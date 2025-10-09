@@ -5,7 +5,7 @@ import (
 
 	"github.com/limes-cloud/manager/api/errors"
 
-	"github.com/limes-cloud/manager/internal/domain/middleware/auth"
+	"github.com/limes-cloud/manager/internal/middleware/auth"
 
 	"github.com/limes-cloud/kratosx"
 )
@@ -24,20 +24,25 @@ func (Context) Config() *Conf {
 	return conf
 }
 
+func (c Context) HasAuth() bool {
+	return auth.HasAuth(c.Context)
+}
+
 func (c Context) Auth() *auth.Info {
 	info := auth.GetAuth(c.Context)
 	if info == nil {
-		panic(errors.ForbiddenError("用户未登录"))
+		c.Exit(errors.NotLoginError())
 	}
 	return info
 }
 
 func (c Context) IsSuperAdmin() bool {
 	info := auth.GetAuth(c.Context)
-	if info == nil {
-		panic(errors.ForbiddenError("用户未登录"))
-	}
-	return info.UserId == 1
+	return info != nil && info.UserId == 1
+}
+
+func (c Context) Clone() Context {
+	return MustContext(context.WithoutCancel(c.Context))
 }
 
 func MustContext(ctx context.Context, opts ...kratosx.ContextOptionFunc) Context {

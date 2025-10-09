@@ -3,7 +3,7 @@ package auth
 import (
 	"context"
 
-	"github.com/limes-cloud/manager/api/errors"
+	"github.com/go-kratos/kratos/v2/errors"
 
 	"github.com/go-kratos/kratos/v2/middleware"
 	"github.com/limes-cloud/kratosx"
@@ -11,6 +11,9 @@ import (
 
 const (
 	metaKey = "x-md-global-auth"
+
+	reason    string = "FORBIDDEN"
+	noSupport string = "ONLY_SUPPORT_HTTP"
 )
 
 type Info struct {
@@ -30,7 +33,9 @@ func (a Info) ToMap() map[string]any {
 	}
 }
 
-type key struct{}
+type (
+	key struct{}
+)
 
 func Parse() middleware.Middleware {
 	return func(handler middleware.Handler) middleware.Handler {
@@ -44,7 +49,7 @@ func Parse() middleware.Middleware {
 			// 解析token的信息
 			info := &Info{}
 			if err := kctx.JWT().ParseByToken(token, info); err != nil {
-				return nil, errors.SystemError(err)
+				return nil, errors.Forbidden(reason, err.Error())
 			}
 			ctx = context.WithValue(ctx, key{}, info)
 			return handler(ctx, req)
@@ -60,7 +65,7 @@ func GetAuth(ctx context.Context) *Info {
 	return val
 }
 
-func HasLogin(ctx context.Context) bool {
+func HasAuth(ctx context.Context) bool {
 	_, ok := ctx.Value(key{}).(*Info)
 	return ok
 }

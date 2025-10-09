@@ -52,7 +52,7 @@ func (u *Role) GetRole(ctx core.Context, req *types.GetRoleRequest) (*entity.Rol
 // ListCurrentRole 获取当前角色信息列表树
 func (u *Role) ListCurrentRole(ctx core.Context, req *types.ListRoleRequest) ([]*entity.Role, error) {
 	// 获取角色权限
-	if !u.scope.IsSuperAdmin(ctx) {
+	if !ctx.IsSuperAdmin() {
 		req.InIds = u.scope.RoleScopes(ctx)
 	}
 	return u.ListRole(ctx, req)
@@ -70,7 +70,7 @@ func (u *Role) ListRole(ctx core.Context, req *types.ListRoleRequest) ([]*entity
 
 // CreateRole 创建角色
 func (u *Role) CreateRole(ctx core.Context, req *entity.Role) (uint32, error) {
-	if !u.scope.IsSuperAdmin(ctx) {
+	if !ctx.IsSuperAdmin() {
 		// 判断是否具有角色权限
 		if !u.scope.HasRoleScope(ctx, req.ParentId) {
 			return 0, errors.RoleScopeError()
@@ -88,7 +88,7 @@ func (u *Role) CreateRole(ctx core.Context, req *entity.Role) (uint32, error) {
 
 // UpdateRole 更新角色
 func (u *Role) UpdateRole(ctx core.Context, req *entity.Role) error {
-	if !u.scope.IsSuperAdmin(ctx) {
+	if !ctx.IsSuperAdmin() {
 		// 获取角色信息
 		old, err := u.repo.GetRole(ctx, req.Id)
 		if err != nil {
@@ -124,7 +124,7 @@ func (u *Role) UpdateRole(ctx core.Context, req *entity.Role) error {
 
 // DeleteRole 删除角色
 func (u *Role) DeleteRole(ctx core.Context, id uint32) error {
-	if !u.scope.IsSuperAdmin(ctx) {
+	if !ctx.IsSuperAdmin() {
 		// 不能修改自己的角色
 		if lo.Contains(u.scope.RoleIds(ctx), id) {
 			return errors.UpdateError("不能删除当前用户所属角色")

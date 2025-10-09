@@ -10,14 +10,16 @@ option java_package = "manager.api.auth";
 import "validate/validate.proto";
 
 
-message AuthRequest{
+message ApiAuthRequest{
   string path = 1[(validate.rules).string = {min_len: 1}];
   string method = 2[(validate.rules).string = {in: ["GET","POST","PUT","DELETE"]}];
 }
 
-message AuthReply{
+message ApiAuthReply{
   uint32 userId = 1;
-  string username = 2;
+  uint32 deptId = 2;
+  uint32 tenantId = 3;
+  string username = 4;
 }
 
 
@@ -26,6 +28,7 @@ message UserLoginRequest {
   string password = 2[(validate.rules).string = {min_len:4}];
   string captchaId = 3[(validate.rules).string = {min_len:1}];
   string captcha = 4[(validate.rules).string = {min_len:1}];
+  string tenant = 5[(validate.rules).string = {min_len:1}];
 }
 
 message UserLoginReply{
@@ -99,7 +102,10 @@ message ListLoginLogRequest {
   repeated int64 createdAts = 4;
 }
 
-message ListLoginLogReply { // fixed code
+message ListLoginLogReply {
+  message User{
+    string username = 1;
+  }
   message Log {
     string username = 1;
     string type = 2;
@@ -110,6 +116,7 @@ message ListLoginLogReply { // fixed code
     int32 code = 7;
     string description = 8;
     uint32 createdAt = 9;
+    User user = 10;
   }
 
   uint32 total = 1;
@@ -127,14 +134,10 @@ message ListAuthLogRequest {
 message ListAuthLogReply { // fixed code
   message Log {
     string username = 1;
-    string type = 2;
-    string ip = 3;
-    string address = 4;
-    string browser = 5;
-    string device = 6;
-    int32 method = 7;
-    string path = 8;
-    uint32 createdAt = 9;
+    string api = 2;
+    string method = 3;
+    string name = 4;
+    uint32 createdAt = 5;
   }
 
   uint32 total = 1;

@@ -6,6 +6,73 @@ info:
     title: User API
     version: 0.0.1
 paths:
+    /manager/api/v1/current/user:
+        get:
+            tags:
+                - User
+            description: GetCurrentUser 获取当前用户信息
+            operationId: User_GetCurrentUser
+            parameters:
+                - name: app
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/UserObject'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        put:
+            tags:
+                - User
+            description: UpdateCurrentUserSetting 更新当前用户设置
+            operationId: User_UpdateCurrentUser
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/UpdateCurrentUserRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /manager/api/v1/current/user/setting:
+        put:
+            tags:
+                - User
+            description: UpdateCurrentUserSetting 更新当前用户设置
+            operationId: User_UpdateCurrentUserSetting
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/UpdateCurrentUserSettingRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
     /manager/api/v1/user:
         get:
             tags:
@@ -19,6 +86,10 @@ paths:
                     type: integer
                     format: uint32
                 - name: username
+                  in: query
+                  schema:
+                    type: string
+                - name: app
                   in: query
                   schema:
                     type: string
@@ -101,25 +172,6 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/DeleteUserReply'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/Status'
-    /manager/api/v1/user/current:
-        get:
-            tags:
-                - User
-            description: GetCurrentUser 获取当前用户信息
-            operationId: User_GetCurrentUser
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/UserObject'
                 default:
                     description: Default error response
                     content:
@@ -240,6 +292,13 @@ components:
                     description: The type of the serialized message.
             additionalProperties: true
             description: Contains an arbitrary serialized message along with a @type that describes the type of the serialized message.
+        Info:
+            type: object
+            properties:
+                field:
+                    type: string
+                value:
+                    type: string
         ListUserReply:
             type: object
             properties:
@@ -280,6 +339,20 @@ components:
                         $ref: '#/components/schemas/GoogleProtobufAny'
                     description: A list of messages that carry the error details.  There is a common set of message types for APIs to use.
             description: 'The `Status` type defines a logical error model that is suitable for different programming environments, including REST APIs and RPC APIs. It is used by [gRPC](https://github.com/grpc). Each `Status` message contains three pieces of data: error code, error message, and error details. You can find out more about this error model and how to work with it in the [API Design Guide](https://cloud.google.com/apis/design/errors).'
+        UpdateCurrentUserRequest:
+            type: object
+            properties:
+                nickname:
+                    type: string
+                avatar:
+                    type: string
+        UpdateCurrentUserSettingRequest:
+            type: object
+            properties:
+                app:
+                    type: string
+                setting:
+                    type: string
         UpdateUserReply:
             type: object
             properties: {}
@@ -328,6 +401,12 @@ components:
                 jobId:
                     type: integer
                     format: uint32
+                setting:
+                    type: string
+                infos:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/Info'
                 dept:
                     $ref: '#/components/schemas/Result'
                 job:

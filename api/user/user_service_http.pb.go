@@ -24,13 +24,15 @@ var (
 const _ = http.SupportPackageIsVersion1
 
 const (
-	OperationUserCreateUser     = "/manager.api.user.User/CreateUser"
-	OperationUserDeleteUser     = "/manager.api.user.User/DeleteUser"
-	OperationUserGetCurrentUser = "/manager.api.user.User/GetCurrentUser"
-	OperationUserGetUser        = "/manager.api.user.User/GetUser"
-	OperationUserListUser       = "/manager.api.user.User/ListUser"
-	OperationUserResetPassword  = "/manager.api.user.User/ResetPassword"
-	OperationUserUpdateUser     = "/manager.api.user.User/UpdateUser"
+	OperationUserCreateUser               = "/manager.api.user.User/CreateUser"
+	OperationUserDeleteUser               = "/manager.api.user.User/DeleteUser"
+	OperationUserGetCurrentUser           = "/manager.api.user.User/GetCurrentUser"
+	OperationUserGetUser                  = "/manager.api.user.User/GetUser"
+	OperationUserListUser                 = "/manager.api.user.User/ListUser"
+	OperationUserResetPassword            = "/manager.api.user.User/ResetPassword"
+	OperationUserUpdateCurrentUser        = "/manager.api.user.User/UpdateCurrentUser"
+	OperationUserUpdateCurrentUserSetting = "/manager.api.user.User/UpdateCurrentUserSetting"
+	OperationUserUpdateUser               = "/manager.api.user.User/UpdateUser"
 )
 
 type UserHTTPServer interface {
@@ -39,20 +41,26 @@ type UserHTTPServer interface {
 	// DeleteUser DeleteUser 删除角色信息
 	DeleteUser(context.Context, *DeleteUserRequest) (*DeleteUserReply, error)
 	// GetCurrentUser GetCurrentUser 获取当前用户信息
-	GetCurrentUser(context.Context, *emptypb.Empty) (*UserObject, error)
+	GetCurrentUser(context.Context, *GetCurrentUserRequest) (*UserObject, error)
 	// GetUser GetUser 获取角色信息
 	GetUser(context.Context, *GetUserRequest) (*UserObject, error)
 	// ListUser ListUser 获取角色信息列表
 	ListUser(context.Context, *ListUserRequest) (*ListUserReply, error)
 	// ResetPassword UpdateUser 更新角色信息
 	ResetPassword(context.Context, *ResetPasswordRequest) (*emptypb.Empty, error)
+	// UpdateCurrentUser UpdateCurrentUserSetting 更新当前用户设置
+	UpdateCurrentUser(context.Context, *UpdateCurrentUserRequest) (*emptypb.Empty, error)
+	// UpdateCurrentUserSetting UpdateCurrentUserSetting 更新当前用户设置
+	UpdateCurrentUserSetting(context.Context, *UpdateCurrentUserSettingRequest) (*emptypb.Empty, error)
 	// UpdateUser UpdateUser 更新角色信息
 	UpdateUser(context.Context, *UpdateUserRequest) (*UpdateUserReply, error)
 }
 
 func RegisterUserHTTPServer(s *http.Server, srv UserHTTPServer) {
 	r := s.Route("/")
-	r.GET("/manager/api/v1/user/current", _User_GetCurrentUser0_HTTP_Handler(srv))
+	r.GET("/manager/api/v1/current/user", _User_GetCurrentUser0_HTTP_Handler(srv))
+	r.PUT("/manager/api/v1/current/user/setting", _User_UpdateCurrentUserSetting0_HTTP_Handler(srv))
+	r.PUT("/manager/api/v1/current/user", _User_UpdateCurrentUser0_HTTP_Handler(srv))
 	r.GET("/manager/api/v1/user", _User_GetUser0_HTTP_Handler(srv))
 	r.GET("/manager/api/v1/users", _User_ListUser0_HTTP_Handler(srv))
 	r.POST("/manager/api/v1/user", _User_CreateUser0_HTTP_Handler(srv))
@@ -63,19 +71,63 @@ func RegisterUserHTTPServer(s *http.Server, srv UserHTTPServer) {
 
 func _User_GetCurrentUser0_HTTP_Handler(srv UserHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in emptypb.Empty
+		var in GetCurrentUserRequest
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
 		http.SetOperation(ctx, OperationUserGetCurrentUser)
 		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
-			return srv.GetCurrentUser(ctx, req.(*emptypb.Empty))
+			return srv.GetCurrentUser(ctx, req.(*GetCurrentUserRequest))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
 		reply := out.(*UserObject)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _User_UpdateCurrentUserSetting0_HTTP_Handler(srv UserHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in UpdateCurrentUserSettingRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationUserUpdateCurrentUserSetting)
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
+			return srv.UpdateCurrentUserSetting(ctx, req.(*UpdateCurrentUserSettingRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*emptypb.Empty)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _User_UpdateCurrentUser0_HTTP_Handler(srv UserHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in UpdateCurrentUserRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationUserUpdateCurrentUser)
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
+			return srv.UpdateCurrentUser(ctx, req.(*UpdateCurrentUserRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*emptypb.Empty)
 		return ctx.Result(200, reply)
 	}
 }
@@ -206,10 +258,12 @@ func _User_DeleteUser0_HTTP_Handler(srv UserHTTPServer) func(ctx http.Context) e
 type UserHTTPClient interface {
 	CreateUser(ctx context.Context, req *CreateUserRequest, opts ...http.CallOption) (rsp *CreateUserReply, err error)
 	DeleteUser(ctx context.Context, req *DeleteUserRequest, opts ...http.CallOption) (rsp *DeleteUserReply, err error)
-	GetCurrentUser(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *UserObject, err error)
+	GetCurrentUser(ctx context.Context, req *GetCurrentUserRequest, opts ...http.CallOption) (rsp *UserObject, err error)
 	GetUser(ctx context.Context, req *GetUserRequest, opts ...http.CallOption) (rsp *UserObject, err error)
 	ListUser(ctx context.Context, req *ListUserRequest, opts ...http.CallOption) (rsp *ListUserReply, err error)
 	ResetPassword(ctx context.Context, req *ResetPasswordRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
+	UpdateCurrentUser(ctx context.Context, req *UpdateCurrentUserRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
+	UpdateCurrentUserSetting(ctx context.Context, req *UpdateCurrentUserSettingRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	UpdateUser(ctx context.Context, req *UpdateUserRequest, opts ...http.CallOption) (rsp *UpdateUserReply, err error)
 }
 
@@ -247,9 +301,9 @@ func (c *UserHTTPClientImpl) DeleteUser(ctx context.Context, in *DeleteUserReque
 	return &out, err
 }
 
-func (c *UserHTTPClientImpl) GetCurrentUser(ctx context.Context, in *emptypb.Empty, opts ...http.CallOption) (*UserObject, error) {
+func (c *UserHTTPClientImpl) GetCurrentUser(ctx context.Context, in *GetCurrentUserRequest, opts ...http.CallOption) (*UserObject, error) {
 	var out UserObject
-	pattern := "/manager/api/v1/user/current"
+	pattern := "/manager/api/v1/current/user"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationUserGetCurrentUser))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -293,6 +347,32 @@ func (c *UserHTTPClientImpl) ResetPassword(ctx context.Context, in *ResetPasswor
 	opts = append(opts, http.Operation(OperationUserResetPassword))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *UserHTTPClientImpl) UpdateCurrentUser(ctx context.Context, in *UpdateCurrentUserRequest, opts ...http.CallOption) (*emptypb.Empty, error) {
+	var out emptypb.Empty
+	pattern := "/manager/api/v1/current/user"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationUserUpdateCurrentUser))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "PUT", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *UserHTTPClientImpl) UpdateCurrentUserSetting(ctx context.Context, in *UpdateCurrentUserSettingRequest, opts ...http.CallOption) (*emptypb.Empty, error) {
+	var out emptypb.Empty
+	pattern := "/manager/api/v1/current/user/setting"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationUserUpdateCurrentUserSetting))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "PUT", path, in, &out, opts...)
 	if err != nil {
 		return nil, err
 	}

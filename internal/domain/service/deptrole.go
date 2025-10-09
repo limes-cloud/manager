@@ -26,11 +26,11 @@ func NewDeptRole(
 
 // ListDeptRole 获取指定的部门角色列表
 func (rm *DeptRole) ListDeptRole(ctx core.Context, req *types.ListDeptRoleRequest) ([]*entity.Role, uint32, error) {
-	if !rm.scope.IsSuperAdmin(ctx) {
+	if !ctx.IsSuperAdmin() {
 		// 判断是否具有当前部门ID
-		if !rm.scope.HasDeptScope(ctx, entity.DeptEntityName, req.DeptId) {
-			return nil, 0, errors.DeptScopeError()
-		}
+		//if !rm.scope.HasDeptScope(ctx, entity.DeptEntityName, req.DeptId) {
+		//	return nil, 0, errors.DeptScopeError()
+		//}
 
 		// 获取当前有权限的角色
 		req.InRoleIds = rm.scope.RoleScopes(ctx)
@@ -48,16 +48,16 @@ func (rm *DeptRole) ListDeptRole(ctx core.Context, req *types.ListDeptRoleReques
 
 // ListRoleDept 获取指定角色的所有部门列表
 func (rm *DeptRole) ListRoleDept(ctx core.Context, req *types.ListRoleDeptRequest) ([]*entity.Dept, uint32, error) {
-	if !rm.scope.IsSuperAdmin(ctx) {
+	if !ctx.IsSuperAdmin() {
 		// 获取当前的角色id
 		if !rm.scope.HasRoleScope(ctx, req.RoleId) {
 			return nil, 0, errors.RoleScopeError()
 		}
 		// 获取当前有权限的部门
-		all, ids := rm.scope.DeptScopes(ctx, entity.DeptEntityName)
-		if !all {
-			req.InDeptIds = ids
-		}
+		//all, ids := rm.scope.DeptScopes(ctx, entity.DeptEntityName)
+		//if !all {
+		//	req.InDeptIds = ids
+		//}
 	}
 
 	// 获取菜单对应的角色列表
@@ -70,7 +70,7 @@ func (rm *DeptRole) ListRoleDept(ctx core.Context, req *types.ListRoleDeptReques
 
 // CreateDeptRoles 批量创建指定部门的角色
 func (rm *DeptRole) CreateDeptRoles(ctx core.Context, req *types.CreateDeptRolesRequest) error {
-	if !rm.scope.IsSuperAdmin(ctx) {
+	if !ctx.IsSuperAdmin() {
 		// 获取当前有权限的角色ID
 		rids := rm.scope.RoleScopes(ctx)
 		if len(rids) == 0 {
@@ -83,9 +83,9 @@ func (rm *DeptRole) CreateDeptRoles(ctx core.Context, req *types.CreateDeptRoles
 		}
 
 		// 验证当前角色是否具有指定菜单的权限
-		if !rm.scope.HasDeptScope(ctx, entity.DeptEntityName, req.DeptId) {
-			return errors.DeptScopeError()
-		}
+		//if !rm.scope.HasDeptScope(ctx, entity.DeptEntityName, req.DeptId) {
+		//	return errors.DeptScopeError()
+		//}
 	}
 
 	// 组装为实体列表
@@ -104,15 +104,14 @@ func (rm *DeptRole) CreateDeptRoles(ctx core.Context, req *types.CreateDeptRoles
 
 // CreateRoleDepts 角色批量授权给菜单
 func (rm *DeptRole) CreateRoleDepts(ctx core.Context, req *types.CreateRoleDeptsRequest) error {
-	if !rm.scope.IsSuperAdmin(ctx) {
-
+	if !ctx.IsSuperAdmin() {
 		// 判断是否拥有部门权限
-		all, dids := rm.scope.DeptScopes(ctx, entity.DeptEntityName)
-		if !all {
-			if len(lo.Intersect(dids, req.DeptIds)) != len(req.DeptIds) {
-				return errors.DeptScopeError()
-			}
-		}
+		//all, dids := rm.scope.DeptScopes(ctx, entity.DeptEntityName)
+		//if !all {
+		//	if len(lo.Intersect(dids, req.DeptIds)) != len(req.DeptIds) {
+		//		return errors.DeptScopeError()
+		//	}
+		//}
 
 		// 判断是否拥有角色权限
 		if !rm.scope.HasRoleScope(ctx, req.RoleId) {
@@ -135,7 +134,7 @@ func (rm *DeptRole) CreateRoleDepts(ctx core.Context, req *types.CreateRoleDepts
 }
 
 func (rm *DeptRole) DeleteDeptRoles(ctx core.Context, req *types.DeleteDeptRolesRequest) error {
-	if !rm.scope.IsSuperAdmin(ctx) {
+	if !ctx.IsSuperAdmin() {
 
 		// 获取当前有权限的角色ID
 		rids := rm.scope.RoleScopes(ctx)
@@ -153,13 +152,13 @@ func (rm *DeptRole) DeleteDeptRoles(ctx core.Context, req *types.DeleteDeptRoles
 			return errors.DeptScopeError()
 		}
 
-		// 判断是否拥有部门权限
-		all, dids := rm.scope.DeptScopes(ctx, entity.DeptEntityName)
-		if !all {
-			if lo.Contains(dids, req.DeptId) {
-				return errors.DeptScopeError()
-			}
-		}
+		//// 判断是否拥有部门权限
+		//all, dids := rm.scope.DeptScopes(ctx, entity.DeptEntityName)
+		//if !all {
+		//	if lo.Contains(dids, req.DeptId) {
+		//		return errors.DeptScopeError()
+		//	}
+		//}
 	}
 
 	// 组装数据
@@ -177,7 +176,7 @@ func (rm *DeptRole) DeleteDeptRoles(ctx core.Context, req *types.DeleteDeptRoles
 }
 
 func (rm *DeptRole) DeleteRoleDepts(ctx core.Context, req *types.DeleteRoleDeptsRequest) error {
-	if !rm.scope.IsSuperAdmin(ctx) {
+	if !ctx.IsSuperAdmin() {
 		// 判断是否拥有角色权限
 		if !rm.scope.HasRoleScope(ctx, req.RoleId) {
 			return errors.RoleScopeError()
@@ -189,13 +188,14 @@ func (rm *DeptRole) DeleteRoleDepts(ctx core.Context, req *types.DeleteRoleDepts
 		}
 
 		// 判断部门是否在可操作的部门内
-		all, dids := rm.scope.DeptScopes(ctx, entity.DeptEntityName)
-		if !all {
-			if len(lo.Intersect(dids, req.DeptIds)) != len(req.DeptIds) {
-				return errors.DeptScopeError()
-			}
-		}
+		//all, dids := rm.scope.DeptScopes(ctx, entity.DeptEntityName)
+		//if !all {
+		//	if len(lo.Intersect(dids, req.DeptIds)) != len(req.DeptIds) {
+		//		return errors.DeptScopeError()
+		//	}
+		//}
 	}
+
 	// 组装数据
 	var rms []*entity.DeptRole
 	for _, v := range req.DeptIds {

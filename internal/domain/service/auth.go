@@ -5,7 +5,9 @@ import (
 	"encoding/json"
 	"time"
 
-	midauth "github.com/limes-cloud/manager/internal/domain/middleware/auth"
+	"github.com/limes-cloud/manager/api/auth"
+
+	midauth "github.com/limes-cloud/manager/internal/middleware/auth"
 
 	"github.com/forgoer/openssl"
 	kerrors "github.com/go-kratos/kratos/v2/errors"
@@ -36,47 +38,67 @@ type Auth struct {
 	user    repository.User
 	address repository.Address
 	oauth   repository.OAuth
+	menu    repository.Menu
+	scope   repository.Scope
+	tenant  repository.Tenant
 }
 
 func NewAuth(
 	auth repository.Auth,
 	user repository.User,
 	address repository.Address,
+	oauth repository.OAuth,
+	menu repository.Menu,
+	scope repository.Scope,
+	tenant repository.Tenant,
 ) *Auth {
 	return &Auth{
 		auth:    auth,
 		user:    user,
 		address: address,
+		oauth:   oauth,
+		menu:    menu,
+		scope:   scope,
+		tenant:  tenant,
 	}
 }
 
-// Auth 外部接口rbac鉴权
-//func (u *Auth) Auth(ctx core.Context, in *types.AuthRequest) (*auth.AuthReply, error) {
-//	// 获取鉴权器，判断是否为白名单
-//	author := ctx.Authentication()
-//	if author.IsWhitelist(in.Path, in.Method) {
-//		return nil, nil
-//	}
-//
-//	info := auth.Get(ctx)
-//
-//	// 进行rbac鉴权
-//	enforce := ctx.Authentication().Enforce()
-//
-//	isPass := false
-//	for _, role := range roleKeys {
-//		isAuth, _ := enforce.Enforce(role, in.Path, in.Method)
-//		if isAuth {
-//			isPass = true
-//			break
-//		}
-//	}
-//	if !isPass {
-//		return nil, errors.ForbiddenError()
-//	}
-//
-//	return info, nil
-//}
+// ApiAuth 外部接口rbac鉴权
+func (u *Auth) ApiAuth(ctx core.Context, in *auth.ApiAuthRequest) (*auth.ApiAuthReply, error) {
+	info := &auth.ApiAuthReply{
+		TenantId: ctx.Auth().TenantId,
+		UserId:   ctx.Auth().UserId,
+		DeptId:   ctx.Auth().DeptId,
+		Username: ctx.Auth().Username,
+	}
+	if ctx.IsSuperAdmin() {
+		return info, nil
+	}
+	// 获取鉴权器，判断是否为白名单
+	id, tp, has := u.menu.GetMenuTypeInfo(in.Path, in.Method)
+	if !has {
+		return nil, errors.ForbiddenError()
+	}
+	if tp == entity.MenuTypeBasic {
+		return info, nil
+	}
+
+	// 判断是否拥有api权限
+	if !u.scope.HasMenuScope(ctx, id) {
+		return nil, errors.ForbiddenError()
+	}
+
+	_ = ctx.Pool().GoFunc(func() {
+		ctx = ctx.Clone()
+		log := entity.AuthLog{
+			MenuId: id,
+		}
+
+		_, _ = u.auth.CreateAuthLog(ctx, &log)
+	})
+
+	return info, nil
+}
 
 // GetUserLoginCaptcha 获取用户登陆验证吗
 func (u *Auth) GetUserLoginCaptcha(ctx core.Context) (*types.GetUserLoginCaptchaReply, error) {
@@ -111,13 +133,17 @@ func (u *Auth) GetUserLoginCaptcha(ctx core.Context) (*types.GetUserLoginCaptcha
 func (u *Auth) UserLogin(ctx core.Context, req *types.UserLoginRequest) (token string, err error) {
 	var user *entity.User
 	defer func() {
-		if errors.IsUserDisableError(err) || errors.IsVerifyCaptchaError(err) {
+		if errors.IsUserDisableError(err) ||
+			errors.IsVerifyCaptchaError(err) ||
+			errors.IsPasswordError(err) ||
+			errors.IsTenantNotFoundError(err) {
 			return
 		}
+
 		if user == nil {
 			return
 		}
-		u.addLoginLog(ctx, user, err)
+		u.addLoginLog(ctx, "username", user, err)
 	}()
 
 	// 判断验证码
@@ -166,8 +192,16 @@ func (u *Auth) UserLogin(ctx core.Context, req *types.UserLoginRequest) (token s
 		return
 	}
 
+	// 获取租户信息
+	tenant, err := u.tenant.GetTenantByKeyword(ctx, req.Tenant)
+	if err != nil {
+		ctx.Logger().Errorw("msg", "get tenant info error", "err", err.Error())
+		err = errors.TenantNotFoundError()
+		return
+	}
+
 	// 获取用户信息
-	user, err = u.user.GetUserByUsername(ctx, req.Username)
+	user, err = u.user.GetUserByTU(ctx, tenant.Id, req.Username)
 	if err != nil {
 		ctx.Logger().Errorw("msg", "get user info error", "err", err.Error())
 		err = errors.UsernameNotExistError()
@@ -240,7 +274,7 @@ func (u *Auth) genToken(ctx core.Context, user *entity.User) (token string, err 
 	}
 
 	// 更新用户token信息
-	expired := time.Now().Unix() + int64(ctx.JWT().Config().Expire)
+	expired := time.Now().Unix() + int64(ctx.JWT().Config().Expire.Seconds())
 	data := &entity.User{
 		BaseTenantDeptModel: model.BaseTenantDeptModel{Id: user.Id},
 		Token:               &token,
@@ -256,7 +290,7 @@ func (u *Auth) genToken(ctx core.Context, user *entity.User) (token string, err 
 	return token, nil
 }
 
-func (u *Auth) addLoginLog(ctx core.Context, user *entity.User, err error) {
+func (u *Auth) addLoginLog(ctx core.Context, tp string, user *entity.User, err error) {
 	header, ok := transport.FromServerContext(ctx)
 	if !ok {
 		return
@@ -286,6 +320,7 @@ func (u *Auth) addLoginLog(ctx core.Context, user *entity.User, err error) {
 			DeptId:   user.DeptId,
 			TenantId: user.TenantId,
 		},
+		Type:        tp,
 		IP:          ctx.ClientIP(),
 		Address:     u.address.GetAddressByIP(ip),
 		Browser:     ug.Name + " " + ug.Version,
@@ -532,6 +567,15 @@ func (u *Auth) ListLoginLog(ctx core.Context, req *types.ListLoginLogRequest) ([
 
 // ListAuthLog 获取用户登陆日志
 func (u *Auth) ListAuthLog(ctx core.Context, req *types.ListAuthLogRequest) ([]*entity.AuthLog, uint32, error) {
+	if req.Username != "" {
+		user, err := u.user.GetUserByUsername(ctx, req.Username)
+		if err != nil {
+			ctx.Logger().Warnw("msg", "get user  error", "err", err.Error())
+			return nil, 0, errors.NotUserError()
+		}
+		req.UserId = &user.Id
+	}
+
 	list, total, err := u.auth.ListAuthLog(ctx, req)
 	if err != nil {
 		return nil, 0, errors.ListError()

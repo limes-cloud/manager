@@ -17,6 +17,7 @@ type Menu struct {
 	app   repository.App
 	rm    repository.RoleMenu
 	scope repository.Scope
+	ta    repository.TenantApp
 }
 
 func NewMenu(
@@ -24,12 +25,14 @@ func NewMenu(
 	app repository.App,
 	rm repository.RoleMenu,
 	scope repository.Scope,
+	ta repository.TenantApp,
 ) *Menu {
 	uc := &Menu{
 		repo:  repo,
 		app:   app,
 		rm:    rm,
 		scope: scope,
+		ta:    ta,
 	}
 	return uc
 }
@@ -37,9 +40,23 @@ func NewMenu(
 // ListCurrentMenu 获取当前的菜单信息列表树
 func (u *Menu) ListCurrentMenu(ctx core.Context, req *types.ListMenuRequest) ([]*entity.Menu, error) {
 	// 获取当前的角色列表
-	if !u.scope.IsSuperAdmin(ctx) {
+	if ctx.IsSuperAdmin() && req.FilterTenant {
+		req.InIds = u.ta.GetTenantMenuIds(ctx.Auth().TenantId)
+	}
+	if !ctx.IsSuperAdmin() {
 		rids := u.scope.RoleScopes(ctx)
-		req.InIds = u.rm.GetMenuIdsByRoleIds(rids)
+		mids := u.rm.GetMenuIdsByRoleIds(rids)
+		tmids := u.ta.GetTenantMenuIds(ctx.Auth().TenantId)
+
+		if req.AppId != nil {
+			ids, err := u.ta.GetTenantAppMenuIds(ctx, ctx.Auth().TenantId, *req.AppId)
+			if err != nil {
+				return nil, errors.SystemError()
+			}
+			tmids = ids
+		}
+		req.InIds = lo.Intersect(mids, tmids)
+
 	}
 
 	// 获取当前角色有权限的菜单ID

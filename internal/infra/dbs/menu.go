@@ -1,8 +1,16 @@
 package dbs
 
 import (
+	"context"
 	"errors"
+	"fmt"
 	"sync"
+
+	"github.com/samber/lo"
+
+	"github.com/limes-cloud/kratosx"
+
+	"github.com/limes-cloud/kratosx/pkg/cache"
 
 	"github.com/limes-cloud/manager/internal/core"
 
@@ -10,16 +18,40 @@ import (
 	"github.com/limes-cloud/manager/internal/types"
 )
 
-type Menu struct{}
+type cacheMenuType struct {
+	Id   uint32 `json:"id"`
+	Type string `json:"type"`
+}
+
+type Menu struct {
+	cache *cache.Cache[string, *cacheMenuType]
+}
 
 var (
-	menuIns  *Menu
-	menuOnce sync.Once
+	menuIns      *Menu
+	menuOnce     sync.Once
+	menuCacheKey = "menu"
 )
 
 func NewMenu() *Menu {
 	menuOnce.Do(func() {
 		menuIns = &Menu{}
+
+		ctx := core.MustContext(
+			context.Background(),
+			kratosx.WithTrace("cache", "menu"),
+			kratosx.WithSkipDBHook(),
+		)
+		ctx.BeforeStart("load cache menu", func() {
+			menuIns.cache = cache.NewCacheAndInit[string, *cacheMenuType](
+				ctx,
+				ctx.Redis(),
+				menuCacheKey,
+				cache.HookLoad(func() (map[string]*cacheMenuType, error) {
+					return menuIns.load(ctx)
+				}),
+			)
+		})
 	})
 	return menuIns
 }
@@ -48,14 +80,6 @@ func (infra *Menu) ListMenu(ctx core.Context, req *types.ListMenuRequest) ([]*en
 	return ms, db.Find(&ms).Error
 }
 
-//func (infra *Menu) ListMenuApi(ctx core.Context) ([]*entity.MenuApi, error) {
-//	var (
-//		ms []*entity.MenuApi
-//		fs = []string{"id", "api", "method"}
-//	)
-//	return ms, ctx.DB().Model(entity.Menu{}).Select(fs).Where("type=?", entity.MenuTypeApi).Scan(&ms).Error
-//}
-
 // CreateMenu 创建数据
 func (infra *Menu) CreateMenu(ctx core.Context, menu *entity.Menu) (uint32, error) {
 	if menu.Type == entity.MenuTypeRoot {
@@ -69,6 +93,14 @@ func (infra *Menu) CreateMenu(ctx core.Context, menu *entity.Menu) (uint32, erro
 
 		if err := infra.appendMenuChildren(ctx, menu.ParentId, menu.Id); err != nil {
 			return err
+		}
+
+		if lo.Contains([]string{entity.MenuTypeApi, entity.MenuTypeBasic}, menu.Type) {
+			op := infra.cache.OP(ctx)
+			return op.Put(infra.getCacheKey(menu.GetApi(), menu.GetMethod()), &cacheMenuType{
+				Id:   menu.Id,
+				Type: menu.Type,
+			}).Do()
 		}
 
 		return nil
@@ -103,7 +135,21 @@ func (infra *Menu) UpdateMenu(ctx core.Context, menu *entity.Menu) error {
 		}
 	}
 
-	return ctx.DB().Updates(menu).Error
+	return ctx.Transaction(func(ctx core.Context) error {
+		if err := ctx.DB().Updates(menu).Error; err != nil {
+			return err
+		}
+		if old.GetApi() != menu.GetApi() || old.GetMethod() != menu.GetMethod() {
+			op := infra.cache.OP(ctx)
+			op = op.Delete(infra.getCacheKey(old.GetApi(), old.GetMethod()))
+			op = op.Put(infra.getCacheKey(menu.GetApi(), menu.GetMethod()), &cacheMenuType{
+				Id:   menu.Id,
+				Type: menu.Type,
+			})
+			return op.Do()
+		}
+		return nil
+	})
 }
 
 // DeleteMenu 删除数据
@@ -114,7 +160,27 @@ func (infra *Menu) DeleteMenu(ctx core.Context, id uint32) error {
 	}
 	ids = append(ids, id)
 
-	return ctx.DB().Where("id in ?", ids).Delete(&entity.Menu{}).Error
+	// 查询当前条件下的菜单接口
+	var apis []*entity.Menu
+	if err := ctx.DB().
+		Where("id in ?", ids).
+		Where("type in ?", []string{
+			entity.MenuTypeApi,
+			entity.MenuTypeBasic,
+		}).
+		Find(&apis).Error; err != nil {
+		return err
+	}
+	op := infra.cache.OP(ctx)
+	return ctx.Transaction(func(ctx core.Context) error {
+		if err := ctx.DB().Where("id in ?", ids).Delete(&entity.Menu{}).Error; err != nil {
+			return err
+		}
+		for _, item := range apis {
+			op = op.Delete(infra.getCacheKey(item.GetApi(), item.GetMethod()))
+		}
+		return op.Do()
+	})
 }
 
 // GetMenuChildrenIds 获取指定id的所有子id
@@ -198,4 +264,39 @@ func (infra *Menu) SetHome(ctx core.Context, id uint32) error {
 	}
 	pids = append(pids, cids...)
 	return ctx.DB().Model(entity.Menu{}).Where("id in ?", pids).Update("is_home", false).Error
+}
+
+// load 加载全量的数据
+func (infra *Menu) load(ctx core.Context) (map[string]*cacheMenuType, error) {
+	var list []*entity.Menu
+	if err := ctx.DB().Where("type in ?", []string{
+		entity.MenuTypeApi,
+		entity.MenuTypeBasic,
+	}).Find(&list).Error; err != nil {
+		return nil, err
+	}
+
+	bucket := map[string]*cacheMenuType{}
+	for _, item := range list {
+		bucket[infra.getCacheKey(item.GetApi(), item.GetMethod())] = &cacheMenuType{
+			Id:   item.Id,
+			Type: item.Type,
+		}
+	}
+
+	return bucket, nil
+}
+
+// getCacheKey 获取缓存的key
+func (infra *Menu) getCacheKey(api string, method string) string {
+	return fmt.Sprintf("%s:%s", api, method)
+}
+
+// GetMenuTypeInfo 获取api类型
+func (infra *Menu) GetMenuTypeInfo(api string, method string) (uint32, string, bool) {
+	val, has := infra.cache.Get(infra.getCacheKey(api, method))
+	if !has {
+		return 0, "", false
+	}
+	return val.Id, val.Type, true
 }

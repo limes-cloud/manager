@@ -32,6 +32,7 @@ func NewMenu() *Menu {
 			dbs.NewApp(),
 			dbs.NewRoleMenu(),
 			dbs.NewScope(),
+			dbs.NewTenantApp(),
 		),
 	}
 }
@@ -50,8 +51,9 @@ func (s *Menu) ListCurrentMenu(c context.Context, req *menu.ListCurrentMenuReque
 
 	// 调用服务
 	in := &types.ListMenuRequest{
-		AppId:      req.AppId,
-		FilterRoot: req.FilterRoot,
+		AppId:        req.AppId,
+		FilterRoot:   req.FilterRoot,
+		FilterTenant: req.FilterTenant,
 	}
 	if req.GetFilterBaseApi() {
 		in.NotInTypes = []string{entity.MenuTypeBasic}

@@ -22,11 +22,13 @@ type TenantApp interface {
 	DeleteTenantApp(ctx core.Context, tid uint32, aid uint32) error
 
 	// GetTenantAppMenuIds 获取租户应用的菜单ids
-	GetTenantAppMenuIds(ctx core.Context, tid, aid uint32) ([]uint32, error)
+	GetTenantAppMenuIds(ctx core.Context, tid uint32, aid uint32) ([]uint32, error)
 
 	// CreateTenantAppMenuIds 添加租户应用的菜单ids
 	CreateTenantAppMenuIds(ctx core.Context, tid, aid uint32, mids []uint32) error
 
 	// DeleteTenantAppMenuIds 获取租户应用的菜单ids
 	DeleteTenantAppMenuIds(ctx core.Context, tid, aid uint32, mids []uint32) error
+
+	GetTenantMenuIds(tid uint32) []uint32
 }

@@ -56,9 +56,9 @@ database:
     slowThreshold: 2s #慢sql阈值
 
 redis:
-  enable: true
-  name: cache
-  host: 127.0.0.1:6379
+  - enable: true
+    name: cache
+    host: 127.0.0.1:6379
 captcha:
   login:
     length: 6
@@ -90,7 +90,7 @@ jwt:
   secret: limes-cloud-test
   expire: 12h
   renewal: 1h
-  whitelist: {"*:*":true,"POST:/manager/api/v1/user/login":true,"POST:/manager/api/v1/user/logout":true,"POST:/manager/api/v1/user/token/refresh":true,"GET:/manager/api/v1/system/setting":true,"GET:/manager/api/v1/user/login/captcha":true}
+  whitelist: {"POST:/manager/api/v1/login":true,"POST:/manager/api/v1/logout":true,"POST:/manager/api/v1/token/refresh":true,"GET:/manager/api/v1/system/setting":true,"GET:/manager/api/v1/login/captcha":true,"GET:/manager/api/v1/tenants":true,"GET:/manager/api/v1/oauth/channels":true}
 authentication:
   db: system
   redis: cache
@@ -102,6 +102,12 @@ client:
     type: direct
     backends:
       - target: 127.0.0.1:8020
+pool: #并非池配置
+  size: 10000 #最大协程数量
+  expiryDuration: 30s #过期时间
+  preAlloc: true #是否预分配
+  maxBlockingTasks: 1000 #最大的并发任务
+  nonblocking: true #设置为true时maxBlockingTasks将失效，不限制并发任务
 business:
   changePasswordType: password
   defaultUserPassword: 12345678

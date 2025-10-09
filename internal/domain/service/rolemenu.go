@@ -37,7 +37,7 @@ func NewRoleMenu(
 // GetRoleMenuIds 获取角色的菜单id列表
 func (rm *RoleMenu) GetRoleMenuIds(ctx core.Context, req *types.GetRoleMenuIdsRequest) ([]uint32, error) {
 	rids := rm.scope.RoleScopes(ctx)
-	if !rm.scope.IsSuperAdmin(ctx) && !lo.Contains(rids, req.RoleId) {
+	if !ctx.IsSuperAdmin() && !lo.Contains(rids, req.RoleId) {
 		return nil, errors.RoleScopeError()
 	}
 
@@ -56,7 +56,7 @@ func (rm *RoleMenu) GetRoleMenuIds(ctx core.Context, req *types.GetRoleMenuIdsRe
 func (rm *RoleMenu) GetMenuRoleIds(ctx core.Context, req *types.GetMenuRoleIdsRequest) ([]uint32, error) {
 	rids := rm.scope.RoleScopes(ctx)
 	mrs := rm.repo.GetRoleIdsByMenuIds([]uint32{req.MenuId})
-	if !rm.scope.IsSuperAdmin(ctx) {
+	if !ctx.IsSuperAdmin() {
 		// 验证当前角色是否具有指定菜单的权限
 		lom.Filter(mrs, func(item uint32) bool {
 			return !lo.Contains(rids, item)
@@ -68,7 +68,7 @@ func (rm *RoleMenu) GetMenuRoleIds(ctx core.Context, req *types.GetMenuRoleIdsRe
 // CreateMenuRoles 菜单批量授权给角色
 func (rm *RoleMenu) CreateMenuRoles(ctx core.Context, req *types.CreateMenuRolesRequest) error {
 	// 超级管理员不做权限校验
-	if !rm.scope.IsSuperAdmin(ctx) {
+	if !ctx.IsSuperAdmin() {
 		// 获取当前有权限的角色ID
 		rids := rm.scope.RoleScopes(ctx)
 		if len(rids) == 0 {
@@ -111,7 +111,7 @@ func (rm *RoleMenu) CreateRoleMenus(ctx core.Context, req *types.CreateRoleMenus
 
 	// 获取当前角色的菜单
 	roleMenuIds := appMenuIds
-	if !rm.scope.IsSuperAdmin(ctx) {
+	if !ctx.IsSuperAdmin() {
 		roleMenuIds = rm.repo.GetMenuIdsByRoleIds(rm.scope.RoleScopes(ctx))
 	}
 
@@ -180,7 +180,7 @@ func (rm *RoleMenu) CreateRoleMenus(ctx core.Context, req *types.CreateRoleMenus
 }
 
 func (rm *RoleMenu) DeleteRoleMenus(ctx core.Context, req *types.DeleteRoleMenusRequest) error {
-	if !rm.scope.IsSuperAdmin(ctx) {
+	if !ctx.IsSuperAdmin() {
 		// 获取当前有权限的角色ID
 		rids := rm.scope.RoleScopes(ctx)
 		if len(rids) == 0 {
@@ -219,7 +219,7 @@ func (rm *RoleMenu) DeleteRoleMenus(ctx core.Context, req *types.DeleteRoleMenus
 }
 
 func (rm *RoleMenu) DeleteMenuRoles(ctx core.Context, req *types.DeleteMenuRolesRequest) error {
-	if !rm.scope.IsSuperAdmin(ctx) {
+	if !ctx.IsSuperAdmin() {
 		// 获取当前有权限的角色ID
 		rids := rm.scope.RoleScopes(ctx)
 		if len(rids) == 0 {

@@ -1,0 +1,50 @@
+syntax = "proto3";
+
+package manager.api.field;
+
+option go_package = ".;field";
+option java_multiple_files = true;
+option java_package = "manager.api.field";
+
+import "api/field/proto/field.proto";
+import "google/api/annotations.proto";
+
+service Field{
+  // ListFieldType 获取可用的字段列表
+  rpc ListFieldType (ListFieldTypeRequest) returns (ListFieldTypeReply) {
+    option (google.api.http) = {
+      get: "/manager/api/v1/field/types",
+    };
+  }
+
+  // ListField 获取用户字段列表
+  rpc ListField (ListFieldRequest) returns (ListFieldReply) {
+    option (google.api.http) = {
+      get: "/manager/api/v1/fields",
+    };
+  }
+
+  // CreateField 创建用户字段
+  rpc CreateField (CreateFieldRequest) returns (CreateFieldReply) {
+    option (google.api.http) = {
+      post: "/manager/api/v1/field",
+      body: "*"
+    };
+  }
+
+  // UpdateField 更新用户字段
+  rpc UpdateField (UpdateFieldRequest) returns (UpdateFieldReply) {
+    option (google.api.http) = {
+      put: "/manager/api/v1/field",
+      body: "*"
+    };
+  }
+
+  // DeleteField 删除用户字段
+  rpc DeleteField (DeleteFieldRequest) returns (DeleteFieldReply) {
+    option (google.api.http) = {
+      delete: "/manager/api/v1/field",
+    };
+  }
+
+}

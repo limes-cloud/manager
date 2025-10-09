@@ -122,13 +122,11 @@ func (u *Entity) ImportEntity(ctx core.Context, ents []*entity.Entity) error {
 			}
 
 			// 查询是否存在实体
-			oldEnt, err := u.repo.GetEntityByName(ctx, ent.Database, ent.Name)
-			if err != nil && !gormtranserror.Is(err, gorm.ErrRecordNotFound) {
-				return err
-			}
+			eid, has := u.repo.GetEntityIdByName(ent.Database, ent.Name)
+
 			// 存在则直接插入实体字段
-			if err == nil {
-				if err := insertFields(oldEnt.Id, fields); err != nil {
+			if has {
+				if err := insertFields(eid, fields); err != nil {
 					return err
 				}
 				continue

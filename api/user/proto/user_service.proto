@@ -12,9 +12,25 @@ import "google/protobuf/empty.proto";
 
 service User{
   // GetCurrentUser 获取当前用户信息
-  rpc GetCurrentUser (google.protobuf.Empty) returns (UserObject) {
+  rpc GetCurrentUser (GetCurrentUserRequest) returns (UserObject) {
     option (google.api.http) = {
-      get: "/manager/api/v1/user/current",
+      get: "/manager/api/v1/current/user",
+    };
+  }
+
+  // UpdateCurrentUserSetting 更新当前用户设置
+  rpc UpdateCurrentUserSetting (UpdateCurrentUserSettingRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      put: "/manager/api/v1/current/user/setting",
+      body: "*"
+    };
+  }
+
+  // UpdateCurrentUserSetting 更新当前用户设置
+  rpc UpdateCurrentUser (UpdateCurrentUserRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      put: "/manager/api/v1/current/user",
+      body: "*"
     };
   }
 

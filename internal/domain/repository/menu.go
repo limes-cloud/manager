@@ -29,4 +29,6 @@ type Menu interface {
 
 	// SetHome 设置菜单首页
 	SetHome(ctx core.Context, id uint32) error
+
+	GetMenuTypeInfo(api string, method string) (uint32, string, bool)
 }
