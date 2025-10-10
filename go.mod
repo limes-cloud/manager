@@ -3,13 +3,14 @@ module github.com/limes-cloud/manager
 go 1.24.6
 
 require (
+	dario.cat/mergo v1.0.0
 	github.com/forgoer/openssl v1.8.0
 	github.com/go-kratos/kratos/v2 v2.8.4
 	github.com/go-resty/resty/v2 v2.16.5
 	github.com/golang/protobuf v1.5.4
 	github.com/google/uuid v1.6.0
 	github.com/json-iterator/go v1.1.12
-	github.com/limes-cloud/kratosx v1.2.1
+	github.com/limes-cloud/kratosx v1.2.3
 	github.com/limes-cloud/manager/api v0.0.0
 	github.com/mojocn/base64Captcha v1.3.8
 	github.com/samber/lo v1.51.0
@@ -20,7 +21,6 @@ require (
 )
 
 require (
-	dario.cat/mergo v1.0.0 // indirect
 	filippo.io/edwards25519 v1.1.0 // indirect
 	github.com/armon/go-metrics v0.4.1 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
@@ -115,7 +115,4 @@ require (
 	gorm.io/driver/sqlserver v1.6.1 // indirect
 )
 
-replace (
-	github.com/limes-cloud/kratosx v1.2.1 => ../../framework/kratosx
-	github.com/limes-cloud/manager/api v0.0.0 => ./api
-)
+replace github.com/limes-cloud/manager/api v0.0.0 => ./api

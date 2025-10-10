@@ -90,7 +90,7 @@ jwt:
   secret: limes-cloud-test
   expire: 12h
   renewal: 1h
-  whitelist: {"POST:/manager/api/v1/login":true,"POST:/manager/api/v1/logout":true,"POST:/manager/api/v1/token/refresh":true,"GET:/manager/api/v1/system/setting":true,"GET:/manager/api/v1/login/captcha":true,"GET:/manager/api/v1/tenants":true,"GET:/manager/api/v1/oauth/channels":true}
+  whitelist: {"POST:/manager/api/v1/login":true,"POST:/manager/api/v1/logout":true,"POST:/manager/api/v1/token/refresh":true,"GET:/manager/api/v1/system/setting":true,"GET:/manager/api/v1/login/captcha":true,"GET:/manager/api/v1/tenants":true,"GET:/manager/api/v1/app/tenant/channels":true,"POST:/manager/api/v1/oauth/handler":true,"POST:/manager/api/v1/oauth/login":true}
 authentication:
   db: system
   redis: cache

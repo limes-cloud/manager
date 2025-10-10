@@ -148,6 +148,20 @@ func (r App) ListAppOAuthChannel(ctx core.Context, req *types.ListAppOAuthChanne
 	return list, uint32(total), nil
 }
 
+func (r App) ListTenantAppOAuthChannel(ctx core.Context, req *types.ListTenantAppOAuthChannelRequest) ([]*entity.AppOAuthChannel, error) {
+	var list []*entity.AppOAuthChannel
+	db := ctx.DB().Model(entity.AppOAuthChannel{}).
+		Where("`app_oauth_channel`.`app_id` = ?", req.AppId).
+		Where("`app_oauth_channel`.`tenant_id` = ?", req.TenantId)
+	db = db.Joins("Channel", ctx.DB().Where("Channel.status = true"))
+	db = db.Where("Channel.status is not null")
+	if err := db.Find(&list).Error; err != nil {
+		return nil, err
+	}
+
+	return list, nil
+}
+
 // CreateAppOAuthChannel 创建数据
 func (r App) CreateAppOAuthChannel(ctx core.Context, aoc *entity.AppOAuthChannel) (uint32, error) {
 	return aoc.Id, ctx.DB().Create(aoc).Error

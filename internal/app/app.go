@@ -3,6 +3,8 @@ package app
 import (
 	"context"
 
+	"github.com/limes-cloud/kratosx"
+
 	"github.com/limes-cloud/manager/internal/core"
 
 	"github.com/limes-cloud/kratosx/pkg/value"
@@ -28,6 +30,7 @@ func NewApp() *App {
 		srv: service.NewApp(
 			dbs.NewApp(),
 			dbs.NewTenantApp(),
+			dbs.NewTenant(),
 		),
 	}
 }
@@ -161,6 +164,29 @@ func (s *App) UpdateApp(c context.Context, req *app.UpdateAppRequest) (*app.Upda
 // DeleteApp 删除应用信息
 func (s *App) DeleteApp(c context.Context, req *app.DeleteAppRequest) (*app.DeleteAppReply, error) {
 	return &app.DeleteAppReply{}, s.srv.DeleteApp(core.MustContext(c), req.Id)
+}
+
+// ListTenantAppOAuthChannel 获取应用渠道信息
+func (s *App) ListTenantAppOAuthChannel(c context.Context, req *app.ListTenantAppOAuthChannelRequest) (*app.ListTenantAppOAuthChannelReply, error) {
+	ctx := core.MustContext(c, kratosx.WithSkipDBHook())
+
+	// 调用服务
+	list, err := s.srv.ListTenantAppOAuthChannel(ctx, req)
+	if err != nil {
+		return nil, err
+	}
+	reply := app.ListTenantAppOAuthChannelReply{}
+	for _, item := range list {
+		reply.List = append(reply.List, &app.ListTenantAppOAuthChannelReply_Channel{
+			Id:      item.Channel.Id,
+			Logo:    item.Channel.Logo,
+			Name:    item.Channel.Name,
+			Keyword: item.Channel.Keyword,
+			Type:    item.Channel.Type,
+		})
+	}
+
+	return &reply, nil
 }
 
 // ListAppOAuthChannel 获取应用渠道信息

@@ -19,6 +19,7 @@ message ListOAuthChannelTypeReply{
   repeated Type list = 1;
 }
 
+
 message ListOAuthChannelRequest {
   uint32 page = 1[(validate.rules).uint32 = {gte: 1}];
   uint32 pageSize = 2[(validate.rules).uint32 = {gte: 1 ,lte: 50}];

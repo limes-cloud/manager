@@ -122,7 +122,8 @@ func (a *Auth) ListLoginLog(c context.Context, req *auth.ListLoginLogRequest) (*
 
 // OAuthHandler 处理授权
 func (a *Auth) OAuthHandler(c context.Context, req *auth.OAuthHandlerRequest) (*auth.OAuthHandlerReply, error) {
-	resp, err := a.srv.OAuthHandler(core.MustContext(c), &types.OAuthHandlerRequest{
+	ctx := core.MustContext(c, kratosx.WithSkipDBHook())
+	resp, err := a.srv.OAuthHandler(ctx, &types.OAuthHandlerRequest{
 		Keyword: req.Keyword,
 		User:    req.User,
 	})
@@ -153,7 +154,8 @@ func (a *Auth) ReportOAuthCode(c context.Context, req *auth.ReportOAuthCodeReque
 }
 
 func (a *Auth) OAuthLogin(c context.Context, req *auth.OAuthLoginRequest) (*auth.OAuthLoginReply, error) {
-	resp, err := a.srv.OAuthLogin(core.MustContext(c), &types.OAuthLoginRequest{
+	ctx := core.MustContext(c, kratosx.WithSkipDBHook())
+	resp, err := a.srv.OAuthLogin(ctx, &types.OAuthLoginRequest{
 		Code:    req.Code,
 		User:    req.User,
 		Keyword: req.Keyword,
@@ -171,6 +173,7 @@ func (a *Auth) OAuthLogin(c context.Context, req *auth.OAuthLoginRequest) (*auth
 func (a *Auth) OAuthBind(c context.Context, req *auth.OAuthBindRequest) (*auth.OAuthBindReply, error) {
 	token, err := a.srv.OAuthBind(core.MustContext(c), &types.OAuthBindRequest{
 		UserLoginRequest: &types.UserLoginRequest{
+			Tenant:    req.Tenant,
 			Username:  req.Username,
 			Password:  req.Password,
 			CaptchaId: req.CaptchaId,

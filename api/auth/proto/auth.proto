@@ -89,6 +89,7 @@ message OAuthBindRequest {
   string captcha = 4[(validate.rules).string = {min_len:1}];
   string keyword = 5[(validate.rules).string = {min_len:1}];
   string uuid = 6[(validate.rules).string = {min_len:1}];
+  string tenant = 7[(validate.rules).string = {min_len:1}];
 }
 
 message OAuthBindReply{

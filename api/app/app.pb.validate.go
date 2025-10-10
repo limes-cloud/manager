@@ -1640,6 +1640,270 @@ var _ interface {
 	ErrorName() string
 } = ListAppOAuthChannelReplyValidationError{}
 
+// Validate checks the field values on ListTenantAppOAuthChannelRequest with
+// the rules defined in the proto definition for this message. If any rules
+// are violated, the first error encountered is returned, or nil if there are
+// no violations.
+func (m *ListTenantAppOAuthChannelRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on ListTenantAppOAuthChannelRequest with
+// the rules defined in the proto definition for this message. If any rules
+// are violated, the result is a list of violation errors wrapped in
+// ListTenantAppOAuthChannelRequestMultiError, or nil if none found.
+func (m *ListTenantAppOAuthChannelRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *ListTenantAppOAuthChannelRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if utf8.RuneCountInString(m.GetApp()) < 1 {
+		err := ListTenantAppOAuthChannelRequestValidationError{
+			field:  "App",
+			reason: "value length must be at least 1 runes",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if utf8.RuneCountInString(m.GetTenant()) < 1 {
+		err := ListTenantAppOAuthChannelRequestValidationError{
+			field:  "Tenant",
+			reason: "value length must be at least 1 runes",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if len(errors) > 0 {
+		return ListTenantAppOAuthChannelRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// ListTenantAppOAuthChannelRequestMultiError is an error wrapping multiple
+// validation errors returned by
+// ListTenantAppOAuthChannelRequest.ValidateAll() if the designated
+// constraints aren't met.
+type ListTenantAppOAuthChannelRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m ListTenantAppOAuthChannelRequestMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m ListTenantAppOAuthChannelRequestMultiError) AllErrors() []error { return m }
+
+// ListTenantAppOAuthChannelRequestValidationError is the validation error
+// returned by ListTenantAppOAuthChannelRequest.Validate if the designated
+// constraints aren't met.
+type ListTenantAppOAuthChannelRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e ListTenantAppOAuthChannelRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e ListTenantAppOAuthChannelRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e ListTenantAppOAuthChannelRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e ListTenantAppOAuthChannelRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e ListTenantAppOAuthChannelRequestValidationError) ErrorName() string {
+	return "ListTenantAppOAuthChannelRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e ListTenantAppOAuthChannelRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sListTenantAppOAuthChannelRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = ListTenantAppOAuthChannelRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = ListTenantAppOAuthChannelRequestValidationError{}
+
+// Validate checks the field values on ListTenantAppOAuthChannelReply with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *ListTenantAppOAuthChannelReply) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on ListTenantAppOAuthChannelReply with
+// the rules defined in the proto definition for this message. If any rules
+// are violated, the result is a list of violation errors wrapped in
+// ListTenantAppOAuthChannelReplyMultiError, or nil if none found.
+func (m *ListTenantAppOAuthChannelReply) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *ListTenantAppOAuthChannelReply) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	for idx, item := range m.GetList() {
+		_, _ = idx, item
+
+		if all {
+			switch v := interface{}(item).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, ListTenantAppOAuthChannelReplyValidationError{
+						field:  fmt.Sprintf("List[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, ListTenantAppOAuthChannelReplyValidationError{
+						field:  fmt.Sprintf("List[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return ListTenantAppOAuthChannelReplyValidationError{
+					field:  fmt.Sprintf("List[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	if len(errors) > 0 {
+		return ListTenantAppOAuthChannelReplyMultiError(errors)
+	}
+
+	return nil
+}
+
+// ListTenantAppOAuthChannelReplyMultiError is an error wrapping multiple
+// validation errors returned by ListTenantAppOAuthChannelReply.ValidateAll()
+// if the designated constraints aren't met.
+type ListTenantAppOAuthChannelReplyMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m ListTenantAppOAuthChannelReplyMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m ListTenantAppOAuthChannelReplyMultiError) AllErrors() []error { return m }
+
+// ListTenantAppOAuthChannelReplyValidationError is the validation error
+// returned by ListTenantAppOAuthChannelReply.Validate if the designated
+// constraints aren't met.
+type ListTenantAppOAuthChannelReplyValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e ListTenantAppOAuthChannelReplyValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e ListTenantAppOAuthChannelReplyValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e ListTenantAppOAuthChannelReplyValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e ListTenantAppOAuthChannelReplyValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e ListTenantAppOAuthChannelReplyValidationError) ErrorName() string {
+	return "ListTenantAppOAuthChannelReplyValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e ListTenantAppOAuthChannelReplyValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sListTenantAppOAuthChannelReply.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = ListTenantAppOAuthChannelReplyValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = ListTenantAppOAuthChannelReplyValidationError{}
+
 // Validate checks the field values on CreateAppOAuthChannelRequest with the
 // rules defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
@@ -3232,6 +3496,122 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = ListAppOAuthChannelReply_DataValidationError{}
+
+// Validate checks the field values on ListTenantAppOAuthChannelReply_Channel
+// with the rules defined in the proto definition for this message. If any
+// rules are violated, the first error encountered is returned, or nil if
+// there are no violations.
+func (m *ListTenantAppOAuthChannelReply_Channel) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on
+// ListTenantAppOAuthChannelReply_Channel with the rules defined in the proto
+// definition for this message. If any rules are violated, the result is a
+// list of violation errors wrapped in
+// ListTenantAppOAuthChannelReply_ChannelMultiError, or nil if none found.
+func (m *ListTenantAppOAuthChannelReply_Channel) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *ListTenantAppOAuthChannelReply_Channel) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Id
+
+	// no validation rules for Logo
+
+	// no validation rules for Name
+
+	// no validation rules for Keyword
+
+	// no validation rules for Type
+
+	if len(errors) > 0 {
+		return ListTenantAppOAuthChannelReply_ChannelMultiError(errors)
+	}
+
+	return nil
+}
+
+// ListTenantAppOAuthChannelReply_ChannelMultiError is an error wrapping
+// multiple validation errors returned by
+// ListTenantAppOAuthChannelReply_Channel.ValidateAll() if the designated
+// constraints aren't met.
+type ListTenantAppOAuthChannelReply_ChannelMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m ListTenantAppOAuthChannelReply_ChannelMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m ListTenantAppOAuthChannelReply_ChannelMultiError) AllErrors() []error { return m }
+
+// ListTenantAppOAuthChannelReply_ChannelValidationError is the validation
+// error returned by ListTenantAppOAuthChannelReply_Channel.Validate if the
+// designated constraints aren't met.
+type ListTenantAppOAuthChannelReply_ChannelValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e ListTenantAppOAuthChannelReply_ChannelValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e ListTenantAppOAuthChannelReply_ChannelValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e ListTenantAppOAuthChannelReply_ChannelValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e ListTenantAppOAuthChannelReply_ChannelValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e ListTenantAppOAuthChannelReply_ChannelValidationError) ErrorName() string {
+	return "ListTenantAppOAuthChannelReply_ChannelValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e ListTenantAppOAuthChannelReply_ChannelValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sListTenantAppOAuthChannelReply_Channel.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = ListTenantAppOAuthChannelReply_ChannelValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = ListTenantAppOAuthChannelReply_ChannelValidationError{}
 
 // Validate checks the field values on ListAppFieldReply_Field with the rules
 // defined in the proto definition for this message. If any rules are

@@ -23,18 +23,19 @@ var (
 const _ = http.SupportPackageIsVersion1
 
 const (
-	OperationAppCreateApp             = "/manager.api.app.App/CreateApp"
-	OperationAppCreateAppField        = "/manager.api.app.App/CreateAppField"
-	OperationAppCreateAppOAuthChannel = "/manager.api.app.App/CreateAppOAuthChannel"
-	OperationAppDeleteApp             = "/manager.api.app.App/DeleteApp"
-	OperationAppDeleteAppField        = "/manager.api.app.App/DeleteAppField"
-	OperationAppDeleteAppOAuthChannel = "/manager.api.app.App/DeleteAppOAuthChannel"
-	OperationAppGetApp                = "/manager.api.app.App/GetApp"
-	OperationAppListApp               = "/manager.api.app.App/ListApp"
-	OperationAppListAppField          = "/manager.api.app.App/ListAppField"
-	OperationAppListAppOAuthChannel   = "/manager.api.app.App/ListAppOAuthChannel"
-	OperationAppListCurrentApp        = "/manager.api.app.App/ListCurrentApp"
-	OperationAppUpdateApp             = "/manager.api.app.App/UpdateApp"
+	OperationAppCreateApp                 = "/manager.api.app.App/CreateApp"
+	OperationAppCreateAppField            = "/manager.api.app.App/CreateAppField"
+	OperationAppCreateAppOAuthChannel     = "/manager.api.app.App/CreateAppOAuthChannel"
+	OperationAppDeleteApp                 = "/manager.api.app.App/DeleteApp"
+	OperationAppDeleteAppField            = "/manager.api.app.App/DeleteAppField"
+	OperationAppDeleteAppOAuthChannel     = "/manager.api.app.App/DeleteAppOAuthChannel"
+	OperationAppGetApp                    = "/manager.api.app.App/GetApp"
+	OperationAppListApp                   = "/manager.api.app.App/ListApp"
+	OperationAppListAppField              = "/manager.api.app.App/ListAppField"
+	OperationAppListAppOAuthChannel       = "/manager.api.app.App/ListAppOAuthChannel"
+	OperationAppListCurrentApp            = "/manager.api.app.App/ListCurrentApp"
+	OperationAppListTenantAppOAuthChannel = "/manager.api.app.App/ListTenantAppOAuthChannel"
+	OperationAppUpdateApp                 = "/manager.api.app.App/UpdateApp"
 )
 
 type AppHTTPServer interface {
@@ -60,6 +61,8 @@ type AppHTTPServer interface {
 	ListAppOAuthChannel(context.Context, *ListAppOAuthChannelRequest) (*ListAppOAuthChannelReply, error)
 	// ListCurrentApp ListApp 获取应用信息列表
 	ListCurrentApp(context.Context, *ListAppRequest) (*ListAppReply, error)
+	// ListTenantAppOAuthChannel ListAppOAuthChannel 获取应用渠道信息
+	ListTenantAppOAuthChannel(context.Context, *ListTenantAppOAuthChannelRequest) (*ListTenantAppOAuthChannelReply, error)
 	// UpdateApp UpdateApp 更新应用信息
 	UpdateApp(context.Context, *UpdateAppRequest) (*UpdateAppReply, error)
 }
@@ -73,6 +76,7 @@ func RegisterAppHTTPServer(s *http.Server, srv AppHTTPServer) {
 	r.PUT("/manager/api/v1/app", _App_UpdateApp0_HTTP_Handler(srv))
 	r.DELETE("/manager/api/v1/app", _App_DeleteApp0_HTTP_Handler(srv))
 	r.GET("/manager/api/v1/app/channels", _App_ListAppOAuthChannel0_HTTP_Handler(srv))
+	r.GET("/manager/api/v1/app/tenant/channels", _App_ListTenantAppOAuthChannel0_HTTP_Handler(srv))
 	r.POST("/manager/api/v1/app/channel", _App_CreateAppOAuthChannel0_HTTP_Handler(srv))
 	r.DELETE("/manager/api/v1/app/channel", _App_DeleteAppOAuthChannel0_HTTP_Handler(srv))
 	r.GET("/manager/api/v1/app/fields", _App_ListAppField0_HTTP_Handler(srv))
@@ -219,6 +223,25 @@ func _App_ListAppOAuthChannel0_HTTP_Handler(srv AppHTTPServer) func(ctx http.Con
 	}
 }
 
+func _App_ListTenantAppOAuthChannel0_HTTP_Handler(srv AppHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in ListTenantAppOAuthChannelRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationAppListTenantAppOAuthChannel)
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
+			return srv.ListTenantAppOAuthChannel(ctx, req.(*ListTenantAppOAuthChannelRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*ListTenantAppOAuthChannelReply)
+		return ctx.Result(200, reply)
+	}
+}
+
 func _App_CreateAppOAuthChannel0_HTTP_Handler(srv AppHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in CreateAppOAuthChannelRequest
@@ -332,6 +355,7 @@ type AppHTTPClient interface {
 	ListAppField(ctx context.Context, req *ListAppFieldRequest, opts ...http.CallOption) (rsp *ListAppFieldReply, err error)
 	ListAppOAuthChannel(ctx context.Context, req *ListAppOAuthChannelRequest, opts ...http.CallOption) (rsp *ListAppOAuthChannelReply, err error)
 	ListCurrentApp(ctx context.Context, req *ListAppRequest, opts ...http.CallOption) (rsp *ListAppReply, err error)
+	ListTenantAppOAuthChannel(ctx context.Context, req *ListTenantAppOAuthChannelRequest, opts ...http.CallOption) (rsp *ListTenantAppOAuthChannelReply, err error)
 	UpdateApp(ctx context.Context, req *UpdateAppRequest, opts ...http.CallOption) (rsp *UpdateAppReply, err error)
 }
 
@@ -478,6 +502,19 @@ func (c *AppHTTPClientImpl) ListCurrentApp(ctx context.Context, in *ListAppReque
 	pattern := "/manager/api/v1/current/apps"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationAppListCurrentApp))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *AppHTTPClientImpl) ListTenantAppOAuthChannel(ctx context.Context, in *ListTenantAppOAuthChannelRequest, opts ...http.CallOption) (*ListTenantAppOAuthChannelReply, error) {
+	var out ListTenantAppOAuthChannelReply
+	pattern := "/manager/api/v1/app/tenant/channels"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationAppListTenantAppOAuthChannel))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {

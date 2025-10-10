@@ -28,6 +28,9 @@ type App interface {
 	// ListAppOAuthChannel 获取应用授权列表
 	ListAppOAuthChannel(ctx core.Context, req *types.ListAppOAuthChannelRequest) ([]*entity.AppOAuthChannel, uint32, error)
 
+	// ListTenantAppOAuthChannel 获取应用授权列表
+	ListTenantAppOAuthChannel(ctx core.Context, req *types.ListTenantAppOAuthChannelRequest) ([]*entity.AppOAuthChannel, error)
+
 	// CreateAppOAuthChannel 创建应用信息
 	CreateAppOAuthChannel(ctx core.Context, req *entity.AppOAuthChannel) (uint32, error)
 

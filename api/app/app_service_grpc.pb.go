@@ -20,18 +20,19 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	App_GetApp_FullMethodName                = "/manager.api.app.App/GetApp"
-	App_ListCurrentApp_FullMethodName        = "/manager.api.app.App/ListCurrentApp"
-	App_ListApp_FullMethodName               = "/manager.api.app.App/ListApp"
-	App_CreateApp_FullMethodName             = "/manager.api.app.App/CreateApp"
-	App_UpdateApp_FullMethodName             = "/manager.api.app.App/UpdateApp"
-	App_DeleteApp_FullMethodName             = "/manager.api.app.App/DeleteApp"
-	App_ListAppOAuthChannel_FullMethodName   = "/manager.api.app.App/ListAppOAuthChannel"
-	App_CreateAppOAuthChannel_FullMethodName = "/manager.api.app.App/CreateAppOAuthChannel"
-	App_DeleteAppOAuthChannel_FullMethodName = "/manager.api.app.App/DeleteAppOAuthChannel"
-	App_ListAppField_FullMethodName          = "/manager.api.app.App/ListAppField"
-	App_CreateAppField_FullMethodName        = "/manager.api.app.App/CreateAppField"
-	App_DeleteAppField_FullMethodName        = "/manager.api.app.App/DeleteAppField"
+	App_GetApp_FullMethodName                    = "/manager.api.app.App/GetApp"
+	App_ListCurrentApp_FullMethodName            = "/manager.api.app.App/ListCurrentApp"
+	App_ListApp_FullMethodName                   = "/manager.api.app.App/ListApp"
+	App_CreateApp_FullMethodName                 = "/manager.api.app.App/CreateApp"
+	App_UpdateApp_FullMethodName                 = "/manager.api.app.App/UpdateApp"
+	App_DeleteApp_FullMethodName                 = "/manager.api.app.App/DeleteApp"
+	App_ListAppOAuthChannel_FullMethodName       = "/manager.api.app.App/ListAppOAuthChannel"
+	App_ListTenantAppOAuthChannel_FullMethodName = "/manager.api.app.App/ListTenantAppOAuthChannel"
+	App_CreateAppOAuthChannel_FullMethodName     = "/manager.api.app.App/CreateAppOAuthChannel"
+	App_DeleteAppOAuthChannel_FullMethodName     = "/manager.api.app.App/DeleteAppOAuthChannel"
+	App_ListAppField_FullMethodName              = "/manager.api.app.App/ListAppField"
+	App_CreateAppField_FullMethodName            = "/manager.api.app.App/CreateAppField"
+	App_DeleteAppField_FullMethodName            = "/manager.api.app.App/DeleteAppField"
 )
 
 // AppClient is the client API for App service.
@@ -52,6 +53,8 @@ type AppClient interface {
 	DeleteApp(ctx context.Context, in *DeleteAppRequest, opts ...grpc.CallOption) (*DeleteAppReply, error)
 	// ListAppOAuthChannel 获取应用渠道信息
 	ListAppOAuthChannel(ctx context.Context, in *ListAppOAuthChannelRequest, opts ...grpc.CallOption) (*ListAppOAuthChannelReply, error)
+	// ListAppOAuthChannel 获取应用渠道信息
+	ListTenantAppOAuthChannel(ctx context.Context, in *ListTenantAppOAuthChannelRequest, opts ...grpc.CallOption) (*ListTenantAppOAuthChannelReply, error)
 	// CreateApp 创建应用渠道信息
 	CreateAppOAuthChannel(ctx context.Context, in *CreateAppOAuthChannelRequest, opts ...grpc.CallOption) (*CreateAppOAuthChannelReply, error)
 	// DeleteApp 删除应用渠道信息
@@ -135,6 +138,15 @@ func (c *appClient) ListAppOAuthChannel(ctx context.Context, in *ListAppOAuthCha
 	return out, nil
 }
 
+func (c *appClient) ListTenantAppOAuthChannel(ctx context.Context, in *ListTenantAppOAuthChannelRequest, opts ...grpc.CallOption) (*ListTenantAppOAuthChannelReply, error) {
+	out := new(ListTenantAppOAuthChannelReply)
+	err := c.cc.Invoke(ctx, App_ListTenantAppOAuthChannel_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *appClient) CreateAppOAuthChannel(ctx context.Context, in *CreateAppOAuthChannelRequest, opts ...grpc.CallOption) (*CreateAppOAuthChannelReply, error) {
 	out := new(CreateAppOAuthChannelReply)
 	err := c.cc.Invoke(ctx, App_CreateAppOAuthChannel_FullMethodName, in, out, opts...)
@@ -198,6 +210,8 @@ type AppServer interface {
 	DeleteApp(context.Context, *DeleteAppRequest) (*DeleteAppReply, error)
 	// ListAppOAuthChannel 获取应用渠道信息
 	ListAppOAuthChannel(context.Context, *ListAppOAuthChannelRequest) (*ListAppOAuthChannelReply, error)
+	// ListAppOAuthChannel 获取应用渠道信息
+	ListTenantAppOAuthChannel(context.Context, *ListTenantAppOAuthChannelRequest) (*ListTenantAppOAuthChannelReply, error)
 	// CreateApp 创建应用渠道信息
 	CreateAppOAuthChannel(context.Context, *CreateAppOAuthChannelRequest) (*CreateAppOAuthChannelReply, error)
 	// DeleteApp 删除应用渠道信息
@@ -240,6 +254,10 @@ func (UnimplementedAppServer) DeleteApp(context.Context, *DeleteAppRequest) (*De
 
 func (UnimplementedAppServer) ListAppOAuthChannel(context.Context, *ListAppOAuthChannelRequest) (*ListAppOAuthChannelReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListAppOAuthChannel not implemented")
+}
+
+func (UnimplementedAppServer) ListTenantAppOAuthChannel(context.Context, *ListTenantAppOAuthChannelRequest) (*ListTenantAppOAuthChannelReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListTenantAppOAuthChannel not implemented")
 }
 
 func (UnimplementedAppServer) CreateAppOAuthChannel(context.Context, *CreateAppOAuthChannelRequest) (*CreateAppOAuthChannelReply, error) {
@@ -400,6 +418,24 @@ func _App_ListAppOAuthChannel_Handler(srv interface{}, ctx context.Context, dec 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _App_ListTenantAppOAuthChannel_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListTenantAppOAuthChannelRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AppServer).ListTenantAppOAuthChannel(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: App_ListTenantAppOAuthChannel_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AppServer).ListTenantAppOAuthChannel(ctx, req.(*ListTenantAppOAuthChannelRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _App_CreateAppOAuthChannel_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(CreateAppOAuthChannelRequest)
 	if err := dec(in); err != nil {
@@ -524,6 +560,10 @@ var App_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListAppOAuthChannel",
 			Handler:    _App_ListAppOAuthChannel_Handler,
+		},
+		{
+			MethodName: "ListTenantAppOAuthChannel",
+			Handler:    _App_ListTenantAppOAuthChannel_Handler,
 		},
 		{
 			MethodName: "CreateAppOAuthChannel",

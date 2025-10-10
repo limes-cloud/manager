@@ -505,7 +505,7 @@ func (u *Auth) OAuthBind(ctx core.Context, req *types.OAuthBindRequest) (string,
 		return "", errors.BindError("获取用户信息失败")
 	}
 
-	// 用户瞪目
+	// 用户登陆
 	token, err := u.UserLogin(ctx, req.UserLoginRequest)
 	if err != nil {
 		return "", err

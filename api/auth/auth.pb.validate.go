@@ -1519,6 +1519,17 @@ func (m *OAuthBindRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
+	if utf8.RuneCountInString(m.GetTenant()) < 1 {
+		err := OAuthBindRequestValidationError{
+			field:  "Tenant",
+			reason: "value length must be at least 1 runes",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
 	if len(errors) > 0 {
 		return OAuthBindRequestMultiError(errors)
 	}

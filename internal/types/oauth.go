@@ -74,8 +74,8 @@ type GetOAuthTokenRequest struct {
 
 type GetOAuthTokenReply struct {
 	Token  string `json:"token"`
-	OID    string `json:"oid"`
 	Expire int64  `json:"expire"`
+	OID    string `json:"oid"`
 }
 
 type GetOAuthInfoRequest struct {

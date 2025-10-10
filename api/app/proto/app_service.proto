@@ -62,6 +62,13 @@ service App{
     };
   }
 
+  // ListAppOAuthChannel 获取应用渠道信息
+  rpc ListTenantAppOAuthChannel (ListTenantAppOAuthChannelRequest) returns (ListTenantAppOAuthChannelReply) {
+    option (google.api.http) = {
+      get: "/manager/api/v1/app/tenant/channels",
+    };
+  }
+
   // CreateApp 创建应用渠道信息
   rpc CreateAppOAuthChannel (CreateAppOAuthChannelRequest) returns (CreateAppOAuthChannelReply) {
     option (google.api.http) = {

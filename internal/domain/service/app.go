@@ -1,6 +1,7 @@
 package service
 
 import (
+	"github.com/limes-cloud/manager/api/app"
 	"github.com/limes-cloud/manager/api/errors"
 	"github.com/limes-cloud/manager/internal/core"
 	"github.com/limes-cloud/manager/internal/pkg/field"
@@ -12,14 +13,16 @@ import (
 )
 
 type App struct {
-	repo repository.App
-	ta   repository.TenantApp
+	repo   repository.App
+	ta     repository.TenantApp
+	tenant repository.Tenant
 }
 
-func NewApp(repo repository.App, scope repository.TenantApp) *App {
+func NewApp(repo repository.App, ta repository.TenantApp, tenant repository.Tenant) *App {
 	return &App{
-		repo: repo,
-		ta:   scope,
+		repo:   repo,
+		ta:     ta,
+		tenant: tenant,
 	}
 }
 
@@ -47,7 +50,9 @@ func (u *App) GetApp(ctx core.Context, req *types.GetAppRequest) (*entity.App, e
 
 // ListCurrentApp 获取应用信息列表
 func (u *App) ListCurrentApp(ctx core.Context, req *types.ListAppRequest) ([]*entity.App, uint32, error) {
-	req.InIds = u.ta.GetAppIds(ctx.Auth().TenantId)
+	if !ctx.IsSuperAdmin() {
+		req.InIds = u.ta.GetAppIds(ctx.Auth().TenantId)
+	}
 	list, total, err := u.repo.ListApp(ctx, req)
 	if err != nil {
 		ctx.Logger().Warnw("msg", "list app error", "err", err.Error())
@@ -94,6 +99,31 @@ func (u *App) DeleteApp(ctx core.Context, id uint32) error {
 		return errors.DeleteError()
 	}
 	return nil
+}
+
+// ListTenantAppOAuthChannel 获取应用渠道信息
+func (u *App) ListTenantAppOAuthChannel(ctx core.Context, req *app.ListTenantAppOAuthChannelRequest) ([]*entity.AppOAuthChannel, error) {
+	// 获取应用
+	app, err := u.GetApp(ctx, &types.GetAppRequest{Keyword: &req.App})
+	if err != nil {
+		return nil, errors.GetError("获取应用失败")
+	}
+
+	// 获取应用
+	tenant, err := u.tenant.GetTenantByKeyword(ctx, req.Tenant)
+	if err != nil {
+		return nil, errors.GetError("获取租户失败")
+	}
+
+	list, err := u.repo.ListTenantAppOAuthChannel(ctx, &types.ListTenantAppOAuthChannelRequest{
+		AppId:    app.Id,
+		TenantId: tenant.Id,
+	})
+	if err != nil {
+		ctx.Logger().Warnw("msg", "create app oauth channel error", "err", err.Error())
+		return nil, errors.ListError()
+	}
+	return list, nil
 }
 
 // ListAppOAuthChannel 获取应用渠道信息

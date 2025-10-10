@@ -22,6 +22,11 @@ type ListAppOAuthChannelRequest struct {
 	Name    *string `json:"name"`
 }
 
+type ListTenantAppOAuthChannelRequest struct {
+	TenantId uint32 `json:"tenantId"`
+	AppId    uint32 `json:"appId"`
+}
+
 type ListAppFieldRequest struct {
 	page.Search
 	AppId   uint32  `json:"appId"`

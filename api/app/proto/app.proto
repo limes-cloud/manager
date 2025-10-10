@@ -123,6 +123,24 @@ message ListAppOAuthChannelReply {
   repeated Data list = 2;
 }
 
+message ListTenantAppOAuthChannelRequest {
+  string app = 1[(validate.rules).string = {min_len: 1}];
+  string tenant = 2[(validate.rules).string = {min_len: 1}];
+}
+
+message ListTenantAppOAuthChannelReply {
+  message Channel {
+    uint32 id = 1;
+    string logo = 2;
+    string name = 3;
+    string keyword = 4;
+    string type = 5;
+  }
+
+  repeated Channel list = 2;
+}
+
+
 message CreateAppOAuthChannelRequest {
   uint32 appId = 1[(validate.rules).uint32 = {gte: 1}];
   uint32 channelId = 2[(validate.rules).uint32 = {gte: 1}];
