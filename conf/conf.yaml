@@ -90,18 +90,8 @@ jwt:
   secret: limes-cloud-test
   expire: 12h
   renewal: 1h
-  whitelist: {"POST:/manager/api/v1/login":true,"POST:/manager/api/v1/logout":true,"POST:/manager/api/v1/token/refresh":true,"GET:/manager/api/v1/system/setting":true,"GET:/manager/api/v1/login/captcha":true,"GET:/manager/api/v1/tenants":true,"GET:/manager/api/v1/app/tenant/channels":true,"POST:/manager/api/v1/oauth/handler":true,"POST:/manager/api/v1/oauth/login":true}
-authentication:
-  db: system
-  redis: cache
-  roleKey: roleKeyword
-  skipRole: ["superAdmin"]
-  whitelist: {"*:*":true,"POST:/resource/api/v1/file/upload":true}
-client:
-  - server: Resource
-    type: direct
-    backends:
-      - target: 127.0.0.1:8020
+  whitelist: {"POST:/manager/api/v1/login":true,"POST:/manager/api/v1/logout":true,"POST:/manager/api/v1/token/refresh":true,"GET:/manager/api/v1/system/setting":true,"GET:/manager/api/v1/login/captcha":true,"GET:/manager/api/v1/tenants":true,"GET:/manager/api/v1/app/tenant/channels":true,"POST:/manager/api/v1/oauth/handler":true,"POST:/manager/api/v1/oauth/login":true,"POST:/manager/api/v1/token/parse":true,"GRPC:/manager.api.auth.Auth/ParseToken":true}
+
 pool: #并非池配置
   size: 10000 #最大协程数量
   expiryDuration: 30s #过期时间

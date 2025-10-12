@@ -1,0 +1,34 @@
+syntax = "proto3";
+
+package manager.api.scope;
+
+option go_package = ".;scope";
+option java_multiple_files = true;
+option java_package = "manager.api.scope.proto";
+
+import "validate/validate.proto";
+
+message GetScopeRequest {
+  string database =1;
+  string model =2;
+  string method =3;
+}
+
+message GetScopeReply {
+  bool allDept = 1;
+  repeated uint32 deptScopes = 2;
+  string rule = 3;
+  repeated string fields = 4;
+  uint32 userId = 5;
+  uint32 deptId = 6;
+  uint32 tenantId = 7;
+}
+
+
+message GetUserDeptIdRequest {
+  uint32 userId = 1;
+}
+message GetUserDeptIdReply {
+  uint32 deptId = 1;
+}
+

@@ -31,6 +31,7 @@ const (
 	OperationAuthOAuthBind           = "/manager.api.auth.Auth/OAuthBind"
 	OperationAuthOAuthHandler        = "/manager.api.auth.Auth/OAuthHandler"
 	OperationAuthOAuthLogin          = "/manager.api.auth.Auth/OAuthLogin"
+	OperationAuthParseToken          = "/manager.api.auth.Auth/ParseToken"
 	OperationAuthReportOAuthCode     = "/manager.api.auth.Auth/ReportOAuthCode"
 	OperationAuthUserLogin           = "/manager.api.auth.Auth/UserLogin"
 	OperationAuthUserLogout          = "/manager.api.auth.Auth/UserLogout"
@@ -52,6 +53,8 @@ type AuthHTTPServer interface {
 	OAuthHandler(context.Context, *OAuthHandlerRequest) (*OAuthHandlerReply, error)
 	// OAuthLogin OAuthLogin 三方授权登陆
 	OAuthLogin(context.Context, *OAuthLoginRequest) (*OAuthLoginReply, error)
+	// ParseToken ParseToken token解析
+	ParseToken(context.Context, *ParseTokenRequest) (*ParseTokenReply, error)
 	// ReportOAuthCode ReportOAuthCode 上报授权信息
 	ReportOAuthCode(context.Context, *ReportOAuthCodeRequest) (*ReportOAuthCodeReply, error)
 	// UserLogin UserLogin 用户登陆
@@ -64,6 +67,7 @@ type AuthHTTPServer interface {
 
 func RegisterAuthHTTPServer(s *http.Server, srv AuthHTTPServer) {
 	r := s.Route("/")
+	r.POST("/manager/api/v1/token/parse", _Auth_ParseToken0_HTTP_Handler(srv))
 	r.POST("/manager/api/v1/auth", _Auth_ApiAuth0_HTTP_Handler(srv))
 	r.GET("/manager/api/v1/login/captcha", _Auth_GetUserLoginCaptcha0_HTTP_Handler(srv))
 	r.POST("/manager/api/v1/login", _Auth_UserLogin0_HTTP_Handler(srv))
@@ -75,6 +79,28 @@ func RegisterAuthHTTPServer(s *http.Server, srv AuthHTTPServer) {
 	r.POST("/manager/api/v1/oauth/report", _Auth_ReportOAuthCode0_HTTP_Handler(srv))
 	r.POST("/manager/api/v1/oauth/login", _Auth_OAuthLogin0_HTTP_Handler(srv))
 	r.POST("/manager/api/v1/oauth/bind", _Auth_OAuthBind0_HTTP_Handler(srv))
+}
+
+func _Auth_ParseToken0_HTTP_Handler(srv AuthHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in ParseTokenRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationAuthParseToken)
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
+			return srv.ParseToken(ctx, req.(*ParseTokenRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*ParseTokenReply)
+		return ctx.Result(200, reply)
+	}
 }
 
 func _Auth_ApiAuth0_HTTP_Handler(srv AuthHTTPServer) func(ctx http.Context) error {
@@ -318,6 +344,7 @@ type AuthHTTPClient interface {
 	OAuthBind(ctx context.Context, req *OAuthBindRequest, opts ...http.CallOption) (rsp *OAuthBindReply, err error)
 	OAuthHandler(ctx context.Context, req *OAuthHandlerRequest, opts ...http.CallOption) (rsp *OAuthHandlerReply, err error)
 	OAuthLogin(ctx context.Context, req *OAuthLoginRequest, opts ...http.CallOption) (rsp *OAuthLoginReply, err error)
+	ParseToken(ctx context.Context, req *ParseTokenRequest, opts ...http.CallOption) (rsp *ParseTokenReply, err error)
 	ReportOAuthCode(ctx context.Context, req *ReportOAuthCodeRequest, opts ...http.CallOption) (rsp *ReportOAuthCodeReply, err error)
 	UserLogin(ctx context.Context, req *UserLoginRequest, opts ...http.CallOption) (rsp *UserLoginReply, err error)
 	UserLogout(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
@@ -415,6 +442,19 @@ func (c *AuthHTTPClientImpl) OAuthLogin(ctx context.Context, in *OAuthLoginReque
 	pattern := "/manager/api/v1/oauth/login"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationAuthOAuthLogin))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *AuthHTTPClientImpl) ParseToken(ctx context.Context, in *ParseTokenRequest, opts ...http.CallOption) (*ParseTokenReply, error) {
+	var out ParseTokenReply
+	pattern := "/manager/api/v1/token/parse"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationAuthParseToken))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
 	if err != nil {

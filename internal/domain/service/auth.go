@@ -71,6 +71,9 @@ func (u *Auth) ApiAuth(ctx core.Context, in *auth.ApiAuthRequest) (*auth.ApiAuth
 		DeptId:   ctx.Auth().DeptId,
 		Username: ctx.Auth().Username,
 	}
+	if ctx.JWT().IsWhitelist(in.Path, in.Method) {
+		return info, nil
+	}
 	if ctx.IsSuperAdmin() {
 		return info, nil
 	}

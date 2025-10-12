@@ -13,6 +13,14 @@ import "api/auth/proto/auth.proto";
 
 
 service Auth {
+  // ParseToken token解析
+  rpc ParseToken(ParseTokenRequest) returns(ParseTokenReply){
+    option (google.api.http) = {
+      post: "/manager/api/v1/token/parse",
+      body: "*"
+    };
+  }
+
   // Auth 接口鉴权
   rpc ApiAuth(ApiAuthRequest) returns(ApiAuthReply){
     option (google.api.http) = {

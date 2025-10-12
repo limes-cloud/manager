@@ -49,6 +49,18 @@ func init() {
 	})
 }
 
+// ParseToken 接口鉴权
+func (a *Auth) ParseToken(c context.Context, req *auth.ParseTokenRequest) (*auth.ParseTokenReply, error) {
+	var (
+		ctx   = core.MustContext(c)
+		reply = auth.ParseTokenReply{}
+	)
+	if err := ctx.JWT().ParseByToken(req.Token, &reply); err != nil {
+		return nil, errors.SystemError()
+	}
+	return &reply, nil
+}
+
 // Auth 接口鉴权
 func (a *Auth) ApiAuth(c context.Context, req *auth.ApiAuthRequest) (*auth.ApiAuthReply, error) {
 	return a.srv.ApiAuth(core.MustContext(c), req)

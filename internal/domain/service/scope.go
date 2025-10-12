@@ -19,9 +19,6 @@ type resp struct {
 	ctx   core.Context
 	scope *types.GetScopeResponse
 	user  repository.User
-	// database string
-	// model    string
-	// method   string
 }
 
 func (r *resp) Condition() *mhook.ConditionGroup {
@@ -41,6 +38,10 @@ func (h *Scope) Hook(ctx context.Context, database string, model string, method 
 		ctx:   core.MustContext(ctx),
 		scope: h.repo.GetScope(core.MustContext(ctx), database, model, method),
 	}, nil
+}
+
+func (h *Scope) GetUserDeptId(u uint32) uint32 {
+	return h.user.GetUserDeptId(u)
 }
 
 func (r *resp) DeptScopes() (bool, []uint32) {

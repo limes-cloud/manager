@@ -22,6 +22,16 @@ message ApiAuthReply{
   string username = 4;
 }
 
+message ParseTokenRequest{
+  string token = 1;
+}
+
+message ParseTokenReply{
+  uint32 userId = 1;
+  uint32 deptId = 2;
+  uint32 tenantId = 3;
+  string username = 4;
+}
 
 message UserLoginRequest {
   string username = 1[(validate.rules).string = {min_len:4}];

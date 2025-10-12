@@ -21,6 +21,7 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
+	Auth_ParseToken_FullMethodName          = "/manager.api.auth.Auth/ParseToken"
 	Auth_ApiAuth_FullMethodName             = "/manager.api.auth.Auth/ApiAuth"
 	Auth_GetUserLoginCaptcha_FullMethodName = "/manager.api.auth.Auth/GetUserLoginCaptcha"
 	Auth_UserLogin_FullMethodName           = "/manager.api.auth.Auth/UserLogin"
@@ -38,6 +39,8 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type AuthClient interface {
+	// ParseToken token解析
+	ParseToken(ctx context.Context, in *ParseTokenRequest, opts ...grpc.CallOption) (*ParseTokenReply, error)
 	// Auth 接口鉴权
 	ApiAuth(ctx context.Context, in *ApiAuthRequest, opts ...grpc.CallOption) (*ApiAuthReply, error)
 	// GetUserLoginCaptcha 获取用户登陆验证吗
@@ -68,6 +71,15 @@ type authClient struct {
 
 func NewAuthClient(cc grpc.ClientConnInterface) AuthClient {
 	return &authClient{cc}
+}
+
+func (c *authClient) ParseToken(ctx context.Context, in *ParseTokenRequest, opts ...grpc.CallOption) (*ParseTokenReply, error) {
+	out := new(ParseTokenReply)
+	err := c.cc.Invoke(ctx, Auth_ParseToken_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *authClient) ApiAuth(ctx context.Context, in *ApiAuthRequest, opts ...grpc.CallOption) (*ApiAuthReply, error) {
@@ -173,6 +185,8 @@ func (c *authClient) OAuthBind(ctx context.Context, in *OAuthBindRequest, opts .
 // All implementations must embed UnimplementedAuthServer
 // for forward compatibility
 type AuthServer interface {
+	// ParseToken token解析
+	ParseToken(context.Context, *ParseTokenRequest) (*ParseTokenReply, error)
 	// Auth 接口鉴权
 	ApiAuth(context.Context, *ApiAuthRequest) (*ApiAuthReply, error)
 	// GetUserLoginCaptcha 获取用户登陆验证吗
@@ -200,6 +214,10 @@ type AuthServer interface {
 
 // UnimplementedAuthServer must be embedded to have forward compatible implementations.
 type UnimplementedAuthServer struct{}
+
+func (UnimplementedAuthServer) ParseToken(context.Context, *ParseTokenRequest) (*ParseTokenReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ParseToken not implemented")
+}
 
 func (UnimplementedAuthServer) ApiAuth(context.Context, *ApiAuthRequest) (*ApiAuthReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ApiAuth not implemented")
@@ -255,6 +273,24 @@ type UnsafeAuthServer interface {
 
 func RegisterAuthServer(s grpc.ServiceRegistrar, srv AuthServer) {
 	s.RegisterService(&Auth_ServiceDesc, srv)
+}
+
+func _Auth_ParseToken_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ParseTokenRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServer).ParseToken(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Auth_ParseToken_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServer).ParseToken(ctx, req.(*ParseTokenRequest))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _Auth_ApiAuth_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -462,6 +498,10 @@ var Auth_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "manager.api.auth.Auth",
 	HandlerType: (*AuthServer)(nil),
 	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "ParseToken",
+			Handler:    _Auth_ParseToken_Handler,
+		},
 		{
 			MethodName: "ApiAuth",
 			Handler:    _Auth_ApiAuth_Handler,

@@ -41,14 +41,6 @@ func Check() middleware.Middleware {
 			if err != nil {
 				return nil, err
 			}
-
-			_, err = author.ApiAuth(ctx, &auth.ApiAuthRequest{
-				Path:   path,
-				Method: method,
-			})
-			if err != nil {
-				return nil, err
-			}
 			return handler(ctx, req)
 		}
 	}

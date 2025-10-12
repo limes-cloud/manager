@@ -173,7 +173,7 @@ func (u *Entity) LoadEntity(ctx core.Context) ([]*entity.Entity, error) {
 
 			var fields []*entity.EntityField
 			// 过滤字段
-			for _, field := range item.Columns {
+			for _, field := range item.Fields {
 				if value.InList(filterColumn, field.Name) {
 					continue
 				}

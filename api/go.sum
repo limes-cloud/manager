@@ -266,6 +266,7 @@ github.com/lib/pq v1.10.2 h1:AqzbZs4ZoCBp+GtejcpCpcxM3zlSMx29dXbUSeVtJb8=
 github.com/lib/pq v1.10.2/go.mod h1:AlVN5x4E4T544tWzH6hKfbfQvm3HdbOxrmggDNAPY9o=
 github.com/limes-cloud/kratosx v1.2.1 h1:LbbMoNT7K8t4GvBHtFZkZ1+ojYccPw3Xem1QAFodM2s=
 github.com/limes-cloud/kratosx v1.2.1/go.mod h1:1ZGNwFMkBciEJJmFR2REql3sqWHf3QM1a9bitR+ufz4=
+github.com/limes-cloud/kratosx v1.2.3/go.mod h1:H6LxpdvIBMxlExLhItfcO/ySYh6gvjPVTxGxK1+17c0=
 github.com/lufia/plan9stats v0.0.0-20211012122336-39d0f177ccd0/go.mod h1:zJYVVT2jmtg6P3p1VtQj7WsuWi/y4VnjVBn7F8KPB3I=
 github.com/lufia/plan9stats v0.0.0-20240408141607-282e7b5d6b74 h1:1KuuSOy4ZNgW0KA2oYIngXVFhQcXxhLqCVK7cBcldkk=
 github.com/lufia/plan9stats v0.0.0-20240408141607-282e7b5d6b74/go.mod h1:ilwx/Dta8jXAgpFYFvSWEMwxmbWXyiUHkd5FwyKhb5k=
