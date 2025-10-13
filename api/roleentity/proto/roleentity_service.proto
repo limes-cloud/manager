@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package manager.api.roleentity;
 
-option go_package = ".;roleentity";
+option go_package = "manager/api/roleentity;roleentity";
 option java_multiple_files = true;
 option java_package = "manager.api.roleentity";
 

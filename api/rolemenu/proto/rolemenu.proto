@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package manager.api.rolemenu;
 
-option go_package = ".;rolemenu";
+option go_package = "manager/api/rolemenu;rolemenu";
 option java_multiple_files = true;
 option java_package = "manager.api.rolemenu";
 

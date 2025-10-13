@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package manager.api.feedback;
 
-option go_package = ".;feedback";
+option go_package = "manager/api/feedback;feedback";
 option java_multiple_files = true;
 option java_package = "manager.api.feedback";
 

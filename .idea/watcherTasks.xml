@@ -3,7 +3,6 @@
   <component name="ProjectTasksOptions">
     <enabled-global>
       <option value="format" />
-      <option value="golangci-lint" />
       <option value="kratosx" />
     </enabled-global>
   </component>

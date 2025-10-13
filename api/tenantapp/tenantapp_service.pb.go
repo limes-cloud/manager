@@ -7,6 +7,7 @@
 package tenantapp
 
 import (
+	tenanttapp "manager/api/tenanttapp"
 	reflect "reflect"
 
 	_ "google.golang.org/genproto/googleapis/api/annotations"
@@ -80,24 +81,25 @@ var file_api_tenantapp_proto_tenantapp_service_proto_rawDesc = []byte{
 	0x2e, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x54, 0x65, 0x6e, 0x61, 0x6e, 0x74, 0x41, 0x70, 0x70,
 	0x52, 0x65, 0x70, 0x6c, 0x79, 0x22, 0x25, 0x82, 0xd3, 0xe4, 0x93, 0x02, 0x1f, 0x3a, 0x01, 0x2a,
 	0x2a, 0x1a, 0x2f, 0x6d, 0x61, 0x6e, 0x61, 0x67, 0x65, 0x72, 0x2f, 0x61, 0x70, 0x69, 0x2f, 0x76,
-	0x31, 0x2f, 0x74, 0x65, 0x6e, 0x61, 0x6e, 0x74, 0x2f, 0x61, 0x70, 0x70, 0x42, 0x2c, 0x0a, 0x1b,
+	0x31, 0x2f, 0x74, 0x65, 0x6e, 0x61, 0x6e, 0x74, 0x2f, 0x61, 0x70, 0x70, 0x42, 0x40, 0x0a, 0x1b,
 	0x6d, 0x61, 0x6e, 0x61, 0x67, 0x65, 0x72, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x74, 0x65, 0x6e, 0x61,
-	0x6e, 0x74, 0x61, 0x70, 0x70, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x50, 0x01, 0x5a, 0x0b, 0x2e,
-	0x3b, 0x74, 0x65, 0x6e, 0x61, 0x6e, 0x74, 0x61, 0x70, 0x70, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74,
-	0x6f, 0x33,
+	0x6e, 0x74, 0x61, 0x70, 0x70, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x50, 0x01, 0x5a, 0x1f, 0x6d,
+	0x61, 0x6e, 0x61, 0x67, 0x65, 0x72, 0x2f, 0x61, 0x70, 0x69, 0x2f, 0x74, 0x65, 0x6e, 0x61, 0x6e,
+	0x74, 0x61, 0x70, 0x70, 0x3b, 0x74, 0x65, 0x6e, 0x61, 0x6e, 0x74, 0x61, 0x70, 0x70, 0x62, 0x06,
+	0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var file_api_tenantapp_proto_tenantapp_service_proto_goTypes = []interface{}{
-	(*GetTenantAppMenuIdsRequest)(nil), // 0: manager.api.tenantapp.GetTenantAppMenuIdsRequest
-	(*ListTenantAppRequest)(nil),       // 1: manager.api.tenantapp.ListTenantAppRequest
-	(*CreateTenantAppRequest)(nil),     // 2: manager.api.tenantapp.CreateTenantAppRequest
-	(*UpdateTenantAppRequest)(nil),     // 3: manager.api.tenantapp.UpdateTenantAppRequest
-	(*DeleteTenantAppRequest)(nil),     // 4: manager.api.tenantapp.DeleteTenantAppRequest
-	(*GetTenantAppMenuIdsReply)(nil),   // 5: manager.api.tenantapp.GetTenantAppMenuIdsReply
-	(*ListTenantAppReply)(nil),         // 6: manager.api.tenantapp.ListTenantAppReply
-	(*CreateTenantAppReply)(nil),       // 7: manager.api.tenantapp.CreateTenantAppReply
-	(*UpdateTenantAppReply)(nil),       // 8: manager.api.tenantapp.UpdateTenantAppReply
-	(*DeleteTenantAppReply)(nil),       // 9: manager.api.tenantapp.DeleteTenantAppReply
+	(*tenanttapp.GetTenantAppMenuIdsRequest)(nil), // 0: manager.api.tenantapp.GetTenantAppMenuIdsRequest
+	(*tenanttapp.ListTenantAppRequest)(nil),       // 1: manager.api.tenantapp.ListTenantAppRequest
+	(*tenanttapp.CreateTenantAppRequest)(nil),     // 2: manager.api.tenantapp.CreateTenantAppRequest
+	(*tenanttapp.UpdateTenantAppRequest)(nil),     // 3: manager.api.tenantapp.UpdateTenantAppRequest
+	(*tenanttapp.DeleteTenantAppRequest)(nil),     // 4: manager.api.tenantapp.DeleteTenantAppRequest
+	(*tenanttapp.GetTenantAppMenuIdsReply)(nil),   // 5: manager.api.tenantapp.GetTenantAppMenuIdsReply
+	(*tenanttapp.ListTenantAppReply)(nil),         // 6: manager.api.tenantapp.ListTenantAppReply
+	(*tenanttapp.CreateTenantAppReply)(nil),       // 7: manager.api.tenantapp.CreateTenantAppReply
+	(*tenanttapp.UpdateTenantAppReply)(nil),       // 8: manager.api.tenantapp.UpdateTenantAppReply
+	(*tenanttapp.DeleteTenantAppReply)(nil),       // 9: manager.api.tenantapp.DeleteTenantAppReply
 }
 
 var file_api_tenantapp_proto_tenantapp_service_proto_depIdxs = []int32{
@@ -123,7 +125,6 @@ func file_api_tenantapp_proto_tenantapp_service_proto_init() {
 	if File_api_tenantapp_proto_tenantapp_service_proto != nil {
 		return
 	}
-	file_api_tenantapp_proto_tenantapp_proto_init()
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

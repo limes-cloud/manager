@@ -45,7 +45,7 @@ func init() {
 
 // GetApp 获取指定的应用信息
 func (s *App) GetApp(c context.Context, req *app.GetAppRequest) (*app.GetAppReply, error) {
-	ctx := core.MustContext(c)
+	ctx := core.MustContext(c, kratosx.WithSkipDBHook())
 	data, err := s.srv.GetApp(ctx, &types.GetAppRequest{
 		Id:      req.Id,
 		Keyword: req.Keyword,

@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package manager.api.role;
 
-option go_package = ".;role";
+option go_package = "manager/api/role;role";
 option java_multiple_files = true;
 option java_package = "manager.api.role";
 

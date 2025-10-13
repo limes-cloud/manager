@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package manager.api.scope;
 
-option go_package = ".;scope";
+option go_package = "manager/api/scope;scope";
 option java_multiple_files = true;
 option java_package = "manager.api.scope.proto";
 

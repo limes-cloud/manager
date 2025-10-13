@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package manager.api.deptrole;
 
-option go_package = ".;deptrole";
+option go_package = "manager/api/deptrole;deptrole";
 option java_multiple_files = true;
 option java_package = "manager.api.deptrole.proto";
 

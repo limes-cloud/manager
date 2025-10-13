@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package manager.api.job;
 
-option go_package = ".;job";
+option go_package = "manager/api/job;job";
 option java_multiple_files = true;
 option java_package = "manager.api.job";
 option java_outer_classname = "DeptV1";

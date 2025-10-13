@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package manager.api.field;
 
-option go_package = ".;field";
+option go_package = "manager/api/field;field";
 option java_multiple_files = true;
 option java_package = "manager.api.field";
 
