@@ -8,8 +8,6 @@ package tenantapp
 
 import (
 	context "context"
-	tenanttapp "manager/api/tenanttapp"
-
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -32,11 +30,11 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type TenantClient interface {
-	GetTenantAppMenuIds(ctx context.Context, in *tenanttapp.GetTenantAppMenuIdsRequest, opts ...grpc.CallOption) (*tenanttapp.GetTenantAppMenuIdsReply, error)
-	ListTenantApp(ctx context.Context, in *tenanttapp.ListTenantAppRequest, opts ...grpc.CallOption) (*tenanttapp.ListTenantAppReply, error)
-	CreateTenantApp(ctx context.Context, in *tenanttapp.CreateTenantAppRequest, opts ...grpc.CallOption) (*tenanttapp.CreateTenantAppReply, error)
-	UpdateTenantApp(ctx context.Context, in *tenanttapp.UpdateTenantAppRequest, opts ...grpc.CallOption) (*tenanttapp.UpdateTenantAppReply, error)
-	DeleteTenantApp(ctx context.Context, in *tenanttapp.DeleteTenantAppRequest, opts ...grpc.CallOption) (*tenanttapp.DeleteTenantAppReply, error)
+	GetTenantAppMenuIds(ctx context.Context, in *GetTenantAppMenuIdsRequest, opts ...grpc.CallOption) (*GetTenantAppMenuIdsReply, error)
+	ListTenantApp(ctx context.Context, in *ListTenantAppRequest, opts ...grpc.CallOption) (*ListTenantAppReply, error)
+	CreateTenantApp(ctx context.Context, in *CreateTenantAppRequest, opts ...grpc.CallOption) (*CreateTenantAppReply, error)
+	UpdateTenantApp(ctx context.Context, in *UpdateTenantAppRequest, opts ...grpc.CallOption) (*UpdateTenantAppReply, error)
+	DeleteTenantApp(ctx context.Context, in *DeleteTenantAppRequest, opts ...grpc.CallOption) (*DeleteTenantAppReply, error)
 }
 
 type tenantClient struct {
@@ -47,8 +45,8 @@ func NewTenantClient(cc grpc.ClientConnInterface) TenantClient {
 	return &tenantClient{cc}
 }
 
-func (c *tenantClient) GetTenantAppMenuIds(ctx context.Context, in *tenanttapp.GetTenantAppMenuIdsRequest, opts ...grpc.CallOption) (*tenanttapp.GetTenantAppMenuIdsReply, error) {
-	out := new(tenanttapp.GetTenantAppMenuIdsReply)
+func (c *tenantClient) GetTenantAppMenuIds(ctx context.Context, in *GetTenantAppMenuIdsRequest, opts ...grpc.CallOption) (*GetTenantAppMenuIdsReply, error) {
+	out := new(GetTenantAppMenuIdsReply)
 	err := c.cc.Invoke(ctx, Tenant_GetTenantAppMenuIds_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -56,8 +54,8 @@ func (c *tenantClient) GetTenantAppMenuIds(ctx context.Context, in *tenanttapp.G
 	return out, nil
 }
 
-func (c *tenantClient) ListTenantApp(ctx context.Context, in *tenanttapp.ListTenantAppRequest, opts ...grpc.CallOption) (*tenanttapp.ListTenantAppReply, error) {
-	out := new(tenanttapp.ListTenantAppReply)
+func (c *tenantClient) ListTenantApp(ctx context.Context, in *ListTenantAppRequest, opts ...grpc.CallOption) (*ListTenantAppReply, error) {
+	out := new(ListTenantAppReply)
 	err := c.cc.Invoke(ctx, Tenant_ListTenantApp_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -65,8 +63,8 @@ func (c *tenantClient) ListTenantApp(ctx context.Context, in *tenanttapp.ListTen
 	return out, nil
 }
 
-func (c *tenantClient) CreateTenantApp(ctx context.Context, in *tenanttapp.CreateTenantAppRequest, opts ...grpc.CallOption) (*tenanttapp.CreateTenantAppReply, error) {
-	out := new(tenanttapp.CreateTenantAppReply)
+func (c *tenantClient) CreateTenantApp(ctx context.Context, in *CreateTenantAppRequest, opts ...grpc.CallOption) (*CreateTenantAppReply, error) {
+	out := new(CreateTenantAppReply)
 	err := c.cc.Invoke(ctx, Tenant_CreateTenantApp_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -74,8 +72,8 @@ func (c *tenantClient) CreateTenantApp(ctx context.Context, in *tenanttapp.Creat
 	return out, nil
 }
 
-func (c *tenantClient) UpdateTenantApp(ctx context.Context, in *tenanttapp.UpdateTenantAppRequest, opts ...grpc.CallOption) (*tenanttapp.UpdateTenantAppReply, error) {
-	out := new(tenanttapp.UpdateTenantAppReply)
+func (c *tenantClient) UpdateTenantApp(ctx context.Context, in *UpdateTenantAppRequest, opts ...grpc.CallOption) (*UpdateTenantAppReply, error) {
+	out := new(UpdateTenantAppReply)
 	err := c.cc.Invoke(ctx, Tenant_UpdateTenantApp_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -83,8 +81,8 @@ func (c *tenantClient) UpdateTenantApp(ctx context.Context, in *tenanttapp.Updat
 	return out, nil
 }
 
-func (c *tenantClient) DeleteTenantApp(ctx context.Context, in *tenanttapp.DeleteTenantAppRequest, opts ...grpc.CallOption) (*tenanttapp.DeleteTenantAppReply, error) {
-	out := new(tenanttapp.DeleteTenantAppReply)
+func (c *tenantClient) DeleteTenantApp(ctx context.Context, in *DeleteTenantAppRequest, opts ...grpc.CallOption) (*DeleteTenantAppReply, error) {
+	out := new(DeleteTenantAppReply)
 	err := c.cc.Invoke(ctx, Tenant_DeleteTenantApp_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -96,34 +94,31 @@ func (c *tenantClient) DeleteTenantApp(ctx context.Context, in *tenanttapp.Delet
 // All implementations must embed UnimplementedTenantServer
 // for forward compatibility
 type TenantServer interface {
-	GetTenantAppMenuIds(context.Context, *tenanttapp.GetTenantAppMenuIdsRequest) (*tenanttapp.GetTenantAppMenuIdsReply, error)
-	ListTenantApp(context.Context, *tenanttapp.ListTenantAppRequest) (*tenanttapp.ListTenantAppReply, error)
-	CreateTenantApp(context.Context, *tenanttapp.CreateTenantAppRequest) (*tenanttapp.CreateTenantAppReply, error)
-	UpdateTenantApp(context.Context, *tenanttapp.UpdateTenantAppRequest) (*tenanttapp.UpdateTenantAppReply, error)
-	DeleteTenantApp(context.Context, *tenanttapp.DeleteTenantAppRequest) (*tenanttapp.DeleteTenantAppReply, error)
+	GetTenantAppMenuIds(context.Context, *GetTenantAppMenuIdsRequest) (*GetTenantAppMenuIdsReply, error)
+	ListTenantApp(context.Context, *ListTenantAppRequest) (*ListTenantAppReply, error)
+	CreateTenantApp(context.Context, *CreateTenantAppRequest) (*CreateTenantAppReply, error)
+	UpdateTenantApp(context.Context, *UpdateTenantAppRequest) (*UpdateTenantAppReply, error)
+	DeleteTenantApp(context.Context, *DeleteTenantAppRequest) (*DeleteTenantAppReply, error)
 	mustEmbedUnimplementedTenantServer()
 }
 
 // UnimplementedTenantServer must be embedded to have forward compatible implementations.
-type UnimplementedTenantServer struct{}
+type UnimplementedTenantServer struct {
+}
 
-func (UnimplementedTenantServer) GetTenantAppMenuIds(context.Context, *tenanttapp.GetTenantAppMenuIdsRequest) (*tenanttapp.GetTenantAppMenuIdsReply, error) {
+func (UnimplementedTenantServer) GetTenantAppMenuIds(context.Context, *GetTenantAppMenuIdsRequest) (*GetTenantAppMenuIdsReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetTenantAppMenuIds not implemented")
 }
-
-func (UnimplementedTenantServer) ListTenantApp(context.Context, *tenanttapp.ListTenantAppRequest) (*tenanttapp.ListTenantAppReply, error) {
+func (UnimplementedTenantServer) ListTenantApp(context.Context, *ListTenantAppRequest) (*ListTenantAppReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListTenantApp not implemented")
 }
-
-func (UnimplementedTenantServer) CreateTenantApp(context.Context, *tenanttapp.CreateTenantAppRequest) (*tenanttapp.CreateTenantAppReply, error) {
+func (UnimplementedTenantServer) CreateTenantApp(context.Context, *CreateTenantAppRequest) (*CreateTenantAppReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateTenantApp not implemented")
 }
-
-func (UnimplementedTenantServer) UpdateTenantApp(context.Context, *tenanttapp.UpdateTenantAppRequest) (*tenanttapp.UpdateTenantAppReply, error) {
+func (UnimplementedTenantServer) UpdateTenantApp(context.Context, *UpdateTenantAppRequest) (*UpdateTenantAppReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateTenantApp not implemented")
 }
-
-func (UnimplementedTenantServer) DeleteTenantApp(context.Context, *tenanttapp.DeleteTenantAppRequest) (*tenanttapp.DeleteTenantAppReply, error) {
+func (UnimplementedTenantServer) DeleteTenantApp(context.Context, *DeleteTenantAppRequest) (*DeleteTenantAppReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteTenantApp not implemented")
 }
 func (UnimplementedTenantServer) mustEmbedUnimplementedTenantServer() {}
@@ -140,7 +135,7 @@ func RegisterTenantServer(s grpc.ServiceRegistrar, srv TenantServer) {
 }
 
 func _Tenant_GetTenantAppMenuIds_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(tenanttapp.GetTenantAppMenuIdsRequest)
+	in := new(GetTenantAppMenuIdsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -152,13 +147,13 @@ func _Tenant_GetTenantAppMenuIds_Handler(srv interface{}, ctx context.Context, d
 		FullMethod: Tenant_GetTenantAppMenuIds_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TenantServer).GetTenantAppMenuIds(ctx, req.(*tenanttapp.GetTenantAppMenuIdsRequest))
+		return srv.(TenantServer).GetTenantAppMenuIds(ctx, req.(*GetTenantAppMenuIdsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _Tenant_ListTenantApp_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(tenanttapp.ListTenantAppRequest)
+	in := new(ListTenantAppRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -170,13 +165,13 @@ func _Tenant_ListTenantApp_Handler(srv interface{}, ctx context.Context, dec fun
 		FullMethod: Tenant_ListTenantApp_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TenantServer).ListTenantApp(ctx, req.(*tenanttapp.ListTenantAppRequest))
+		return srv.(TenantServer).ListTenantApp(ctx, req.(*ListTenantAppRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _Tenant_CreateTenantApp_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(tenanttapp.CreateTenantAppRequest)
+	in := new(CreateTenantAppRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -188,13 +183,13 @@ func _Tenant_CreateTenantApp_Handler(srv interface{}, ctx context.Context, dec f
 		FullMethod: Tenant_CreateTenantApp_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TenantServer).CreateTenantApp(ctx, req.(*tenanttapp.CreateTenantAppRequest))
+		return srv.(TenantServer).CreateTenantApp(ctx, req.(*CreateTenantAppRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _Tenant_UpdateTenantApp_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(tenanttapp.UpdateTenantAppRequest)
+	in := new(UpdateTenantAppRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -206,13 +201,13 @@ func _Tenant_UpdateTenantApp_Handler(srv interface{}, ctx context.Context, dec f
 		FullMethod: Tenant_UpdateTenantApp_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TenantServer).UpdateTenantApp(ctx, req.(*tenanttapp.UpdateTenantAppRequest))
+		return srv.(TenantServer).UpdateTenantApp(ctx, req.(*UpdateTenantAppRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _Tenant_DeleteTenantApp_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(tenanttapp.DeleteTenantAppRequest)
+	in := new(DeleteTenantAppRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -224,7 +219,7 @@ func _Tenant_DeleteTenantApp_Handler(srv interface{}, ctx context.Context, dec f
 		FullMethod: Tenant_DeleteTenantApp_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TenantServer).DeleteTenantApp(ctx, req.(*tenanttapp.DeleteTenantAppRequest))
+		return srv.(TenantServer).DeleteTenantApp(ctx, req.(*DeleteTenantAppRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }

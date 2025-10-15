@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package manager.api.tenantapp;
 
-option go_package = "manager/api/tenanttapp;tenantapp";
+option go_package = "manager/api/tenantapp;tenantapp";
 option java_multiple_files = true;
 option java_package = "manager.api.tenantapp.proto";
 

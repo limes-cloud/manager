@@ -7,12 +7,11 @@
 package tenantapp
 
 import (
-	reflect "reflect"
-	sync "sync"
-
 	_ "github.com/envoyproxy/protoc-gen-validate/validate"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	reflect "reflect"
+	sync "sync"
 )
 
 const (
@@ -854,11 +853,12 @@ var file_api_tenantapp_proto_tenantapp_proto_rawDesc = []byte{
 	0x01, 0x52, 0x05, 0x61, 0x70, 0x70, 0x49, 0x64, 0x22, 0x34, 0x0a, 0x18, 0x47, 0x65, 0x74, 0x54,
 	0x65, 0x6e, 0x61, 0x6e, 0x74, 0x41, 0x70, 0x70, 0x4d, 0x65, 0x6e, 0x75, 0x49, 0x64, 0x73, 0x52,
 	0x65, 0x70, 0x6c, 0x79, 0x12, 0x18, 0x0a, 0x07, 0x6d, 0x65, 0x6e, 0x75, 0x49, 0x64, 0x73, 0x18,
-	0x01, 0x20, 0x03, 0x28, 0x0d, 0x52, 0x07, 0x6d, 0x65, 0x6e, 0x75, 0x49, 0x64, 0x73, 0x42, 0x2c,
+	0x01, 0x20, 0x03, 0x28, 0x0d, 0x52, 0x07, 0x6d, 0x65, 0x6e, 0x75, 0x49, 0x64, 0x73, 0x42, 0x40,
 	0x0a, 0x1b, 0x6d, 0x61, 0x6e, 0x61, 0x67, 0x65, 0x72, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x74, 0x65,
 	0x6e, 0x61, 0x6e, 0x74, 0x61, 0x70, 0x70, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x50, 0x01, 0x5a,
-	0x0b, 0x2e, 0x3b, 0x74, 0x65, 0x6e, 0x61, 0x6e, 0x74, 0x61, 0x70, 0x70, 0x62, 0x06, 0x70, 0x72,
-	0x6f, 0x74, 0x6f, 0x33,
+	0x1f, 0x6d, 0x61, 0x6e, 0x61, 0x67, 0x65, 0x72, 0x2f, 0x61, 0x70, 0x69, 0x2f, 0x74, 0x65, 0x6e,
+	0x61, 0x6e, 0x74, 0x61, 0x70, 0x70, 0x3b, 0x74, 0x65, 0x6e, 0x61, 0x6e, 0x74, 0x61, 0x70, 0x70,
+	0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -873,24 +873,21 @@ func file_api_tenantapp_proto_tenantapp_proto_rawDescGZIP() []byte {
 	return file_api_tenantapp_proto_tenantapp_proto_rawDescData
 }
 
-var (
-	file_api_tenantapp_proto_tenantapp_proto_msgTypes = make([]protoimpl.MessageInfo, 12)
-	file_api_tenantapp_proto_tenantapp_proto_goTypes  = []interface{}{
-		(*CreateTenantAppRequest)(nil),     // 0: manager.api.tenantapp.CreateTenantAppRequest
-		(*CreateTenantAppReply)(nil),       // 1: manager.api.tenantapp.CreateTenantAppReply
-		(*UpdateTenantAppRequest)(nil),     // 2: manager.api.tenantapp.UpdateTenantAppRequest
-		(*UpdateTenantAppReply)(nil),       // 3: manager.api.tenantapp.UpdateTenantAppReply
-		(*DeleteTenantAppRequest)(nil),     // 4: manager.api.tenantapp.DeleteTenantAppRequest
-		(*DeleteTenantAppReply)(nil),       // 5: manager.api.tenantapp.DeleteTenantAppReply
-		(*ListTenantAppRequest)(nil),       // 6: manager.api.tenantapp.ListTenantAppRequest
-		(*ListTenantAppReply)(nil),         // 7: manager.api.tenantapp.ListTenantAppReply
-		(*GetTenantAppMenuIdsRequest)(nil), // 8: manager.api.tenantapp.GetTenantAppMenuIdsRequest
-		(*GetTenantAppMenuIdsReply)(nil),   // 9: manager.api.tenantapp.GetTenantAppMenuIdsReply
-		(*ListTenantAppReply_App)(nil),     // 10: manager.api.tenantapp.ListTenantAppReply.App
-		(*ListTenantAppReply_Data)(nil),    // 11: manager.api.tenantapp.ListTenantAppReply.Data
-	}
-)
-
+var file_api_tenantapp_proto_tenantapp_proto_msgTypes = make([]protoimpl.MessageInfo, 12)
+var file_api_tenantapp_proto_tenantapp_proto_goTypes = []interface{}{
+	(*CreateTenantAppRequest)(nil),     // 0: manager.api.tenantapp.CreateTenantAppRequest
+	(*CreateTenantAppReply)(nil),       // 1: manager.api.tenantapp.CreateTenantAppReply
+	(*UpdateTenantAppRequest)(nil),     // 2: manager.api.tenantapp.UpdateTenantAppRequest
+	(*UpdateTenantAppReply)(nil),       // 3: manager.api.tenantapp.UpdateTenantAppReply
+	(*DeleteTenantAppRequest)(nil),     // 4: manager.api.tenantapp.DeleteTenantAppRequest
+	(*DeleteTenantAppReply)(nil),       // 5: manager.api.tenantapp.DeleteTenantAppReply
+	(*ListTenantAppRequest)(nil),       // 6: manager.api.tenantapp.ListTenantAppRequest
+	(*ListTenantAppReply)(nil),         // 7: manager.api.tenantapp.ListTenantAppReply
+	(*GetTenantAppMenuIdsRequest)(nil), // 8: manager.api.tenantapp.GetTenantAppMenuIdsRequest
+	(*GetTenantAppMenuIdsReply)(nil),   // 9: manager.api.tenantapp.GetTenantAppMenuIdsReply
+	(*ListTenantAppReply_App)(nil),     // 10: manager.api.tenantapp.ListTenantAppReply.App
+	(*ListTenantAppReply_Data)(nil),    // 11: manager.api.tenantapp.ListTenantAppReply.Data
+}
 var file_api_tenantapp_proto_tenantapp_proto_depIdxs = []int32{
 	11, // 0: manager.api.tenantapp.ListTenantAppReply.list:type_name -> manager.api.tenantapp.ListTenantAppReply.Data
 	10, // 1: manager.api.tenantapp.ListTenantAppReply.Data.app:type_name -> manager.api.tenantapp.ListTenantAppReply.App

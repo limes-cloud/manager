@@ -40,7 +40,6 @@ service Tenant {
 	rpc DeleteTenantApp (DeleteTenantAppRequest) returns (DeleteTenantAppReply){
 		option (google.api.http) = {
 			delete: "/manager/api/v1/tenant/app",
-			body: "*"
 		};
 	}
 

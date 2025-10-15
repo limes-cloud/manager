@@ -8,35 +8,29 @@ package tenantapp
 
 import (
 	context "context"
-	tenanttapp "manager/api/tenanttapp"
-
 	http "github.com/go-kratos/kratos/v2/transport/http"
 	binding "github.com/go-kratos/kratos/v2/transport/http/binding"
 )
 
 // This is a compile-time assertion to ensure that this generated file
 // is compatible with the kratos package it is being compiled against.
-var (
-	_ = new(context.Context)
-	_ = binding.EncodeURL
-)
+var _ = new(context.Context)
+var _ = binding.EncodeURL
 
 const _ = http.SupportPackageIsVersion1
 
-const (
-	OperationTenantCreateTenantApp     = "/manager.api.tenantapp.Tenant/CreateTenantApp"
-	OperationTenantDeleteTenantApp     = "/manager.api.tenantapp.Tenant/DeleteTenantApp"
-	OperationTenantGetTenantAppMenuIds = "/manager.api.tenantapp.Tenant/GetTenantAppMenuIds"
-	OperationTenantListTenantApp       = "/manager.api.tenantapp.Tenant/ListTenantApp"
-	OperationTenantUpdateTenantApp     = "/manager.api.tenantapp.Tenant/UpdateTenantApp"
-)
+const OperationTenantCreateTenantApp = "/manager.api.tenantapp.Tenant/CreateTenantApp"
+const OperationTenantDeleteTenantApp = "/manager.api.tenantapp.Tenant/DeleteTenantApp"
+const OperationTenantGetTenantAppMenuIds = "/manager.api.tenantapp.Tenant/GetTenantAppMenuIds"
+const OperationTenantListTenantApp = "/manager.api.tenantapp.Tenant/ListTenantApp"
+const OperationTenantUpdateTenantApp = "/manager.api.tenantapp.Tenant/UpdateTenantApp"
 
 type TenantHTTPServer interface {
-	CreateTenantApp(context.Context, *tenanttapp.CreateTenantAppRequest) (*tenanttapp.CreateTenantAppReply, error)
-	DeleteTenantApp(context.Context, *tenanttapp.DeleteTenantAppRequest) (*tenanttapp.DeleteTenantAppReply, error)
-	GetTenantAppMenuIds(context.Context, *tenanttapp.GetTenantAppMenuIdsRequest) (*tenanttapp.GetTenantAppMenuIdsReply, error)
-	ListTenantApp(context.Context, *tenanttapp.ListTenantAppRequest) (*tenanttapp.ListTenantAppReply, error)
-	UpdateTenantApp(context.Context, *tenanttapp.UpdateTenantAppRequest) (*tenanttapp.UpdateTenantAppReply, error)
+	CreateTenantApp(context.Context, *CreateTenantAppRequest) (*CreateTenantAppReply, error)
+	DeleteTenantApp(context.Context, *DeleteTenantAppRequest) (*DeleteTenantAppReply, error)
+	GetTenantAppMenuIds(context.Context, *GetTenantAppMenuIdsRequest) (*GetTenantAppMenuIdsReply, error)
+	ListTenantApp(context.Context, *ListTenantAppRequest) (*ListTenantAppReply, error)
+	UpdateTenantApp(context.Context, *UpdateTenantAppRequest) (*UpdateTenantAppReply, error)
 }
 
 func RegisterTenantHTTPServer(s *http.Server, srv TenantHTTPServer) {
@@ -50,45 +44,45 @@ func RegisterTenantHTTPServer(s *http.Server, srv TenantHTTPServer) {
 
 func _Tenant_GetTenantAppMenuIds0_HTTP_Handler(srv TenantHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in tenanttapp.GetTenantAppMenuIdsRequest
+		var in GetTenantAppMenuIdsRequest
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
 		http.SetOperation(ctx, OperationTenantGetTenantAppMenuIds)
 		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
-			return srv.GetTenantAppMenuIds(ctx, req.(*tenanttapp.GetTenantAppMenuIdsRequest))
+			return srv.GetTenantAppMenuIds(ctx, req.(*GetTenantAppMenuIdsRequest))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		reply := out.(*tenanttapp.GetTenantAppMenuIdsReply)
+		reply := out.(*GetTenantAppMenuIdsReply)
 		return ctx.Result(200, reply)
 	}
 }
 
 func _Tenant_ListTenantApp0_HTTP_Handler(srv TenantHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in tenanttapp.ListTenantAppRequest
+		var in ListTenantAppRequest
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
 		http.SetOperation(ctx, OperationTenantListTenantApp)
 		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
-			return srv.ListTenantApp(ctx, req.(*tenanttapp.ListTenantAppRequest))
+			return srv.ListTenantApp(ctx, req.(*ListTenantAppRequest))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		reply := out.(*tenanttapp.ListTenantAppReply)
+		reply := out.(*ListTenantAppReply)
 		return ctx.Result(200, reply)
 	}
 }
 
 func _Tenant_CreateTenantApp0_HTTP_Handler(srv TenantHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in tenanttapp.CreateTenantAppRequest
+		var in CreateTenantAppRequest
 		if err := ctx.Bind(&in); err != nil {
 			return err
 		}
@@ -97,20 +91,20 @@ func _Tenant_CreateTenantApp0_HTTP_Handler(srv TenantHTTPServer) func(ctx http.C
 		}
 		http.SetOperation(ctx, OperationTenantCreateTenantApp)
 		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
-			return srv.CreateTenantApp(ctx, req.(*tenanttapp.CreateTenantAppRequest))
+			return srv.CreateTenantApp(ctx, req.(*CreateTenantAppRequest))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		reply := out.(*tenanttapp.CreateTenantAppReply)
+		reply := out.(*CreateTenantAppReply)
 		return ctx.Result(200, reply)
 	}
 }
 
 func _Tenant_UpdateTenantApp0_HTTP_Handler(srv TenantHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in tenanttapp.UpdateTenantAppRequest
+		var in UpdateTenantAppRequest
 		if err := ctx.Bind(&in); err != nil {
 			return err
 		}
@@ -119,45 +113,42 @@ func _Tenant_UpdateTenantApp0_HTTP_Handler(srv TenantHTTPServer) func(ctx http.C
 		}
 		http.SetOperation(ctx, OperationTenantUpdateTenantApp)
 		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
-			return srv.UpdateTenantApp(ctx, req.(*tenanttapp.UpdateTenantAppRequest))
+			return srv.UpdateTenantApp(ctx, req.(*UpdateTenantAppRequest))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		reply := out.(*tenanttapp.UpdateTenantAppReply)
+		reply := out.(*UpdateTenantAppReply)
 		return ctx.Result(200, reply)
 	}
 }
 
 func _Tenant_DeleteTenantApp0_HTTP_Handler(srv TenantHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in tenanttapp.DeleteTenantAppRequest
-		if err := ctx.Bind(&in); err != nil {
-			return err
-		}
+		var in DeleteTenantAppRequest
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
 		http.SetOperation(ctx, OperationTenantDeleteTenantApp)
 		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
-			return srv.DeleteTenantApp(ctx, req.(*tenanttapp.DeleteTenantAppRequest))
+			return srv.DeleteTenantApp(ctx, req.(*DeleteTenantAppRequest))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		reply := out.(*tenanttapp.DeleteTenantAppReply)
+		reply := out.(*DeleteTenantAppReply)
 		return ctx.Result(200, reply)
 	}
 }
 
 type TenantHTTPClient interface {
-	CreateTenantApp(ctx context.Context, req *tenanttapp.CreateTenantAppRequest, opts ...http.CallOption) (rsp *tenanttapp.CreateTenantAppReply, err error)
-	DeleteTenantApp(ctx context.Context, req *tenanttapp.DeleteTenantAppRequest, opts ...http.CallOption) (rsp *tenanttapp.DeleteTenantAppReply, err error)
-	GetTenantAppMenuIds(ctx context.Context, req *tenanttapp.GetTenantAppMenuIdsRequest, opts ...http.CallOption) (rsp *tenanttapp.GetTenantAppMenuIdsReply, err error)
-	ListTenantApp(ctx context.Context, req *tenanttapp.ListTenantAppRequest, opts ...http.CallOption) (rsp *tenanttapp.ListTenantAppReply, err error)
-	UpdateTenantApp(ctx context.Context, req *tenanttapp.UpdateTenantAppRequest, opts ...http.CallOption) (rsp *tenanttapp.UpdateTenantAppReply, err error)
+	CreateTenantApp(ctx context.Context, req *CreateTenantAppRequest, opts ...http.CallOption) (rsp *CreateTenantAppReply, err error)
+	DeleteTenantApp(ctx context.Context, req *DeleteTenantAppRequest, opts ...http.CallOption) (rsp *DeleteTenantAppReply, err error)
+	GetTenantAppMenuIds(ctx context.Context, req *GetTenantAppMenuIdsRequest, opts ...http.CallOption) (rsp *GetTenantAppMenuIdsReply, err error)
+	ListTenantApp(ctx context.Context, req *ListTenantAppRequest, opts ...http.CallOption) (rsp *ListTenantAppReply, err error)
+	UpdateTenantApp(ctx context.Context, req *UpdateTenantAppRequest, opts ...http.CallOption) (rsp *UpdateTenantAppReply, err error)
 }
 
 type TenantHTTPClientImpl struct {
@@ -168,8 +159,8 @@ func NewTenantHTTPClient(client *http.Client) TenantHTTPClient {
 	return &TenantHTTPClientImpl{client}
 }
 
-func (c *TenantHTTPClientImpl) CreateTenantApp(ctx context.Context, in *tenanttapp.CreateTenantAppRequest, opts ...http.CallOption) (*tenanttapp.CreateTenantAppReply, error) {
-	var out tenanttapp.CreateTenantAppReply
+func (c *TenantHTTPClientImpl) CreateTenantApp(ctx context.Context, in *CreateTenantAppRequest, opts ...http.CallOption) (*CreateTenantAppReply, error) {
+	var out CreateTenantAppReply
 	pattern := "/manager/api/v1/tenant/app"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationTenantCreateTenantApp))
@@ -181,21 +172,21 @@ func (c *TenantHTTPClientImpl) CreateTenantApp(ctx context.Context, in *tenantta
 	return &out, err
 }
 
-func (c *TenantHTTPClientImpl) DeleteTenantApp(ctx context.Context, in *tenanttapp.DeleteTenantAppRequest, opts ...http.CallOption) (*tenanttapp.DeleteTenantAppReply, error) {
-	var out tenanttapp.DeleteTenantAppReply
+func (c *TenantHTTPClientImpl) DeleteTenantApp(ctx context.Context, in *DeleteTenantAppRequest, opts ...http.CallOption) (*DeleteTenantAppReply, error) {
+	var out DeleteTenantAppReply
 	pattern := "/manager/api/v1/tenant/app"
-	path := binding.EncodeURL(pattern, in, false)
+	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationTenantDeleteTenantApp))
 	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "DELETE", path, in, &out, opts...)
+	err := c.cc.Invoke(ctx, "DELETE", path, nil, &out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return &out, err
 }
 
-func (c *TenantHTTPClientImpl) GetTenantAppMenuIds(ctx context.Context, in *tenanttapp.GetTenantAppMenuIdsRequest, opts ...http.CallOption) (*tenanttapp.GetTenantAppMenuIdsReply, error) {
-	var out tenanttapp.GetTenantAppMenuIdsReply
+func (c *TenantHTTPClientImpl) GetTenantAppMenuIds(ctx context.Context, in *GetTenantAppMenuIdsRequest, opts ...http.CallOption) (*GetTenantAppMenuIdsReply, error) {
+	var out GetTenantAppMenuIdsReply
 	pattern := "/manager/api/v1/tenant/app/menus"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationTenantGetTenantAppMenuIds))
@@ -207,8 +198,8 @@ func (c *TenantHTTPClientImpl) GetTenantAppMenuIds(ctx context.Context, in *tena
 	return &out, err
 }
 
-func (c *TenantHTTPClientImpl) ListTenantApp(ctx context.Context, in *tenanttapp.ListTenantAppRequest, opts ...http.CallOption) (*tenanttapp.ListTenantAppReply, error) {
-	var out tenanttapp.ListTenantAppReply
+func (c *TenantHTTPClientImpl) ListTenantApp(ctx context.Context, in *ListTenantAppRequest, opts ...http.CallOption) (*ListTenantAppReply, error) {
+	var out ListTenantAppReply
 	pattern := "/manager/api/v1/tenant/apps"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationTenantListTenantApp))
@@ -220,8 +211,8 @@ func (c *TenantHTTPClientImpl) ListTenantApp(ctx context.Context, in *tenanttapp
 	return &out, err
 }
 
-func (c *TenantHTTPClientImpl) UpdateTenantApp(ctx context.Context, in *tenanttapp.UpdateTenantAppRequest, opts ...http.CallOption) (*tenanttapp.UpdateTenantAppReply, error) {
-	var out tenanttapp.UpdateTenantAppReply
+func (c *TenantHTTPClientImpl) UpdateTenantApp(ctx context.Context, in *UpdateTenantAppRequest, opts ...http.CallOption) (*UpdateTenantAppReply, error) {
+	var out UpdateTenantAppReply
 	pattern := "/manager/api/v1/tenant/app"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationTenantUpdateTenantApp))

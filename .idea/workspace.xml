@@ -4,99 +4,16 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="986be327-4ef6-4fb0-b836-2023bc76be7e" name="Changes" comment="feat: add hook">
-      <change beforePath="$PROJECT_DIR$/.idea/watcherTasks.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/watcherTasks.xml" afterDir="false" />
+    <list default="true" id="986be327-4ef6-4fb0-b836-2023bc76be7e" name="Changes" comment="feat: change proto">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/app/app.pb.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/app/app.pb.validate.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/app/app_service.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/app/app_service.pb.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/app/proto/app.proto" beforeDir="false" afterPath="$PROJECT_DIR$/api/app/proto/app.proto" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/app/proto/app_service.proto" beforeDir="false" afterPath="$PROJECT_DIR$/api/app/proto/app_service.proto" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/auth/auth.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/auth/auth.pb.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/auth/auth_service.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/auth/auth_service.pb.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/auth/proto/auth.proto" beforeDir="false" afterPath="$PROJECT_DIR$/api/auth/proto/auth.proto" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/auth/proto/auth_service.proto" beforeDir="false" afterPath="$PROJECT_DIR$/api/auth/proto/auth_service.proto" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/dept/dept.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/dept/dept.pb.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/dept/dept_service.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/dept/dept_service.pb.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/dept/proto/dept.proto" beforeDir="false" afterPath="$PROJECT_DIR$/api/dept/proto/dept.proto" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/dept/proto/dept_service.proto" beforeDir="false" afterPath="$PROJECT_DIR$/api/dept/proto/dept_service.proto" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/deptrole/deptrole.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/deptrole/deptrole.pb.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/deptrole/deptrole_service.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/deptrole/deptrole_service.pb.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/deptrole/proto/deptrole.proto" beforeDir="false" afterPath="$PROJECT_DIR$/api/deptrole/proto/deptrole.proto" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/deptrole/proto/deptrole_service.proto" beforeDir="false" afterPath="$PROJECT_DIR$/api/deptrole/proto/deptrole_service.proto" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/dictionary/dictionary.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/dictionary/dictionary.pb.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/dictionary/dictionary_service.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/dictionary/dictionary_service.pb.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/dictionary/proto/dictionary.proto" beforeDir="false" afterPath="$PROJECT_DIR$/api/dictionary/proto/dictionary.proto" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/dictionary/proto/dictionary_service.proto" beforeDir="false" afterPath="$PROJECT_DIR$/api/dictionary/proto/dictionary_service.proto" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/entity/entity.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/entity/entity.pb.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/entity/entity_service.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/entity/entity_service.pb.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/entity/proto/entity.proto" beforeDir="false" afterPath="$PROJECT_DIR$/api/entity/proto/entity.proto" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/entity/proto/entity_service.proto" beforeDir="false" afterPath="$PROJECT_DIR$/api/entity/proto/entity_service.proto" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/errors/errors.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/errors/errors.pb.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/errors/proto/errors.proto" beforeDir="false" afterPath="$PROJECT_DIR$/api/errors/proto/errors.proto" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/feedback/feedback.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/feedback/feedback.pb.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/feedback/feedback_service.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/feedback/feedback_service.pb.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/feedback/feedback.pb.go" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/api/feedback/proto/feedback.proto" beforeDir="false" afterPath="$PROJECT_DIR$/api/feedback/proto/feedback.proto" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/feedback/proto/feedback_service.proto" beforeDir="false" afterPath="$PROJECT_DIR$/api/feedback/proto/feedback_service.proto" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/field/field.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/field/field.pb.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/field/field_service.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/field/field_service.pb.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/field/proto/field.proto" beforeDir="false" afterPath="$PROJECT_DIR$/api/field/proto/field.proto" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/field/proto/field_service.proto" beforeDir="false" afterPath="$PROJECT_DIR$/api/field/proto/field_service.proto" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/job/job.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/job/job.pb.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/job/job_service.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/job/job_service.pb.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/job/proto/job.proto" beforeDir="false" afterPath="$PROJECT_DIR$/api/job/proto/job.proto" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/job/proto/job_service.proto" beforeDir="false" afterPath="$PROJECT_DIR$/api/job/proto/job_service.proto" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/jobrole/jobrole.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/jobrole/jobrole.pb.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/jobrole/jobrole_service.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/jobrole/jobrole_service.pb.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/jobrole/proto/jobrole.proto" beforeDir="false" afterPath="$PROJECT_DIR$/api/jobrole/proto/jobrole.proto" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/jobrole/proto/jobrole_service.proto" beforeDir="false" afterPath="$PROJECT_DIR$/api/jobrole/proto/jobrole_service.proto" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/menu/menu.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/menu/menu.pb.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/menu/menu_service.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/menu/menu_service.pb.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/menu/proto/menu.proto" beforeDir="false" afterPath="$PROJECT_DIR$/api/menu/proto/menu.proto" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/menu/proto/menu_service.proto" beforeDir="false" afterPath="$PROJECT_DIR$/api/menu/proto/menu_service.proto" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/oauth/oauth.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/oauth/oauth.pb.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/oauth/oauth_service.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/oauth/oauth_service.pb.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/oauth/proto/oauth.proto" beforeDir="false" afterPath="$PROJECT_DIR$/api/oauth/proto/oauth.proto" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/oauth/proto/oauth_service.proto" beforeDir="false" afterPath="$PROJECT_DIR$/api/oauth/proto/oauth_service.proto" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/role/proto/role.proto" beforeDir="false" afterPath="$PROJECT_DIR$/api/role/proto/role.proto" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/role/proto/role_service.proto" beforeDir="false" afterPath="$PROJECT_DIR$/api/role/proto/role_service.proto" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/role/role.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/role/role.pb.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/role/role_service.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/role/role_service.pb.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/roleentity/proto/roleentity.proto" beforeDir="false" afterPath="$PROJECT_DIR$/api/roleentity/proto/roleentity.proto" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/roleentity/proto/roleentity_service.proto" beforeDir="false" afterPath="$PROJECT_DIR$/api/roleentity/proto/roleentity_service.proto" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/roleentity/roleentity.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/roleentity/roleentity.pb.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/roleentity/roleentity_service.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/roleentity/roleentity_service.pb.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/rolemenu/proto/rolemenu.proto" beforeDir="false" afterPath="$PROJECT_DIR$/api/rolemenu/proto/rolemenu.proto" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/rolemenu/proto/rolemenu_service.proto" beforeDir="false" afterPath="$PROJECT_DIR$/api/rolemenu/proto/rolemenu_service.proto" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/rolemenu/rolemenu.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/rolemenu/rolemenu.pb.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/rolemenu/rolemenu_service.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/rolemenu/rolemenu_service.pb.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/scope/proto/scope.proto" beforeDir="false" afterPath="$PROJECT_DIR$/api/scope/proto/scope.proto" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/scope/proto/scope_service.proto" beforeDir="false" afterPath="$PROJECT_DIR$/api/scope/proto/scope_service.proto" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/scope/scope.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/scope/scope.pb.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/scope/scope_service.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/scope/scope_service.pb.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/system/proto/system.proto" beforeDir="false" afterPath="$PROJECT_DIR$/api/system/proto/system.proto" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/system/proto/system_service.proto" beforeDir="false" afterPath="$PROJECT_DIR$/api/system/proto/system_service.proto" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/system/system.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/system/system.pb.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/system/system_service.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/system/system_service.pb.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/tenant/proto/tenant.proto" beforeDir="false" afterPath="$PROJECT_DIR$/api/tenant/proto/tenant.proto" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/tenant/proto/tenant_service.proto" beforeDir="false" afterPath="$PROJECT_DIR$/api/tenant/proto/tenant_service.proto" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/tenant/tenant.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/tenant/tenant.pb.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/tenant/tenant_service.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/tenant/tenant_service.pb.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/api/tenantapp/proto/tenantapp.proto" beforeDir="false" afterPath="$PROJECT_DIR$/api/tenantapp/proto/tenantapp.proto" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/api/tenantapp/proto/tenantapp_service.proto" beforeDir="false" afterPath="$PROJECT_DIR$/api/tenantapp/proto/tenantapp_service.proto" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/tenantapp/tenantapp.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/tenantapp/tenantapp.pb.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/api/tenantapp/tenantapp_service.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/tenantapp/tenantapp_service.pb.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/api/tenantapp/tenantapp_service_grpc.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/tenantapp/tenantapp_service_grpc.pb.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/api/tenantapp/tenantapp_service_http.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/tenantapp/tenantapp_service_http.pb.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/user/proto/user.proto" beforeDir="false" afterPath="$PROJECT_DIR$/api/user/proto/user.proto" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/user/proto/user_service.proto" beforeDir="false" afterPath="$PROJECT_DIR$/api/user/proto/user_service.proto" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/user/user.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/user/user.pb.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/user/user_service.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/user/user_service.pb.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/userdept/proto/userdept.proto" beforeDir="false" afterPath="$PROJECT_DIR$/api/userdept/proto/userdept.proto" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/userdept/proto/userdept_service.proto" beforeDir="false" afterPath="$PROJECT_DIR$/api/userdept/proto/userdept_service.proto" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/userdept/userdept.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/userdept/userdept.pb.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/conf/conf.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/conf/conf.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/app/app.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/app/app.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/domain/service/auth.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/domain/service/auth.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -130,30 +47,30 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "DefaultGoTemplateProperty": "Go File",
-    "Go Build.go build github.com/limes-cloud/manager.executor": "Debug",
-    "Go Build.go build github.com/limes-cloud/manager/cmd/manager.executor": "Debug",
-    "OpenAPI/Swagger Code Generator.openapi.yaml.executor": "Run",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.go.formatter.settings.were.checked": "true",
-    "RunOnceActivity.go.migrated.go.modules.settings": "true",
-    "RunOnceActivity.go.modules.automatic.dependencies.download": "true",
-    "RunOnceActivity.go.modules.go.list.on.any.changes.was.set": "true",
-    "codeReviewSummary": "[]",
-    "git-widget-placeholder": "main",
-    "go.import.settings.migrated": "true",
-    "go.sdk.automatically.set": "true",
-    "last_opened_file_path": "/Users/fangweiye/GolandProjects/go-platform/server/manager",
-    "node.js.detected.package.eslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "watcher.settings",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;DefaultGoTemplateProperty&quot;: &quot;Go File&quot;,
+    &quot;Go Build.go build github.com/limes-cloud/manager.executor&quot;: &quot;Debug&quot;,
+    &quot;Go Build.go build github.com/limes-cloud/manager/cmd/manager.executor&quot;: &quot;Debug&quot;,
+    &quot;OpenAPI/Swagger Code Generator.openapi.yaml.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.formatter.settings.were.checked&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.migrated.go.modules.settings&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.modules.automatic.dependencies.download&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.modules.go.list.on.any.changes.was.set&quot;: &quot;true&quot;,
+    &quot;codeReviewSummary&quot;: &quot;[]&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;go.import.settings.migrated&quot;: &quot;true&quot;,
+    &quot;go.sdk.automatically.set&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/fangweiye/GolandProjects/go-platform/server/manager&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;watcher.settings&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/api/scope/proto" />
@@ -236,7 +153,8 @@
     <MESSAGE value="feat: 新增鉴权日志 &amp; 用户设置 &amp; 信息" />
     <MESSAGE value="feat: 修改app" />
     <MESSAGE value="feat: add hook" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat: add hook" />
+    <MESSAGE value="feat: change proto" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: change proto" />
   </component>
   <component name="VgoProject">
     <environment>
