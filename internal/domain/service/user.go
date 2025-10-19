@@ -121,7 +121,6 @@ func (u *User) GetUser(ctx core.Context, req *types.GetUserRequest) (*entity.Use
 
 	// 获取用户应用信息
 	infos, _ := u.info.ListUserinfo(ctx, &types.ListUserinfoRequest{
-		AppId:  app.Id,
 		UserId: res.Id,
 	})
 	if infos != nil {
@@ -183,6 +182,15 @@ func (u *User) DeleteUser(ctx core.Context, id uint32) error {
 	if err := u.repo.DeleteUser(ctx, id); err != nil {
 		ctx.Logger().Warnw("msg", "delete user error", "err", err.Error())
 		return errors.DeleteError()
+	}
+	return nil
+}
+
+// UpdateUserinfo 更新用户信息
+func (u *User) UpdateUserinfo(ctx core.Context, list []*entity.Userinfo) error {
+	if err := u.info.UpsertUserinfo(ctx, list); err != nil {
+		ctx.Logger().Warnw("msg", "update user info error", "err", err.Error())
+		return errors.UpdateError()
 	}
 	return nil
 }

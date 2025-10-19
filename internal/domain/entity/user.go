@@ -25,9 +25,11 @@ type User struct {
 }
 
 type UserDept struct {
-	UserId uint32 `json:"user_id" gorm:"column:user_id"`
-	DeptId uint32 `json:"dept_id" gorm:"column:dept_id"`
-	JobId  uint32 `json:"job_id" gorm:"column:job_id"`
+	UserId uint32 `json:"userId" gorm:"column:user_id"`
+	DeptId uint32 `json:"deptId" gorm:"column:dept_id"`
+	JobId  uint32 `json:"jobId" gorm:"column:job_id"`
+	Dept   *Dept  `json:"dept" gorm:"foreignKey:dept_id;references:id"`
+	Job    *Job   `json:"job" gorm:"foreignKey:job_id;references:id"`
 	model.BaseModel
 }
 
@@ -40,7 +42,6 @@ type UserSetting struct {
 
 type Userinfo struct {
 	UserId uint32 `json:"userId" gorm:"column:user_id"`
-	AppId  uint32 `json:"appId" gorm:"column:app_id"`
 	Field  string `json:"field" gorm:"column:field"`
 	Value  string `json:"value" gorm:"column:value"`
 	Index  *int   `json:"index" gorm:"-"`

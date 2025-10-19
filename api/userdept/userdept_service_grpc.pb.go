@@ -8,7 +8,6 @@ package userdept
 
 import (
 	context "context"
-
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -92,20 +91,18 @@ type UserDeptServer interface {
 }
 
 // UnimplementedUserDeptServer must be embedded to have forward compatible implementations.
-type UnimplementedUserDeptServer struct{}
+type UnimplementedUserDeptServer struct {
+}
 
 func (UnimplementedUserDeptServer) ListUserDept(context.Context, *ListUserDeptRequest) (*ListUserDeptReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListUserDept not implemented")
 }
-
 func (UnimplementedUserDeptServer) CreateUserDept(context.Context, *CreateUserDeptRequest) (*CreateUserDeptReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateUserDept not implemented")
 }
-
 func (UnimplementedUserDeptServer) DeleteUserDept(context.Context, *DeleteUserDeptRequest) (*DeleteUserDeptReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteUserDept not implemented")
 }
-
 func (UnimplementedUserDeptServer) ListDeptUser(context.Context, *ListDeptUserRequest) (*ListDeptUserReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListDeptUser not implemented")
 }

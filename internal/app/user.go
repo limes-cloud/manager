@@ -98,6 +98,7 @@ func (app *User) GetUser(c context.Context, req *user.GetUserRequest) (*user.Use
 	ent, err := app.srv.GetUser(ctx, &types.GetUserRequest{
 		Id:       req.Id,
 		Username: req.Username,
+		App:      req.App,
 	})
 	if err != nil {
 		return nil, err
@@ -198,4 +199,25 @@ func (app *User) UpdateUser(c context.Context, req *user.UpdateUserRequest) (*us
 // DeleteUser 删除角色信息
 func (app *User) DeleteUser(c context.Context, req *user.DeleteUserRequest) (*user.DeleteUserReply, error) {
 	return &user.DeleteUserReply{}, app.srv.DeleteUser(core.MustContext(c), req.Id)
+}
+
+// UpdateUserinfo 更新角色信息
+func (app *User) UpdateUserinfo(c context.Context, req *user.UpdateUserinfoRequest) (*user.UpdateUserinfoReply, error) {
+	//var (
+	//	ctx = core.MustContext(c)
+	//	in  = entity.Userinfo{}
+	//)
+
+	// 处理请求参数
+	//if err := value.Transform(req, &in); err != nil {
+	//	ctx.Logger().Errorw("msg", "create user req transform error", "err", err)
+	//	return nil, errors.TransformError()
+	//}
+	//
+	//// 调用服务
+	//if err := app.srv.UpdateUserinfo(ctx, &in); err != nil {
+	//	return nil, err
+	//}
+
+	return &user.UpdateUserinfoReply{}, nil
 }

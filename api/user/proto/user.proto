@@ -8,7 +8,6 @@ option java_package = "manager.api.user";
 
 import "validate/validate.proto";
 
-
 message Result {
   uint32 id = 1;
   string name = 2;
@@ -56,6 +55,8 @@ message ListUserRequest{
   optional bool status = 7;
   repeated int64 loggedAts = 8;
   repeated int64 createdAts = 9;
+  repeated uint32 inIds = 10;
+  repeated uint32 notInIds = 11;
 }
 
 message ListUserReply {
@@ -108,3 +109,13 @@ message UpdateCurrentUserRequest {
 
 message UpdateCurrentUserReply {
 }
+
+message UpdateUserinfoRequest {
+  message Info {
+    string field = 1[(validate.rules).string = {min_len: 1,max_len: 64}];
+    string value = 2[(validate.rules).string = {min_len: 1,max_len: 500}];
+  }
+  uint32 id = 1[(validate.rules).uint32 = {gte: 1}];
+}
+
+message UpdateUserinfoReply {}

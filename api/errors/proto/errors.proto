@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package errors;
+package manager.api.error;
 
 import "errorsx/errors.proto";
 option go_package = "manager/api/errors;errors";

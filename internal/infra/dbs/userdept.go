@@ -77,16 +77,17 @@ func (ud *UserDept) ListDeptUser(ctx core.Context, req *types.ListDeptUserReques
 }
 
 // ListUserDept 获取指定部门的角色列表
-func (ud *UserDept) ListUserDept(ctx core.Context, req *types.ListUserDeptRequest) ([]*entity.Dept, uint32, error) {
+func (ud *UserDept) ListUserDept(ctx core.Context, req *types.ListUserDeptRequest) ([]*entity.UserDept, uint32, error) {
 	var (
 		total int64
-		list  []*entity.Dept
+		list  []*entity.UserDept
 	)
 	db := ctx.DB().
-		Model(&entity.Dept{}).
-		Joins("left join user_dept on dept.id = user_dept.dept_id").
+		Model(&entity.UserDept{}).Preload("Job").Preload("Dept").
+		Joins("left join dept on dept.id = user_dept.dept_id").
 		Where("user_dept.dept_id is not null").
 		Where("dept.status = 1")
+
 	if req.Name != nil {
 		db = db.Where("dept.name like ?", *req.Name+"%")
 	}

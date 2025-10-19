@@ -30,9 +30,7 @@ func (u *Userinfo) ListUserinfo(ctx core.Context, req *types.ListUserinfoRequest
 		ms    []*entity.Userinfo
 		model = entity.Userinfo{UserId: req.UserId}
 	)
-	db := ctx.DB().Table(model.TableName()).
-		Where("app_id = ?", req.AppId).
-		Where("user_id = ?", req.UserId)
+	db := ctx.DB().Table(model.TableName()).Where("user_id = ?", req.UserId)
 	if len(req.Fields) != 0 {
 		db.Where("field in ?", req.Fields)
 	}

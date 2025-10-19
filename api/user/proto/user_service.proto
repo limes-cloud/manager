@@ -79,4 +79,11 @@ service User{
     };
   }
 
+  // UpdateUserinfo 更新角色信息
+  rpc UpdateUserinfo (UpdateUserinfoRequest) returns (UpdateUserinfoReply) {
+    option (google.api.http) = {
+      put: "/manager/api/v1/user/info",
+      body: "*"
+    };
+  }
 }

@@ -7,11 +7,10 @@
 package userdept
 
 import (
-	reflect "reflect"
-
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	reflect "reflect"
 )
 
 const (
@@ -85,7 +84,6 @@ var file_api_userdept_proto_userdept_service_proto_goTypes = []interface{}{
 	(*DeleteUserDeptReply)(nil),   // 6: manager.api.userdept.DeleteUserDeptReply
 	(*ListDeptUserReply)(nil),     // 7: manager.api.userdept.ListDeptUserReply
 }
-
 var file_api_userdept_proto_userdept_service_proto_depIdxs = []int32{
 	0, // 0: manager.api.userdept.UserDept.ListUserDept:input_type -> manager.api.userdept.ListUserDeptRequest
 	1, // 1: manager.api.userdept.UserDept.CreateUserDept:input_type -> manager.api.userdept.CreateUserDeptRequest

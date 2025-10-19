@@ -26,12 +26,19 @@ message ListUserDeptRequest {
 }
 
 message ListUserDeptReply {
-  message Dept{
+  message Data{
     uint32 id = 1;
     string name = 2;
   }
 
-  repeated Dept list = 1;
+  message UserDept{
+    uint32 id = 1;
+    uint32 userId = 2;
+    Data dept = 3;
+    Data job = 4;
+  }
+
+  repeated UserDept list = 1;
   uint32 total = 2;
 }
 

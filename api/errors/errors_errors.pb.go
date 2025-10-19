@@ -4,7 +4,6 @@ package errors
 
 import (
 	fmt "fmt"
-
 	errors "github.com/go-kratos/kratos/v2/errors"
 )
 
