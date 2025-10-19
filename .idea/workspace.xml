@@ -4,9 +4,9 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="986be327-4ef6-4fb0-b836-2023bc76be7e" name="Changes" comment="feat: ug version">
+    <list default="true" id="986be327-4ef6-4fb0-b836-2023bc76be7e" name="Changes" comment="feat: change docker">
+      <change afterPath="$PROJECT_DIR$/deploy/readme.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/Dockerfile" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -148,7 +148,8 @@
     <MESSAGE value="feat: add hook" />
     <MESSAGE value="feat: change proto" />
     <MESSAGE value="feat: ug version" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat: ug version" />
+    <MESSAGE value="feat: change docker" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: change docker" />
   </component>
   <component name="VgoProject">
     <environment>
