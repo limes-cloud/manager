@@ -10,6 +10,7 @@ require (
 	github.com/golang/protobuf v1.5.4
 	github.com/google/uuid v1.6.0
 	github.com/json-iterator/go v1.1.12
+	github.com/limes-cloud/configure v1.0.49
 	github.com/limes-cloud/kratosx v1.2.6
 	github.com/limes-cloud/manager/api v0.0.0
 	github.com/mojocn/base64Captcha v1.3.8

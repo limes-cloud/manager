@@ -91,7 +91,6 @@ jwt:
   expire: 12h
   renewal: 1h
   whitelist: {"GET:/manager/api/v1/app":true,"POST:/manager/api/v1/login":true,"POST:/manager/api/v1/logout":true,"POST:/manager/api/v1/token/refresh":true,"GET:/manager/api/v1/system/setting":true,"GET:/manager/api/v1/login/captcha":true,"GET:/manager/api/v1/tenants":true,"GET:/manager/api/v1/app/tenant/channels":true,"POST:/manager/api/v1/oauth/handler":true,"POST:/manager/api/v1/oauth/login":true,"POST:/manager/api/v1/token/parse":true,"GRPC:/manager.api.auth.Auth/ParseToken":true}
-
 pool: #并非池配置
   size: 10000 #最大协程数量
   expiryDuration: 30s #过期时间
@@ -101,4 +100,4 @@ pool: #并非池配置
 business:
   changePasswordType: password
   defaultUserPassword: 12345678
-  setting: {"title":"情感应用管理平台","desc":"开放协作，拥抱未来，统一应用管理平台","copyright":"Copyright © 2024-2025 withu.baidu.com . All rights reserved.","logo":"http://p3-armor.byteimg.com/tos-cn-i-49unhts6dw/dfdba5317c0c20ce20e64fac803d52bc.svg~tplv-49unhts6dw-image.image","watermark":"emotion admin"}
+  setting: {"title":"统一应用管理平台","desc":"开放协作，拥抱未来，统一应用管理平台","copyright":"Copyright © 2024-2025 withu.baidu.com . All rights reserved.","logo":"http://p3-armor.byteimg.com/tos-cn-i-49unhts6dw/dfdba5317c0c20ce20e64fac803d52bc.svg~tplv-49unhts6dw-image.image","watermark":"emotion admin"}

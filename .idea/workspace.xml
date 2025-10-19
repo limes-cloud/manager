@@ -4,31 +4,13 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="986be327-4ef6-4fb0-b836-2023bc76be7e" name="Changes" comment="feat: change proto">
+    <list default="true" id="986be327-4ef6-4fb0-b836-2023bc76be7e" name="Changes" comment="feat: ug version">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/errors/errors.pb.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/errors/errors_errors.pb.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/errors/proto/errors.proto" beforeDir="false" afterPath="$PROJECT_DIR$/api/errors/proto/errors.proto" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/user/proto/user.proto" beforeDir="false" afterPath="$PROJECT_DIR$/api/user/proto/user.proto" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/user/proto/user_service.proto" beforeDir="false" afterPath="$PROJECT_DIR$/api/user/proto/user_service.proto" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/user/user.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/user/user.pb.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/userdept/proto/userdept.proto" beforeDir="false" afterPath="$PROJECT_DIR$/api/userdept/proto/userdept.proto" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/userdept/userdept.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/userdept/userdept.pb.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/userdept/userdept.pb.validate.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/userdept/userdept_service.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/userdept/userdept_service.pb.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/userdept/userdept_service_grpc.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/userdept/userdept_service_grpc.pb.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/userdept/userdept_service_http.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/userdept/userdept_service_http.pb.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/conf/conf.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/conf/conf.yaml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/app/user.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/app/user.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/domain/entity/user.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/domain/entity/user.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/domain/repository/userdept.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/domain/repository/userdept.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/domain/service/user.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/domain/service/user.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/domain/service/userdept.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/domain/service/userdept.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/infra/dbs/user.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/infra/dbs/user.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/infra/dbs/userdept.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/infra/dbs/userdept.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/infra/dbs/userinfo.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/infra/dbs/userinfo.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/types/user.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/types/user.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/types/userinfo.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/types/userinfo.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/core/app.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/core/app.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/core/conf.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/core/conf.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -168,7 +150,8 @@
     <MESSAGE value="feat: 修改app" />
     <MESSAGE value="feat: add hook" />
     <MESSAGE value="feat: change proto" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat: change proto" />
+    <MESSAGE value="feat: ug version" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: ug version" />
   </component>
   <component name="VgoProject">
     <environment>
