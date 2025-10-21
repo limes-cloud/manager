@@ -183,7 +183,7 @@ func (a *Auth) OAuthLogin(c context.Context, req *auth.OAuthLoginRequest) (*auth
 }
 
 func (a *Auth) OAuthBind(c context.Context, req *auth.OAuthBindRequest) (*auth.OAuthBindReply, error) {
-	token, err := a.srv.OAuthBind(core.MustContext(c), &types.OAuthBindRequest{
+	token, err := a.srv.OAuthBind(core.MustContext(c, kratosx.WithSkipDBHook()), &types.OAuthBindRequest{
 		UserLoginRequest: &types.UserLoginRequest{
 			Tenant:    req.Tenant,
 			Username:  req.Username,

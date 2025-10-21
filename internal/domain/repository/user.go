@@ -29,4 +29,7 @@ type User interface {
 
 	// DeleteUser 删除用户信息
 	DeleteUser(ctx core.Context, id uint32) error
+
+	// ClearTokenExpire 清空token
+	ClearTokenExpire(ctx core.Context, id uint32) error
 }

@@ -207,6 +207,9 @@ func (u *Auth) UserLogin(ctx core.Context, req *types.UserLoginRequest) (token s
 		err = errors.UsernameNotExistError()
 		return
 	}
+	if user.TenantId != tenant.Id {
+		user.TenantId = tenant.Id
+	}
 
 	// 判断密码
 	if !crypto.CompareHashPwd(user.Password, pw.Password) {
@@ -224,7 +227,8 @@ func (u *Auth) UserLogout(ctx core.Context) error {
 	if token != "" {
 		ctx.JWT().AddBlacklist(token)
 	}
-	return nil
+
+	return u.user.ClearTokenExpire(ctx, ctx.Auth().UserId)
 }
 
 // UserRefreshToken 用户刷新token

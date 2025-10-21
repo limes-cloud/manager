@@ -55,6 +55,10 @@ type OAuth struct {
 	model.BaseTenantModel
 }
 
+func (c OAuth) TableName() string {
+	return "oauth"
+}
+
 func (o OAuth) GetExtra() *OAuthExtra {
 	var extra OAuthExtra
 	_ = json.Unmarshal([]byte(o.Extra), &extra)

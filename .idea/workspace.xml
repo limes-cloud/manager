@@ -5,8 +5,21 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="986be327-4ef6-4fb0-b836-2023bc76be7e" name="Changes" comment="feat: change docker">
+      <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" afterPath="$PROJECT_DIR$/.env" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/deploy/readme.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/auth/auth.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/auth/auth.pb.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/auth/auth.pb.validate.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/auth/proto/auth.proto" beforeDir="false" afterPath="$PROJECT_DIR$/api/auth/proto/auth.proto" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/conf/conf.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/conf/conf.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/app/auth.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/app/auth.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/core/app.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/core/app.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/domain/entity/oauth.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/domain/entity/oauth.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/domain/entity/user.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/domain/entity/user.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/domain/repository/user.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/domain/repository/user.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/domain/service/auth.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/domain/service/auth.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/infra/dbs/user.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/infra/dbs/user.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/infra/oauth/yiban.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/infra/oauth/yiban.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -52,7 +65,6 @@
     "RunOnceActivity.go.migrated.go.modules.settings": "true",
     "RunOnceActivity.go.modules.automatic.dependencies.download": "true",
     "RunOnceActivity.go.modules.go.list.on.any.changes.was.set": "true",
-    "codeReviewSummary": "[]",
     "git-widget-placeholder": "main",
     "go.import.settings.migrated": "true",
     "go.sdk.automatically.set": "true",

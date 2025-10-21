@@ -2,6 +2,7 @@ package dbs
 
 import (
 	"context"
+	"errors"
 	"sync"
 
 	"github.com/limes-cloud/kratosx"
@@ -108,6 +109,9 @@ func (u *User) ListUser(ctx core.Context, req *types.ListUserRequest) ([]*entity
 
 // CreateUser 创建数据
 func (u *User) CreateUser(ctx core.Context, req *entity.User) (uint32, error) {
+	if req.Username == entity.AdminUsername {
+		return 0, errors.New("username is error")
+	}
 	op := u.cache.OP(ctx)
 	err := ctx.Transaction(func(ctx core.Context) error {
 		if err := ctx.DB().Create(req).Error; err != nil {
@@ -144,6 +148,13 @@ func (u *User) DeleteUser(ctx core.Context, id uint32) error {
 		}
 		return op.Delete(id).Do()
 	})
+}
+
+// ClearTokenExpire 清空tokens有效时间
+func (u *User) ClearTokenExpire(ctx core.Context, id uint32) error {
+	return ctx.DB().Model(entity.User{}).
+		Where("id = ?", id).
+		UpdateColumn("expire_at", 0).Error
 }
 
 func (u *User) GetUserDeptId(id uint32) uint32 {

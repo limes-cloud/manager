@@ -7,12 +7,11 @@
 package auth
 
 import (
-	reflect "reflect"
-	sync "sync"
-
 	_ "github.com/envoyproxy/protoc-gen-validate/validate"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	reflect "reflect"
+	sync "sync"
 )
 
 const (
@@ -1604,7 +1603,7 @@ var file_api_auth_proto_auth_proto_rawDesc = []byte{
 	0x6b, 0x65, 0x6e, 0x88, 0x01, 0x01, 0x42, 0x08, 0x0a, 0x06, 0x5f, 0x74, 0x6f, 0x6b, 0x65, 0x6e,
 	0x22, 0x87, 0x02, 0x0a, 0x10, 0x4f, 0x41, 0x75, 0x74, 0x68, 0x42, 0x69, 0x6e, 0x64, 0x52, 0x65,
 	0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x23, 0x0a, 0x08, 0x75, 0x73, 0x65, 0x72, 0x6e, 0x61, 0x6d,
-	0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x42, 0x07, 0xfa, 0x42, 0x04, 0x72, 0x02, 0x10, 0x06,
+	0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x42, 0x07, 0xfa, 0x42, 0x04, 0x72, 0x02, 0x10, 0x03,
 	0x52, 0x08, 0x75, 0x73, 0x65, 0x72, 0x6e, 0x61, 0x6d, 0x65, 0x12, 0x23, 0x0a, 0x08, 0x70, 0x61,
 	0x73, 0x73, 0x77, 0x6f, 0x72, 0x64, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x42, 0x07, 0xfa, 0x42,
 	0x04, 0x72, 0x02, 0x10, 0x06, 0x52, 0x08, 0x70, 0x61, 0x73, 0x73, 0x77, 0x6f, 0x72, 0x64, 0x12,
@@ -1702,35 +1701,32 @@ func file_api_auth_proto_auth_proto_rawDescGZIP() []byte {
 	return file_api_auth_proto_auth_proto_rawDescData
 }
 
-var (
-	file_api_auth_proto_auth_proto_msgTypes = make([]protoimpl.MessageInfo, 23)
-	file_api_auth_proto_auth_proto_goTypes  = []interface{}{
-		(*ApiAuthRequest)(nil),           // 0: manager.api.auth.ApiAuthRequest
-		(*ApiAuthReply)(nil),             // 1: manager.api.auth.ApiAuthReply
-		(*ParseTokenRequest)(nil),        // 2: manager.api.auth.ParseTokenRequest
-		(*ParseTokenReply)(nil),          // 3: manager.api.auth.ParseTokenReply
-		(*UserLoginRequest)(nil),         // 4: manager.api.auth.UserLoginRequest
-		(*UserLoginReply)(nil),           // 5: manager.api.auth.UserLoginReply
-		(*UserRefreshTokenReply)(nil),    // 6: manager.api.auth.UserRefreshTokenReply
-		(*GetUserLoginCaptchaReply)(nil), // 7: manager.api.auth.GetUserLoginCaptchaReply
-		(*OAuthHandlerRequest)(nil),      // 8: manager.api.auth.OAuthHandlerRequest
-		(*OAuthHandlerReply)(nil),        // 9: manager.api.auth.OAuthHandlerReply
-		(*ReportOAuthCodeRequest)(nil),   // 10: manager.api.auth.ReportOAuthCodeRequest
-		(*ReportOAuthCodeReply)(nil),     // 11: manager.api.auth.ReportOAuthCodeReply
-		(*OAuthLoginRequest)(nil),        // 12: manager.api.auth.OAuthLoginRequest
-		(*OAuthLoginReply)(nil),          // 13: manager.api.auth.OAuthLoginReply
-		(*OAuthBindRequest)(nil),         // 14: manager.api.auth.OAuthBindRequest
-		(*OAuthBindReply)(nil),           // 15: manager.api.auth.OAuthBindReply
-		(*ListLoginLogRequest)(nil),      // 16: manager.api.auth.ListLoginLogRequest
-		(*ListLoginLogReply)(nil),        // 17: manager.api.auth.ListLoginLogReply
-		(*ListAuthLogRequest)(nil),       // 18: manager.api.auth.ListAuthLogRequest
-		(*ListAuthLogReply)(nil),         // 19: manager.api.auth.ListAuthLogReply
-		(*ListLoginLogReply_User)(nil),   // 20: manager.api.auth.ListLoginLogReply.User
-		(*ListLoginLogReply_Log)(nil),    // 21: manager.api.auth.ListLoginLogReply.Log
-		(*ListAuthLogReply_Log)(nil),     // 22: manager.api.auth.ListAuthLogReply.Log
-	}
-)
-
+var file_api_auth_proto_auth_proto_msgTypes = make([]protoimpl.MessageInfo, 23)
+var file_api_auth_proto_auth_proto_goTypes = []interface{}{
+	(*ApiAuthRequest)(nil),           // 0: manager.api.auth.ApiAuthRequest
+	(*ApiAuthReply)(nil),             // 1: manager.api.auth.ApiAuthReply
+	(*ParseTokenRequest)(nil),        // 2: manager.api.auth.ParseTokenRequest
+	(*ParseTokenReply)(nil),          // 3: manager.api.auth.ParseTokenReply
+	(*UserLoginRequest)(nil),         // 4: manager.api.auth.UserLoginRequest
+	(*UserLoginReply)(nil),           // 5: manager.api.auth.UserLoginReply
+	(*UserRefreshTokenReply)(nil),    // 6: manager.api.auth.UserRefreshTokenReply
+	(*GetUserLoginCaptchaReply)(nil), // 7: manager.api.auth.GetUserLoginCaptchaReply
+	(*OAuthHandlerRequest)(nil),      // 8: manager.api.auth.OAuthHandlerRequest
+	(*OAuthHandlerReply)(nil),        // 9: manager.api.auth.OAuthHandlerReply
+	(*ReportOAuthCodeRequest)(nil),   // 10: manager.api.auth.ReportOAuthCodeRequest
+	(*ReportOAuthCodeReply)(nil),     // 11: manager.api.auth.ReportOAuthCodeReply
+	(*OAuthLoginRequest)(nil),        // 12: manager.api.auth.OAuthLoginRequest
+	(*OAuthLoginReply)(nil),          // 13: manager.api.auth.OAuthLoginReply
+	(*OAuthBindRequest)(nil),         // 14: manager.api.auth.OAuthBindRequest
+	(*OAuthBindReply)(nil),           // 15: manager.api.auth.OAuthBindReply
+	(*ListLoginLogRequest)(nil),      // 16: manager.api.auth.ListLoginLogRequest
+	(*ListLoginLogReply)(nil),        // 17: manager.api.auth.ListLoginLogReply
+	(*ListAuthLogRequest)(nil),       // 18: manager.api.auth.ListAuthLogRequest
+	(*ListAuthLogReply)(nil),         // 19: manager.api.auth.ListAuthLogReply
+	(*ListLoginLogReply_User)(nil),   // 20: manager.api.auth.ListLoginLogReply.User
+	(*ListLoginLogReply_Log)(nil),    // 21: manager.api.auth.ListLoginLogReply.Log
+	(*ListAuthLogReply_Log)(nil),     // 22: manager.api.auth.ListAuthLogReply.Log
+}
 var file_api_auth_proto_auth_proto_depIdxs = []int32{
 	21, // 0: manager.api.auth.ListLoginLogReply.list:type_name -> manager.api.auth.ListLoginLogReply.Log
 	22, // 1: manager.api.auth.ListAuthLogReply.list:type_name -> manager.api.auth.ListAuthLogReply.Log

@@ -6,6 +6,10 @@ import (
 	"github.com/limes-cloud/kratosx/model"
 )
 
+const (
+	AdminUsername = "admin"
+)
+
 type User struct {
 	Avatar   string      `json:"avatar" gorm:"column:avatar"`      // 用户头像
 	Nickname string      `json:"nickname" gorm:"column:nickname"`  // 用户昵称

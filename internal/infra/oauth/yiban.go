@@ -35,7 +35,7 @@ func (y YiBan) OAuthHandler(_ core.Context, req *types.OAuthHandlerRequest) (*ty
 	uid := crypto.MD5([]byte(uuid.NewString()))
 	resp := types.OAuthHandlerReply{
 		UUID:      uid,
-		Action:    types.GetOAuthWayActionScan,
+		Action:    types.GetOAuthWayActionJump,
 		Tip:       "点击跳转授权",
 		CodeField: "verify_request",
 	}

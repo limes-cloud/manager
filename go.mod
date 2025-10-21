@@ -116,4 +116,7 @@ require (
 	gorm.io/driver/sqlserver v1.6.1 // indirect
 )
 
-replace github.com/limes-cloud/manager/api v0.0.0 => ./api
+replace (
+ 	github.com/limes-cloud/manager/api v0.0.0 => ./api
+ 	github.com/limes-cloud/kratosx v1.2.6 => ../../framework/kratosx
+ )
