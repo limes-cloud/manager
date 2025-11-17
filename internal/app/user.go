@@ -125,7 +125,9 @@ func (app *User) ListUser(c context.Context, req *user.ListUserRequest) (*user.L
 		ctx.Logger().Errorw("msg", "list user req transform error", "err", err)
 		return nil, errors.TransformError()
 	}
-
+	if req.DeptId != nil {
+		in.InDeptIds = []uint32{*req.DeptId}
+	}
 	// 调用服务
 	list, total, err := app.srv.ListUser(ctx, &in)
 	if err != nil {

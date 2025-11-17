@@ -98,6 +98,9 @@ func (u *User) ListUser(ctx core.Context, req *types.ListUserRequest) ([]*entity
 	if len(req.NotInIds) > 0 {
 		db = db.Where("id not in ?", req.NotInIds)
 	}
+	if req.InDeptIds != nil {
+		db = db.Where("dept_id in ?", req.InDeptIds)
+	}
 
 	// 查询条件下数据总数
 	if err := db.Count(&total).Error; err != nil {

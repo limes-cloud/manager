@@ -7,11 +7,12 @@
 package user
 
 import (
+	reflect "reflect"
+	sync "sync"
+
 	_ "github.com/envoyproxy/protoc-gen-validate/validate"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
-	reflect "reflect"
-	sync "sync"
 )
 
 const (
@@ -1391,29 +1392,32 @@ func file_api_user_proto_user_proto_rawDescGZIP() []byte {
 	return file_api_user_proto_user_proto_rawDescData
 }
 
-var file_api_user_proto_user_proto_msgTypes = make([]protoimpl.MessageInfo, 20)
-var file_api_user_proto_user_proto_goTypes = []interface{}{
-	(*Result)(nil),                          // 0: manager.api.user.Result
-	(*Info)(nil),                            // 1: manager.api.user.Info
-	(*GetCurrentUserRequest)(nil),           // 2: manager.api.user.GetCurrentUserRequest
-	(*GetUserRequest)(nil),                  // 3: manager.api.user.GetUserRequest
-	(*UserObject)(nil),                      // 4: manager.api.user.UserObject
-	(*ListUserRequest)(nil),                 // 5: manager.api.user.ListUserRequest
-	(*ListUserReply)(nil),                   // 6: manager.api.user.ListUserReply
-	(*CreateUserRequest)(nil),               // 7: manager.api.user.CreateUserRequest
-	(*CreateUserReply)(nil),                 // 8: manager.api.user.CreateUserReply
-	(*UpdateUserRequest)(nil),               // 9: manager.api.user.UpdateUserRequest
-	(*UpdateUserReply)(nil),                 // 10: manager.api.user.UpdateUserReply
-	(*DeleteUserRequest)(nil),               // 11: manager.api.user.DeleteUserRequest
-	(*DeleteUserReply)(nil),                 // 12: manager.api.user.DeleteUserReply
-	(*ResetPasswordRequest)(nil),            // 13: manager.api.user.ResetPasswordRequest
-	(*UpdateCurrentUserSettingRequest)(nil), // 14: manager.api.user.UpdateCurrentUserSettingRequest
-	(*UpdateCurrentUserRequest)(nil),        // 15: manager.api.user.UpdateCurrentUserRequest
-	(*UpdateCurrentUserReply)(nil),          // 16: manager.api.user.UpdateCurrentUserReply
-	(*UpdateUserinfoRequest)(nil),           // 17: manager.api.user.UpdateUserinfoRequest
-	(*UpdateUserinfoReply)(nil),             // 18: manager.api.user.UpdateUserinfoReply
-	(*UpdateUserinfoRequest_Info)(nil),      // 19: manager.api.user.UpdateUserinfoRequest.Info
-}
+var (
+	file_api_user_proto_user_proto_msgTypes = make([]protoimpl.MessageInfo, 20)
+	file_api_user_proto_user_proto_goTypes  = []interface{}{
+		(*Result)(nil),                          // 0: manager.api.user.Result
+		(*Info)(nil),                            // 1: manager.api.user.Info
+		(*GetCurrentUserRequest)(nil),           // 2: manager.api.user.GetCurrentUserRequest
+		(*GetUserRequest)(nil),                  // 3: manager.api.user.GetUserRequest
+		(*UserObject)(nil),                      // 4: manager.api.user.UserObject
+		(*ListUserRequest)(nil),                 // 5: manager.api.user.ListUserRequest
+		(*ListUserReply)(nil),                   // 6: manager.api.user.ListUserReply
+		(*CreateUserRequest)(nil),               // 7: manager.api.user.CreateUserRequest
+		(*CreateUserReply)(nil),                 // 8: manager.api.user.CreateUserReply
+		(*UpdateUserRequest)(nil),               // 9: manager.api.user.UpdateUserRequest
+		(*UpdateUserReply)(nil),                 // 10: manager.api.user.UpdateUserReply
+		(*DeleteUserRequest)(nil),               // 11: manager.api.user.DeleteUserRequest
+		(*DeleteUserReply)(nil),                 // 12: manager.api.user.DeleteUserReply
+		(*ResetPasswordRequest)(nil),            // 13: manager.api.user.ResetPasswordRequest
+		(*UpdateCurrentUserSettingRequest)(nil), // 14: manager.api.user.UpdateCurrentUserSettingRequest
+		(*UpdateCurrentUserRequest)(nil),        // 15: manager.api.user.UpdateCurrentUserRequest
+		(*UpdateCurrentUserReply)(nil),          // 16: manager.api.user.UpdateCurrentUserReply
+		(*UpdateUserinfoRequest)(nil),           // 17: manager.api.user.UpdateUserinfoRequest
+		(*UpdateUserinfoReply)(nil),             // 18: manager.api.user.UpdateUserinfoReply
+		(*UpdateUserinfoRequest_Info)(nil),      // 19: manager.api.user.UpdateUserinfoRequest.Info
+	}
+)
+
 var file_api_user_proto_user_proto_depIdxs = []int32{
 	1, // 0: manager.api.user.UserObject.infos:type_name -> manager.api.user.Info
 	0, // 1: manager.api.user.UserObject.dept:type_name -> manager.api.user.Result
