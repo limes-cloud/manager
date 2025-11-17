@@ -705,10 +705,10 @@ func (m *ListUserRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	if val := m.GetPageSize(); val < 1 || val > 50 {
+	if val := m.GetPageSize(); val < 1 || val > 1000 {
 		err := ListUserRequestValidationError{
 			field:  "PageSize",
-			reason: "value must be inside range [1, 50]",
+			reason: "value must be inside range [1, 1000]",
 		}
 		if !all {
 			return err
@@ -1232,6 +1232,7 @@ func (m *UpdateUserRequest) validate(all bool) error {
 	}
 
 	if m.Nickname != nil {
+
 		if l := utf8.RuneCountInString(m.GetNickname()); l < 4 || l > 64 {
 			err := UpdateUserRequestValidationError{
 				field:  "Nickname",
@@ -1242,9 +1243,11 @@ func (m *UpdateUserRequest) validate(all bool) error {
 			}
 			errors = append(errors, err)
 		}
+
 	}
 
 	if m.DeptId != nil {
+
 		if m.GetDeptId() < 1 {
 			err := UpdateUserRequestValidationError{
 				field:  "DeptId",
@@ -1255,9 +1258,11 @@ func (m *UpdateUserRequest) validate(all bool) error {
 			}
 			errors = append(errors, err)
 		}
+
 	}
 
 	if m.JobId != nil {
+
 		if m.GetJobId() < 1 {
 			err := UpdateUserRequestValidationError{
 				field:  "JobId",
@@ -1268,6 +1273,7 @@ func (m *UpdateUserRequest) validate(all bool) error {
 			}
 			errors = append(errors, err)
 		}
+
 	}
 
 	if m.Status != nil {
@@ -1919,6 +1925,7 @@ func (m *UpdateCurrentUserRequest) validate(all bool) error {
 	var errors []error
 
 	if m.Nickname != nil {
+
 		if l := utf8.RuneCountInString(m.GetNickname()); l < 1 || l > 64 {
 			err := UpdateCurrentUserRequestValidationError{
 				field:  "Nickname",
@@ -1929,9 +1936,11 @@ func (m *UpdateCurrentUserRequest) validate(all bool) error {
 			}
 			errors = append(errors, err)
 		}
+
 	}
 
 	if m.Avatar != nil {
+
 		if l := utf8.RuneCountInString(m.GetAvatar()); l < 1 || l > 64 {
 			err := UpdateCurrentUserRequestValidationError{
 				field:  "Avatar",
@@ -1942,6 +1951,7 @@ func (m *UpdateCurrentUserRequest) validate(all bool) error {
 			}
 			errors = append(errors, err)
 		}
+
 	}
 
 	if len(errors) > 0 {
