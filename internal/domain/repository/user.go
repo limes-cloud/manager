@@ -18,7 +18,7 @@ type User interface {
 	// GetUserByTU 获取指定的用户信息
 	GetUserByTU(ctx core.Context, tid uint32, un string) (*entity.User, error)
 
-	// ListUser 获取用户信息列表
+	// ListUser 获取用户 信息列表
 	ListUser(ctx core.Context, req *types.ListUserRequest) ([]*entity.User, uint32, error)
 
 	// CreateUser 创建用户信息
