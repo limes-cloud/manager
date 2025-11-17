@@ -1231,6 +1231,19 @@ func (m *UpdateUserRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
+	if m.Avatar != nil {
+		if utf8.RuneCountInString(m.GetAvatar()) < 1 {
+			err := UpdateUserRequestValidationError{
+				field:  "Avatar",
+				reason: "value length must be at least 1 runes",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+	}
+
 	if m.Nickname != nil {
 		if l := utf8.RuneCountInString(m.GetNickname()); l < 1 || l > 64 {
 			err := UpdateUserRequestValidationError{
