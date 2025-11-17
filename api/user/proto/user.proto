@@ -78,7 +78,7 @@ message CreateUserReply {
 
 message UpdateUserRequest {
   uint32 id = 1[(validate.rules).uint32 = {gte: 1}];
-  optional string nickname = 2[(validate.rules).string = {min_len: 4,max_len: 64}];
+  optional string nickname = 2[(validate.rules).string = {min_len: 1,max_len: 64}];
   optional uint32 deptId = 3[(validate.rules).uint32 = {gte: 1}];
   optional uint32 jobId = 4[(validate.rules).uint32 = {gte: 1}];
   optional bool status = 5;

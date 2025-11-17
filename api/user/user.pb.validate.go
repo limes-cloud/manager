@@ -1232,10 +1232,10 @@ func (m *UpdateUserRequest) validate(all bool) error {
 	}
 
 	if m.Nickname != nil {
-		if l := utf8.RuneCountInString(m.GetNickname()); l < 4 || l > 64 {
+		if l := utf8.RuneCountInString(m.GetNickname()); l < 1 || l > 64 {
 			err := UpdateUserRequestValidationError{
 				field:  "Nickname",
-				reason: "value length must be between 4 and 64 runes, inclusive",
+				reason: "value length must be between 1 and 64 runes, inclusive",
 			}
 			if !all {
 				return err
