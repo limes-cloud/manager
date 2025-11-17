@@ -6,6 +6,14 @@
   <component name="ChangeListManager">
     <list default="true" id="986be327-4ef6-4fb0-b836-2023bc76be7e" name="Changes" comment="feat: fix bind">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/errors/errors.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/errors/errors.pb.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/errors/errors_errors.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/errors/errors_errors.pb.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/user/proto/user.proto" beforeDir="false" afterPath="$PROJECT_DIR$/api/user/proto/user.proto" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/user/user.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/user/user.pb.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/user/user.pb.validate.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/user/user.pb.validate.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/infra/dbs/user.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/infra/dbs/user.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/types/user.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/types/user.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -39,29 +47,29 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "DefaultGoTemplateProperty": "Go File",
-    "Go Build.go build github.com/limes-cloud/manager.executor": "Debug",
-    "Go Build.go build github.com/limes-cloud/manager/cmd/manager.executor": "Debug",
-    "OpenAPI/Swagger Code Generator.openapi.yaml.executor": "Run",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.go.formatter.settings.were.checked": "true",
-    "RunOnceActivity.go.migrated.go.modules.settings": "true",
-    "RunOnceActivity.go.modules.automatic.dependencies.download": "true",
-    "RunOnceActivity.go.modules.go.list.on.any.changes.was.set": "true",
-    "git-widget-placeholder": "main",
-    "go.import.settings.migrated": "true",
-    "go.sdk.automatically.set": "true",
-    "last_opened_file_path": "/Users/fangweiye/GolandProjects/go-platform/server/manager",
-    "node.js.detected.package.eslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "watcher.settings",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;DefaultGoTemplateProperty&quot;: &quot;Go File&quot;,
+    &quot;Go Build.go build github.com/limes-cloud/manager.executor&quot;: &quot;Debug&quot;,
+    &quot;Go Build.go build github.com/limes-cloud/manager/cmd/manager.executor&quot;: &quot;Debug&quot;,
+    &quot;OpenAPI/Swagger Code Generator.openapi.yaml.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.formatter.settings.were.checked&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.migrated.go.modules.settings&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.modules.automatic.dependencies.download&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.modules.go.list.on.any.changes.was.set&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;go.import.settings.migrated&quot;: &quot;true&quot;,
+    &quot;go.sdk.automatically.set&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/fangweiye/GolandProjects/go-platform/server/manager&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;watcher.settings&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/api/scope/proto" />

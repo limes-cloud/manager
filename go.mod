@@ -117,6 +117,5 @@ require (
 )
 
 replace (
-	github.com/limes-cloud/kratosx v1.2.6 => ../../framework/kratosx
 	github.com/limes-cloud/manager/api v0.0.0 => ./api
 )

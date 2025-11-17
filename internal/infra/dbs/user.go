@@ -84,7 +84,10 @@ func (u *User) ListUser(ctx core.Context, req *types.ListUserRequest) ([]*entity
 	db := ctx.DB().Model(entity.User{}).Preload("Job").Preload("Dept")
 
 	if req.Username != nil {
-		db = db.Where("username = ?", req.Username)
+		db = db.Where("username = ?", *req.Username)
+	}
+	if req.Nickname != nil {
+		db = db.Where("nickname like ?", *req.Nickname+"%")
 	}
 	if req.Status != nil {
 		db = db.Where("status = ?", *req.Status)

@@ -23,5 +23,6 @@ type ListUserRequest struct {
 	NotInIds  []uint32 `json:"notInIds"`
 	InDeptIds []uint32 `json:"inDeptIds"`
 	Username  *string  `json:"name"`
+	Nickname  *string  `json:"nickname"`
 	Status    *bool    `json:"status"`
 }

@@ -52,6 +52,7 @@ message ListUserRequest{
   optional uint32 deptId = 3;
   optional uint32 jobId = 5;
   optional string username = 6;
+  optional string nickname = 12;
   optional bool status = 7;
   repeated int64 loggedAts = 8;
   repeated int64 createdAts = 9;
