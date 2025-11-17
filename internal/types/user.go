@@ -19,7 +19,7 @@ type GetUserRequest struct {
 
 type ListUserRequest struct {
 	page.Search
-	InIds     []uint32 `json:"idIds"`
+	InIds     []uint32 `json:"inIds"`
 	NotInIds  []uint32 `json:"notInIds"`
 	InDeptIds []uint32 `json:"inDeptIds"`
 	Username  *string  `json:"name"`
