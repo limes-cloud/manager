@@ -85,7 +85,7 @@ business:
     title: "统一应用管理平台"
     desc: "开放协作，拥抱未来，统一应用管理平台"
     copyright: "Copyright © 2024-2025 withu.baidu.com . All rights reserved."
-    logo: "http://p3-armor.byteimg.com/tos-cn-i-49unhts6dw/dfdba5317c0c20ce20e64fac803d52bc.svg~tplv-49unhts6dw-image.image",
+    logo: "http://p3-armor.byteimg.com/tos-cn-i-49unhts6dw/dfdba5317c0c20ce20e64fac803d52bc.svg~tplv-49unhts6dw-image.image"
     watermark: "GoPlatform"
   jwt:
     whitelist:

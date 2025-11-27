@@ -1,7 +1,10 @@
 # 构建打包镜像
 FROM golang:alpine AS build
-#ENV GOPROXY=https://goproxy.cn,direct
+RUN apk add git
+
+ENV GOPROXY=https://goproxy.cn,direct
 ENV GO111MODULE=on
+
 WORKDIR /go/cache
 ADD api/go.mod api/go.mod
 ADD api/go.sum api/go.sum
