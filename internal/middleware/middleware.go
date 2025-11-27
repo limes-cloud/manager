@@ -2,13 +2,18 @@ package middleware
 
 import (
 	"github.com/go-kratos/kratos/v2/middleware"
-	"github.com/limes-cloud/manager/internal/middleware/api"
-	"github.com/limes-cloud/manager/internal/middleware/auth"
+	"github.com/limes-cloud/manager/internal/middleware/jwt"
 )
 
 func Middleware() []middleware.Middleware {
 	return []middleware.Middleware{
-		auth.Parse(),
-		api.Check(),
+		// 获取token
+		jwt.Token(),
+
+		// jwt校验
+		jwt.TokenValidate(),
+
+		// api鉴权
+		jwt.ApiValidate(),
 	}
 }

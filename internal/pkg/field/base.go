@@ -26,7 +26,7 @@ func init() {
 	register("bool", &boolType{})
 	register("datetime", &datetimeType{})
 	register("email", &emailType{})
-	register("idCard", &idCardType{})
+	register("idcard", &idCardType{})
 	register("number", &numberType{})
 	register("phone", &phoneType{})
 	register("string", &stringType{})

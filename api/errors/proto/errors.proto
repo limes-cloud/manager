@@ -53,4 +53,6 @@ enum ErrorReason {
 	JobPurviewError = 48[(errors.message)="无此职位权限"];
 	NotLoginError = 49[(errors.code)=403,(errors.message)="用户未登陆"];
 	TenantNotFoundError = 50[(errors.code)=403,(errors.message)="租户不存在"];
+	AppNotFoundError = 51[(errors.code)=403,(errors.message)="应用不存在"];
+	RegisterError = 52[(errors.message)="注册失败"];
 }

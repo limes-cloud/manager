@@ -20,12 +20,9 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	JobRole_ListJobRole_FullMethodName    = "/manager.api.jobrole.JobRole/ListJobRole"
-	JobRole_CreateJobRoles_FullMethodName = "/manager.api.jobrole.JobRole/CreateJobRoles"
-	JobRole_DeleteJobRoles_FullMethodName = "/manager.api.jobrole.JobRole/DeleteJobRoles"
-	JobRole_ListRoleJob_FullMethodName    = "/manager.api.jobrole.JobRole/ListRoleJob"
-	JobRole_CreateRoleJobs_FullMethodName = "/manager.api.jobrole.JobRole/CreateRoleJobs"
-	JobRole_DeleteRoleJobs_FullMethodName = "/manager.api.jobrole.JobRole/DeleteRoleJobs"
+	JobRole_ListJobRole_FullMethodName   = "/manager.api.jobrole.JobRole/ListJobRole"
+	JobRole_CreateJobRole_FullMethodName = "/manager.api.jobrole.JobRole/CreateJobRole"
+	JobRole_DeleteJobRole_FullMethodName = "/manager.api.jobrole.JobRole/DeleteJobRole"
 )
 
 // JobRoleClient is the client API for JobRole service.
@@ -33,11 +30,8 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type JobRoleClient interface {
 	ListJobRole(ctx context.Context, in *ListJobRoleRequest, opts ...grpc.CallOption) (*ListJobRoleReply, error)
-	CreateJobRoles(ctx context.Context, in *CreateJobRolesRequest, opts ...grpc.CallOption) (*CreateJobRolesReply, error)
-	DeleteJobRoles(ctx context.Context, in *DeleteJobRolesRequest, opts ...grpc.CallOption) (*DeleteJobRolesReply, error)
-	ListRoleJob(ctx context.Context, in *ListRoleJobRequest, opts ...grpc.CallOption) (*ListRoleJobReply, error)
-	CreateRoleJobs(ctx context.Context, in *CreateRoleJobsRequest, opts ...grpc.CallOption) (*CreateRoleJobsReply, error)
-	DeleteRoleJobs(ctx context.Context, in *DeleteRoleJobsRequest, opts ...grpc.CallOption) (*DeleteRoleJobsReply, error)
+	CreateJobRole(ctx context.Context, in *CreateJobRoleRequest, opts ...grpc.CallOption) (*CreateJobRoleReply, error)
+	DeleteJobRole(ctx context.Context, in *DeleteJobRoleRequest, opts ...grpc.CallOption) (*DeleteJobRoleReply, error)
 }
 
 type jobRoleClient struct {
@@ -57,45 +51,18 @@ func (c *jobRoleClient) ListJobRole(ctx context.Context, in *ListJobRoleRequest,
 	return out, nil
 }
 
-func (c *jobRoleClient) CreateJobRoles(ctx context.Context, in *CreateJobRolesRequest, opts ...grpc.CallOption) (*CreateJobRolesReply, error) {
-	out := new(CreateJobRolesReply)
-	err := c.cc.Invoke(ctx, JobRole_CreateJobRoles_FullMethodName, in, out, opts...)
+func (c *jobRoleClient) CreateJobRole(ctx context.Context, in *CreateJobRoleRequest, opts ...grpc.CallOption) (*CreateJobRoleReply, error) {
+	out := new(CreateJobRoleReply)
+	err := c.cc.Invoke(ctx, JobRole_CreateJobRole_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *jobRoleClient) DeleteJobRoles(ctx context.Context, in *DeleteJobRolesRequest, opts ...grpc.CallOption) (*DeleteJobRolesReply, error) {
-	out := new(DeleteJobRolesReply)
-	err := c.cc.Invoke(ctx, JobRole_DeleteJobRoles_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *jobRoleClient) ListRoleJob(ctx context.Context, in *ListRoleJobRequest, opts ...grpc.CallOption) (*ListRoleJobReply, error) {
-	out := new(ListRoleJobReply)
-	err := c.cc.Invoke(ctx, JobRole_ListRoleJob_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *jobRoleClient) CreateRoleJobs(ctx context.Context, in *CreateRoleJobsRequest, opts ...grpc.CallOption) (*CreateRoleJobsReply, error) {
-	out := new(CreateRoleJobsReply)
-	err := c.cc.Invoke(ctx, JobRole_CreateRoleJobs_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *jobRoleClient) DeleteRoleJobs(ctx context.Context, in *DeleteRoleJobsRequest, opts ...grpc.CallOption) (*DeleteRoleJobsReply, error) {
-	out := new(DeleteRoleJobsReply)
-	err := c.cc.Invoke(ctx, JobRole_DeleteRoleJobs_FullMethodName, in, out, opts...)
+func (c *jobRoleClient) DeleteJobRole(ctx context.Context, in *DeleteJobRoleRequest, opts ...grpc.CallOption) (*DeleteJobRoleReply, error) {
+	out := new(DeleteJobRoleReply)
+	err := c.cc.Invoke(ctx, JobRole_DeleteJobRole_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -107,11 +74,8 @@ func (c *jobRoleClient) DeleteRoleJobs(ctx context.Context, in *DeleteRoleJobsRe
 // for forward compatibility
 type JobRoleServer interface {
 	ListJobRole(context.Context, *ListJobRoleRequest) (*ListJobRoleReply, error)
-	CreateJobRoles(context.Context, *CreateJobRolesRequest) (*CreateJobRolesReply, error)
-	DeleteJobRoles(context.Context, *DeleteJobRolesRequest) (*DeleteJobRolesReply, error)
-	ListRoleJob(context.Context, *ListRoleJobRequest) (*ListRoleJobReply, error)
-	CreateRoleJobs(context.Context, *CreateRoleJobsRequest) (*CreateRoleJobsReply, error)
-	DeleteRoleJobs(context.Context, *DeleteRoleJobsRequest) (*DeleteRoleJobsReply, error)
+	CreateJobRole(context.Context, *CreateJobRoleRequest) (*CreateJobRoleReply, error)
+	DeleteJobRole(context.Context, *DeleteJobRoleRequest) (*DeleteJobRoleReply, error)
 	mustEmbedUnimplementedJobRoleServer()
 }
 
@@ -122,24 +86,12 @@ func (UnimplementedJobRoleServer) ListJobRole(context.Context, *ListJobRoleReque
 	return nil, status.Errorf(codes.Unimplemented, "method ListJobRole not implemented")
 }
 
-func (UnimplementedJobRoleServer) CreateJobRoles(context.Context, *CreateJobRolesRequest) (*CreateJobRolesReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method CreateJobRoles not implemented")
+func (UnimplementedJobRoleServer) CreateJobRole(context.Context, *CreateJobRoleRequest) (*CreateJobRoleReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateJobRole not implemented")
 }
 
-func (UnimplementedJobRoleServer) DeleteJobRoles(context.Context, *DeleteJobRolesRequest) (*DeleteJobRolesReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method DeleteJobRoles not implemented")
-}
-
-func (UnimplementedJobRoleServer) ListRoleJob(context.Context, *ListRoleJobRequest) (*ListRoleJobReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ListRoleJob not implemented")
-}
-
-func (UnimplementedJobRoleServer) CreateRoleJobs(context.Context, *CreateRoleJobsRequest) (*CreateRoleJobsReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method CreateRoleJobs not implemented")
-}
-
-func (UnimplementedJobRoleServer) DeleteRoleJobs(context.Context, *DeleteRoleJobsRequest) (*DeleteRoleJobsReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method DeleteRoleJobs not implemented")
+func (UnimplementedJobRoleServer) DeleteJobRole(context.Context, *DeleteJobRoleRequest) (*DeleteJobRoleReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteJobRole not implemented")
 }
 func (UnimplementedJobRoleServer) mustEmbedUnimplementedJobRoleServer() {}
 
@@ -172,92 +124,38 @@ func _JobRole_ListJobRole_Handler(srv interface{}, ctx context.Context, dec func
 	return interceptor(ctx, in, info, handler)
 }
 
-func _JobRole_CreateJobRoles_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CreateJobRolesRequest)
+func _JobRole_CreateJobRole_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateJobRoleRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(JobRoleServer).CreateJobRoles(ctx, in)
+		return srv.(JobRoleServer).CreateJobRole(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: JobRole_CreateJobRoles_FullMethodName,
+		FullMethod: JobRole_CreateJobRole_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(JobRoleServer).CreateJobRoles(ctx, req.(*CreateJobRolesRequest))
+		return srv.(JobRoleServer).CreateJobRole(ctx, req.(*CreateJobRoleRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _JobRole_DeleteJobRoles_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DeleteJobRolesRequest)
+func _JobRole_DeleteJobRole_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteJobRoleRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(JobRoleServer).DeleteJobRoles(ctx, in)
+		return srv.(JobRoleServer).DeleteJobRole(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: JobRole_DeleteJobRoles_FullMethodName,
+		FullMethod: JobRole_DeleteJobRole_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(JobRoleServer).DeleteJobRoles(ctx, req.(*DeleteJobRolesRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _JobRole_ListRoleJob_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListRoleJobRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(JobRoleServer).ListRoleJob(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: JobRole_ListRoleJob_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(JobRoleServer).ListRoleJob(ctx, req.(*ListRoleJobRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _JobRole_CreateRoleJobs_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CreateRoleJobsRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(JobRoleServer).CreateRoleJobs(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: JobRole_CreateRoleJobs_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(JobRoleServer).CreateRoleJobs(ctx, req.(*CreateRoleJobsRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _JobRole_DeleteRoleJobs_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DeleteRoleJobsRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(JobRoleServer).DeleteRoleJobs(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: JobRole_DeleteRoleJobs_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(JobRoleServer).DeleteRoleJobs(ctx, req.(*DeleteRoleJobsRequest))
+		return srv.(JobRoleServer).DeleteJobRole(ctx, req.(*DeleteJobRoleRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -274,24 +172,12 @@ var JobRole_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _JobRole_ListJobRole_Handler,
 		},
 		{
-			MethodName: "CreateJobRoles",
-			Handler:    _JobRole_CreateJobRoles_Handler,
+			MethodName: "CreateJobRole",
+			Handler:    _JobRole_CreateJobRole_Handler,
 		},
 		{
-			MethodName: "DeleteJobRoles",
-			Handler:    _JobRole_DeleteJobRoles_Handler,
-		},
-		{
-			MethodName: "ListRoleJob",
-			Handler:    _JobRole_ListRoleJob_Handler,
-		},
-		{
-			MethodName: "CreateRoleJobs",
-			Handler:    _JobRole_CreateRoleJobs_Handler,
-		},
-		{
-			MethodName: "DeleteRoleJobs",
-			Handler:    _JobRole_DeleteRoleJobs_Handler,
+			MethodName: "DeleteJobRole",
+			Handler:    _JobRole_DeleteJobRole_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -24,7 +24,7 @@ func (u *Entity) ListEntityRule(ctx core.Context, req *types.ListEntityRuleReque
 	list, total, err := u.repo.ListEntityRule(ctx, req)
 	if err != nil {
 		ctx.Logger().Warnw("msg", "list entity rule error", "err", err.Error())
-		return nil, 0, errors.ListError()
+		return nil, 0, errors.ListError(err.Error())
 	}
 	return list, total, nil
 }
@@ -34,7 +34,7 @@ func (u *Entity) CreateEntityRule(ctx core.Context, req *entity.EntityRule) (uin
 	id, err := u.repo.CreateEntityRule(ctx, req)
 	if err != nil {
 		ctx.Logger().Warnw("msg", "create entity rule error", "err", err.Error())
-		return 0, errors.CreateError()
+		return 0, errors.CreateError(err.Error())
 	}
 	return id, nil
 }
@@ -43,7 +43,7 @@ func (u *Entity) CreateEntityRule(ctx core.Context, req *entity.EntityRule) (uin
 func (u *Entity) UpdateEntityRule(ctx core.Context, req *entity.EntityRule) error {
 	if err := u.repo.UpdateEntityRule(ctx, req); err != nil {
 		ctx.Logger().Warnw("msg", "update entity rule error", "err", err.Error())
-		return errors.UpdateError()
+		return errors.UpdateError(err.Error())
 	}
 	return nil
 }
@@ -52,7 +52,7 @@ func (u *Entity) UpdateEntityRule(ctx core.Context, req *entity.EntityRule) erro
 func (u *Entity) DeleteEntityRule(ctx core.Context, id uint32) error {
 	if err := u.repo.DeleteEntityRule(ctx, id); err != nil {
 		ctx.Logger().Warnw("msg", "delete entity rule error", "err", err.Error())
-		return errors.DeleteError()
+		return errors.DeleteError(err.Error())
 	}
 	return nil
 }
@@ -62,7 +62,7 @@ func (u *Entity) ListEntityField(ctx core.Context, req *types.ListEntityFieldReq
 	list, total, err := u.repo.ListEntityField(ctx, req)
 	if err != nil {
 		ctx.Logger().Warnw("msg", "list entity field error", "err", err.Error())
-		return nil, 0, errors.ListError()
+		return nil, 0, errors.ListError(err.Error())
 	}
 	return list, total, nil
 }
@@ -72,7 +72,7 @@ func (u *Entity) CreateEntityField(ctx core.Context, req *entity.EntityField) (u
 	id, err := u.repo.CreateEntityField(ctx, req)
 	if err != nil {
 		ctx.Logger().Warnw("msg", "create entity field error", "err", err.Error())
-		return 0, errors.CreateError()
+		return 0, errors.CreateError(err.Error())
 	}
 	return id, nil
 }
@@ -81,7 +81,7 @@ func (u *Entity) CreateEntityField(ctx core.Context, req *entity.EntityField) (u
 func (u *Entity) UpdateEntityField(ctx core.Context, req *entity.EntityField) error {
 	if err := u.repo.UpdateEntityField(ctx, req); err != nil {
 		ctx.Logger().Warnw("msg", "update entity field error", "err", err.Error())
-		return errors.UpdateError()
+		return errors.UpdateError(err.Error())
 	}
 	return nil
 }
@@ -90,7 +90,7 @@ func (u *Entity) UpdateEntityField(ctx core.Context, req *entity.EntityField) er
 func (u *Entity) DeleteEntityField(ctx core.Context, id uint32) error {
 	if err := u.repo.DeleteEntityField(ctx, id); err != nil {
 		ctx.Logger().Warnw("msg", "delete entity field error", "err", err.Error())
-		return errors.DeleteError()
+		return errors.DeleteError(err.Error())
 	}
 	return nil
 }
@@ -196,7 +196,7 @@ func (u *Entity) ListEntity(ctx core.Context, req *types.ListEntityRequest) ([]*
 	list, err := u.repo.ListEntity(ctx, req)
 	if err != nil {
 		ctx.Logger().Warnw("msg", "list entity error", "err", err.Error())
-		return nil, errors.ListError()
+		return nil, errors.ListError(err.Error())
 	}
 
 	return list, nil
@@ -207,7 +207,7 @@ func (u *Entity) CreateEntity(ctx core.Context, req *entity.Entity) (uint32, err
 	id, err := u.repo.CreateEntity(ctx, req)
 	if err != nil {
 		ctx.Logger().Warnw("msg", "create entity error", "err", err.Error())
-		return 0, errors.CreateError()
+		return 0, errors.CreateError(err.Error())
 	}
 	return id, nil
 }
@@ -216,7 +216,7 @@ func (u *Entity) CreateEntity(ctx core.Context, req *entity.Entity) (uint32, err
 func (u *Entity) UpdateEntity(ctx core.Context, req *entity.Entity) error {
 	if err := u.repo.UpdateEntity(ctx, req); err != nil {
 		ctx.Logger().Warnw("msg", "update entity error", "err", err.Error())
-		return errors.UpdateError()
+		return errors.UpdateError(err.Error())
 	}
 	return nil
 }
@@ -225,7 +225,7 @@ func (u *Entity) UpdateEntity(ctx core.Context, req *entity.Entity) error {
 func (u *Entity) DeleteEntity(ctx core.Context, id uint32) error {
 	if err := u.repo.DeleteEntity(ctx, id); err != nil {
 		ctx.Logger().Warnw("msg", "delete entity error", "err", err.Error())
-		return errors.DeleteError()
+		return errors.DeleteError(err.Error())
 	}
 	return nil
 }

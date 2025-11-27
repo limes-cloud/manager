@@ -11,7 +11,7 @@ type ListDeptRequest struct {
 }
 
 type ListDeptClassifyRequest struct {
-	page.Search
+	*page.Search
 	Name   *string `json:"name"`
 	Status *bool   `json:"status"`
 }

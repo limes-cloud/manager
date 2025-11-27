@@ -7,6 +7,8 @@ import (
 	"strings"
 	"sync"
 
+	"gorm.io/gorm"
+
 	"github.com/limes-cloud/kratosx/pkg/cache"
 
 	"github.com/limes-cloud/kratosx"
@@ -60,6 +62,15 @@ func NewTenantApp() *TenantApp {
 	return taIns
 }
 
+func (ta *TenantApp) GetTenantApp(ctx core.Context, req *types.GetTenantAppRequest) (*entity.TenantApp, error) {
+	var res entity.TenantApp
+	return &res, ctx.DB().Joins("App").
+		Model(&entity.TenantApp{}).
+		Where("tenant_id=?", req.TenantId).
+		Where("app_id=?", req.AppId).
+		First(&res).Error
+}
+
 // ListTenantApp 获取app列表
 func (ta *TenantApp) ListTenantApp(ctx core.Context, req *types.ListTenantAppRequest) ([]*entity.TenantApp, uint32, error) {
 	var (
@@ -69,21 +80,33 @@ func (ta *TenantApp) ListTenantApp(ctx core.Context, req *types.ListTenantAppReq
 
 	db := ctx.DB().Model(entity.TenantApp{}).Where("tenant_id=?", req.TenantId)
 
-	if req.AppName != nil {
-		joinWhere := ctx.DB().Where("App.name LIKE ?", *req.AppName+"%")
-		db = db.Joins("App", joinWhere)
+	if req.AppName != nil || req.AppKeyword != nil {
+		var tx *gorm.DB
+		if req.AppName != nil {
+			tx = ctx.DB().Where("App.name LIKE ?", *req.AppName+"%")
+		}
+		if req.AppKeyword != nil {
+			if tx == nil {
+				tx = ctx.DB().Where("App.keyword LIKE ?", *req.AppKeyword+"%")
+			} else {
+				tx = tx.Where("App.keyword LIKE ?", *req.AppKeyword+"%")
+			}
+		}
+		db = db.Joins("App", tx)
 	} else {
 		db = db.Joins("App")
 	}
+	db = db.Where("App.id is not null")
 
-	// 查询条件下数据总数
-	if err := db.Count(&total).Error; err != nil {
-		return nil, 0, err
+	if req.Search != nil {
+		// 查询条件下数据总数
+		if err := db.Count(&total).Error; err != nil {
+			return nil, 0, err
+		}
+
+		// 分页查询
+		db = page.SearchScopes(db, req.Search)
 	}
-
-	// 搜索排序
-	db = page.SearchScopes(db, &req.Search)
-
 	return list, uint32(total), db.Find(&list).Error
 }
 

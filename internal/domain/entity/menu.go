@@ -2,6 +2,7 @@ package entity
 
 import (
 	"github.com/limes-cloud/kratosx/model"
+	"github.com/limes-cloud/kratosx/pkg/value"
 	"gorm.io/gorm"
 )
 
@@ -23,7 +24,7 @@ const (
 
 type Menu struct {
 	AppId      uint32      `json:"appId" gorm:"column:app_id"`          // 应用ID
-	ParentId   uint32      `json:"parentId" gorm:"column:parent_id"`    // 父节点ID
+	ParentId   *uint32     `json:"parentId" gorm:"column:parent_id"`    // 父节点ID
 	Title      string      `json:"title" gorm:"column:title"`           // 菜单标题
 	Type       string      `json:"type" gorm:"column:type"`             // 菜单类型
 	Keyword    *string     `json:"keyword" gorm:"column:keyword"`       // 菜单标识
@@ -33,7 +34,8 @@ type Menu struct {
 	Path       *string     `json:"path" gorm:"column:path"`             // 路由路径
 	Permission *string     `json:"permission" gorm:"column:permission"` // 权限标识
 	Component  *string     `json:"component" gorm:"column:component"`   // 组件路径
-	Redirect   *string     `json:"redirect" gorm:"column:redirect"`     // 重定向路径
+	Redirect   *string     `json:"redirect" gorm:"column:redirect"`     // 重定向地址
+	Url        *string     `json:"url" gorm:"column:url"`               // 站外url
 	Weight     *int32      `json:"weight" gorm:"column:weight"`         // 菜单权重
 	IsIframe   *bool       `json:"isIframe" gorm:"column:is_iframe"`    // 是否外链打开
 	IsHidden   *bool       `json:"isHidden" gorm:"column:is_hidden"`    // 是否隐藏菜单
@@ -77,7 +79,7 @@ func (m *Menu) ID() uint32 {
 
 // Parent 获取父ID
 func (m *Menu) Parent() uint32 {
-	return m.ParentId
+	return value.Value(m.ParentId)
 }
 
 // AppendChildren 添加子节点

@@ -21,15 +21,18 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	User_GetCurrentUser_FullMethodName           = "/manager.api.user.User/GetCurrentUser"
-	User_UpdateCurrentUserSetting_FullMethodName = "/manager.api.user.User/UpdateCurrentUserSetting"
-	User_UpdateCurrentUser_FullMethodName        = "/manager.api.user.User/UpdateCurrentUser"
-	User_GetUser_FullMethodName                  = "/manager.api.user.User/GetUser"
-	User_ListUser_FullMethodName                 = "/manager.api.user.User/ListUser"
-	User_CreateUser_FullMethodName               = "/manager.api.user.User/CreateUser"
-	User_ResetPassword_FullMethodName            = "/manager.api.user.User/ResetPassword"
-	User_UpdateUser_FullMethodName               = "/manager.api.user.User/UpdateUser"
-	User_DeleteUser_FullMethodName               = "/manager.api.user.User/DeleteUser"
+	User_GetCurrentUser_FullMethodName            = "/manager.api.user.User/GetCurrentUser"
+	User_UpdateCurrentUserPassword_FullMethodName = "/manager.api.user.User/UpdateCurrentUserPassword"
+	User_UpdateCurrentUserSetting_FullMethodName  = "/manager.api.user.User/UpdateCurrentUserSetting"
+	User_UpdateCurrentUser_FullMethodName         = "/manager.api.user.User/UpdateCurrentUser"
+	User_GetUser_FullMethodName                   = "/manager.api.user.User/GetUser"
+	User_ListUser_FullMethodName                  = "/manager.api.user.User/ListUser"
+	User_CreateUser_FullMethodName                = "/manager.api.user.User/CreateUser"
+	User_ResetPassword_FullMethodName             = "/manager.api.user.User/ResetPassword"
+	User_UpdateUser_FullMethodName                = "/manager.api.user.User/UpdateUser"
+	User_DeleteUser_FullMethodName                = "/manager.api.user.User/DeleteUser"
+	User_UpdateUserinfo_FullMethodName            = "/manager.api.user.User/UpdateUserinfo"
+	User_OfflineUser_FullMethodName               = "/manager.api.user.User/OfflineUser"
 )
 
 // UserClient is the client API for User service.
@@ -38,22 +41,28 @@ const (
 type UserClient interface {
 	// GetCurrentUser 获取当前用户信息
 	GetCurrentUser(ctx context.Context, in *GetCurrentUserRequest, opts ...grpc.CallOption) (*UserObject, error)
+	// UpdateCurrentUserPassword 更新当前用户密码
+	UpdateCurrentUserPassword(ctx context.Context, in *UpdateCurrentUserPasswordRequest, opts ...grpc.CallOption) (*UpdateCurrentUserPasswordReply, error)
 	// UpdateCurrentUserSetting 更新当前用户设置
 	UpdateCurrentUserSetting(ctx context.Context, in *UpdateCurrentUserSettingRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	// UpdateCurrentUserSetting 更新当前用户设置
 	UpdateCurrentUser(ctx context.Context, in *UpdateCurrentUserRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	// GetUser 获取角色信息
+	// GetUser 获取用户信息
 	GetUser(ctx context.Context, in *GetUserRequest, opts ...grpc.CallOption) (*UserObject, error)
-	// ListUser 获取角色信息列表
+	// ListUser 获取用户信息列表
 	ListUser(ctx context.Context, in *ListUserRequest, opts ...grpc.CallOption) (*ListUserReply, error)
-	// CreateUser 创建角色信息
+	// CreateUser 创建用户信息
 	CreateUser(ctx context.Context, in *CreateUserRequest, opts ...grpc.CallOption) (*CreateUserReply, error)
-	// UpdateUser 更新角色信息
+	// UpdateUser 更新用户信息
 	ResetPassword(ctx context.Context, in *ResetPasswordRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	// UpdateUser 更新角色信息
+	// UpdateUser 更新用户信息
 	UpdateUser(ctx context.Context, in *UpdateUserRequest, opts ...grpc.CallOption) (*UpdateUserReply, error)
-	// DeleteUser 删除角色信息
+	// DeleteUser 删除用户信息
 	DeleteUser(ctx context.Context, in *DeleteUserRequest, opts ...grpc.CallOption) (*DeleteUserReply, error)
+	// UpdateUserinfo 更新用户信息
+	UpdateUserinfo(ctx context.Context, in *UpdateUserinfoRequest, opts ...grpc.CallOption) (*UpdateUserinfoReply, error)
+	// OfflineUser 下线用户信息
+	OfflineUser(ctx context.Context, in *OfflineUserRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type userClient struct {
@@ -67,6 +76,15 @@ func NewUserClient(cc grpc.ClientConnInterface) UserClient {
 func (c *userClient) GetCurrentUser(ctx context.Context, in *GetCurrentUserRequest, opts ...grpc.CallOption) (*UserObject, error) {
 	out := new(UserObject)
 	err := c.cc.Invoke(ctx, User_GetCurrentUser_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userClient) UpdateCurrentUserPassword(ctx context.Context, in *UpdateCurrentUserPasswordRequest, opts ...grpc.CallOption) (*UpdateCurrentUserPasswordReply, error) {
+	out := new(UpdateCurrentUserPasswordReply)
+	err := c.cc.Invoke(ctx, User_UpdateCurrentUserPassword_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -145,28 +163,52 @@ func (c *userClient) DeleteUser(ctx context.Context, in *DeleteUserRequest, opts
 	return out, nil
 }
 
+func (c *userClient) UpdateUserinfo(ctx context.Context, in *UpdateUserinfoRequest, opts ...grpc.CallOption) (*UpdateUserinfoReply, error) {
+	out := new(UpdateUserinfoReply)
+	err := c.cc.Invoke(ctx, User_UpdateUserinfo_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userClient) OfflineUser(ctx context.Context, in *OfflineUserRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, User_OfflineUser_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UserServer is the server API for User service.
 // All implementations must embed UnimplementedUserServer
 // for forward compatibility
 type UserServer interface {
 	// GetCurrentUser 获取当前用户信息
 	GetCurrentUser(context.Context, *GetCurrentUserRequest) (*UserObject, error)
+	// UpdateCurrentUserPassword 更新当前用户密码
+	UpdateCurrentUserPassword(context.Context, *UpdateCurrentUserPasswordRequest) (*UpdateCurrentUserPasswordReply, error)
 	// UpdateCurrentUserSetting 更新当前用户设置
 	UpdateCurrentUserSetting(context.Context, *UpdateCurrentUserSettingRequest) (*emptypb.Empty, error)
 	// UpdateCurrentUserSetting 更新当前用户设置
 	UpdateCurrentUser(context.Context, *UpdateCurrentUserRequest) (*emptypb.Empty, error)
-	// GetUser 获取角色信息
+	// GetUser 获取用户信息
 	GetUser(context.Context, *GetUserRequest) (*UserObject, error)
-	// ListUser 获取角色信息列表
+	// ListUser 获取用户信息列表
 	ListUser(context.Context, *ListUserRequest) (*ListUserReply, error)
-	// CreateUser 创建角色信息
+	// CreateUser 创建用户信息
 	CreateUser(context.Context, *CreateUserRequest) (*CreateUserReply, error)
-	// UpdateUser 更新角色信息
+	// UpdateUser 更新用户信息
 	ResetPassword(context.Context, *ResetPasswordRequest) (*emptypb.Empty, error)
-	// UpdateUser 更新角色信息
+	// UpdateUser 更新用户信息
 	UpdateUser(context.Context, *UpdateUserRequest) (*UpdateUserReply, error)
-	// DeleteUser 删除角色信息
+	// DeleteUser 删除用户信息
 	DeleteUser(context.Context, *DeleteUserRequest) (*DeleteUserReply, error)
+	// UpdateUserinfo 更新用户信息
+	UpdateUserinfo(context.Context, *UpdateUserinfoRequest) (*UpdateUserinfoReply, error)
+	// OfflineUser 下线用户信息
+	OfflineUser(context.Context, *OfflineUserRequest) (*emptypb.Empty, error)
 	mustEmbedUnimplementedUserServer()
 }
 
@@ -175,6 +217,10 @@ type UnimplementedUserServer struct{}
 
 func (UnimplementedUserServer) GetCurrentUser(context.Context, *GetCurrentUserRequest) (*UserObject, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetCurrentUser not implemented")
+}
+
+func (UnimplementedUserServer) UpdateCurrentUserPassword(context.Context, *UpdateCurrentUserPasswordRequest) (*UpdateCurrentUserPasswordReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateCurrentUserPassword not implemented")
 }
 
 func (UnimplementedUserServer) UpdateCurrentUserSetting(context.Context, *UpdateCurrentUserSettingRequest) (*emptypb.Empty, error) {
@@ -208,6 +254,14 @@ func (UnimplementedUserServer) UpdateUser(context.Context, *UpdateUserRequest) (
 func (UnimplementedUserServer) DeleteUser(context.Context, *DeleteUserRequest) (*DeleteUserReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteUser not implemented")
 }
+
+func (UnimplementedUserServer) UpdateUserinfo(context.Context, *UpdateUserinfoRequest) (*UpdateUserinfoReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateUserinfo not implemented")
+}
+
+func (UnimplementedUserServer) OfflineUser(context.Context, *OfflineUserRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method OfflineUser not implemented")
+}
 func (UnimplementedUserServer) mustEmbedUnimplementedUserServer() {}
 
 // UnsafeUserServer may be embedded to opt out of forward compatibility for this service.
@@ -235,6 +289,24 @@ func _User_GetCurrentUser_Handler(srv interface{}, ctx context.Context, dec func
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(UserServer).GetCurrentUser(ctx, req.(*GetCurrentUserRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _User_UpdateCurrentUserPassword_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateCurrentUserPasswordRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).UpdateCurrentUserPassword(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_UpdateCurrentUserPassword_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).UpdateCurrentUserPassword(ctx, req.(*UpdateCurrentUserPasswordRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -383,6 +455,42 @@ func _User_DeleteUser_Handler(srv interface{}, ctx context.Context, dec func(int
 	return interceptor(ctx, in, info, handler)
 }
 
+func _User_UpdateUserinfo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateUserinfoRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).UpdateUserinfo(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_UpdateUserinfo_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).UpdateUserinfo(ctx, req.(*UpdateUserinfoRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _User_OfflineUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(OfflineUserRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).OfflineUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_OfflineUser_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).OfflineUser(ctx, req.(*OfflineUserRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // User_ServiceDesc is the grpc.ServiceDesc for User service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -393,6 +501,10 @@ var User_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetCurrentUser",
 			Handler:    _User_GetCurrentUser_Handler,
+		},
+		{
+			MethodName: "UpdateCurrentUserPassword",
+			Handler:    _User_UpdateCurrentUserPassword_Handler,
 		},
 		{
 			MethodName: "UpdateCurrentUserSetting",
@@ -425,6 +537,14 @@ var User_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DeleteUser",
 			Handler:    _User_DeleteUser_Handler,
+		},
+		{
+			MethodName: "UpdateUserinfo",
+			Handler:    _User_UpdateUserinfo_Handler,
+		},
+		{
+			MethodName: "OfflineUser",
+			Handler:    _User_OfflineUser_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

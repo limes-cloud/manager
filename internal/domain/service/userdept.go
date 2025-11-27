@@ -32,7 +32,7 @@ func (rm *UserDept) ListUserDept(ctx core.Context, req *types.ListUserDeptReques
 	list, total, err := rm.repo.ListUserDept(ctx, req)
 	if err != nil {
 		ctx.Logger().Warnw("msg", "get menu ids error", "err", err.Error())
-		return nil, 0, errors.ListError()
+		return nil, 0, errors.ListError(err.Error())
 	}
 
 	return list, total, nil
@@ -42,7 +42,7 @@ func (rm *UserDept) ListUserDept(ctx core.Context, req *types.ListUserDeptReques
 func (rm *UserDept) ListDeptUser(ctx core.Context, req *types.ListDeptUserRequest) ([]*entity.User, uint32, error) {
 	list, total, err := rm.repo.ListDeptUser(ctx, req)
 	if err != nil {
-		return nil, 0, errors.ListError()
+		return nil, 0, errors.ListError(err.Error())
 	}
 	return list, total, nil
 }
@@ -50,15 +50,22 @@ func (rm *UserDept) ListDeptUser(ctx core.Context, req *types.ListDeptUserReques
 // CreateUserDept 创建指定部门的角色
 func (rm *UserDept) CreateUserDept(ctx core.Context, req *entity.UserDept) error {
 	if err := rm.repo.CreateUserDept(ctx, req); err != nil {
-		return errors.CreateError()
+		return errors.CreateError(err.Error())
 	}
 	return nil
 }
 
-func (rm *UserDept) DeleteUserDept(ctx core.Context, req *entity.UserDept) error {
+// UpdateUserDept 修改指定部门的角色
+func (rm *UserDept) UpdateUserDept(ctx core.Context, req *entity.UserDept) error {
+	if err := rm.repo.UpdateUserDept(ctx, req); err != nil {
+		return errors.UpdateError(err.Error())
+	}
+	return nil
+}
 
-	if err := rm.repo.DeleteUserDept(ctx, req); err != nil {
-		return errors.DeleteError()
+func (rm *UserDept) DeleteUserDept(ctx core.Context, id uint32) error {
+	if err := rm.repo.DeleteUserDept(ctx, id); err != nil {
+		return errors.DeleteError(err.Error())
 	}
 	return nil
 }

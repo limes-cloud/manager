@@ -3,11 +3,10 @@ package core
 import (
 	"context"
 
-	"github.com/limes-cloud/manager/api/errors"
-
-	"github.com/limes-cloud/manager/internal/middleware/auth"
+	types2 "github.com/limes-cloud/manager/internal/types"
 
 	"github.com/limes-cloud/kratosx"
+	"github.com/limes-cloud/manager/api/errors"
 )
 
 type Context struct {
@@ -24,21 +23,12 @@ func (Context) Config() *Conf {
 	return conf
 }
 
-func (c Context) HasAuth() bool {
-	return auth.HasAuth(c.Context)
-}
-
-func (c Context) Auth() *auth.Info {
-	info := auth.GetAuth(c.Context)
-	if info == nil {
+func (c Context) Auth() *types2.AuthorizeInfo {
+	val, _ := c.Context.Value(types2.InfoKey).(*types2.AuthorizeInfo)
+	if val == nil {
 		c.Exit(errors.NotLoginError())
 	}
-	return info
-}
-
-func (c Context) IsSuperAdmin() bool {
-	info := auth.GetAuth(c.Context)
-	return info != nil && info.UserId == 1
+	return val
 }
 
 func (c Context) Clone() Context {

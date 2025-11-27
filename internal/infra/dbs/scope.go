@@ -1,6 +1,7 @@
 package dbs
 
 import (
+	"context"
 	"encoding/json"
 	"sync"
 
@@ -16,15 +17,16 @@ import (
 )
 
 type Scope struct {
-	ta   *TenantApp
-	jr   *JobRole
-	dr   *DeptRole
-	ud   *UserDept
-	re   *RoleEntity
-	rm   *RoleMenu
-	ent  *Entity
-	dept *Dept
-	role *Role
+	database string
+	ta       *TenantApp
+	jr       *JobRole
+	dr       *DeptRole
+	ud       *UserDept
+	re       *RoleEntity
+	rm       *RoleMenu
+	ent      *Entity
+	dept     *Dept
+	role     *Role
 }
 
 var (
@@ -45,6 +47,11 @@ func NewScope() *Scope {
 			dept: NewDept(),
 			role: NewRole(),
 		}
+
+		ctx := core.MustContext(context.Background())
+		ctx.BeforeStart("init database", func() {
+			scopeIns.database = ctx.DB().Migrator().CurrentDatabase()
+		})
 	})
 	return scopeIns
 }
@@ -131,6 +138,35 @@ func (s Scope) GetScope(ctx core.Context, database string, entity string, action
 	}
 
 	return reply
+}
+
+// SystemDeptScopes 获取当前操
+func (s Scope) SystemDeptScopes(ctx core.Context, entity string, action string) (bool, []uint32) {
+	// 获取当前系统的数据库名称
+	eid, has := s.ent.GetEntityIdByName(s.database, entity)
+	if !has {
+		return false, nil
+	}
+
+	// 获取当前的角色id
+	rids, drm := s.getRoleDept(ctx)
+
+	// 获取这些角色-实体关系
+	var scopes []uint32
+	for _, rid := range rids {
+		roleEntity, has := s.re.GetRoleEntityByRDA(rid, eid, action)
+		if !has {
+			continue
+		}
+
+		all, deptIds := s.deptScope(drm[rid], roleEntity)
+		if all {
+			return true, nil
+		}
+		scopes = append(scopes, deptIds...)
+	}
+
+	return false, scopes
 }
 
 // DeptScopes 获取当前操

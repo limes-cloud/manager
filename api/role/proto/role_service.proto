@@ -13,28 +13,28 @@ service Role{
   // GetRole 获取角色信息
   rpc GetRole (GetRoleRequest) returns (GetRoleReply) {
     option (google.api.http) = {
-      get: "/manager/api/v1/role",
+      get: "/manager/api/role",
     };
   }
 
   // ListRole 获取角色信息列表
   rpc ListCurrentRole (ListRoleRequest) returns (ListRoleReply) {
     option (google.api.http) = {
-      get: "/manager/api/v1/current/roles",
+      get: "/manager/api/current/roles",
     };
   }
 
   // ListRole 获取角色信息列表
-  rpc ListRole (ListRoleRequest) returns (ListRoleReply) {
-    option (google.api.http) = {
-      get: "/manager/api/v1/roles",
-    };
-  }
+//  rpc ListRole (ListRoleRequest) returns (ListRoleReply) {
+//    option (google.api.http) = {
+//      get: "/manager/api/roles",
+//    };
+//  }
 
   // CreateRole 创建角色信息
   rpc CreateRole (CreateRoleRequest) returns (CreateRoleReply) {
     option (google.api.http) = {
-      post: "/manager/api/v1/role",
+      post: "/manager/api/role",
       body: "*"
     };
   }
@@ -42,7 +42,7 @@ service Role{
   // UpdateRole 更新角色信息
   rpc UpdateRole (UpdateRoleRequest) returns (UpdateRoleReply) {
     option (google.api.http) = {
-      put: "/manager/api/v1/role",
+      put: "/manager/api/role",
       body: "*"
     };
   }
@@ -50,7 +50,7 @@ service Role{
   // DeleteRole 删除角色信息
   rpc DeleteRole (DeleteRoleRequest) returns (DeleteRoleReply) {
     option (google.api.http) = {
-      delete: "/manager/api/v1/role",
+      delete: "/manager/api/role",
     };
   }
 

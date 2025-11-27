@@ -1,0 +1,99 @@
+syntax = "proto3";
+
+package manager.api.oauther;
+
+option go_package = "manager/api/oauther;oauther";
+option java_multiple_files = true;
+option java_package = "manager.api.oauther";
+
+import "validate/validate.proto";
+
+message ListOAutherTypeRequest{}
+
+message ListOAutherTypeReply{
+  message Type{
+    string keyword = 1;
+    string name = 2;
+  }
+  repeated Type list = 1;
+}
+
+
+message OAutherSetting{
+  message Email{
+    string host = 1;
+    uint32 port = 2;
+    string from = 3;
+    string subject = 4;
+    string template = 5;
+  }
+  string callback = 1;
+  Email email = 2;
+}
+
+message ListOAutherRequest {
+  uint32 page = 1[(validate.rules).uint32 = {gte: 1}];
+  uint32 pageSize = 2[(validate.rules).uint32 = {gte: 1 ,lte: 50}];
+  optional string order = 3[(validate.rules).string = {in: ["asc","desc"]}];
+  optional string orderBy = 4[(validate.rules).string = {in: ["id","created_at"]}];
+  optional string keyword = 5;
+  optional string name = 6;
+  optional bool status = 7;
+}
+
+message ListOAutherReply {
+  message OAuther {
+    uint32 id = 1;
+    string logo = 2;
+    string keyword = 3;
+    string type = 4;
+    string name = 5;
+    optional bool status = 6;
+    string ak = 7;
+    string sk = 8;
+    OAutherSetting setting = 9;
+    string description = 10;
+    uint32 createdAt = 11;
+    uint32 updatedAt = 12;
+  }
+
+  uint32 total = 1;
+  repeated OAuther list = 2;
+}
+
+message CreateOAutherRequest {
+  string logo = 1[(validate.rules).string = {min_len: 1}];
+  string keyword = 2[(validate.rules).string = {min_len: 1}];
+  string name = 3[(validate.rules).string = {min_len: 1}];
+  string ak = 4[(validate.rules).string = {min_len: 1}];
+  string sk = 5[(validate.rules).string = {min_len: 1}];
+  string type = 6[(validate.rules).string = {min_len: 1}];
+  OAutherSetting setting = 7;
+  string description = 8[(validate.rules).string = {min_len: 1}];
+}
+
+message CreateOAutherReply {
+  uint32 id = 1;
+}
+
+message UpdateOAutherRequest {
+  uint32 id = 1[(validate.rules).uint32 = {gte: 1}];
+  optional string logo = 2;
+  optional string type = 3;
+  optional string name = 4;
+  optional bool status = 5;
+  optional string ak = 6;
+  optional string sk = 7;
+  optional OAutherSetting setting = 8;
+  optional string description = 9;
+}
+
+message UpdateOAutherReply {
+}
+
+message DeleteOAutherRequest {
+  uint32 id = 1[(validate.rules).uint32 = {gte: 1}];
+}
+
+message DeleteOAutherReply {
+}

@@ -1,0 +1,66 @@
+syntax = "proto3";
+
+package manager.api.appfield;
+
+option go_package = "manager/api/appfield;appfield";
+option java_multiple_files = true;
+option java_package = "manager.api.appfield";
+
+import "validate/validate.proto";
+
+message ListAppFieldRequest {
+  uint32 page = 1[(validate.rules).uint32 = {gte: 1}];
+  uint32 pageSize = 2[(validate.rules).uint32 = {gte: 1,lte:50}];
+  optional string order = 3[(validate.rules).string = {in: ["asc","desc"]}];
+  optional string orderBy = 4[(validate.rules).string = {in: ["id","created_at","updated_at"]}];
+  optional string keyword = 5;
+  optional string name = 6;
+  uint32 appId = 7[(validate.rules).uint32 = {gte: 1}];
+}
+
+message ListAppFieldReply {
+  message Field {
+    uint32 id = 1;
+    string name = 2;
+    string keyword = 3;
+    string type = 4;
+  }
+
+  message Data {
+    uint32 id = 1;
+    uint32 appId = 2;
+    uint32 fieldId = 3;
+    bool required = 4;
+    uint32 createdAt = 5;
+    uint32 updatedAt = 6;
+    Field field = 7;
+  }
+
+  uint32 total = 1;
+  repeated Data list = 2;
+}
+
+message CreateAppFieldRequest {
+  uint32 appId = 1[(validate.rules).uint32 = {gte: 1}];
+  uint32 fieldId = 2[(validate.rules).uint32 = {gte: 1}];
+  bool required = 3;
+}
+
+message CreateAppFieldReply {
+  uint32 id = 1;
+}
+
+message UpdateAppFieldRequest {
+  uint32 id = 1[(validate.rules).uint32 = {gt: 0}];
+  bool required = 3;
+}
+
+message UpdateAppFieldReply {
+}
+
+message DeleteAppFieldRequest {
+  uint32 id = 1[(validate.rules).uint32 = {gt: 0}];
+}
+
+message DeleteAppFieldReply {
+}

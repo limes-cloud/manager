@@ -41,31 +41,31 @@ const (
 )
 
 type EntityHTTPServer interface {
-	// CreateEntity CreateEntity 创建部门信息
+	// CreateEntity CreateEntity 创建实体
 	CreateEntity(context.Context, *CreateEntityRequest) (*CreateEntityReply, error)
-	// CreateEntityField CreateEntityField 创建部门分类
+	// CreateEntityField CreateEntityField 创建实体字段
 	CreateEntityField(context.Context, *CreateEntityFieldRequest) (*CreateEntityFieldReply, error)
 	// CreateEntityRule CreateEntityRule 创建实体规则
 	CreateEntityRule(context.Context, *CreateEntityRuleRequest) (*CreateEntityRuleReply, error)
-	// DeleteEntity DeleteEntity 删除部门信息
+	// DeleteEntity DeleteEntity 删除实体
 	DeleteEntity(context.Context, *DeleteEntityRequest) (*DeleteEntityReply, error)
-	// DeleteEntityField DeleteEntityField 删除部门分类
+	// DeleteEntityField DeleteEntityField 删除实体字段
 	DeleteEntityField(context.Context, *DeleteEntityFieldRequest) (*DeleteEntityFieldReply, error)
 	// DeleteEntityRule DeleteEntityRule 删除实体规则
 	DeleteEntityRule(context.Context, *DeleteEntityRuleRequest) (*DeleteEntityRuleReply, error)
 	// ImportEntity ImportEntity 载入全部系统的实体
 	ImportEntity(context.Context, *ImportEntityRequest) (*emptypb.Empty, error)
-	// ListEntity ListEntity 获取部门信息列表
+	// ListEntity ListEntity 获取实体列表
 	ListEntity(context.Context, *ListEntityRequest) (*ListEntityReply, error)
-	// ListEntityField ListEntityField 获取部门分类列表
+	// ListEntityField ListEntityField 获取实体字段列表
 	ListEntityField(context.Context, *ListEntityFieldRequest) (*ListEntityFieldReply, error)
 	// ListEntityRule ListEntityRule 获取实体规则列表
 	ListEntityRule(context.Context, *ListEntityRuleRequest) (*ListEntityRuleReply, error)
 	// LoadEntity LoadEntity 载入全部系统的实体
 	LoadEntity(context.Context, *emptypb.Empty) (*LoadEntityReply, error)
-	// UpdateEntity UpdateEntity 更新部门信息
+	// UpdateEntity UpdateEntity 更新实体
 	UpdateEntity(context.Context, *UpdateEntityRequest) (*UpdateEntityReply, error)
-	// UpdateEntityField UpdateEntityField 更新部门分类
+	// UpdateEntityField UpdateEntityField 更新实体字段
 	UpdateEntityField(context.Context, *UpdateEntityFieldRequest) (*UpdateEntityFieldReply, error)
 	// UpdateEntityRule UpdateEntityRule 更新实体规则
 	UpdateEntityRule(context.Context, *UpdateEntityRuleRequest) (*UpdateEntityRuleReply, error)
@@ -73,20 +73,20 @@ type EntityHTTPServer interface {
 
 func RegisterEntityHTTPServer(s *http.Server, srv EntityHTTPServer) {
 	r := s.Route("/")
-	r.GET("/manager/api/v1/load/entities", _Entity_LoadEntity0_HTTP_Handler(srv))
-	r.POST("/manager/api/v1/import/entities", _Entity_ImportEntity0_HTTP_Handler(srv))
-	r.GET("/manager/api/v1/entities", _Entity_ListEntity0_HTTP_Handler(srv))
-	r.POST("/manager/api/v1/entity", _Entity_CreateEntity0_HTTP_Handler(srv))
-	r.PUT("/manager/api/v1/entity", _Entity_UpdateEntity0_HTTP_Handler(srv))
-	r.DELETE("/manager/api/v1/entity", _Entity_DeleteEntity0_HTTP_Handler(srv))
-	r.GET("/manager/api/v1/entity/fields", _Entity_ListEntityField0_HTTP_Handler(srv))
-	r.POST("/manager/api/v1/entity/field", _Entity_CreateEntityField0_HTTP_Handler(srv))
-	r.PUT("/manager/api/v1/entity/field", _Entity_UpdateEntityField0_HTTP_Handler(srv))
-	r.DELETE("/manager/api/v1/entity/field", _Entity_DeleteEntityField0_HTTP_Handler(srv))
-	r.GET("/manager/api/v1/entity/rules", _Entity_ListEntityRule0_HTTP_Handler(srv))
-	r.POST("/manager/api/v1/entity/rule", _Entity_CreateEntityRule0_HTTP_Handler(srv))
-	r.PUT("/manager/api/v1/entity/rule", _Entity_UpdateEntityRule0_HTTP_Handler(srv))
-	r.DELETE("/manager/api/v1/entity/rule", _Entity_DeleteEntityRule0_HTTP_Handler(srv))
+	r.GET("/manager/api/entity/load", _Entity_LoadEntity0_HTTP_Handler(srv))
+	r.POST("/manager/api/entity/import", _Entity_ImportEntity0_HTTP_Handler(srv))
+	r.GET("/manager/api/entities", _Entity_ListEntity0_HTTP_Handler(srv))
+	r.POST("/manager/api/entity", _Entity_CreateEntity0_HTTP_Handler(srv))
+	r.PUT("/manager/api/entity", _Entity_UpdateEntity0_HTTP_Handler(srv))
+	r.DELETE("/manager/api/entity", _Entity_DeleteEntity0_HTTP_Handler(srv))
+	r.GET("/manager/api/entity/fields", _Entity_ListEntityField0_HTTP_Handler(srv))
+	r.POST("/manager/api/entity/field", _Entity_CreateEntityField0_HTTP_Handler(srv))
+	r.PUT("/manager/api/entity/field", _Entity_UpdateEntityField0_HTTP_Handler(srv))
+	r.DELETE("/manager/api/entity/field", _Entity_DeleteEntityField0_HTTP_Handler(srv))
+	r.GET("/manager/api/entity/rules", _Entity_ListEntityRule0_HTTP_Handler(srv))
+	r.POST("/manager/api/entity/rule", _Entity_CreateEntityRule0_HTTP_Handler(srv))
+	r.PUT("/manager/api/entity/rule", _Entity_UpdateEntityRule0_HTTP_Handler(srv))
+	r.DELETE("/manager/api/entity/rule", _Entity_DeleteEntityRule0_HTTP_Handler(srv))
 }
 
 func _Entity_LoadEntity0_HTTP_Handler(srv EntityHTTPServer) func(ctx http.Context) error {
@@ -403,7 +403,7 @@ func NewEntityHTTPClient(client *http.Client) EntityHTTPClient {
 
 func (c *EntityHTTPClientImpl) CreateEntity(ctx context.Context, in *CreateEntityRequest, opts ...http.CallOption) (*CreateEntityReply, error) {
 	var out CreateEntityReply
-	pattern := "/manager/api/v1/entity"
+	pattern := "/manager/api/entity"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationEntityCreateEntity))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -416,7 +416,7 @@ func (c *EntityHTTPClientImpl) CreateEntity(ctx context.Context, in *CreateEntit
 
 func (c *EntityHTTPClientImpl) CreateEntityField(ctx context.Context, in *CreateEntityFieldRequest, opts ...http.CallOption) (*CreateEntityFieldReply, error) {
 	var out CreateEntityFieldReply
-	pattern := "/manager/api/v1/entity/field"
+	pattern := "/manager/api/entity/field"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationEntityCreateEntityField))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -429,7 +429,7 @@ func (c *EntityHTTPClientImpl) CreateEntityField(ctx context.Context, in *Create
 
 func (c *EntityHTTPClientImpl) CreateEntityRule(ctx context.Context, in *CreateEntityRuleRequest, opts ...http.CallOption) (*CreateEntityRuleReply, error) {
 	var out CreateEntityRuleReply
-	pattern := "/manager/api/v1/entity/rule"
+	pattern := "/manager/api/entity/rule"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationEntityCreateEntityRule))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -442,7 +442,7 @@ func (c *EntityHTTPClientImpl) CreateEntityRule(ctx context.Context, in *CreateE
 
 func (c *EntityHTTPClientImpl) DeleteEntity(ctx context.Context, in *DeleteEntityRequest, opts ...http.CallOption) (*DeleteEntityReply, error) {
 	var out DeleteEntityReply
-	pattern := "/manager/api/v1/entity"
+	pattern := "/manager/api/entity"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationEntityDeleteEntity))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -455,7 +455,7 @@ func (c *EntityHTTPClientImpl) DeleteEntity(ctx context.Context, in *DeleteEntit
 
 func (c *EntityHTTPClientImpl) DeleteEntityField(ctx context.Context, in *DeleteEntityFieldRequest, opts ...http.CallOption) (*DeleteEntityFieldReply, error) {
 	var out DeleteEntityFieldReply
-	pattern := "/manager/api/v1/entity/field"
+	pattern := "/manager/api/entity/field"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationEntityDeleteEntityField))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -468,7 +468,7 @@ func (c *EntityHTTPClientImpl) DeleteEntityField(ctx context.Context, in *Delete
 
 func (c *EntityHTTPClientImpl) DeleteEntityRule(ctx context.Context, in *DeleteEntityRuleRequest, opts ...http.CallOption) (*DeleteEntityRuleReply, error) {
 	var out DeleteEntityRuleReply
-	pattern := "/manager/api/v1/entity/rule"
+	pattern := "/manager/api/entity/rule"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationEntityDeleteEntityRule))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -481,7 +481,7 @@ func (c *EntityHTTPClientImpl) DeleteEntityRule(ctx context.Context, in *DeleteE
 
 func (c *EntityHTTPClientImpl) ImportEntity(ctx context.Context, in *ImportEntityRequest, opts ...http.CallOption) (*emptypb.Empty, error) {
 	var out emptypb.Empty
-	pattern := "/manager/api/v1/import/entities"
+	pattern := "/manager/api/entity/import"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationEntityImportEntity))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -494,7 +494,7 @@ func (c *EntityHTTPClientImpl) ImportEntity(ctx context.Context, in *ImportEntit
 
 func (c *EntityHTTPClientImpl) ListEntity(ctx context.Context, in *ListEntityRequest, opts ...http.CallOption) (*ListEntityReply, error) {
 	var out ListEntityReply
-	pattern := "/manager/api/v1/entities"
+	pattern := "/manager/api/entities"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationEntityListEntity))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -507,7 +507,7 @@ func (c *EntityHTTPClientImpl) ListEntity(ctx context.Context, in *ListEntityReq
 
 func (c *EntityHTTPClientImpl) ListEntityField(ctx context.Context, in *ListEntityFieldRequest, opts ...http.CallOption) (*ListEntityFieldReply, error) {
 	var out ListEntityFieldReply
-	pattern := "/manager/api/v1/entity/fields"
+	pattern := "/manager/api/entity/fields"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationEntityListEntityField))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -520,7 +520,7 @@ func (c *EntityHTTPClientImpl) ListEntityField(ctx context.Context, in *ListEnti
 
 func (c *EntityHTTPClientImpl) ListEntityRule(ctx context.Context, in *ListEntityRuleRequest, opts ...http.CallOption) (*ListEntityRuleReply, error) {
 	var out ListEntityRuleReply
-	pattern := "/manager/api/v1/entity/rules"
+	pattern := "/manager/api/entity/rules"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationEntityListEntityRule))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -533,7 +533,7 @@ func (c *EntityHTTPClientImpl) ListEntityRule(ctx context.Context, in *ListEntit
 
 func (c *EntityHTTPClientImpl) LoadEntity(ctx context.Context, in *emptypb.Empty, opts ...http.CallOption) (*LoadEntityReply, error) {
 	var out LoadEntityReply
-	pattern := "/manager/api/v1/load/entities"
+	pattern := "/manager/api/entity/load"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationEntityLoadEntity))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -546,7 +546,7 @@ func (c *EntityHTTPClientImpl) LoadEntity(ctx context.Context, in *emptypb.Empty
 
 func (c *EntityHTTPClientImpl) UpdateEntity(ctx context.Context, in *UpdateEntityRequest, opts ...http.CallOption) (*UpdateEntityReply, error) {
 	var out UpdateEntityReply
-	pattern := "/manager/api/v1/entity"
+	pattern := "/manager/api/entity"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationEntityUpdateEntity))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -559,7 +559,7 @@ func (c *EntityHTTPClientImpl) UpdateEntity(ctx context.Context, in *UpdateEntit
 
 func (c *EntityHTTPClientImpl) UpdateEntityField(ctx context.Context, in *UpdateEntityFieldRequest, opts ...http.CallOption) (*UpdateEntityFieldReply, error) {
 	var out UpdateEntityFieldReply
-	pattern := "/manager/api/v1/entity/field"
+	pattern := "/manager/api/entity/field"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationEntityUpdateEntityField))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -572,7 +572,7 @@ func (c *EntityHTTPClientImpl) UpdateEntityField(ctx context.Context, in *Update
 
 func (c *EntityHTTPClientImpl) UpdateEntityRule(ctx context.Context, in *UpdateEntityRuleRequest, opts ...http.CallOption) (*UpdateEntityRuleReply, error) {
 	var out UpdateEntityRuleReply
-	pattern := "/manager/api/v1/entity/rule"
+	pattern := "/manager/api/entity/rule"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationEntityUpdateEntityRule))
 	opts = append(opts, http.PathTemplate(pattern))

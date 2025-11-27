@@ -1,0 +1,61 @@
+syntax = "proto3";
+
+package manager.api.appoauther;
+
+option go_package = "manager/api/appoauther;appoauther";
+option java_multiple_files = true;
+option java_package = "manager.api.appoauther";
+
+import "validate/validate.proto";
+
+message OAuther {
+  uint32 id = 1;
+  string logo = 2;
+  string name = 3;
+  string keyword = 4;
+  string type = 5;
+}
+
+
+message ListAppOAutherRequest {
+  uint32 page = 1[(validate.rules).uint32 = {gte: 1}];
+  uint32 pageSize = 2[(validate.rules).uint32 = {gte: 1,lte:50}];
+  optional string order = 3[(validate.rules).string = {in: ["asc","desc"]}];
+  optional string orderBy = 4[(validate.rules).string = {in: ["id","created_at","updated_at"]}];
+  optional string keyword = 5;
+  optional string name = 6;
+  uint32 appId = 7[(validate.rules).uint32 = {gte: 1}];
+}
+
+message ListAppOAutherReply {
+
+  message Data {
+    uint32 id = 1;
+    uint32 appId = 2;
+    uint32 oautherId = 3;
+    uint32 createdAt = 4;
+    uint32 updatedAt = 5;
+    OAuther oauther = 6;
+  }
+
+  uint32 total = 1;
+  repeated Data list = 2;
+}
+
+
+
+message CreateAppOAutherRequest {
+  uint32 appId = 1[(validate.rules).uint32 = {gte: 1}];
+  uint32 oautherId = 2[(validate.rules).uint32 = {gte: 1}];
+}
+
+message CreateAppOAutherReply {
+  uint32 id = 1;
+}
+
+message DeleteAppOAutherRequest {
+  uint32 id = 1[(validate.rules).uint32 = {gt: 0}];
+}
+
+message DeleteAppOAutherReply {
+}

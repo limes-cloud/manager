@@ -16,7 +16,6 @@ import (
 	"github.com/limes-cloud/manager/internal/core"
 	"github.com/limes-cloud/manager/internal/domain/entity"
 	"github.com/limes-cloud/manager/internal/types"
-	"gorm.io/gorm/clause"
 )
 
 type DeptRole struct {
@@ -53,34 +52,6 @@ func NewDeptRole() *DeptRole {
 	return drIns
 }
 
-// ListRoleDept 获取指定角色绑定的所有部门
-func (dr *DeptRole) ListRoleDept(ctx core.Context, req *types.ListRoleDeptRequest) ([]*entity.Dept, uint32, error) {
-	var (
-		total int64
-		list  []*entity.Dept
-	)
-	db := ctx.DB().Model(&entity.Dept{}).
-		Joins("left join dept_role on dept.id = dept_role.dept_id").
-		Joins("Classify", ctx.DB().Where("Classify.status=1")).
-		Where("dept_role.role_id is not null").
-		Where("Classify.id is not null").
-		Where("dept.status = 1")
-
-	if req.Name != nil {
-		db = db.Where("dept.name like ?", *req.Name+"%")
-	}
-	if req.InDeptIds != nil {
-		db = db.Where("dept.id in ?", req.InDeptIds)
-	}
-
-	if err := db.Count(&total).Error; err != nil {
-		return nil, 0, err
-	}
-
-	db = page.SearchScopes(db, &req.Search)
-	return list, uint32(total), db.Find(&list).Error
-}
-
 // ListDeptRole 获取指定部门的角色列表
 func (dr *DeptRole) ListDeptRole(ctx core.Context, req *types.ListDeptRoleRequest) ([]*entity.Role, uint32, error) {
 	var (
@@ -91,13 +62,15 @@ func (dr *DeptRole) ListDeptRole(ctx core.Context, req *types.ListDeptRoleReques
 		Model(&entity.Role{}).
 		Joins("left join dept_role on role.id = dept_role.role_id").
 		Where("dept_role.role_id is not null").
-		Where("role.status = 1")
+		Where("role.status = 1").
+		Where("dept_role.dept_id = ?", req.DeptId)
 	if req.Name != nil {
 		db = db.Where("role.name like ?", *req.Name+"%")
 	}
 	if req.InRoleIds != nil {
 		db = db.Where("role.id in ?", req.InRoleIds)
 	}
+
 	if err := db.Count(&total).Error; err != nil {
 		return nil, 0, err
 	}
@@ -106,34 +79,40 @@ func (dr *DeptRole) ListDeptRole(ctx core.Context, req *types.ListDeptRoleReques
 	return list, uint32(total), db.Find(&list).Error
 }
 
-// CreateDeptRoles 批量绑定部门部门角色关系
-func (dr *DeptRole) CreateDeptRoles(ctx core.Context, drs []*entity.DeptRole) error {
+// CreateDeptRole 创建部门角色
+func (dr *DeptRole) CreateDeptRole(ctx core.Context, deptId, roleId uint32) error {
+	ent := &entity.DeptRole{
+		DeptId: deptId,
+		RoleId: roleId,
+	}
+
 	op := dr.cache.OP(ctx)
 	return ctx.Transaction(func(ctx core.Context) error {
-		if err := ctx.DB().Model(&entity.DeptRole{}).
-			Clauses(clause.OnConflict{UpdateAll: true}).
-			Create(&drs).Error; err != nil {
+		if err := ctx.DB().Model(&entity.DeptRole{}).Create(&ent).Error; err != nil {
 			return err
 		}
-
-		return op.Puts(dr.transvals(drs)).Do()
+		return op.Puts(dr.transvals([]*entity.DeptRole{ent})).Do()
 	})
 }
 
-// DeleteDeptRoles 获取指定菜单的角色列表
-func (dr *DeptRole) DeleteDeptRoles(ctx core.Context, drs []*entity.DeptRole) error {
+// DeleteDeptRole 获取指定部门的角色列表
+func (dr *DeptRole) DeleteDeptRole(ctx core.Context, deptId, roleId uint32) error {
+	ent := &entity.DeptRole{
+		DeptId: deptId,
+		RoleId: roleId,
+	}
 	op := dr.cache.OP(ctx)
 	return ctx.Transaction(func(ctx core.Context) error {
 		db := ctx.DB()
-		for _, item := range drs {
-			db = db.Or(ctx.DB().Where("role_id = ? AND dept_id = ?", item.RoleId, item.DeptId))
-		}
-		if err := db.Delete(&entity.DeptRole{}).Error; err != nil {
+		if err := db.
+			Where("dept_id = ?", deptId).
+			Where("role_id = ?", roleId).
+			Delete(ent).Error; err != nil {
 			return err
 		}
 
 		// 从缓存中删除
-		return op.Deletes(dr.transkeys(drs)).Do()
+		return op.Deletes(dr.transkeys([]*entity.DeptRole{ent})).Do()
 	})
 }
 

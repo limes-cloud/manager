@@ -6,8 +6,6 @@ option go_package = "manager/api/system;system";
 option java_multiple_files = true;
 option java_package = "manager.api.system";
 
-import "validate/validate.proto";
-import "google/protobuf/any.proto";
 import "api/system/proto/system.proto";
 import "google/api/annotations.proto";
 
@@ -16,7 +14,7 @@ service System{
   // GetSystemSetting 获取系统设置
   rpc GetSystemSetting (GetSystemSettingRequest) returns (GetSystemSettingReply) {
     option (google.api.http) = {
-      get: "/manager/api/v1/system/setting",
+      get: "/manager/api/system/setting",
     };
   }
 

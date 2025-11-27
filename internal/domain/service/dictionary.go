@@ -81,6 +81,7 @@ func (u *Dictionary) ListDictionaryValue(ctx kratosx.Context, req *types.ListDic
 		Label:        req.Label,
 		Value:        req.Value,
 		DictionaryId: req.DictionaryId,
+		Status:       req.Status,
 	})
 	if err != nil {
 		ctx.Logger().Warnw("msg", "list dictionary error", "err", err.Error())

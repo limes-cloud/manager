@@ -3,6 +3,13 @@ package app
 import (
 	"context"
 
+	"github.com/limes-cloud/kratosx"
+
+	"github.com/limes-cloud/kratosx/model"
+
+	"github.com/go-kratos/kratos/v2/transport/grpc"
+	"github.com/go-kratos/kratos/v2/transport/http"
+
 	"google.golang.org/protobuf/types/known/emptypb"
 
 	"github.com/limes-cloud/manager/api/user"
@@ -14,8 +21,6 @@ import (
 	"github.com/limes-cloud/kratosx/pkg/value"
 	"github.com/limes-cloud/manager/api/errors"
 
-	"github.com/go-kratos/kratos/v2/transport/grpc"
-	"github.com/go-kratos/kratos/v2/transport/http"
 	"github.com/limes-cloud/manager/internal/core"
 	"github.com/limes-cloud/manager/internal/domain/service"
 	"github.com/limes-cloud/manager/internal/infra/dbs"
@@ -31,10 +36,15 @@ func NewUser() *User {
 	return &User{
 		srv: service.NewUser(
 			dbs.NewUser(),
-			dbs.NewScope(),
 			dbs.NewApp(),
+			dbs.NewAppField(),
 			dbs.NewUserinfo(),
 			dbs.NewUserSetting(),
+			dbs.NewTenant(),
+			dbs.NewUserDept(),
+			dbs.NewAuthorize(),
+			dbs.NewScope(),
+			dbs.NewTenantAdmin(),
 		),
 	}
 }
@@ -49,7 +59,7 @@ func init() {
 }
 
 func (app *User) GetCurrentUser(c context.Context, req *user.GetCurrentUserRequest) (*user.UserObject, error) {
-	ctx := core.MustContext(c)
+	ctx := core.MustContext(c, kratosx.WithSkipDBHook())
 
 	result, err := app.srv.GetCurrentUser(ctx, &types.GetCurrentUserRequest{
 		App: req.App,
@@ -58,11 +68,39 @@ func (app *User) GetCurrentUser(c context.Context, req *user.GetCurrentUserReque
 		return nil, err
 	}
 
-	reply := user.UserObject{}
-	if err = value.Transform(result, &reply); err != nil {
-		ctx.Logger().Warnw("msg", "reply transform err", "err", err.Error())
-		return nil, errors.TransformError()
+	reply := user.UserObject{
+		Id:        result.Id,
+		Nickname:  result.Nickname,
+		Username:  result.Username,
+		Avatar:    result.Avatar,
+		Status:    result.Status,
+		LoggedAt:  uint32(result.LoggedAt),
+		CreatedAt: uint32(result.CreatedAt),
+		UpdatedAt: uint32(result.UpdatedAt),
+		Setting:   result.Setting,
 	}
+	reply.Infos = make(map[string]string)
+	for _, info := range result.Infos {
+		reply.Infos[info.Field] = info.Value
+	}
+
+	for _, item := range result.UserDepts {
+		reply.UserDepts = append(reply.UserDepts, &user.UserObject_UserDept{
+			DeptId: item.DeptId,
+			JobId:  item.JobId,
+			Job: &user.UserObject_Job{
+				Id:   item.JobId,
+				Name: item.Job.Name,
+			},
+			Dept: &user.UserObject_Dept{
+				Id:   item.DeptId,
+				Name: item.Dept.Name,
+				Logo: item.Dept.Logo,
+				Main: value.Value(item.Main),
+			},
+		})
+	}
+
 	return &reply, nil
 }
 
@@ -90,12 +128,24 @@ func (app *User) UpdateCurrentUser(c context.Context, req *user.UpdateCurrentUse
 	return &emptypb.Empty{}, nil
 }
 
+func (app *User) UpdateCurrentUserPassword(c context.Context, req *user.UpdateCurrentUserPasswordRequest) (*user.UpdateCurrentUserPasswordReply, error) {
+	ctx := core.MustContext(c)
+	err := app.srv.UpdateCurrentUserPassword(ctx, &types.UpdateCurrentUserPasswordRequest{
+		OldPassword: req.OldPassword,
+		Password:    req.Password,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return &user.UpdateCurrentUserPasswordReply{}, nil
+}
+
 // GetUser 获取指定角色信息
 func (app *User) GetUser(c context.Context, req *user.GetUserRequest) (*user.UserObject, error) {
 	ctx := core.MustContext(c)
 
 	// 调用服务
-	ent, err := app.srv.GetUser(ctx, &types.GetUserRequest{
+	result, err := app.srv.GetUser(ctx, &types.GetUserRequest{
 		Id:       req.Id,
 		Username: req.Username,
 		App:      req.App,
@@ -105,10 +155,20 @@ func (app *User) GetUser(c context.Context, req *user.GetUserRequest) (*user.Use
 	}
 
 	// 处理返回数据
-	reply := user.UserObject{}
-	if err := value.Transform(ent, &reply); err != nil {
-		ctx.Logger().Errorw("msg", "get user resp transform error", "err", err)
-		return nil, errors.TransformError()
+	reply := user.UserObject{
+		Id:        result.Id,
+		Nickname:  result.Nickname,
+		Username:  result.Username,
+		Avatar:    result.Avatar,
+		Status:    result.Status,
+		LoggedAt:  uint32(result.LoggedAt),
+		CreatedAt: uint32(result.CreatedAt),
+		UpdatedAt: uint32(result.UpdatedAt),
+		Setting:   result.Setting,
+	}
+	reply.Infos = make(map[string]string)
+	for _, info := range result.Infos {
+		reply.Infos[info.Field] = info.Value
 	}
 	return &reply, nil
 }
@@ -143,19 +203,22 @@ func (app *User) ListUser(c context.Context, req *user.ListUserRequest) (*user.L
 
 // CreateUser 创建角色信息
 func (app *User) CreateUser(c context.Context, req *user.CreateUserRequest) (*user.CreateUserReply, error) {
-	var (
-		ctx = core.MustContext(c)
-		in  = entity.User{}
-	)
+	ctx := core.MustContext(c)
 
-	// 处理请求参数
-	if err := value.Transform(req, &in); err != nil {
-		ctx.Logger().Errorw("msg", "create user req transform error", "err", err)
-		return nil, errors.TransformError()
+	info := &entity.User{
+		Avatar:   req.Avatar,
+		Nickname: req.Nickname,
+		Username: req.Username,
+	}
+	for key, val := range req.Infos {
+		info.Infos = append(info.Infos, &entity.Userinfo{
+			Field: key,
+			Value: val,
+		})
 	}
 
 	// 调用服务
-	id, err := app.srv.CreateUser(ctx, &in)
+	id, err := app.srv.CreateUser(ctx, info)
 	if err != nil {
 		return nil, err
 	}
@@ -177,19 +240,25 @@ func (app *User) ResetPassword(c context.Context, req *user.ResetPasswordRequest
 
 // UpdateUser 更新角色信息
 func (app *User) UpdateUser(c context.Context, req *user.UpdateUserRequest) (*user.UpdateUserReply, error) {
-	var (
-		ctx = core.MustContext(c)
-		in  = entity.User{}
-	)
+	ctx := core.MustContext(c)
 
-	// 处理请求参数
-	if err := value.Transform(req, &in); err != nil {
-		ctx.Logger().Errorw("msg", "create user req transform error", "err", err)
-		return nil, errors.TransformError()
+	info := &entity.User{
+		BaseTenantModel: model.BaseTenantModel{Id: req.Id},
+		Avatar:          value.Value(req.Avatar),
+		Nickname:        value.Value(req.Nickname),
+		Status:          req.Status,
+		Reason:          req.Reason,
+	}
+	for key, val := range req.Infos {
+		info.Infos = append(info.Infos, &entity.Userinfo{
+			UserId: req.Id,
+			Field:  key,
+			Value:  val,
+		})
 	}
 
 	// 调用服务
-	if err := app.srv.UpdateUser(ctx, &in); err != nil {
+	if err := app.srv.UpdateUser(ctx, info); err != nil {
 		return nil, err
 	}
 
@@ -220,4 +289,18 @@ func (app *User) UpdateUserinfo(c context.Context, req *user.UpdateUserinfoReque
 	//}
 
 	return &user.UpdateUserinfoReply{}, nil
+}
+
+// OfflineUser 下线用户
+func (app *User) OfflineUser(c context.Context, req *user.OfflineUserRequest) (*emptypb.Empty, error) {
+	ctx := core.MustContext(c)
+
+	// 调用服务
+	if err := app.srv.OfflineUser(ctx, &types.OfflineUserRequest{
+		UserId: req.UserId,
+		AppIds: req.AppIds,
+	}); err != nil {
+		return nil, err
+	}
+	return &emptypb.Empty{}, nil
 }

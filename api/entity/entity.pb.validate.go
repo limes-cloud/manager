@@ -1491,6 +1491,8 @@ func (m *EntityField) validate(all bool) error {
 
 	// no validation rules for Comment
 
+	// no validation rules for Index
+
 	// no validation rules for CreatedAt
 
 	// no validation rules for UpdatedAt
@@ -1765,6 +1767,17 @@ func (m *CreateEntityFieldRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
+	if m.GetIndex() < 0 {
+		err := CreateEntityFieldRequestValidationError{
+			field:  "Index",
+			reason: "value must be greater than or equal to 0",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
 	if len(errors) > 0 {
 		return CreateEntityFieldRequestMultiError(errors)
 	}
@@ -2013,6 +2026,19 @@ func (m *UpdateEntityFieldRequest) validate(all bool) error {
 			err := UpdateEntityFieldRequestValidationError{
 				field:  "Comment",
 				reason: "value length must be between 1 and 128 runes, inclusive",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+	}
+
+	if m.Index != nil {
+		if m.GetIndex() < 0 {
+			err := UpdateEntityFieldRequestValidationError{
+				field:  "Index",
+				reason: "value must be greater than or equal to 0",
 			}
 			if !all {
 				return err
@@ -2440,9 +2466,9 @@ func (m *ListEntityRuleRequest) validate(all bool) error {
 
 	var errors []error
 
-	if m.GetEntityId() < 1 {
+	if m.GetPage() < 1 {
 		err := ListEntityRuleRequestValidationError{
-			field:  "EntityId",
+			field:  "Page",
 			reason: "value must be greater than or equal to 1",
 		}
 		if !all {
@@ -2451,8 +2477,62 @@ func (m *ListEntityRuleRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
+	if val := m.GetPageSize(); val < 1 || val > 50 {
+		err := ListEntityRuleRequestValidationError{
+			field:  "PageSize",
+			reason: "value must be inside range [1, 50]",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if m.Order != nil {
+		if _, ok := _ListEntityRuleRequest_Order_InLookup[m.GetOrder()]; !ok {
+			err := ListEntityRuleRequestValidationError{
+				field:  "Order",
+				reason: "value must be in list [asc desc]",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+	}
+
+	if m.OrderBy != nil {
+		if _, ok := _ListEntityRuleRequest_OrderBy_InLookup[m.GetOrderBy()]; !ok {
+			err := ListEntityRuleRequestValidationError{
+				field:  "OrderBy",
+				reason: "value must be in list [id created_at updated_at]",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+	}
+
+	if m.EntityId != nil {
+		if m.GetEntityId() < 1 {
+			err := ListEntityRuleRequestValidationError{
+				field:  "EntityId",
+				reason: "value must be greater than or equal to 1",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+	}
+
 	if m.Name != nil {
 		// no validation rules for Name
+	}
+
+	if m.Status != nil {
+		// no validation rules for Status
 	}
 
 	if len(errors) > 0 {
@@ -2535,6 +2615,344 @@ var _ interface {
 	ErrorName() string
 } = ListEntityRuleRequestValidationError{}
 
+var _ListEntityRuleRequest_Order_InLookup = map[string]struct{}{
+	"asc":  {},
+	"desc": {},
+}
+
+var _ListEntityRuleRequest_OrderBy_InLookup = map[string]struct{}{
+	"id":         {},
+	"created_at": {},
+	"updated_at": {},
+}
+
+// Validate checks the field values on Condition with the rules defined in the
+// proto definition for this message. If any rules are violated, the first
+// error encountered is returned, or nil if there are no violations.
+func (m *Condition) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on Condition with the rules defined in
+// the proto definition for this message. If any rules are violated, the
+// result is a list of violation errors wrapped in ConditionMultiError, or nil
+// if none found.
+func (m *Condition) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *Condition) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if l := utf8.RuneCountInString(m.GetField()); l < 1 || l > 64 {
+		err := ConditionValidationError{
+			field:  "Field",
+			reason: "value length must be between 1 and 64 runes, inclusive",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if l := utf8.RuneCountInString(m.GetOperator()); l < 1 || l > 64 {
+		err := ConditionValidationError{
+			field:  "Operator",
+			reason: "value length must be between 1 and 64 runes, inclusive",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if l := utf8.RuneCountInString(m.GetValue()); l < 1 || l > 64 {
+		err := ConditionValidationError{
+			field:  "Value",
+			reason: "value length must be between 1 and 64 runes, inclusive",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if len(errors) > 0 {
+		return ConditionMultiError(errors)
+	}
+
+	return nil
+}
+
+// ConditionMultiError is an error wrapping multiple validation errors returned
+// by Condition.ValidateAll() if the designated constraints aren't met.
+type ConditionMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m ConditionMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m ConditionMultiError) AllErrors() []error { return m }
+
+// ConditionValidationError is the validation error returned by
+// Condition.Validate if the designated constraints aren't met.
+type ConditionValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e ConditionValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e ConditionValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e ConditionValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e ConditionValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e ConditionValidationError) ErrorName() string { return "ConditionValidationError" }
+
+// Error satisfies the builtin error interface
+func (e ConditionValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sCondition.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = ConditionValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = ConditionValidationError{}
+
+// Validate checks the field values on ConditionGroup with the rules defined in
+// the proto definition for this message. If any rules are violated, the first
+// error encountered is returned, or nil if there are no violations.
+func (m *ConditionGroup) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on ConditionGroup with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// result is a list of violation errors wrapped in ConditionGroupMultiError,
+// or nil if none found.
+func (m *ConditionGroup) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *ConditionGroup) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if _, ok := _ConditionGroup_Logic_InLookup[m.GetLogic()]; !ok {
+		err := ConditionGroupValidationError{
+			field:  "Logic",
+			reason: "value must be in list [AND OR]",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if len(m.GetConditions()) < 1 {
+		err := ConditionGroupValidationError{
+			field:  "Conditions",
+			reason: "value must contain at least 1 item(s)",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	for idx, item := range m.GetConditions() {
+		_, _ = idx, item
+
+		if all {
+			switch v := interface{}(item).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, ConditionGroupValidationError{
+						field:  fmt.Sprintf("Conditions[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, ConditionGroupValidationError{
+						field:  fmt.Sprintf("Conditions[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return ConditionGroupValidationError{
+					field:  fmt.Sprintf("Conditions[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	for idx, item := range m.GetGroups() {
+		_, _ = idx, item
+
+		if all {
+			switch v := interface{}(item).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, ConditionGroupValidationError{
+						field:  fmt.Sprintf("Groups[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, ConditionGroupValidationError{
+						field:  fmt.Sprintf("Groups[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return ConditionGroupValidationError{
+					field:  fmt.Sprintf("Groups[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	if len(errors) > 0 {
+		return ConditionGroupMultiError(errors)
+	}
+
+	return nil
+}
+
+// ConditionGroupMultiError is an error wrapping multiple validation errors
+// returned by ConditionGroup.ValidateAll() if the designated constraints
+// aren't met.
+type ConditionGroupMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m ConditionGroupMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m ConditionGroupMultiError) AllErrors() []error { return m }
+
+// ConditionGroupValidationError is the validation error returned by
+// ConditionGroup.Validate if the designated constraints aren't met.
+type ConditionGroupValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e ConditionGroupValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e ConditionGroupValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e ConditionGroupValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e ConditionGroupValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e ConditionGroupValidationError) ErrorName() string { return "ConditionGroupValidationError" }
+
+// Error satisfies the builtin error interface
+func (e ConditionGroupValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sConditionGroup.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = ConditionGroupValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = ConditionGroupValidationError{}
+
+var _ConditionGroup_Logic_InLookup = map[string]struct{}{
+	"AND": {},
+	"OR":  {},
+}
+
 // Validate checks the field values on EntityRule with the rules defined in the
 // proto definition for this message. If any rules are violated, the first
 // error encountered is returned, or nil if there are no violations.
@@ -2565,7 +2983,36 @@ func (m *EntityRule) validate(all bool) error {
 
 	// no validation rules for Description
 
-	// no validation rules for Expression
+	if all {
+		switch v := interface{}(m.GetExpression()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, EntityRuleValidationError{
+					field:  "Expression",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, EntityRuleValidationError{
+					field:  "Expression",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetExpression()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return EntityRuleValidationError{
+				field:  "Expression",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	// no validation rules for Status
 
 	// no validation rules for CreatedAt
 
@@ -2841,15 +3288,33 @@ func (m *CreateEntityRuleRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	if utf8.RuneCountInString(m.GetExpression()) < 1 {
-		err := CreateEntityRuleRequestValidationError{
-			field:  "Expression",
-			reason: "value length must be at least 1 runes",
+	if all {
+		switch v := interface{}(m.GetExpression()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, CreateEntityRuleRequestValidationError{
+					field:  "Expression",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, CreateEntityRuleRequestValidationError{
+					field:  "Expression",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
 		}
-		if !all {
-			return err
+	} else if v, ok := interface{}(m.GetExpression()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return CreateEntityRuleRequestValidationError{
+				field:  "Expression",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
 		}
-		errors = append(errors, err)
 	}
 
 	if len(errors) > 0 {
@@ -3096,15 +3561,33 @@ func (m *UpdateEntityRuleRequest) validate(all bool) error {
 	}
 
 	if m.Expression != nil {
-		if utf8.RuneCountInString(m.GetExpression()) < 1 {
-			err := UpdateEntityRuleRequestValidationError{
-				field:  "Expression",
-				reason: "value length must be at least 1 runes",
+		if all {
+			switch v := interface{}(m.GetExpression()).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, UpdateEntityRuleRequestValidationError{
+						field:  "Expression",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, UpdateEntityRuleRequestValidationError{
+						field:  "Expression",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
 			}
-			if !all {
-				return err
+		} else if v, ok := interface{}(m.GetExpression()).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return UpdateEntityRuleRequestValidationError{
+					field:  "Expression",
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
 			}
-			errors = append(errors, err)
 		}
 	}
 
@@ -3119,6 +3602,10 @@ func (m *UpdateEntityRuleRequest) validate(all bool) error {
 			}
 			errors = append(errors, err)
 		}
+	}
+
+	if m.Status != nil {
+		// no validation rules for Status
 	}
 
 	if len(errors) > 0 {

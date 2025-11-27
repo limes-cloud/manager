@@ -12,33 +12,39 @@ import "api/tenant/proto/tenant.proto";
 service Tenant {
 	rpc GetTenant (GetTenantRequest) returns (GetTenantReply){
 		option (google.api.http) = {
-			get: "/manager/api/v1/tenant"
+			get: "/manager/api/tenant"
 		};
 	}
 
 	rpc ListTenant (ListTenantRequest) returns (ListTenantReply){
 		option (google.api.http) = {
-			get: "/manager/api/v1/tenants"
+			get: "/manager/api/tenants"
+		};
+	}
+
+	rpc ListAppTenant (ListAppTenantRequest) returns (ListAppTenantReply){
+		option (google.api.http) = {
+			get: "/manager/api/app/tenants"
 		};
 	}
 
 	rpc CreateTenant (CreateTenantRequest) returns (CreateTenantReply){
 		option (google.api.http) = {
-			post: "/manager/api/v1/tenant",
+			post: "/manager/api/tenant",
 			body: "*"
 		};
 	}
 
 	rpc UpdateTenant (UpdateTenantRequest) returns (UpdateTenantReply){
 		option (google.api.http) = {
-			put: "/manager/api/v1/tenant",
+			put: "/manager/api/tenant",
 			body: "*"
 		};
 	}
 
 	rpc DeleteTenant (DeleteTenantRequest) returns (DeleteTenantReply){
 		option (google.api.http) = {
-			delete: "/manager/api/v1/tenant"
+			delete: "/manager/api/tenant"
 		};
 	}
 

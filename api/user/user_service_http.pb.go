@@ -24,49 +24,61 @@ var (
 const _ = http.SupportPackageIsVersion1
 
 const (
-	OperationUserCreateUser               = "/manager.api.user.User/CreateUser"
-	OperationUserDeleteUser               = "/manager.api.user.User/DeleteUser"
-	OperationUserGetCurrentUser           = "/manager.api.user.User/GetCurrentUser"
-	OperationUserGetUser                  = "/manager.api.user.User/GetUser"
-	OperationUserListUser                 = "/manager.api.user.User/ListUser"
-	OperationUserResetPassword            = "/manager.api.user.User/ResetPassword"
-	OperationUserUpdateCurrentUser        = "/manager.api.user.User/UpdateCurrentUser"
-	OperationUserUpdateCurrentUserSetting = "/manager.api.user.User/UpdateCurrentUserSetting"
-	OperationUserUpdateUser               = "/manager.api.user.User/UpdateUser"
+	OperationUserCreateUser                = "/manager.api.user.User/CreateUser"
+	OperationUserDeleteUser                = "/manager.api.user.User/DeleteUser"
+	OperationUserGetCurrentUser            = "/manager.api.user.User/GetCurrentUser"
+	OperationUserGetUser                   = "/manager.api.user.User/GetUser"
+	OperationUserListUser                  = "/manager.api.user.User/ListUser"
+	OperationUserOfflineUser               = "/manager.api.user.User/OfflineUser"
+	OperationUserResetPassword             = "/manager.api.user.User/ResetPassword"
+	OperationUserUpdateCurrentUser         = "/manager.api.user.User/UpdateCurrentUser"
+	OperationUserUpdateCurrentUserPassword = "/manager.api.user.User/UpdateCurrentUserPassword"
+	OperationUserUpdateCurrentUserSetting  = "/manager.api.user.User/UpdateCurrentUserSetting"
+	OperationUserUpdateUser                = "/manager.api.user.User/UpdateUser"
+	OperationUserUpdateUserinfo            = "/manager.api.user.User/UpdateUserinfo"
 )
 
 type UserHTTPServer interface {
-	// CreateUser CreateUser 创建角色信息
+	// CreateUser CreateUser 创建用户信息
 	CreateUser(context.Context, *CreateUserRequest) (*CreateUserReply, error)
-	// DeleteUser DeleteUser 删除角色信息
+	// DeleteUser DeleteUser 删除用户信息
 	DeleteUser(context.Context, *DeleteUserRequest) (*DeleteUserReply, error)
 	// GetCurrentUser GetCurrentUser 获取当前用户信息
 	GetCurrentUser(context.Context, *GetCurrentUserRequest) (*UserObject, error)
-	// GetUser GetUser 获取角色信息
+	// GetUser GetUser 获取用户信息
 	GetUser(context.Context, *GetUserRequest) (*UserObject, error)
-	// ListUser ListUser 获取角色信息列表
+	// ListUser ListUser 获取用户信息列表
 	ListUser(context.Context, *ListUserRequest) (*ListUserReply, error)
-	// ResetPassword UpdateUser 更新角色信息
+	// OfflineUser OfflineUser 下线用户信息
+	OfflineUser(context.Context, *OfflineUserRequest) (*emptypb.Empty, error)
+	// ResetPassword UpdateUser 更新用户信息
 	ResetPassword(context.Context, *ResetPasswordRequest) (*emptypb.Empty, error)
 	// UpdateCurrentUser UpdateCurrentUserSetting 更新当前用户设置
 	UpdateCurrentUser(context.Context, *UpdateCurrentUserRequest) (*emptypb.Empty, error)
+	// UpdateCurrentUserPassword UpdateCurrentUserPassword 更新当前用户密码
+	UpdateCurrentUserPassword(context.Context, *UpdateCurrentUserPasswordRequest) (*UpdateCurrentUserPasswordReply, error)
 	// UpdateCurrentUserSetting UpdateCurrentUserSetting 更新当前用户设置
 	UpdateCurrentUserSetting(context.Context, *UpdateCurrentUserSettingRequest) (*emptypb.Empty, error)
-	// UpdateUser UpdateUser 更新角色信息
+	// UpdateUser UpdateUser 更新用户信息
 	UpdateUser(context.Context, *UpdateUserRequest) (*UpdateUserReply, error)
+	// UpdateUserinfo UpdateUserinfo 更新用户信息
+	UpdateUserinfo(context.Context, *UpdateUserinfoRequest) (*UpdateUserinfoReply, error)
 }
 
 func RegisterUserHTTPServer(s *http.Server, srv UserHTTPServer) {
 	r := s.Route("/")
-	r.GET("/manager/api/v1/current/user", _User_GetCurrentUser0_HTTP_Handler(srv))
-	r.PUT("/manager/api/v1/current/user/setting", _User_UpdateCurrentUserSetting0_HTTP_Handler(srv))
-	r.PUT("/manager/api/v1/current/user", _User_UpdateCurrentUser0_HTTP_Handler(srv))
-	r.GET("/manager/api/v1/user", _User_GetUser0_HTTP_Handler(srv))
-	r.GET("/manager/api/v1/users", _User_ListUser0_HTTP_Handler(srv))
-	r.POST("/manager/api/v1/user", _User_CreateUser0_HTTP_Handler(srv))
-	r.POST("/manager/api/v1/user/password/reset", _User_ResetPassword0_HTTP_Handler(srv))
-	r.PUT("/manager/api/v1/user", _User_UpdateUser0_HTTP_Handler(srv))
-	r.DELETE("/manager/api/v1/user", _User_DeleteUser0_HTTP_Handler(srv))
+	r.GET("/manager/api/current/user", _User_GetCurrentUser0_HTTP_Handler(srv))
+	r.POST("/manager/api/current/user/password", _User_UpdateCurrentUserPassword0_HTTP_Handler(srv))
+	r.PUT("/manager/api/current/user/setting", _User_UpdateCurrentUserSetting0_HTTP_Handler(srv))
+	r.PUT("/manager/api/current/user", _User_UpdateCurrentUser0_HTTP_Handler(srv))
+	r.GET("/manager/api/user", _User_GetUser0_HTTP_Handler(srv))
+	r.GET("/manager/api/users", _User_ListUser0_HTTP_Handler(srv))
+	r.POST("/manager/api/user", _User_CreateUser0_HTTP_Handler(srv))
+	r.POST("/manager/api/user/password/reset", _User_ResetPassword0_HTTP_Handler(srv))
+	r.PUT("/manager/api/user", _User_UpdateUser0_HTTP_Handler(srv))
+	r.DELETE("/manager/api/user", _User_DeleteUser0_HTTP_Handler(srv))
+	r.PUT("/manager/api/user/info", _User_UpdateUserinfo0_HTTP_Handler(srv))
+	r.POST("/manager/api/user/offline", _User_OfflineUser0_HTTP_Handler(srv))
 }
 
 func _User_GetCurrentUser0_HTTP_Handler(srv UserHTTPServer) func(ctx http.Context) error {
@@ -84,6 +96,28 @@ func _User_GetCurrentUser0_HTTP_Handler(srv UserHTTPServer) func(ctx http.Contex
 			return err
 		}
 		reply := out.(*UserObject)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _User_UpdateCurrentUserPassword0_HTTP_Handler(srv UserHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in UpdateCurrentUserPasswordRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationUserUpdateCurrentUserPassword)
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
+			return srv.UpdateCurrentUserPassword(ctx, req.(*UpdateCurrentUserPasswordRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*UpdateCurrentUserPasswordReply)
 		return ctx.Result(200, reply)
 	}
 }
@@ -255,16 +289,63 @@ func _User_DeleteUser0_HTTP_Handler(srv UserHTTPServer) func(ctx http.Context) e
 	}
 }
 
+func _User_UpdateUserinfo0_HTTP_Handler(srv UserHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in UpdateUserinfoRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationUserUpdateUserinfo)
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
+			return srv.UpdateUserinfo(ctx, req.(*UpdateUserinfoRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*UpdateUserinfoReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _User_OfflineUser0_HTTP_Handler(srv UserHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in OfflineUserRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationUserOfflineUser)
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
+			return srv.OfflineUser(ctx, req.(*OfflineUserRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*emptypb.Empty)
+		return ctx.Result(200, reply)
+	}
+}
+
 type UserHTTPClient interface {
 	CreateUser(ctx context.Context, req *CreateUserRequest, opts ...http.CallOption) (rsp *CreateUserReply, err error)
 	DeleteUser(ctx context.Context, req *DeleteUserRequest, opts ...http.CallOption) (rsp *DeleteUserReply, err error)
 	GetCurrentUser(ctx context.Context, req *GetCurrentUserRequest, opts ...http.CallOption) (rsp *UserObject, err error)
 	GetUser(ctx context.Context, req *GetUserRequest, opts ...http.CallOption) (rsp *UserObject, err error)
 	ListUser(ctx context.Context, req *ListUserRequest, opts ...http.CallOption) (rsp *ListUserReply, err error)
+	OfflineUser(ctx context.Context, req *OfflineUserRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	ResetPassword(ctx context.Context, req *ResetPasswordRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	UpdateCurrentUser(ctx context.Context, req *UpdateCurrentUserRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
+	UpdateCurrentUserPassword(ctx context.Context, req *UpdateCurrentUserPasswordRequest, opts ...http.CallOption) (rsp *UpdateCurrentUserPasswordReply, err error)
 	UpdateCurrentUserSetting(ctx context.Context, req *UpdateCurrentUserSettingRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	UpdateUser(ctx context.Context, req *UpdateUserRequest, opts ...http.CallOption) (rsp *UpdateUserReply, err error)
+	UpdateUserinfo(ctx context.Context, req *UpdateUserinfoRequest, opts ...http.CallOption) (rsp *UpdateUserinfoReply, err error)
 }
 
 type UserHTTPClientImpl struct {
@@ -277,7 +358,7 @@ func NewUserHTTPClient(client *http.Client) UserHTTPClient {
 
 func (c *UserHTTPClientImpl) CreateUser(ctx context.Context, in *CreateUserRequest, opts ...http.CallOption) (*CreateUserReply, error) {
 	var out CreateUserReply
-	pattern := "/manager/api/v1/user"
+	pattern := "/manager/api/user"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationUserCreateUser))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -290,7 +371,7 @@ func (c *UserHTTPClientImpl) CreateUser(ctx context.Context, in *CreateUserReque
 
 func (c *UserHTTPClientImpl) DeleteUser(ctx context.Context, in *DeleteUserRequest, opts ...http.CallOption) (*DeleteUserReply, error) {
 	var out DeleteUserReply
-	pattern := "/manager/api/v1/user"
+	pattern := "/manager/api/user"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationUserDeleteUser))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -303,7 +384,7 @@ func (c *UserHTTPClientImpl) DeleteUser(ctx context.Context, in *DeleteUserReque
 
 func (c *UserHTTPClientImpl) GetCurrentUser(ctx context.Context, in *GetCurrentUserRequest, opts ...http.CallOption) (*UserObject, error) {
 	var out UserObject
-	pattern := "/manager/api/v1/current/user"
+	pattern := "/manager/api/current/user"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationUserGetCurrentUser))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -316,7 +397,7 @@ func (c *UserHTTPClientImpl) GetCurrentUser(ctx context.Context, in *GetCurrentU
 
 func (c *UserHTTPClientImpl) GetUser(ctx context.Context, in *GetUserRequest, opts ...http.CallOption) (*UserObject, error) {
 	var out UserObject
-	pattern := "/manager/api/v1/user"
+	pattern := "/manager/api/user"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationUserGetUser))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -329,7 +410,7 @@ func (c *UserHTTPClientImpl) GetUser(ctx context.Context, in *GetUserRequest, op
 
 func (c *UserHTTPClientImpl) ListUser(ctx context.Context, in *ListUserRequest, opts ...http.CallOption) (*ListUserReply, error) {
 	var out ListUserReply
-	pattern := "/manager/api/v1/users"
+	pattern := "/manager/api/users"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationUserListUser))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -340,9 +421,22 @@ func (c *UserHTTPClientImpl) ListUser(ctx context.Context, in *ListUserRequest, 
 	return &out, err
 }
 
+func (c *UserHTTPClientImpl) OfflineUser(ctx context.Context, in *OfflineUserRequest, opts ...http.CallOption) (*emptypb.Empty, error) {
+	var out emptypb.Empty
+	pattern := "/manager/api/user/offline"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationUserOfflineUser))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
 func (c *UserHTTPClientImpl) ResetPassword(ctx context.Context, in *ResetPasswordRequest, opts ...http.CallOption) (*emptypb.Empty, error) {
 	var out emptypb.Empty
-	pattern := "/manager/api/v1/user/password/reset"
+	pattern := "/manager/api/user/password/reset"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationUserResetPassword))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -355,7 +449,7 @@ func (c *UserHTTPClientImpl) ResetPassword(ctx context.Context, in *ResetPasswor
 
 func (c *UserHTTPClientImpl) UpdateCurrentUser(ctx context.Context, in *UpdateCurrentUserRequest, opts ...http.CallOption) (*emptypb.Empty, error) {
 	var out emptypb.Empty
-	pattern := "/manager/api/v1/current/user"
+	pattern := "/manager/api/current/user"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationUserUpdateCurrentUser))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -366,9 +460,22 @@ func (c *UserHTTPClientImpl) UpdateCurrentUser(ctx context.Context, in *UpdateCu
 	return &out, err
 }
 
+func (c *UserHTTPClientImpl) UpdateCurrentUserPassword(ctx context.Context, in *UpdateCurrentUserPasswordRequest, opts ...http.CallOption) (*UpdateCurrentUserPasswordReply, error) {
+	var out UpdateCurrentUserPasswordReply
+	pattern := "/manager/api/current/user/password"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationUserUpdateCurrentUserPassword))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
 func (c *UserHTTPClientImpl) UpdateCurrentUserSetting(ctx context.Context, in *UpdateCurrentUserSettingRequest, opts ...http.CallOption) (*emptypb.Empty, error) {
 	var out emptypb.Empty
-	pattern := "/manager/api/v1/current/user/setting"
+	pattern := "/manager/api/current/user/setting"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationUserUpdateCurrentUserSetting))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -381,9 +488,22 @@ func (c *UserHTTPClientImpl) UpdateCurrentUserSetting(ctx context.Context, in *U
 
 func (c *UserHTTPClientImpl) UpdateUser(ctx context.Context, in *UpdateUserRequest, opts ...http.CallOption) (*UpdateUserReply, error) {
 	var out UpdateUserReply
-	pattern := "/manager/api/v1/user"
+	pattern := "/manager/api/user"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationUserUpdateUser))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "PUT", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *UserHTTPClientImpl) UpdateUserinfo(ctx context.Context, in *UpdateUserinfoRequest, opts ...http.CallOption) (*UpdateUserinfoReply, error) {
+	var out UpdateUserinfoReply
+	pattern := "/manager/api/user/info"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationUserUpdateUserinfo))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "PUT", path, in, &out, opts...)
 	if err != nil {

@@ -20,12 +20,9 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	DeptRole_ListDeptRole_FullMethodName    = "/manager.api.deptrole.DeptRole/ListDeptRole"
-	DeptRole_CreateDeptRoles_FullMethodName = "/manager.api.deptrole.DeptRole/CreateDeptRoles"
-	DeptRole_DeleteDeptRoles_FullMethodName = "/manager.api.deptrole.DeptRole/DeleteDeptRoles"
-	DeptRole_ListRoleDept_FullMethodName    = "/manager.api.deptrole.DeptRole/ListRoleDept"
-	DeptRole_CreateRoleDepts_FullMethodName = "/manager.api.deptrole.DeptRole/CreateRoleDepts"
-	DeptRole_DeleteRoleDepts_FullMethodName = "/manager.api.deptrole.DeptRole/DeleteRoleDepts"
+	DeptRole_ListDeptRole_FullMethodName   = "/manager.api.deptrole.DeptRole/ListDeptRole"
+	DeptRole_CreateDeptRole_FullMethodName = "/manager.api.deptrole.DeptRole/CreateDeptRole"
+	DeptRole_DeleteDeptRole_FullMethodName = "/manager.api.deptrole.DeptRole/DeleteDeptRole"
 )
 
 // DeptRoleClient is the client API for DeptRole service.
@@ -33,11 +30,8 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type DeptRoleClient interface {
 	ListDeptRole(ctx context.Context, in *ListDeptRoleRequest, opts ...grpc.CallOption) (*ListDeptRoleReply, error)
-	CreateDeptRoles(ctx context.Context, in *CreateDeptRolesRequest, opts ...grpc.CallOption) (*CreateDeptRolesReply, error)
-	DeleteDeptRoles(ctx context.Context, in *DeleteDeptRolesRequest, opts ...grpc.CallOption) (*DeleteDeptRolesReply, error)
-	ListRoleDept(ctx context.Context, in *ListRoleDeptRequest, opts ...grpc.CallOption) (*ListRoleDeptReply, error)
-	CreateRoleDepts(ctx context.Context, in *CreateRoleDeptsRequest, opts ...grpc.CallOption) (*CreateRoleDeptsReply, error)
-	DeleteRoleDepts(ctx context.Context, in *DeleteRoleDeptsRequest, opts ...grpc.CallOption) (*DeleteRoleDeptsReply, error)
+	CreateDeptRole(ctx context.Context, in *CreateDeptRoleRequest, opts ...grpc.CallOption) (*CreateDeptRoleReply, error)
+	DeleteDeptRole(ctx context.Context, in *DeleteDeptRoleRequest, opts ...grpc.CallOption) (*DeleteDeptRoleReply, error)
 }
 
 type deptRoleClient struct {
@@ -57,45 +51,18 @@ func (c *deptRoleClient) ListDeptRole(ctx context.Context, in *ListDeptRoleReque
 	return out, nil
 }
 
-func (c *deptRoleClient) CreateDeptRoles(ctx context.Context, in *CreateDeptRolesRequest, opts ...grpc.CallOption) (*CreateDeptRolesReply, error) {
-	out := new(CreateDeptRolesReply)
-	err := c.cc.Invoke(ctx, DeptRole_CreateDeptRoles_FullMethodName, in, out, opts...)
+func (c *deptRoleClient) CreateDeptRole(ctx context.Context, in *CreateDeptRoleRequest, opts ...grpc.CallOption) (*CreateDeptRoleReply, error) {
+	out := new(CreateDeptRoleReply)
+	err := c.cc.Invoke(ctx, DeptRole_CreateDeptRole_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *deptRoleClient) DeleteDeptRoles(ctx context.Context, in *DeleteDeptRolesRequest, opts ...grpc.CallOption) (*DeleteDeptRolesReply, error) {
-	out := new(DeleteDeptRolesReply)
-	err := c.cc.Invoke(ctx, DeptRole_DeleteDeptRoles_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *deptRoleClient) ListRoleDept(ctx context.Context, in *ListRoleDeptRequest, opts ...grpc.CallOption) (*ListRoleDeptReply, error) {
-	out := new(ListRoleDeptReply)
-	err := c.cc.Invoke(ctx, DeptRole_ListRoleDept_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *deptRoleClient) CreateRoleDepts(ctx context.Context, in *CreateRoleDeptsRequest, opts ...grpc.CallOption) (*CreateRoleDeptsReply, error) {
-	out := new(CreateRoleDeptsReply)
-	err := c.cc.Invoke(ctx, DeptRole_CreateRoleDepts_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *deptRoleClient) DeleteRoleDepts(ctx context.Context, in *DeleteRoleDeptsRequest, opts ...grpc.CallOption) (*DeleteRoleDeptsReply, error) {
-	out := new(DeleteRoleDeptsReply)
-	err := c.cc.Invoke(ctx, DeptRole_DeleteRoleDepts_FullMethodName, in, out, opts...)
+func (c *deptRoleClient) DeleteDeptRole(ctx context.Context, in *DeleteDeptRoleRequest, opts ...grpc.CallOption) (*DeleteDeptRoleReply, error) {
+	out := new(DeleteDeptRoleReply)
+	err := c.cc.Invoke(ctx, DeptRole_DeleteDeptRole_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -107,11 +74,8 @@ func (c *deptRoleClient) DeleteRoleDepts(ctx context.Context, in *DeleteRoleDept
 // for forward compatibility
 type DeptRoleServer interface {
 	ListDeptRole(context.Context, *ListDeptRoleRequest) (*ListDeptRoleReply, error)
-	CreateDeptRoles(context.Context, *CreateDeptRolesRequest) (*CreateDeptRolesReply, error)
-	DeleteDeptRoles(context.Context, *DeleteDeptRolesRequest) (*DeleteDeptRolesReply, error)
-	ListRoleDept(context.Context, *ListRoleDeptRequest) (*ListRoleDeptReply, error)
-	CreateRoleDepts(context.Context, *CreateRoleDeptsRequest) (*CreateRoleDeptsReply, error)
-	DeleteRoleDepts(context.Context, *DeleteRoleDeptsRequest) (*DeleteRoleDeptsReply, error)
+	CreateDeptRole(context.Context, *CreateDeptRoleRequest) (*CreateDeptRoleReply, error)
+	DeleteDeptRole(context.Context, *DeleteDeptRoleRequest) (*DeleteDeptRoleReply, error)
 	mustEmbedUnimplementedDeptRoleServer()
 }
 
@@ -122,24 +86,12 @@ func (UnimplementedDeptRoleServer) ListDeptRole(context.Context, *ListDeptRoleRe
 	return nil, status.Errorf(codes.Unimplemented, "method ListDeptRole not implemented")
 }
 
-func (UnimplementedDeptRoleServer) CreateDeptRoles(context.Context, *CreateDeptRolesRequest) (*CreateDeptRolesReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method CreateDeptRoles not implemented")
+func (UnimplementedDeptRoleServer) CreateDeptRole(context.Context, *CreateDeptRoleRequest) (*CreateDeptRoleReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateDeptRole not implemented")
 }
 
-func (UnimplementedDeptRoleServer) DeleteDeptRoles(context.Context, *DeleteDeptRolesRequest) (*DeleteDeptRolesReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method DeleteDeptRoles not implemented")
-}
-
-func (UnimplementedDeptRoleServer) ListRoleDept(context.Context, *ListRoleDeptRequest) (*ListRoleDeptReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ListRoleDept not implemented")
-}
-
-func (UnimplementedDeptRoleServer) CreateRoleDepts(context.Context, *CreateRoleDeptsRequest) (*CreateRoleDeptsReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method CreateRoleDepts not implemented")
-}
-
-func (UnimplementedDeptRoleServer) DeleteRoleDepts(context.Context, *DeleteRoleDeptsRequest) (*DeleteRoleDeptsReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method DeleteRoleDepts not implemented")
+func (UnimplementedDeptRoleServer) DeleteDeptRole(context.Context, *DeleteDeptRoleRequest) (*DeleteDeptRoleReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteDeptRole not implemented")
 }
 func (UnimplementedDeptRoleServer) mustEmbedUnimplementedDeptRoleServer() {}
 
@@ -172,92 +124,38 @@ func _DeptRole_ListDeptRole_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
-func _DeptRole_CreateDeptRoles_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CreateDeptRolesRequest)
+func _DeptRole_CreateDeptRole_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateDeptRoleRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(DeptRoleServer).CreateDeptRoles(ctx, in)
+		return srv.(DeptRoleServer).CreateDeptRole(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: DeptRole_CreateDeptRoles_FullMethodName,
+		FullMethod: DeptRole_CreateDeptRole_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DeptRoleServer).CreateDeptRoles(ctx, req.(*CreateDeptRolesRequest))
+		return srv.(DeptRoleServer).CreateDeptRole(ctx, req.(*CreateDeptRoleRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _DeptRole_DeleteDeptRoles_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DeleteDeptRolesRequest)
+func _DeptRole_DeleteDeptRole_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteDeptRoleRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(DeptRoleServer).DeleteDeptRoles(ctx, in)
+		return srv.(DeptRoleServer).DeleteDeptRole(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: DeptRole_DeleteDeptRoles_FullMethodName,
+		FullMethod: DeptRole_DeleteDeptRole_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DeptRoleServer).DeleteDeptRoles(ctx, req.(*DeleteDeptRolesRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _DeptRole_ListRoleDept_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListRoleDeptRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(DeptRoleServer).ListRoleDept(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: DeptRole_ListRoleDept_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DeptRoleServer).ListRoleDept(ctx, req.(*ListRoleDeptRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _DeptRole_CreateRoleDepts_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CreateRoleDeptsRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(DeptRoleServer).CreateRoleDepts(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: DeptRole_CreateRoleDepts_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DeptRoleServer).CreateRoleDepts(ctx, req.(*CreateRoleDeptsRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _DeptRole_DeleteRoleDepts_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DeleteRoleDeptsRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(DeptRoleServer).DeleteRoleDepts(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: DeptRole_DeleteRoleDepts_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DeptRoleServer).DeleteRoleDepts(ctx, req.(*DeleteRoleDeptsRequest))
+		return srv.(DeptRoleServer).DeleteDeptRole(ctx, req.(*DeleteDeptRoleRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -274,24 +172,12 @@ var DeptRole_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _DeptRole_ListDeptRole_Handler,
 		},
 		{
-			MethodName: "CreateDeptRoles",
-			Handler:    _DeptRole_CreateDeptRoles_Handler,
+			MethodName: "CreateDeptRole",
+			Handler:    _DeptRole_CreateDeptRole_Handler,
 		},
 		{
-			MethodName: "DeleteDeptRoles",
-			Handler:    _DeptRole_DeleteDeptRoles_Handler,
-		},
-		{
-			MethodName: "ListRoleDept",
-			Handler:    _DeptRole_ListRoleDept_Handler,
-		},
-		{
-			MethodName: "CreateRoleDepts",
-			Handler:    _DeptRole_CreateRoleDepts_Handler,
-		},
-		{
-			MethodName: "DeleteRoleDepts",
-			Handler:    _DeptRole_DeleteRoleDepts_Handler,
+			MethodName: "DeleteDeptRole",
+			Handler:    _DeptRole_DeleteDeptRole_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -1,0 +1,36 @@
+syntax = "proto3";
+
+package manager.api.appoauther;
+
+option go_package = "manager/api/appoauther;appoauther";
+option java_multiple_files = true;
+option java_package = "manager.api.appoauther";
+
+import "api/appoauther/proto/appoauther.proto";
+import "google/api/annotations.proto";
+
+
+service AppOAuther {
+
+  // ListAppOAuther 获取应用渠道信息
+  rpc ListAppOAuther (ListAppOAutherRequest) returns (ListAppOAutherReply) {
+    option (google.api.http) = {
+      get: "/manager/api/app/oauthers",
+    };
+  }
+
+  // CreateApp 创建应用渠道信息
+  rpc CreateAppOAuther (CreateAppOAutherRequest) returns (CreateAppOAutherReply) {
+    option (google.api.http) = {
+      post: "/manager/api/app/oauther",
+      body: "*"
+    };
+  }
+
+  // DeleteApp 删除应用渠道信息
+  rpc DeleteAppOAuther (DeleteAppOAutherRequest) returns (DeleteAppOAutherReply) {
+    option (google.api.http) = {
+      delete: "/manager/api/app/oauther",
+    };
+  }
+}

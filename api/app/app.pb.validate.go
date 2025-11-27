@@ -35,6 +35,375 @@ var (
 	_ = sort.Sort
 )
 
+// Validate checks the field values on AppSettingJWT with the rules defined in
+// the proto definition for this message. If any rules are violated, the first
+// error encountered is returned, or nil if there are no violations.
+func (m *AppSettingJWT) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on AppSettingJWT with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// result is a list of violation errors wrapped in AppSettingJWTMultiError, or
+// nil if none found.
+func (m *AppSettingJWT) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *AppSettingJWT) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Secret
+
+	// no validation rules for Expire
+
+	// no validation rules for Renewal
+
+	// no validation rules for UniqueDevice
+
+	// no validation rules for UniquePlatform
+
+	if len(errors) > 0 {
+		return AppSettingJWTMultiError(errors)
+	}
+
+	return nil
+}
+
+// AppSettingJWTMultiError is an error wrapping multiple validation errors
+// returned by AppSettingJWT.ValidateAll() if the designated constraints
+// aren't met.
+type AppSettingJWTMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m AppSettingJWTMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m AppSettingJWTMultiError) AllErrors() []error { return m }
+
+// AppSettingJWTValidationError is the validation error returned by
+// AppSettingJWT.Validate if the designated constraints aren't met.
+type AppSettingJWTValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e AppSettingJWTValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e AppSettingJWTValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e AppSettingJWTValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e AppSettingJWTValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e AppSettingJWTValidationError) ErrorName() string { return "AppSettingJWTValidationError" }
+
+// Error satisfies the builtin error interface
+func (e AppSettingJWTValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sAppSettingJWT.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = AppSettingJWTValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = AppSettingJWTValidationError{}
+
+// Validate checks the field values on AppSettingTenant with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// first error encountered is returned, or nil if there are no violations.
+func (m *AppSettingTenant) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on AppSettingTenant with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// AppSettingTenantMultiError, or nil if none found.
+func (m *AppSettingTenant) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *AppSettingTenant) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Mode
+
+	if len(errors) > 0 {
+		return AppSettingTenantMultiError(errors)
+	}
+
+	return nil
+}
+
+// AppSettingTenantMultiError is an error wrapping multiple validation errors
+// returned by AppSettingTenant.ValidateAll() if the designated constraints
+// aren't met.
+type AppSettingTenantMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m AppSettingTenantMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m AppSettingTenantMultiError) AllErrors() []error { return m }
+
+// AppSettingTenantValidationError is the validation error returned by
+// AppSettingTenant.Validate if the designated constraints aren't met.
+type AppSettingTenantValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e AppSettingTenantValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e AppSettingTenantValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e AppSettingTenantValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e AppSettingTenantValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e AppSettingTenantValidationError) ErrorName() string { return "AppSettingTenantValidationError" }
+
+// Error satisfies the builtin error interface
+func (e AppSettingTenantValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sAppSettingTenant.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = AppSettingTenantValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = AppSettingTenantValidationError{}
+
+// Validate checks the field values on AppSetting with the rules defined in the
+// proto definition for this message. If any rules are violated, the first
+// error encountered is returned, or nil if there are no violations.
+func (m *AppSetting) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on AppSetting with the rules defined in
+// the proto definition for this message. If any rules are violated, the
+// result is a list of violation errors wrapped in AppSettingMultiError, or
+// nil if none found.
+func (m *AppSetting) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *AppSetting) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if all {
+		switch v := interface{}(m.GetJwt()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, AppSettingValidationError{
+					field:  "Jwt",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, AppSettingValidationError{
+					field:  "Jwt",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetJwt()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return AppSettingValidationError{
+				field:  "Jwt",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	if all {
+		switch v := interface{}(m.GetTenant()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, AppSettingValidationError{
+					field:  "Tenant",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, AppSettingValidationError{
+					field:  "Tenant",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetTenant()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return AppSettingValidationError{
+				field:  "Tenant",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	if len(errors) > 0 {
+		return AppSettingMultiError(errors)
+	}
+
+	return nil
+}
+
+// AppSettingMultiError is an error wrapping multiple validation errors
+// returned by AppSetting.ValidateAll() if the designated constraints aren't met.
+type AppSettingMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m AppSettingMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m AppSettingMultiError) AllErrors() []error { return m }
+
+// AppSettingValidationError is the validation error returned by
+// AppSetting.Validate if the designated constraints aren't met.
+type AppSettingValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e AppSettingValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e AppSettingValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e AppSettingValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e AppSettingValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e AppSettingValidationError) ErrorName() string { return "AppSettingValidationError" }
+
+// Error satisfies the builtin error interface
+func (e AppSettingValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sAppSetting.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = AppSettingValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = AppSettingValidationError{}
+
 // Validate checks the field values on GetAppRequest with the rules defined in
 // the proto definition for this message. If any rules are violated, the first
 // error encountered is returned, or nil if there are no violations.
@@ -57,30 +426,15 @@ func (m *GetAppRequest) validate(all bool) error {
 
 	var errors []error
 
-	if m.Id != nil {
-		if m.GetId() < 1 {
-			err := GetAppRequestValidationError{
-				field:  "Id",
-				reason: "value must be greater than or equal to 1",
-			}
-			if !all {
-				return err
-			}
-			errors = append(errors, err)
+	if m.GetId() < 1 {
+		err := GetAppRequestValidationError{
+			field:  "Id",
+			reason: "value must be greater than or equal to 1",
 		}
-	}
-
-	if m.Keyword != nil {
-		if utf8.RuneCountInString(m.GetKeyword()) < 1 {
-			err := GetAppRequestValidationError{
-				field:  "Keyword",
-				reason: "value length must be at least 1 runes",
-			}
-			if !all {
-				return err
-			}
-			errors = append(errors, err)
+		if !all {
+			return err
 		}
+		errors = append(errors, err)
 	}
 
 	if len(errors) > 0 {
@@ -185,30 +539,61 @@ func (m *GetAppReply) validate(all bool) error {
 
 	// no validation rules for Id
 
+	// no validation rules for Type
+
 	// no validation rules for Logo
+
+	// no validation rules for Favicon
 
 	// no validation rules for Keyword
 
+	// no validation rules for Secret
+
 	// no validation rules for Name
+
+	// no validation rules for Private
+
+	// no validation rules for Status
 
 	// no validation rules for CreatedAt
 
 	// no validation rules for UpdatedAt
 
-	if m.Status != nil {
-		// no validation rules for Status
+	if all {
+		switch v := interface{}(m.GetSetting()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, GetAppReplyValidationError{
+					field:  "Setting",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, GetAppReplyValidationError{
+					field:  "Setting",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetSetting()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return GetAppReplyValidationError{
+				field:  "Setting",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	if m.Comment != nil {
+		// no validation rules for Comment
 	}
 
 	if m.Reason != nil {
 		// no validation rules for Reason
-	}
-
-	if m.Private != nil {
-		// no validation rules for Private
-	}
-
-	if m.Extra != nil {
-		// no validation rules for Extra
 	}
 
 	if m.Description != nil {
@@ -291,6 +676,282 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = GetAppReplyValidationError{}
+
+// Validate checks the field values on GetSampleAppRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *GetSampleAppRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on GetSampleAppRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// GetSampleAppRequestMultiError, or nil if none found.
+func (m *GetSampleAppRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *GetSampleAppRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if utf8.RuneCountInString(m.GetKeyword()) < 1 {
+		err := GetSampleAppRequestValidationError{
+			field:  "Keyword",
+			reason: "value length must be at least 1 runes",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if len(errors) > 0 {
+		return GetSampleAppRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// GetSampleAppRequestMultiError is an error wrapping multiple validation
+// errors returned by GetSampleAppRequest.ValidateAll() if the designated
+// constraints aren't met.
+type GetSampleAppRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m GetSampleAppRequestMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m GetSampleAppRequestMultiError) AllErrors() []error { return m }
+
+// GetSampleAppRequestValidationError is the validation error returned by
+// GetSampleAppRequest.Validate if the designated constraints aren't met.
+type GetSampleAppRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e GetSampleAppRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e GetSampleAppRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e GetSampleAppRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e GetSampleAppRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e GetSampleAppRequestValidationError) ErrorName() string {
+	return "GetSampleAppRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e GetSampleAppRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sGetSampleAppRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = GetSampleAppRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = GetSampleAppRequestValidationError{}
+
+// Validate checks the field values on GetSampleAppReply with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// first error encountered is returned, or nil if there are no violations.
+func (m *GetSampleAppReply) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on GetSampleAppReply with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// GetSampleAppReplyMultiError, or nil if none found.
+func (m *GetSampleAppReply) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *GetSampleAppReply) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Id
+
+	// no validation rules for Type
+
+	// no validation rules for Logo
+
+	// no validation rules for Favicon
+
+	// no validation rules for Keyword
+
+	// no validation rules for Name
+
+	// no validation rules for Private
+
+	// no validation rules for Status
+
+	if all {
+		switch v := interface{}(m.GetSetting()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, GetSampleAppReplyValidationError{
+					field:  "Setting",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, GetSampleAppReplyValidationError{
+					field:  "Setting",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetSetting()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return GetSampleAppReplyValidationError{
+				field:  "Setting",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	// no validation rules for CreatedAt
+
+	// no validation rules for UpdatedAt
+
+	if m.Comment != nil {
+		// no validation rules for Comment
+	}
+
+	if m.Reason != nil {
+		// no validation rules for Reason
+	}
+
+	if m.Description != nil {
+		// no validation rules for Description
+	}
+
+	if len(errors) > 0 {
+		return GetSampleAppReplyMultiError(errors)
+	}
+
+	return nil
+}
+
+// GetSampleAppReplyMultiError is an error wrapping multiple validation errors
+// returned by GetSampleAppReply.ValidateAll() if the designated constraints
+// aren't met.
+type GetSampleAppReplyMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m GetSampleAppReplyMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m GetSampleAppReplyMultiError) AllErrors() []error { return m }
+
+// GetSampleAppReplyValidationError is the validation error returned by
+// GetSampleAppReply.Validate if the designated constraints aren't met.
+type GetSampleAppReplyValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e GetSampleAppReplyValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e GetSampleAppReplyValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e GetSampleAppReplyValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e GetSampleAppReplyValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e GetSampleAppReplyValidationError) ErrorName() string {
+	return "GetSampleAppReplyValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e GetSampleAppReplyValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sGetSampleAppReply.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = GetSampleAppReplyValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = GetSampleAppReplyValidationError{}
 
 // Validate checks the field values on ListAppRequest with the rules defined in
 // the proto definition for this message. If any rules are violated, the first
@@ -620,9 +1281,9 @@ func (m *CreateAppRequest) validate(all bool) error {
 
 	var errors []error
 
-	if l := utf8.RuneCountInString(m.GetLogo()); l < 1 || l > 128 {
+	if l := utf8.RuneCountInString(m.GetType()); l < 1 || l > 128 {
 		err := CreateAppRequestValidationError{
-			field:  "Logo",
+			field:  "Type",
 			reason: "value length must be between 1 and 128 runes, inclusive",
 		}
 		if !all {
@@ -631,10 +1292,10 @@ func (m *CreateAppRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	if l := utf8.RuneCountInString(m.GetKeyword()); l < 1 || l > 32 {
+	if l := utf8.RuneCountInString(m.GetLogo()); l < 1 || l > 128 {
 		err := CreateAppRequestValidationError{
-			field:  "Keyword",
-			reason: "value length must be between 1 and 32 runes, inclusive",
+			field:  "Logo",
+			reason: "value length must be between 1 and 128 runes, inclusive",
 		}
 		if !all {
 			return err
@@ -653,16 +1314,58 @@ func (m *CreateAppRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	if m.Private != nil {
-		// no validation rules for Private
+	if l := utf8.RuneCountInString(m.GetKeyword()); l < 1 || l > 32 {
+		err := CreateAppRequestValidationError{
+			field:  "Keyword",
+			reason: "value length must be between 1 and 32 runes, inclusive",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
 	}
 
-	if m.Extra != nil {
-		// no validation rules for Extra
+	// no validation rules for Favicon
+
+	// no validation rules for Secret
+
+	// no validation rules for Private
+
+	if all {
+		switch v := interface{}(m.GetSetting()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, CreateAppRequestValidationError{
+					field:  "Setting",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, CreateAppRequestValidationError{
+					field:  "Setting",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetSetting()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return CreateAppRequestValidationError{
+				field:  "Setting",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
 	}
 
 	if m.Description != nil {
 		// no validation rules for Description
+	}
+
+	if m.Comment != nil {
+		// no validation rules for Comment
 	}
 
 	if len(errors) > 0 {
@@ -878,6 +1581,19 @@ func (m *UpdateAppRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
+	if m.Type != nil {
+		if utf8.RuneCountInString(m.GetType()) > 128 {
+			err := UpdateAppRequestValidationError{
+				field:  "Type",
+				reason: "value length must be at most 128 runes",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+	}
+
 	if m.Logo != nil {
 		if utf8.RuneCountInString(m.GetLogo()) > 128 {
 			err := UpdateAppRequestValidationError{
@@ -891,11 +1607,24 @@ func (m *UpdateAppRequest) validate(all bool) error {
 		}
 	}
 
-	if m.Keyword != nil {
-		if utf8.RuneCountInString(m.GetKeyword()) > 32 {
+	if m.Favicon != nil {
+		if utf8.RuneCountInString(m.GetFavicon()) > 128 {
 			err := UpdateAppRequestValidationError{
-				field:  "Keyword",
-				reason: "value length must be at most 32 runes",
+				field:  "Favicon",
+				reason: "value length must be at most 128 runes",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+	}
+
+	if m.Secret != nil {
+		if utf8.RuneCountInString(m.GetSecret()) > 128 {
+			err := UpdateAppRequestValidationError{
+				field:  "Secret",
+				reason: "value length must be at most 128 runes",
 			}
 			if !all {
 				return err
@@ -917,20 +1646,55 @@ func (m *UpdateAppRequest) validate(all bool) error {
 		}
 	}
 
-	if m.Status != nil {
-		// no validation rules for Status
-	}
-
 	if m.Private != nil {
 		// no validation rules for Private
 	}
 
-	if m.Extra != nil {
-		// no validation rules for Extra
+	if m.Status != nil {
+		// no validation rules for Status
+	}
+
+	if m.Reason != nil {
+		// no validation rules for Reason
 	}
 
 	if m.Description != nil {
 		// no validation rules for Description
+	}
+
+	if m.Comment != nil {
+		// no validation rules for Comment
+	}
+
+	if m.Setting != nil {
+		if all {
+			switch v := interface{}(m.GetSetting()).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, UpdateAppRequestValidationError{
+						field:  "Setting",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, UpdateAppRequestValidationError{
+						field:  "Setting",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(m.GetSetting()).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return UpdateAppRequestValidationError{
+					field:  "Setting",
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
 	}
 
 	if len(errors) > 0 {
@@ -1322,1136 +2086,71 @@ var _ interface {
 	ErrorName() string
 } = DeleteAppReplyValidationError{}
 
-// Validate checks the field values on ListAppOAuthChannelRequest with the
-// rules defined in the proto definition for this message. If any rules are
-// violated, the first error encountered is returned, or nil if there are no violations.
-func (m *ListAppOAuthChannelRequest) Validate() error {
-	return m.validate(false)
-}
-
-// ValidateAll checks the field values on ListAppOAuthChannelRequest with the
-// rules defined in the proto definition for this message. If any rules are
-// violated, the result is a list of violation errors wrapped in
-// ListAppOAuthChannelRequestMultiError, or nil if none found.
-func (m *ListAppOAuthChannelRequest) ValidateAll() error {
-	return m.validate(true)
-}
-
-func (m *ListAppOAuthChannelRequest) validate(all bool) error {
-	if m == nil {
-		return nil
-	}
-
-	var errors []error
-
-	if m.GetPage() < 1 {
-		err := ListAppOAuthChannelRequestValidationError{
-			field:  "Page",
-			reason: "value must be greater than or equal to 1",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if val := m.GetPageSize(); val < 1 || val > 50 {
-		err := ListAppOAuthChannelRequestValidationError{
-			field:  "PageSize",
-			reason: "value must be inside range [1, 50]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if m.GetAppId() < 1 {
-		err := ListAppOAuthChannelRequestValidationError{
-			field:  "AppId",
-			reason: "value must be greater than or equal to 1",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if m.Order != nil {
-		if _, ok := _ListAppOAuthChannelRequest_Order_InLookup[m.GetOrder()]; !ok {
-			err := ListAppOAuthChannelRequestValidationError{
-				field:  "Order",
-				reason: "value must be in list [asc desc]",
-			}
-			if !all {
-				return err
-			}
-			errors = append(errors, err)
-		}
-	}
-
-	if m.OrderBy != nil {
-		if _, ok := _ListAppOAuthChannelRequest_OrderBy_InLookup[m.GetOrderBy()]; !ok {
-			err := ListAppOAuthChannelRequestValidationError{
-				field:  "OrderBy",
-				reason: "value must be in list [id created_at updated_at]",
-			}
-			if !all {
-				return err
-			}
-			errors = append(errors, err)
-		}
-	}
-
-	if m.Keyword != nil {
-		// no validation rules for Keyword
-	}
-
-	if m.Name != nil {
-		// no validation rules for Name
-	}
-
-	if len(errors) > 0 {
-		return ListAppOAuthChannelRequestMultiError(errors)
-	}
-
-	return nil
-}
-
-// ListAppOAuthChannelRequestMultiError is an error wrapping multiple
-// validation errors returned by ListAppOAuthChannelRequest.ValidateAll() if
-// the designated constraints aren't met.
-type ListAppOAuthChannelRequestMultiError []error
-
-// Error returns a concatenation of all the error messages it wraps.
-func (m ListAppOAuthChannelRequestMultiError) Error() string {
-	var msgs []string
-	for _, err := range m {
-		msgs = append(msgs, err.Error())
-	}
-	return strings.Join(msgs, "; ")
-}
-
-// AllErrors returns a list of validation violation errors.
-func (m ListAppOAuthChannelRequestMultiError) AllErrors() []error { return m }
-
-// ListAppOAuthChannelRequestValidationError is the validation error returned
-// by ListAppOAuthChannelRequest.Validate if the designated constraints aren't met.
-type ListAppOAuthChannelRequestValidationError struct {
-	field  string
-	reason string
-	cause  error
-	key    bool
-}
-
-// Field function returns field value.
-func (e ListAppOAuthChannelRequestValidationError) Field() string { return e.field }
-
-// Reason function returns reason value.
-func (e ListAppOAuthChannelRequestValidationError) Reason() string { return e.reason }
-
-// Cause function returns cause value.
-func (e ListAppOAuthChannelRequestValidationError) Cause() error { return e.cause }
-
-// Key function returns key value.
-func (e ListAppOAuthChannelRequestValidationError) Key() bool { return e.key }
-
-// ErrorName returns error name.
-func (e ListAppOAuthChannelRequestValidationError) ErrorName() string {
-	return "ListAppOAuthChannelRequestValidationError"
-}
-
-// Error satisfies the builtin error interface
-func (e ListAppOAuthChannelRequestValidationError) Error() string {
-	cause := ""
-	if e.cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.cause)
-	}
-
-	key := ""
-	if e.key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %sListAppOAuthChannelRequest.%s: %s%s",
-		key,
-		e.field,
-		e.reason,
-		cause)
-}
-
-var _ error = ListAppOAuthChannelRequestValidationError{}
-
-var _ interface {
-	Field() string
-	Reason() string
-	Key() bool
-	Cause() error
-	ErrorName() string
-} = ListAppOAuthChannelRequestValidationError{}
-
-var _ListAppOAuthChannelRequest_Order_InLookup = map[string]struct{}{
-	"asc":  {},
-	"desc": {},
-}
-
-var _ListAppOAuthChannelRequest_OrderBy_InLookup = map[string]struct{}{
-	"id":         {},
-	"created_at": {},
-	"updated_at": {},
-}
-
-// Validate checks the field values on ListAppOAuthChannelReply with the rules
+// Validate checks the field values on GetSampleAppReply_Setting with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
-func (m *ListAppOAuthChannelReply) Validate() error {
+func (m *GetSampleAppReply_Setting) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on ListAppOAuthChannelReply with the
+// ValidateAll checks the field values on GetSampleAppReply_Setting with the
 // rules defined in the proto definition for this message. If any rules are
 // violated, the result is a list of violation errors wrapped in
-// ListAppOAuthChannelReplyMultiError, or nil if none found.
-func (m *ListAppOAuthChannelReply) ValidateAll() error {
+// GetSampleAppReply_SettingMultiError, or nil if none found.
+func (m *GetSampleAppReply_Setting) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *ListAppOAuthChannelReply) validate(all bool) error {
+func (m *GetSampleAppReply_Setting) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
 
 	var errors []error
 
-	// no validation rules for Total
-
-	for idx, item := range m.GetList() {
-		_, _ = idx, item
-
-		if all {
-			switch v := interface{}(item).(type) {
-			case interface{ ValidateAll() error }:
-				if err := v.ValidateAll(); err != nil {
-					errors = append(errors, ListAppOAuthChannelReplyValidationError{
-						field:  fmt.Sprintf("List[%v]", idx),
-						reason: "embedded message failed validation",
-						cause:  err,
-					})
-				}
-			case interface{ Validate() error }:
-				if err := v.Validate(); err != nil {
-					errors = append(errors, ListAppOAuthChannelReplyValidationError{
-						field:  fmt.Sprintf("List[%v]", idx),
-						reason: "embedded message failed validation",
-						cause:  err,
-					})
-				}
-			}
-		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
-			if err := v.Validate(); err != nil {
-				return ListAppOAuthChannelReplyValidationError{
-					field:  fmt.Sprintf("List[%v]", idx),
+	if all {
+		switch v := interface{}(m.GetTenant()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, GetSampleAppReply_SettingValidationError{
+					field:  "Tenant",
 					reason: "embedded message failed validation",
 					cause:  err,
-				}
+				})
 			}
-		}
-
-	}
-
-	if len(errors) > 0 {
-		return ListAppOAuthChannelReplyMultiError(errors)
-	}
-
-	return nil
-}
-
-// ListAppOAuthChannelReplyMultiError is an error wrapping multiple validation
-// errors returned by ListAppOAuthChannelReply.ValidateAll() if the designated
-// constraints aren't met.
-type ListAppOAuthChannelReplyMultiError []error
-
-// Error returns a concatenation of all the error messages it wraps.
-func (m ListAppOAuthChannelReplyMultiError) Error() string {
-	var msgs []string
-	for _, err := range m {
-		msgs = append(msgs, err.Error())
-	}
-	return strings.Join(msgs, "; ")
-}
-
-// AllErrors returns a list of validation violation errors.
-func (m ListAppOAuthChannelReplyMultiError) AllErrors() []error { return m }
-
-// ListAppOAuthChannelReplyValidationError is the validation error returned by
-// ListAppOAuthChannelReply.Validate if the designated constraints aren't met.
-type ListAppOAuthChannelReplyValidationError struct {
-	field  string
-	reason string
-	cause  error
-	key    bool
-}
-
-// Field function returns field value.
-func (e ListAppOAuthChannelReplyValidationError) Field() string { return e.field }
-
-// Reason function returns reason value.
-func (e ListAppOAuthChannelReplyValidationError) Reason() string { return e.reason }
-
-// Cause function returns cause value.
-func (e ListAppOAuthChannelReplyValidationError) Cause() error { return e.cause }
-
-// Key function returns key value.
-func (e ListAppOAuthChannelReplyValidationError) Key() bool { return e.key }
-
-// ErrorName returns error name.
-func (e ListAppOAuthChannelReplyValidationError) ErrorName() string {
-	return "ListAppOAuthChannelReplyValidationError"
-}
-
-// Error satisfies the builtin error interface
-func (e ListAppOAuthChannelReplyValidationError) Error() string {
-	cause := ""
-	if e.cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.cause)
-	}
-
-	key := ""
-	if e.key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %sListAppOAuthChannelReply.%s: %s%s",
-		key,
-		e.field,
-		e.reason,
-		cause)
-}
-
-var _ error = ListAppOAuthChannelReplyValidationError{}
-
-var _ interface {
-	Field() string
-	Reason() string
-	Key() bool
-	Cause() error
-	ErrorName() string
-} = ListAppOAuthChannelReplyValidationError{}
-
-// Validate checks the field values on ListTenantAppOAuthChannelRequest with
-// the rules defined in the proto definition for this message. If any rules
-// are violated, the first error encountered is returned, or nil if there are
-// no violations.
-func (m *ListTenantAppOAuthChannelRequest) Validate() error {
-	return m.validate(false)
-}
-
-// ValidateAll checks the field values on ListTenantAppOAuthChannelRequest with
-// the rules defined in the proto definition for this message. If any rules
-// are violated, the result is a list of violation errors wrapped in
-// ListTenantAppOAuthChannelRequestMultiError, or nil if none found.
-func (m *ListTenantAppOAuthChannelRequest) ValidateAll() error {
-	return m.validate(true)
-}
-
-func (m *ListTenantAppOAuthChannelRequest) validate(all bool) error {
-	if m == nil {
-		return nil
-	}
-
-	var errors []error
-
-	if utf8.RuneCountInString(m.GetApp()) < 1 {
-		err := ListTenantAppOAuthChannelRequestValidationError{
-			field:  "App",
-			reason: "value length must be at least 1 runes",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if utf8.RuneCountInString(m.GetTenant()) < 1 {
-		err := ListTenantAppOAuthChannelRequestValidationError{
-			field:  "Tenant",
-			reason: "value length must be at least 1 runes",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if len(errors) > 0 {
-		return ListTenantAppOAuthChannelRequestMultiError(errors)
-	}
-
-	return nil
-}
-
-// ListTenantAppOAuthChannelRequestMultiError is an error wrapping multiple
-// validation errors returned by
-// ListTenantAppOAuthChannelRequest.ValidateAll() if the designated
-// constraints aren't met.
-type ListTenantAppOAuthChannelRequestMultiError []error
-
-// Error returns a concatenation of all the error messages it wraps.
-func (m ListTenantAppOAuthChannelRequestMultiError) Error() string {
-	var msgs []string
-	for _, err := range m {
-		msgs = append(msgs, err.Error())
-	}
-	return strings.Join(msgs, "; ")
-}
-
-// AllErrors returns a list of validation violation errors.
-func (m ListTenantAppOAuthChannelRequestMultiError) AllErrors() []error { return m }
-
-// ListTenantAppOAuthChannelRequestValidationError is the validation error
-// returned by ListTenantAppOAuthChannelRequest.Validate if the designated
-// constraints aren't met.
-type ListTenantAppOAuthChannelRequestValidationError struct {
-	field  string
-	reason string
-	cause  error
-	key    bool
-}
-
-// Field function returns field value.
-func (e ListTenantAppOAuthChannelRequestValidationError) Field() string { return e.field }
-
-// Reason function returns reason value.
-func (e ListTenantAppOAuthChannelRequestValidationError) Reason() string { return e.reason }
-
-// Cause function returns cause value.
-func (e ListTenantAppOAuthChannelRequestValidationError) Cause() error { return e.cause }
-
-// Key function returns key value.
-func (e ListTenantAppOAuthChannelRequestValidationError) Key() bool { return e.key }
-
-// ErrorName returns error name.
-func (e ListTenantAppOAuthChannelRequestValidationError) ErrorName() string {
-	return "ListTenantAppOAuthChannelRequestValidationError"
-}
-
-// Error satisfies the builtin error interface
-func (e ListTenantAppOAuthChannelRequestValidationError) Error() string {
-	cause := ""
-	if e.cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.cause)
-	}
-
-	key := ""
-	if e.key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %sListTenantAppOAuthChannelRequest.%s: %s%s",
-		key,
-		e.field,
-		e.reason,
-		cause)
-}
-
-var _ error = ListTenantAppOAuthChannelRequestValidationError{}
-
-var _ interface {
-	Field() string
-	Reason() string
-	Key() bool
-	Cause() error
-	ErrorName() string
-} = ListTenantAppOAuthChannelRequestValidationError{}
-
-// Validate checks the field values on ListTenantAppOAuthChannelReply with the
-// rules defined in the proto definition for this message. If any rules are
-// violated, the first error encountered is returned, or nil if there are no violations.
-func (m *ListTenantAppOAuthChannelReply) Validate() error {
-	return m.validate(false)
-}
-
-// ValidateAll checks the field values on ListTenantAppOAuthChannelReply with
-// the rules defined in the proto definition for this message. If any rules
-// are violated, the result is a list of violation errors wrapped in
-// ListTenantAppOAuthChannelReplyMultiError, or nil if none found.
-func (m *ListTenantAppOAuthChannelReply) ValidateAll() error {
-	return m.validate(true)
-}
-
-func (m *ListTenantAppOAuthChannelReply) validate(all bool) error {
-	if m == nil {
-		return nil
-	}
-
-	var errors []error
-
-	for idx, item := range m.GetList() {
-		_, _ = idx, item
-
-		if all {
-			switch v := interface{}(item).(type) {
-			case interface{ ValidateAll() error }:
-				if err := v.ValidateAll(); err != nil {
-					errors = append(errors, ListTenantAppOAuthChannelReplyValidationError{
-						field:  fmt.Sprintf("List[%v]", idx),
-						reason: "embedded message failed validation",
-						cause:  err,
-					})
-				}
-			case interface{ Validate() error }:
-				if err := v.Validate(); err != nil {
-					errors = append(errors, ListTenantAppOAuthChannelReplyValidationError{
-						field:  fmt.Sprintf("List[%v]", idx),
-						reason: "embedded message failed validation",
-						cause:  err,
-					})
-				}
-			}
-		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+		case interface{ Validate() error }:
 			if err := v.Validate(); err != nil {
-				return ListTenantAppOAuthChannelReplyValidationError{
-					field:  fmt.Sprintf("List[%v]", idx),
+				errors = append(errors, GetSampleAppReply_SettingValidationError{
+					field:  "Tenant",
 					reason: "embedded message failed validation",
 					cause:  err,
-				}
+				})
 			}
 		}
-
-	}
-
-	if len(errors) > 0 {
-		return ListTenantAppOAuthChannelReplyMultiError(errors)
-	}
-
-	return nil
-}
-
-// ListTenantAppOAuthChannelReplyMultiError is an error wrapping multiple
-// validation errors returned by ListTenantAppOAuthChannelReply.ValidateAll()
-// if the designated constraints aren't met.
-type ListTenantAppOAuthChannelReplyMultiError []error
-
-// Error returns a concatenation of all the error messages it wraps.
-func (m ListTenantAppOAuthChannelReplyMultiError) Error() string {
-	var msgs []string
-	for _, err := range m {
-		msgs = append(msgs, err.Error())
-	}
-	return strings.Join(msgs, "; ")
-}
-
-// AllErrors returns a list of validation violation errors.
-func (m ListTenantAppOAuthChannelReplyMultiError) AllErrors() []error { return m }
-
-// ListTenantAppOAuthChannelReplyValidationError is the validation error
-// returned by ListTenantAppOAuthChannelReply.Validate if the designated
-// constraints aren't met.
-type ListTenantAppOAuthChannelReplyValidationError struct {
-	field  string
-	reason string
-	cause  error
-	key    bool
-}
-
-// Field function returns field value.
-func (e ListTenantAppOAuthChannelReplyValidationError) Field() string { return e.field }
-
-// Reason function returns reason value.
-func (e ListTenantAppOAuthChannelReplyValidationError) Reason() string { return e.reason }
-
-// Cause function returns cause value.
-func (e ListTenantAppOAuthChannelReplyValidationError) Cause() error { return e.cause }
-
-// Key function returns key value.
-func (e ListTenantAppOAuthChannelReplyValidationError) Key() bool { return e.key }
-
-// ErrorName returns error name.
-func (e ListTenantAppOAuthChannelReplyValidationError) ErrorName() string {
-	return "ListTenantAppOAuthChannelReplyValidationError"
-}
-
-// Error satisfies the builtin error interface
-func (e ListTenantAppOAuthChannelReplyValidationError) Error() string {
-	cause := ""
-	if e.cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.cause)
-	}
-
-	key := ""
-	if e.key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %sListTenantAppOAuthChannelReply.%s: %s%s",
-		key,
-		e.field,
-		e.reason,
-		cause)
-}
-
-var _ error = ListTenantAppOAuthChannelReplyValidationError{}
-
-var _ interface {
-	Field() string
-	Reason() string
-	Key() bool
-	Cause() error
-	ErrorName() string
-} = ListTenantAppOAuthChannelReplyValidationError{}
-
-// Validate checks the field values on CreateAppOAuthChannelRequest with the
-// rules defined in the proto definition for this message. If any rules are
-// violated, the first error encountered is returned, or nil if there are no violations.
-func (m *CreateAppOAuthChannelRequest) Validate() error {
-	return m.validate(false)
-}
-
-// ValidateAll checks the field values on CreateAppOAuthChannelRequest with the
-// rules defined in the proto definition for this message. If any rules are
-// violated, the result is a list of violation errors wrapped in
-// CreateAppOAuthChannelRequestMultiError, or nil if none found.
-func (m *CreateAppOAuthChannelRequest) ValidateAll() error {
-	return m.validate(true)
-}
-
-func (m *CreateAppOAuthChannelRequest) validate(all bool) error {
-	if m == nil {
-		return nil
-	}
-
-	var errors []error
-
-	if m.GetAppId() < 1 {
-		err := CreateAppOAuthChannelRequestValidationError{
-			field:  "AppId",
-			reason: "value must be greater than or equal to 1",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if m.GetChannelId() < 1 {
-		err := CreateAppOAuthChannelRequestValidationError{
-			field:  "ChannelId",
-			reason: "value must be greater than or equal to 1",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if len(errors) > 0 {
-		return CreateAppOAuthChannelRequestMultiError(errors)
-	}
-
-	return nil
-}
-
-// CreateAppOAuthChannelRequestMultiError is an error wrapping multiple
-// validation errors returned by CreateAppOAuthChannelRequest.ValidateAll() if
-// the designated constraints aren't met.
-type CreateAppOAuthChannelRequestMultiError []error
-
-// Error returns a concatenation of all the error messages it wraps.
-func (m CreateAppOAuthChannelRequestMultiError) Error() string {
-	var msgs []string
-	for _, err := range m {
-		msgs = append(msgs, err.Error())
-	}
-	return strings.Join(msgs, "; ")
-}
-
-// AllErrors returns a list of validation violation errors.
-func (m CreateAppOAuthChannelRequestMultiError) AllErrors() []error { return m }
-
-// CreateAppOAuthChannelRequestValidationError is the validation error returned
-// by CreateAppOAuthChannelRequest.Validate if the designated constraints
-// aren't met.
-type CreateAppOAuthChannelRequestValidationError struct {
-	field  string
-	reason string
-	cause  error
-	key    bool
-}
-
-// Field function returns field value.
-func (e CreateAppOAuthChannelRequestValidationError) Field() string { return e.field }
-
-// Reason function returns reason value.
-func (e CreateAppOAuthChannelRequestValidationError) Reason() string { return e.reason }
-
-// Cause function returns cause value.
-func (e CreateAppOAuthChannelRequestValidationError) Cause() error { return e.cause }
-
-// Key function returns key value.
-func (e CreateAppOAuthChannelRequestValidationError) Key() bool { return e.key }
-
-// ErrorName returns error name.
-func (e CreateAppOAuthChannelRequestValidationError) ErrorName() string {
-	return "CreateAppOAuthChannelRequestValidationError"
-}
-
-// Error satisfies the builtin error interface
-func (e CreateAppOAuthChannelRequestValidationError) Error() string {
-	cause := ""
-	if e.cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.cause)
-	}
-
-	key := ""
-	if e.key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %sCreateAppOAuthChannelRequest.%s: %s%s",
-		key,
-		e.field,
-		e.reason,
-		cause)
-}
-
-var _ error = CreateAppOAuthChannelRequestValidationError{}
-
-var _ interface {
-	Field() string
-	Reason() string
-	Key() bool
-	Cause() error
-	ErrorName() string
-} = CreateAppOAuthChannelRequestValidationError{}
-
-// Validate checks the field values on CreateAppOAuthChannelReply with the
-// rules defined in the proto definition for this message. If any rules are
-// violated, the first error encountered is returned, or nil if there are no violations.
-func (m *CreateAppOAuthChannelReply) Validate() error {
-	return m.validate(false)
-}
-
-// ValidateAll checks the field values on CreateAppOAuthChannelReply with the
-// rules defined in the proto definition for this message. If any rules are
-// violated, the result is a list of violation errors wrapped in
-// CreateAppOAuthChannelReplyMultiError, or nil if none found.
-func (m *CreateAppOAuthChannelReply) ValidateAll() error {
-	return m.validate(true)
-}
-
-func (m *CreateAppOAuthChannelReply) validate(all bool) error {
-	if m == nil {
-		return nil
-	}
-
-	var errors []error
-
-	// no validation rules for Id
-
-	if len(errors) > 0 {
-		return CreateAppOAuthChannelReplyMultiError(errors)
-	}
-
-	return nil
-}
-
-// CreateAppOAuthChannelReplyMultiError is an error wrapping multiple
-// validation errors returned by CreateAppOAuthChannelReply.ValidateAll() if
-// the designated constraints aren't met.
-type CreateAppOAuthChannelReplyMultiError []error
-
-// Error returns a concatenation of all the error messages it wraps.
-func (m CreateAppOAuthChannelReplyMultiError) Error() string {
-	var msgs []string
-	for _, err := range m {
-		msgs = append(msgs, err.Error())
-	}
-	return strings.Join(msgs, "; ")
-}
-
-// AllErrors returns a list of validation violation errors.
-func (m CreateAppOAuthChannelReplyMultiError) AllErrors() []error { return m }
-
-// CreateAppOAuthChannelReplyValidationError is the validation error returned
-// by CreateAppOAuthChannelReply.Validate if the designated constraints aren't met.
-type CreateAppOAuthChannelReplyValidationError struct {
-	field  string
-	reason string
-	cause  error
-	key    bool
-}
-
-// Field function returns field value.
-func (e CreateAppOAuthChannelReplyValidationError) Field() string { return e.field }
-
-// Reason function returns reason value.
-func (e CreateAppOAuthChannelReplyValidationError) Reason() string { return e.reason }
-
-// Cause function returns cause value.
-func (e CreateAppOAuthChannelReplyValidationError) Cause() error { return e.cause }
-
-// Key function returns key value.
-func (e CreateAppOAuthChannelReplyValidationError) Key() bool { return e.key }
-
-// ErrorName returns error name.
-func (e CreateAppOAuthChannelReplyValidationError) ErrorName() string {
-	return "CreateAppOAuthChannelReplyValidationError"
-}
-
-// Error satisfies the builtin error interface
-func (e CreateAppOAuthChannelReplyValidationError) Error() string {
-	cause := ""
-	if e.cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.cause)
-	}
-
-	key := ""
-	if e.key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %sCreateAppOAuthChannelReply.%s: %s%s",
-		key,
-		e.field,
-		e.reason,
-		cause)
-}
-
-var _ error = CreateAppOAuthChannelReplyValidationError{}
-
-var _ interface {
-	Field() string
-	Reason() string
-	Key() bool
-	Cause() error
-	ErrorName() string
-} = CreateAppOAuthChannelReplyValidationError{}
-
-// Validate checks the field values on DeleteAppOAuthChannelRequest with the
-// rules defined in the proto definition for this message. If any rules are
-// violated, the first error encountered is returned, or nil if there are no violations.
-func (m *DeleteAppOAuthChannelRequest) Validate() error {
-	return m.validate(false)
-}
-
-// ValidateAll checks the field values on DeleteAppOAuthChannelRequest with the
-// rules defined in the proto definition for this message. If any rules are
-// violated, the result is a list of violation errors wrapped in
-// DeleteAppOAuthChannelRequestMultiError, or nil if none found.
-func (m *DeleteAppOAuthChannelRequest) ValidateAll() error {
-	return m.validate(true)
-}
-
-func (m *DeleteAppOAuthChannelRequest) validate(all bool) error {
-	if m == nil {
-		return nil
-	}
-
-	var errors []error
-
-	if m.GetId() <= 0 {
-		err := DeleteAppOAuthChannelRequestValidationError{
-			field:  "Id",
-			reason: "value must be greater than 0",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if len(errors) > 0 {
-		return DeleteAppOAuthChannelRequestMultiError(errors)
-	}
-
-	return nil
-}
-
-// DeleteAppOAuthChannelRequestMultiError is an error wrapping multiple
-// validation errors returned by DeleteAppOAuthChannelRequest.ValidateAll() if
-// the designated constraints aren't met.
-type DeleteAppOAuthChannelRequestMultiError []error
-
-// Error returns a concatenation of all the error messages it wraps.
-func (m DeleteAppOAuthChannelRequestMultiError) Error() string {
-	var msgs []string
-	for _, err := range m {
-		msgs = append(msgs, err.Error())
-	}
-	return strings.Join(msgs, "; ")
-}
-
-// AllErrors returns a list of validation violation errors.
-func (m DeleteAppOAuthChannelRequestMultiError) AllErrors() []error { return m }
-
-// DeleteAppOAuthChannelRequestValidationError is the validation error returned
-// by DeleteAppOAuthChannelRequest.Validate if the designated constraints
-// aren't met.
-type DeleteAppOAuthChannelRequestValidationError struct {
-	field  string
-	reason string
-	cause  error
-	key    bool
-}
-
-// Field function returns field value.
-func (e DeleteAppOAuthChannelRequestValidationError) Field() string { return e.field }
-
-// Reason function returns reason value.
-func (e DeleteAppOAuthChannelRequestValidationError) Reason() string { return e.reason }
-
-// Cause function returns cause value.
-func (e DeleteAppOAuthChannelRequestValidationError) Cause() error { return e.cause }
-
-// Key function returns key value.
-func (e DeleteAppOAuthChannelRequestValidationError) Key() bool { return e.key }
-
-// ErrorName returns error name.
-func (e DeleteAppOAuthChannelRequestValidationError) ErrorName() string {
-	return "DeleteAppOAuthChannelRequestValidationError"
-}
-
-// Error satisfies the builtin error interface
-func (e DeleteAppOAuthChannelRequestValidationError) Error() string {
-	cause := ""
-	if e.cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.cause)
-	}
-
-	key := ""
-	if e.key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %sDeleteAppOAuthChannelRequest.%s: %s%s",
-		key,
-		e.field,
-		e.reason,
-		cause)
-}
-
-var _ error = DeleteAppOAuthChannelRequestValidationError{}
-
-var _ interface {
-	Field() string
-	Reason() string
-	Key() bool
-	Cause() error
-	ErrorName() string
-} = DeleteAppOAuthChannelRequestValidationError{}
-
-// Validate checks the field values on DeleteAppOAuthChannelReply with the
-// rules defined in the proto definition for this message. If any rules are
-// violated, the first error encountered is returned, or nil if there are no violations.
-func (m *DeleteAppOAuthChannelReply) Validate() error {
-	return m.validate(false)
-}
-
-// ValidateAll checks the field values on DeleteAppOAuthChannelReply with the
-// rules defined in the proto definition for this message. If any rules are
-// violated, the result is a list of violation errors wrapped in
-// DeleteAppOAuthChannelReplyMultiError, or nil if none found.
-func (m *DeleteAppOAuthChannelReply) ValidateAll() error {
-	return m.validate(true)
-}
-
-func (m *DeleteAppOAuthChannelReply) validate(all bool) error {
-	if m == nil {
-		return nil
-	}
-
-	var errors []error
-
-	if len(errors) > 0 {
-		return DeleteAppOAuthChannelReplyMultiError(errors)
-	}
-
-	return nil
-}
-
-// DeleteAppOAuthChannelReplyMultiError is an error wrapping multiple
-// validation errors returned by DeleteAppOAuthChannelReply.ValidateAll() if
-// the designated constraints aren't met.
-type DeleteAppOAuthChannelReplyMultiError []error
-
-// Error returns a concatenation of all the error messages it wraps.
-func (m DeleteAppOAuthChannelReplyMultiError) Error() string {
-	var msgs []string
-	for _, err := range m {
-		msgs = append(msgs, err.Error())
-	}
-	return strings.Join(msgs, "; ")
-}
-
-// AllErrors returns a list of validation violation errors.
-func (m DeleteAppOAuthChannelReplyMultiError) AllErrors() []error { return m }
-
-// DeleteAppOAuthChannelReplyValidationError is the validation error returned
-// by DeleteAppOAuthChannelReply.Validate if the designated constraints aren't met.
-type DeleteAppOAuthChannelReplyValidationError struct {
-	field  string
-	reason string
-	cause  error
-	key    bool
-}
-
-// Field function returns field value.
-func (e DeleteAppOAuthChannelReplyValidationError) Field() string { return e.field }
-
-// Reason function returns reason value.
-func (e DeleteAppOAuthChannelReplyValidationError) Reason() string { return e.reason }
-
-// Cause function returns cause value.
-func (e DeleteAppOAuthChannelReplyValidationError) Cause() error { return e.cause }
-
-// Key function returns key value.
-func (e DeleteAppOAuthChannelReplyValidationError) Key() bool { return e.key }
-
-// ErrorName returns error name.
-func (e DeleteAppOAuthChannelReplyValidationError) ErrorName() string {
-	return "DeleteAppOAuthChannelReplyValidationError"
-}
-
-// Error satisfies the builtin error interface
-func (e DeleteAppOAuthChannelReplyValidationError) Error() string {
-	cause := ""
-	if e.cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.cause)
-	}
-
-	key := ""
-	if e.key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %sDeleteAppOAuthChannelReply.%s: %s%s",
-		key,
-		e.field,
-		e.reason,
-		cause)
-}
-
-var _ error = DeleteAppOAuthChannelReplyValidationError{}
-
-var _ interface {
-	Field() string
-	Reason() string
-	Key() bool
-	Cause() error
-	ErrorName() string
-} = DeleteAppOAuthChannelReplyValidationError{}
-
-// Validate checks the field values on ListAppFieldRequest with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the first error encountered is returned, or nil if there are no violations.
-func (m *ListAppFieldRequest) Validate() error {
-	return m.validate(false)
-}
-
-// ValidateAll checks the field values on ListAppFieldRequest with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the result is a list of violation errors wrapped in
-// ListAppFieldRequestMultiError, or nil if none found.
-func (m *ListAppFieldRequest) ValidateAll() error {
-	return m.validate(true)
-}
-
-func (m *ListAppFieldRequest) validate(all bool) error {
-	if m == nil {
-		return nil
-	}
-
-	var errors []error
-
-	if m.GetPage() < 1 {
-		err := ListAppFieldRequestValidationError{
-			field:  "Page",
-			reason: "value must be greater than or equal to 1",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if val := m.GetPageSize(); val < 1 || val > 50 {
-		err := ListAppFieldRequestValidationError{
-			field:  "PageSize",
-			reason: "value must be inside range [1, 50]",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if m.GetAppId() < 1 {
-		err := ListAppFieldRequestValidationError{
-			field:  "AppId",
-			reason: "value must be greater than or equal to 1",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if m.Order != nil {
-		if _, ok := _ListAppFieldRequest_Order_InLookup[m.GetOrder()]; !ok {
-			err := ListAppFieldRequestValidationError{
-				field:  "Order",
-				reason: "value must be in list [asc desc]",
+	} else if v, ok := interface{}(m.GetTenant()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return GetSampleAppReply_SettingValidationError{
+				field:  "Tenant",
+				reason: "embedded message failed validation",
+				cause:  err,
 			}
-			if !all {
-				return err
-			}
-			errors = append(errors, err)
 		}
-	}
-
-	if m.OrderBy != nil {
-		if _, ok := _ListAppFieldRequest_OrderBy_InLookup[m.GetOrderBy()]; !ok {
-			err := ListAppFieldRequestValidationError{
-				field:  "OrderBy",
-				reason: "value must be in list [id created_at updated_at]",
-			}
-			if !all {
-				return err
-			}
-			errors = append(errors, err)
-		}
-	}
-
-	if m.Keyword != nil {
-		// no validation rules for Keyword
-	}
-
-	if m.Name != nil {
-		// no validation rules for Name
 	}
 
 	if len(errors) > 0 {
-		return ListAppFieldRequestMultiError(errors)
+		return GetSampleAppReply_SettingMultiError(errors)
 	}
 
 	return nil
 }
 
-// ListAppFieldRequestMultiError is an error wrapping multiple validation
-// errors returned by ListAppFieldRequest.ValidateAll() if the designated
-// constraints aren't met.
-type ListAppFieldRequestMultiError []error
+// GetSampleAppReply_SettingMultiError is an error wrapping multiple validation
+// errors returned by GetSampleAppReply_Setting.ValidateAll() if the
+// designated constraints aren't met.
+type GetSampleAppReply_SettingMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m ListAppFieldRequestMultiError) Error() string {
+func (m GetSampleAppReply_SettingMultiError) Error() string {
 	var msgs []string
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -2460,11 +2159,11 @@ func (m ListAppFieldRequestMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m ListAppFieldRequestMultiError) AllErrors() []error { return m }
+func (m GetSampleAppReply_SettingMultiError) AllErrors() []error { return m }
 
-// ListAppFieldRequestValidationError is the validation error returned by
-// ListAppFieldRequest.Validate if the designated constraints aren't met.
-type ListAppFieldRequestValidationError struct {
+// GetSampleAppReply_SettingValidationError is the validation error returned by
+// GetSampleAppReply_Setting.Validate if the designated constraints aren't met.
+type GetSampleAppReply_SettingValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -2472,24 +2171,24 @@ type ListAppFieldRequestValidationError struct {
 }
 
 // Field function returns field value.
-func (e ListAppFieldRequestValidationError) Field() string { return e.field }
+func (e GetSampleAppReply_SettingValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e ListAppFieldRequestValidationError) Reason() string { return e.reason }
+func (e GetSampleAppReply_SettingValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e ListAppFieldRequestValidationError) Cause() error { return e.cause }
+func (e GetSampleAppReply_SettingValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e ListAppFieldRequestValidationError) Key() bool { return e.key }
+func (e GetSampleAppReply_SettingValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e ListAppFieldRequestValidationError) ErrorName() string {
-	return "ListAppFieldRequestValidationError"
+func (e GetSampleAppReply_SettingValidationError) ErrorName() string {
+	return "GetSampleAppReply_SettingValidationError"
 }
 
 // Error satisfies the builtin error interface
-func (e ListAppFieldRequestValidationError) Error() string {
+func (e GetSampleAppReply_SettingValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -2501,14 +2200,14 @@ func (e ListAppFieldRequestValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sListAppFieldRequest.%s: %s%s",
+		"invalid %sGetSampleAppReply_Setting.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = ListAppFieldRequestValidationError{}
+var _ error = GetSampleAppReply_SettingValidationError{}
 
 var _ interface {
 	Field() string
@@ -2516,616 +2215,24 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = ListAppFieldRequestValidationError{}
+} = GetSampleAppReply_SettingValidationError{}
 
-var _ListAppFieldRequest_Order_InLookup = map[string]struct{}{
-	"asc":  {},
-	"desc": {},
-}
-
-var _ListAppFieldRequest_OrderBy_InLookup = map[string]struct{}{
-	"id":         {},
-	"created_at": {},
-	"updated_at": {},
-}
-
-// Validate checks the field values on ListAppFieldReply with the rules defined
+// Validate checks the field values on ListAppReply_Data with the rules defined
 // in the proto definition for this message. If any rules are violated, the
 // first error encountered is returned, or nil if there are no violations.
-func (m *ListAppFieldReply) Validate() error {
+func (m *ListAppReply_Data) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on ListAppFieldReply with the rules
+// ValidateAll checks the field values on ListAppReply_Data with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the result is a list of violation errors wrapped in
-// ListAppFieldReplyMultiError, or nil if none found.
-func (m *ListAppFieldReply) ValidateAll() error {
+// ListAppReply_DataMultiError, or nil if none found.
+func (m *ListAppReply_Data) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *ListAppFieldReply) validate(all bool) error {
-	if m == nil {
-		return nil
-	}
-
-	var errors []error
-
-	// no validation rules for Total
-
-	for idx, item := range m.GetList() {
-		_, _ = idx, item
-
-		if all {
-			switch v := interface{}(item).(type) {
-			case interface{ ValidateAll() error }:
-				if err := v.ValidateAll(); err != nil {
-					errors = append(errors, ListAppFieldReplyValidationError{
-						field:  fmt.Sprintf("List[%v]", idx),
-						reason: "embedded message failed validation",
-						cause:  err,
-					})
-				}
-			case interface{ Validate() error }:
-				if err := v.Validate(); err != nil {
-					errors = append(errors, ListAppFieldReplyValidationError{
-						field:  fmt.Sprintf("List[%v]", idx),
-						reason: "embedded message failed validation",
-						cause:  err,
-					})
-				}
-			}
-		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
-			if err := v.Validate(); err != nil {
-				return ListAppFieldReplyValidationError{
-					field:  fmt.Sprintf("List[%v]", idx),
-					reason: "embedded message failed validation",
-					cause:  err,
-				}
-			}
-		}
-
-	}
-
-	if len(errors) > 0 {
-		return ListAppFieldReplyMultiError(errors)
-	}
-
-	return nil
-}
-
-// ListAppFieldReplyMultiError is an error wrapping multiple validation errors
-// returned by ListAppFieldReply.ValidateAll() if the designated constraints
-// aren't met.
-type ListAppFieldReplyMultiError []error
-
-// Error returns a concatenation of all the error messages it wraps.
-func (m ListAppFieldReplyMultiError) Error() string {
-	var msgs []string
-	for _, err := range m {
-		msgs = append(msgs, err.Error())
-	}
-	return strings.Join(msgs, "; ")
-}
-
-// AllErrors returns a list of validation violation errors.
-func (m ListAppFieldReplyMultiError) AllErrors() []error { return m }
-
-// ListAppFieldReplyValidationError is the validation error returned by
-// ListAppFieldReply.Validate if the designated constraints aren't met.
-type ListAppFieldReplyValidationError struct {
-	field  string
-	reason string
-	cause  error
-	key    bool
-}
-
-// Field function returns field value.
-func (e ListAppFieldReplyValidationError) Field() string { return e.field }
-
-// Reason function returns reason value.
-func (e ListAppFieldReplyValidationError) Reason() string { return e.reason }
-
-// Cause function returns cause value.
-func (e ListAppFieldReplyValidationError) Cause() error { return e.cause }
-
-// Key function returns key value.
-func (e ListAppFieldReplyValidationError) Key() bool { return e.key }
-
-// ErrorName returns error name.
-func (e ListAppFieldReplyValidationError) ErrorName() string {
-	return "ListAppFieldReplyValidationError"
-}
-
-// Error satisfies the builtin error interface
-func (e ListAppFieldReplyValidationError) Error() string {
-	cause := ""
-	if e.cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.cause)
-	}
-
-	key := ""
-	if e.key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %sListAppFieldReply.%s: %s%s",
-		key,
-		e.field,
-		e.reason,
-		cause)
-}
-
-var _ error = ListAppFieldReplyValidationError{}
-
-var _ interface {
-	Field() string
-	Reason() string
-	Key() bool
-	Cause() error
-	ErrorName() string
-} = ListAppFieldReplyValidationError{}
-
-// Validate checks the field values on CreateAppFieldRequest with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the first error encountered is returned, or nil if there are no violations.
-func (m *CreateAppFieldRequest) Validate() error {
-	return m.validate(false)
-}
-
-// ValidateAll checks the field values on CreateAppFieldRequest with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the result is a list of violation errors wrapped in
-// CreateAppFieldRequestMultiError, or nil if none found.
-func (m *CreateAppFieldRequest) ValidateAll() error {
-	return m.validate(true)
-}
-
-func (m *CreateAppFieldRequest) validate(all bool) error {
-	if m == nil {
-		return nil
-	}
-
-	var errors []error
-
-	if m.GetAppId() < 1 {
-		err := CreateAppFieldRequestValidationError{
-			field:  "AppId",
-			reason: "value must be greater than or equal to 1",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if m.GetFieldId() < 1 {
-		err := CreateAppFieldRequestValidationError{
-			field:  "FieldId",
-			reason: "value must be greater than or equal to 1",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if len(errors) > 0 {
-		return CreateAppFieldRequestMultiError(errors)
-	}
-
-	return nil
-}
-
-// CreateAppFieldRequestMultiError is an error wrapping multiple validation
-// errors returned by CreateAppFieldRequest.ValidateAll() if the designated
-// constraints aren't met.
-type CreateAppFieldRequestMultiError []error
-
-// Error returns a concatenation of all the error messages it wraps.
-func (m CreateAppFieldRequestMultiError) Error() string {
-	var msgs []string
-	for _, err := range m {
-		msgs = append(msgs, err.Error())
-	}
-	return strings.Join(msgs, "; ")
-}
-
-// AllErrors returns a list of validation violation errors.
-func (m CreateAppFieldRequestMultiError) AllErrors() []error { return m }
-
-// CreateAppFieldRequestValidationError is the validation error returned by
-// CreateAppFieldRequest.Validate if the designated constraints aren't met.
-type CreateAppFieldRequestValidationError struct {
-	field  string
-	reason string
-	cause  error
-	key    bool
-}
-
-// Field function returns field value.
-func (e CreateAppFieldRequestValidationError) Field() string { return e.field }
-
-// Reason function returns reason value.
-func (e CreateAppFieldRequestValidationError) Reason() string { return e.reason }
-
-// Cause function returns cause value.
-func (e CreateAppFieldRequestValidationError) Cause() error { return e.cause }
-
-// Key function returns key value.
-func (e CreateAppFieldRequestValidationError) Key() bool { return e.key }
-
-// ErrorName returns error name.
-func (e CreateAppFieldRequestValidationError) ErrorName() string {
-	return "CreateAppFieldRequestValidationError"
-}
-
-// Error satisfies the builtin error interface
-func (e CreateAppFieldRequestValidationError) Error() string {
-	cause := ""
-	if e.cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.cause)
-	}
-
-	key := ""
-	if e.key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %sCreateAppFieldRequest.%s: %s%s",
-		key,
-		e.field,
-		e.reason,
-		cause)
-}
-
-var _ error = CreateAppFieldRequestValidationError{}
-
-var _ interface {
-	Field() string
-	Reason() string
-	Key() bool
-	Cause() error
-	ErrorName() string
-} = CreateAppFieldRequestValidationError{}
-
-// Validate checks the field values on CreateAppFieldReply with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the first error encountered is returned, or nil if there are no violations.
-func (m *CreateAppFieldReply) Validate() error {
-	return m.validate(false)
-}
-
-// ValidateAll checks the field values on CreateAppFieldReply with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the result is a list of violation errors wrapped in
-// CreateAppFieldReplyMultiError, or nil if none found.
-func (m *CreateAppFieldReply) ValidateAll() error {
-	return m.validate(true)
-}
-
-func (m *CreateAppFieldReply) validate(all bool) error {
-	if m == nil {
-		return nil
-	}
-
-	var errors []error
-
-	// no validation rules for Id
-
-	if len(errors) > 0 {
-		return CreateAppFieldReplyMultiError(errors)
-	}
-
-	return nil
-}
-
-// CreateAppFieldReplyMultiError is an error wrapping multiple validation
-// errors returned by CreateAppFieldReply.ValidateAll() if the designated
-// constraints aren't met.
-type CreateAppFieldReplyMultiError []error
-
-// Error returns a concatenation of all the error messages it wraps.
-func (m CreateAppFieldReplyMultiError) Error() string {
-	var msgs []string
-	for _, err := range m {
-		msgs = append(msgs, err.Error())
-	}
-	return strings.Join(msgs, "; ")
-}
-
-// AllErrors returns a list of validation violation errors.
-func (m CreateAppFieldReplyMultiError) AllErrors() []error { return m }
-
-// CreateAppFieldReplyValidationError is the validation error returned by
-// CreateAppFieldReply.Validate if the designated constraints aren't met.
-type CreateAppFieldReplyValidationError struct {
-	field  string
-	reason string
-	cause  error
-	key    bool
-}
-
-// Field function returns field value.
-func (e CreateAppFieldReplyValidationError) Field() string { return e.field }
-
-// Reason function returns reason value.
-func (e CreateAppFieldReplyValidationError) Reason() string { return e.reason }
-
-// Cause function returns cause value.
-func (e CreateAppFieldReplyValidationError) Cause() error { return e.cause }
-
-// Key function returns key value.
-func (e CreateAppFieldReplyValidationError) Key() bool { return e.key }
-
-// ErrorName returns error name.
-func (e CreateAppFieldReplyValidationError) ErrorName() string {
-	return "CreateAppFieldReplyValidationError"
-}
-
-// Error satisfies the builtin error interface
-func (e CreateAppFieldReplyValidationError) Error() string {
-	cause := ""
-	if e.cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.cause)
-	}
-
-	key := ""
-	if e.key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %sCreateAppFieldReply.%s: %s%s",
-		key,
-		e.field,
-		e.reason,
-		cause)
-}
-
-var _ error = CreateAppFieldReplyValidationError{}
-
-var _ interface {
-	Field() string
-	Reason() string
-	Key() bool
-	Cause() error
-	ErrorName() string
-} = CreateAppFieldReplyValidationError{}
-
-// Validate checks the field values on DeleteAppFieldRequest with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the first error encountered is returned, or nil if there are no violations.
-func (m *DeleteAppFieldRequest) Validate() error {
-	return m.validate(false)
-}
-
-// ValidateAll checks the field values on DeleteAppFieldRequest with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the result is a list of violation errors wrapped in
-// DeleteAppFieldRequestMultiError, or nil if none found.
-func (m *DeleteAppFieldRequest) ValidateAll() error {
-	return m.validate(true)
-}
-
-func (m *DeleteAppFieldRequest) validate(all bool) error {
-	if m == nil {
-		return nil
-	}
-
-	var errors []error
-
-	if m.GetId() <= 0 {
-		err := DeleteAppFieldRequestValidationError{
-			field:  "Id",
-			reason: "value must be greater than 0",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if len(errors) > 0 {
-		return DeleteAppFieldRequestMultiError(errors)
-	}
-
-	return nil
-}
-
-// DeleteAppFieldRequestMultiError is an error wrapping multiple validation
-// errors returned by DeleteAppFieldRequest.ValidateAll() if the designated
-// constraints aren't met.
-type DeleteAppFieldRequestMultiError []error
-
-// Error returns a concatenation of all the error messages it wraps.
-func (m DeleteAppFieldRequestMultiError) Error() string {
-	var msgs []string
-	for _, err := range m {
-		msgs = append(msgs, err.Error())
-	}
-	return strings.Join(msgs, "; ")
-}
-
-// AllErrors returns a list of validation violation errors.
-func (m DeleteAppFieldRequestMultiError) AllErrors() []error { return m }
-
-// DeleteAppFieldRequestValidationError is the validation error returned by
-// DeleteAppFieldRequest.Validate if the designated constraints aren't met.
-type DeleteAppFieldRequestValidationError struct {
-	field  string
-	reason string
-	cause  error
-	key    bool
-}
-
-// Field function returns field value.
-func (e DeleteAppFieldRequestValidationError) Field() string { return e.field }
-
-// Reason function returns reason value.
-func (e DeleteAppFieldRequestValidationError) Reason() string { return e.reason }
-
-// Cause function returns cause value.
-func (e DeleteAppFieldRequestValidationError) Cause() error { return e.cause }
-
-// Key function returns key value.
-func (e DeleteAppFieldRequestValidationError) Key() bool { return e.key }
-
-// ErrorName returns error name.
-func (e DeleteAppFieldRequestValidationError) ErrorName() string {
-	return "DeleteAppFieldRequestValidationError"
-}
-
-// Error satisfies the builtin error interface
-func (e DeleteAppFieldRequestValidationError) Error() string {
-	cause := ""
-	if e.cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.cause)
-	}
-
-	key := ""
-	if e.key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %sDeleteAppFieldRequest.%s: %s%s",
-		key,
-		e.field,
-		e.reason,
-		cause)
-}
-
-var _ error = DeleteAppFieldRequestValidationError{}
-
-var _ interface {
-	Field() string
-	Reason() string
-	Key() bool
-	Cause() error
-	ErrorName() string
-} = DeleteAppFieldRequestValidationError{}
-
-// Validate checks the field values on DeleteAppFieldReply with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the first error encountered is returned, or nil if there are no violations.
-func (m *DeleteAppFieldReply) Validate() error {
-	return m.validate(false)
-}
-
-// ValidateAll checks the field values on DeleteAppFieldReply with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the result is a list of violation errors wrapped in
-// DeleteAppFieldReplyMultiError, or nil if none found.
-func (m *DeleteAppFieldReply) ValidateAll() error {
-	return m.validate(true)
-}
-
-func (m *DeleteAppFieldReply) validate(all bool) error {
-	if m == nil {
-		return nil
-	}
-
-	var errors []error
-
-	if len(errors) > 0 {
-		return DeleteAppFieldReplyMultiError(errors)
-	}
-
-	return nil
-}
-
-// DeleteAppFieldReplyMultiError is an error wrapping multiple validation
-// errors returned by DeleteAppFieldReply.ValidateAll() if the designated
-// constraints aren't met.
-type DeleteAppFieldReplyMultiError []error
-
-// Error returns a concatenation of all the error messages it wraps.
-func (m DeleteAppFieldReplyMultiError) Error() string {
-	var msgs []string
-	for _, err := range m {
-		msgs = append(msgs, err.Error())
-	}
-	return strings.Join(msgs, "; ")
-}
-
-// AllErrors returns a list of validation violation errors.
-func (m DeleteAppFieldReplyMultiError) AllErrors() []error { return m }
-
-// DeleteAppFieldReplyValidationError is the validation error returned by
-// DeleteAppFieldReply.Validate if the designated constraints aren't met.
-type DeleteAppFieldReplyValidationError struct {
-	field  string
-	reason string
-	cause  error
-	key    bool
-}
-
-// Field function returns field value.
-func (e DeleteAppFieldReplyValidationError) Field() string { return e.field }
-
-// Reason function returns reason value.
-func (e DeleteAppFieldReplyValidationError) Reason() string { return e.reason }
-
-// Cause function returns cause value.
-func (e DeleteAppFieldReplyValidationError) Cause() error { return e.cause }
-
-// Key function returns key value.
-func (e DeleteAppFieldReplyValidationError) Key() bool { return e.key }
-
-// ErrorName returns error name.
-func (e DeleteAppFieldReplyValidationError) ErrorName() string {
-	return "DeleteAppFieldReplyValidationError"
-}
-
-// Error satisfies the builtin error interface
-func (e DeleteAppFieldReplyValidationError) Error() string {
-	cause := ""
-	if e.cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.cause)
-	}
-
-	key := ""
-	if e.key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %sDeleteAppFieldReply.%s: %s%s",
-		key,
-		e.field,
-		e.reason,
-		cause)
-}
-
-var _ error = DeleteAppFieldReplyValidationError{}
-
-var _ interface {
-	Field() string
-	Reason() string
-	Key() bool
-	Cause() error
-	ErrorName() string
-} = DeleteAppFieldReplyValidationError{}
-
-// Validate checks the field values on ListAppReply_App with the rules defined
-// in the proto definition for this message. If any rules are violated, the
-// first error encountered is returned, or nil if there are no violations.
-func (m *ListAppReply_App) Validate() error {
-	return m.validate(false)
-}
-
-// ValidateAll checks the field values on ListAppReply_App with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the result is a list of violation errors wrapped in
-// ListAppReply_AppMultiError, or nil if none found.
-func (m *ListAppReply_App) ValidateAll() error {
-	return m.validate(true)
-}
-
-func (m *ListAppReply_App) validate(all bool) error {
+func (m *ListAppReply_Data) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
@@ -3135,6 +2242,8 @@ func (m *ListAppReply_App) validate(all bool) error {
 	// no validation rules for Id
 
 	// no validation rules for Logo
+
+	// no validation rules for Favicon
 
 	// no validation rules for Keyword
 
@@ -3156,28 +2265,28 @@ func (m *ListAppReply_App) validate(all bool) error {
 		// no validation rules for Private
 	}
 
-	if m.Extra != nil {
-		// no validation rules for Extra
-	}
-
 	if m.Description != nil {
 		// no validation rules for Description
 	}
 
+	if m.Comment != nil {
+		// no validation rules for Comment
+	}
+
 	if len(errors) > 0 {
-		return ListAppReply_AppMultiError(errors)
+		return ListAppReply_DataMultiError(errors)
 	}
 
 	return nil
 }
 
-// ListAppReply_AppMultiError is an error wrapping multiple validation errors
-// returned by ListAppReply_App.ValidateAll() if the designated constraints
+// ListAppReply_DataMultiError is an error wrapping multiple validation errors
+// returned by ListAppReply_Data.ValidateAll() if the designated constraints
 // aren't met.
-type ListAppReply_AppMultiError []error
+type ListAppReply_DataMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m ListAppReply_AppMultiError) Error() string {
+func (m ListAppReply_DataMultiError) Error() string {
 	var msgs []string
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -3186,11 +2295,11 @@ func (m ListAppReply_AppMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m ListAppReply_AppMultiError) AllErrors() []error { return m }
+func (m ListAppReply_DataMultiError) AllErrors() []error { return m }
 
-// ListAppReply_AppValidationError is the validation error returned by
-// ListAppReply_App.Validate if the designated constraints aren't met.
-type ListAppReply_AppValidationError struct {
+// ListAppReply_DataValidationError is the validation error returned by
+// ListAppReply_Data.Validate if the designated constraints aren't met.
+type ListAppReply_DataValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -3198,22 +2307,24 @@ type ListAppReply_AppValidationError struct {
 }
 
 // Field function returns field value.
-func (e ListAppReply_AppValidationError) Field() string { return e.field }
+func (e ListAppReply_DataValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e ListAppReply_AppValidationError) Reason() string { return e.reason }
+func (e ListAppReply_DataValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e ListAppReply_AppValidationError) Cause() error { return e.cause }
+func (e ListAppReply_DataValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e ListAppReply_AppValidationError) Key() bool { return e.key }
+func (e ListAppReply_DataValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e ListAppReply_AppValidationError) ErrorName() string { return "ListAppReply_AppValidationError" }
+func (e ListAppReply_DataValidationError) ErrorName() string {
+	return "ListAppReply_DataValidationError"
+}
 
 // Error satisfies the builtin error interface
-func (e ListAppReply_AppValidationError) Error() string {
+func (e ListAppReply_DataValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -3225,14 +2336,14 @@ func (e ListAppReply_AppValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sListAppReply_App.%s: %s%s",
+		"invalid %sListAppReply_Data.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = ListAppReply_AppValidationError{}
+var _ error = ListAppReply_DataValidationError{}
 
 var _ interface {
 	Field() string
@@ -3240,626 +2351,4 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = ListAppReply_AppValidationError{}
-
-// Validate checks the field values on ListAppOAuthChannelReply_Channel with
-// the rules defined in the proto definition for this message. If any rules
-// are violated, the first error encountered is returned, or nil if there are
-// no violations.
-func (m *ListAppOAuthChannelReply_Channel) Validate() error {
-	return m.validate(false)
-}
-
-// ValidateAll checks the field values on ListAppOAuthChannelReply_Channel with
-// the rules defined in the proto definition for this message. If any rules
-// are violated, the result is a list of violation errors wrapped in
-// ListAppOAuthChannelReply_ChannelMultiError, or nil if none found.
-func (m *ListAppOAuthChannelReply_Channel) ValidateAll() error {
-	return m.validate(true)
-}
-
-func (m *ListAppOAuthChannelReply_Channel) validate(all bool) error {
-	if m == nil {
-		return nil
-	}
-
-	var errors []error
-
-	// no validation rules for Id
-
-	// no validation rules for Logo
-
-	// no validation rules for Name
-
-	// no validation rules for Keyword
-
-	if len(errors) > 0 {
-		return ListAppOAuthChannelReply_ChannelMultiError(errors)
-	}
-
-	return nil
-}
-
-// ListAppOAuthChannelReply_ChannelMultiError is an error wrapping multiple
-// validation errors returned by
-// ListAppOAuthChannelReply_Channel.ValidateAll() if the designated
-// constraints aren't met.
-type ListAppOAuthChannelReply_ChannelMultiError []error
-
-// Error returns a concatenation of all the error messages it wraps.
-func (m ListAppOAuthChannelReply_ChannelMultiError) Error() string {
-	var msgs []string
-	for _, err := range m {
-		msgs = append(msgs, err.Error())
-	}
-	return strings.Join(msgs, "; ")
-}
-
-// AllErrors returns a list of validation violation errors.
-func (m ListAppOAuthChannelReply_ChannelMultiError) AllErrors() []error { return m }
-
-// ListAppOAuthChannelReply_ChannelValidationError is the validation error
-// returned by ListAppOAuthChannelReply_Channel.Validate if the designated
-// constraints aren't met.
-type ListAppOAuthChannelReply_ChannelValidationError struct {
-	field  string
-	reason string
-	cause  error
-	key    bool
-}
-
-// Field function returns field value.
-func (e ListAppOAuthChannelReply_ChannelValidationError) Field() string { return e.field }
-
-// Reason function returns reason value.
-func (e ListAppOAuthChannelReply_ChannelValidationError) Reason() string { return e.reason }
-
-// Cause function returns cause value.
-func (e ListAppOAuthChannelReply_ChannelValidationError) Cause() error { return e.cause }
-
-// Key function returns key value.
-func (e ListAppOAuthChannelReply_ChannelValidationError) Key() bool { return e.key }
-
-// ErrorName returns error name.
-func (e ListAppOAuthChannelReply_ChannelValidationError) ErrorName() string {
-	return "ListAppOAuthChannelReply_ChannelValidationError"
-}
-
-// Error satisfies the builtin error interface
-func (e ListAppOAuthChannelReply_ChannelValidationError) Error() string {
-	cause := ""
-	if e.cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.cause)
-	}
-
-	key := ""
-	if e.key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %sListAppOAuthChannelReply_Channel.%s: %s%s",
-		key,
-		e.field,
-		e.reason,
-		cause)
-}
-
-var _ error = ListAppOAuthChannelReply_ChannelValidationError{}
-
-var _ interface {
-	Field() string
-	Reason() string
-	Key() bool
-	Cause() error
-	ErrorName() string
-} = ListAppOAuthChannelReply_ChannelValidationError{}
-
-// Validate checks the field values on ListAppOAuthChannelReply_Data with the
-// rules defined in the proto definition for this message. If any rules are
-// violated, the first error encountered is returned, or nil if there are no violations.
-func (m *ListAppOAuthChannelReply_Data) Validate() error {
-	return m.validate(false)
-}
-
-// ValidateAll checks the field values on ListAppOAuthChannelReply_Data with
-// the rules defined in the proto definition for this message. If any rules
-// are violated, the result is a list of violation errors wrapped in
-// ListAppOAuthChannelReply_DataMultiError, or nil if none found.
-func (m *ListAppOAuthChannelReply_Data) ValidateAll() error {
-	return m.validate(true)
-}
-
-func (m *ListAppOAuthChannelReply_Data) validate(all bool) error {
-	if m == nil {
-		return nil
-	}
-
-	var errors []error
-
-	// no validation rules for Id
-
-	// no validation rules for AppId
-
-	// no validation rules for ChannelId
-
-	// no validation rules for CreatedAt
-
-	// no validation rules for UpdatedAt
-
-	if all {
-		switch v := interface{}(m.GetChannel()).(type) {
-		case interface{ ValidateAll() error }:
-			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, ListAppOAuthChannelReply_DataValidationError{
-					field:  "Channel",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		case interface{ Validate() error }:
-			if err := v.Validate(); err != nil {
-				errors = append(errors, ListAppOAuthChannelReply_DataValidationError{
-					field:  "Channel",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		}
-	} else if v, ok := interface{}(m.GetChannel()).(interface{ Validate() error }); ok {
-		if err := v.Validate(); err != nil {
-			return ListAppOAuthChannelReply_DataValidationError{
-				field:  "Channel",
-				reason: "embedded message failed validation",
-				cause:  err,
-			}
-		}
-	}
-
-	if len(errors) > 0 {
-		return ListAppOAuthChannelReply_DataMultiError(errors)
-	}
-
-	return nil
-}
-
-// ListAppOAuthChannelReply_DataMultiError is an error wrapping multiple
-// validation errors returned by ListAppOAuthChannelReply_Data.ValidateAll()
-// if the designated constraints aren't met.
-type ListAppOAuthChannelReply_DataMultiError []error
-
-// Error returns a concatenation of all the error messages it wraps.
-func (m ListAppOAuthChannelReply_DataMultiError) Error() string {
-	var msgs []string
-	for _, err := range m {
-		msgs = append(msgs, err.Error())
-	}
-	return strings.Join(msgs, "; ")
-}
-
-// AllErrors returns a list of validation violation errors.
-func (m ListAppOAuthChannelReply_DataMultiError) AllErrors() []error { return m }
-
-// ListAppOAuthChannelReply_DataValidationError is the validation error
-// returned by ListAppOAuthChannelReply_Data.Validate if the designated
-// constraints aren't met.
-type ListAppOAuthChannelReply_DataValidationError struct {
-	field  string
-	reason string
-	cause  error
-	key    bool
-}
-
-// Field function returns field value.
-func (e ListAppOAuthChannelReply_DataValidationError) Field() string { return e.field }
-
-// Reason function returns reason value.
-func (e ListAppOAuthChannelReply_DataValidationError) Reason() string { return e.reason }
-
-// Cause function returns cause value.
-func (e ListAppOAuthChannelReply_DataValidationError) Cause() error { return e.cause }
-
-// Key function returns key value.
-func (e ListAppOAuthChannelReply_DataValidationError) Key() bool { return e.key }
-
-// ErrorName returns error name.
-func (e ListAppOAuthChannelReply_DataValidationError) ErrorName() string {
-	return "ListAppOAuthChannelReply_DataValidationError"
-}
-
-// Error satisfies the builtin error interface
-func (e ListAppOAuthChannelReply_DataValidationError) Error() string {
-	cause := ""
-	if e.cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.cause)
-	}
-
-	key := ""
-	if e.key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %sListAppOAuthChannelReply_Data.%s: %s%s",
-		key,
-		e.field,
-		e.reason,
-		cause)
-}
-
-var _ error = ListAppOAuthChannelReply_DataValidationError{}
-
-var _ interface {
-	Field() string
-	Reason() string
-	Key() bool
-	Cause() error
-	ErrorName() string
-} = ListAppOAuthChannelReply_DataValidationError{}
-
-// Validate checks the field values on ListTenantAppOAuthChannelReply_Channel
-// with the rules defined in the proto definition for this message. If any
-// rules are violated, the first error encountered is returned, or nil if
-// there are no violations.
-func (m *ListTenantAppOAuthChannelReply_Channel) Validate() error {
-	return m.validate(false)
-}
-
-// ValidateAll checks the field values on
-// ListTenantAppOAuthChannelReply_Channel with the rules defined in the proto
-// definition for this message. If any rules are violated, the result is a
-// list of violation errors wrapped in
-// ListTenantAppOAuthChannelReply_ChannelMultiError, or nil if none found.
-func (m *ListTenantAppOAuthChannelReply_Channel) ValidateAll() error {
-	return m.validate(true)
-}
-
-func (m *ListTenantAppOAuthChannelReply_Channel) validate(all bool) error {
-	if m == nil {
-		return nil
-	}
-
-	var errors []error
-
-	// no validation rules for Id
-
-	// no validation rules for Logo
-
-	// no validation rules for Name
-
-	// no validation rules for Keyword
-
-	// no validation rules for Type
-
-	if len(errors) > 0 {
-		return ListTenantAppOAuthChannelReply_ChannelMultiError(errors)
-	}
-
-	return nil
-}
-
-// ListTenantAppOAuthChannelReply_ChannelMultiError is an error wrapping
-// multiple validation errors returned by
-// ListTenantAppOAuthChannelReply_Channel.ValidateAll() if the designated
-// constraints aren't met.
-type ListTenantAppOAuthChannelReply_ChannelMultiError []error
-
-// Error returns a concatenation of all the error messages it wraps.
-func (m ListTenantAppOAuthChannelReply_ChannelMultiError) Error() string {
-	var msgs []string
-	for _, err := range m {
-		msgs = append(msgs, err.Error())
-	}
-	return strings.Join(msgs, "; ")
-}
-
-// AllErrors returns a list of validation violation errors.
-func (m ListTenantAppOAuthChannelReply_ChannelMultiError) AllErrors() []error { return m }
-
-// ListTenantAppOAuthChannelReply_ChannelValidationError is the validation
-// error returned by ListTenantAppOAuthChannelReply_Channel.Validate if the
-// designated constraints aren't met.
-type ListTenantAppOAuthChannelReply_ChannelValidationError struct {
-	field  string
-	reason string
-	cause  error
-	key    bool
-}
-
-// Field function returns field value.
-func (e ListTenantAppOAuthChannelReply_ChannelValidationError) Field() string { return e.field }
-
-// Reason function returns reason value.
-func (e ListTenantAppOAuthChannelReply_ChannelValidationError) Reason() string { return e.reason }
-
-// Cause function returns cause value.
-func (e ListTenantAppOAuthChannelReply_ChannelValidationError) Cause() error { return e.cause }
-
-// Key function returns key value.
-func (e ListTenantAppOAuthChannelReply_ChannelValidationError) Key() bool { return e.key }
-
-// ErrorName returns error name.
-func (e ListTenantAppOAuthChannelReply_ChannelValidationError) ErrorName() string {
-	return "ListTenantAppOAuthChannelReply_ChannelValidationError"
-}
-
-// Error satisfies the builtin error interface
-func (e ListTenantAppOAuthChannelReply_ChannelValidationError) Error() string {
-	cause := ""
-	if e.cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.cause)
-	}
-
-	key := ""
-	if e.key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %sListTenantAppOAuthChannelReply_Channel.%s: %s%s",
-		key,
-		e.field,
-		e.reason,
-		cause)
-}
-
-var _ error = ListTenantAppOAuthChannelReply_ChannelValidationError{}
-
-var _ interface {
-	Field() string
-	Reason() string
-	Key() bool
-	Cause() error
-	ErrorName() string
-} = ListTenantAppOAuthChannelReply_ChannelValidationError{}
-
-// Validate checks the field values on ListAppFieldReply_Field with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the first error encountered is returned, or nil if there are no violations.
-func (m *ListAppFieldReply_Field) Validate() error {
-	return m.validate(false)
-}
-
-// ValidateAll checks the field values on ListAppFieldReply_Field with the
-// rules defined in the proto definition for this message. If any rules are
-// violated, the result is a list of violation errors wrapped in
-// ListAppFieldReply_FieldMultiError, or nil if none found.
-func (m *ListAppFieldReply_Field) ValidateAll() error {
-	return m.validate(true)
-}
-
-func (m *ListAppFieldReply_Field) validate(all bool) error {
-	if m == nil {
-		return nil
-	}
-
-	var errors []error
-
-	// no validation rules for Id
-
-	// no validation rules for Name
-
-	// no validation rules for Keyword
-
-	// no validation rules for Type
-
-	if len(errors) > 0 {
-		return ListAppFieldReply_FieldMultiError(errors)
-	}
-
-	return nil
-}
-
-// ListAppFieldReply_FieldMultiError is an error wrapping multiple validation
-// errors returned by ListAppFieldReply_Field.ValidateAll() if the designated
-// constraints aren't met.
-type ListAppFieldReply_FieldMultiError []error
-
-// Error returns a concatenation of all the error messages it wraps.
-func (m ListAppFieldReply_FieldMultiError) Error() string {
-	var msgs []string
-	for _, err := range m {
-		msgs = append(msgs, err.Error())
-	}
-	return strings.Join(msgs, "; ")
-}
-
-// AllErrors returns a list of validation violation errors.
-func (m ListAppFieldReply_FieldMultiError) AllErrors() []error { return m }
-
-// ListAppFieldReply_FieldValidationError is the validation error returned by
-// ListAppFieldReply_Field.Validate if the designated constraints aren't met.
-type ListAppFieldReply_FieldValidationError struct {
-	field  string
-	reason string
-	cause  error
-	key    bool
-}
-
-// Field function returns field value.
-func (e ListAppFieldReply_FieldValidationError) Field() string { return e.field }
-
-// Reason function returns reason value.
-func (e ListAppFieldReply_FieldValidationError) Reason() string { return e.reason }
-
-// Cause function returns cause value.
-func (e ListAppFieldReply_FieldValidationError) Cause() error { return e.cause }
-
-// Key function returns key value.
-func (e ListAppFieldReply_FieldValidationError) Key() bool { return e.key }
-
-// ErrorName returns error name.
-func (e ListAppFieldReply_FieldValidationError) ErrorName() string {
-	return "ListAppFieldReply_FieldValidationError"
-}
-
-// Error satisfies the builtin error interface
-func (e ListAppFieldReply_FieldValidationError) Error() string {
-	cause := ""
-	if e.cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.cause)
-	}
-
-	key := ""
-	if e.key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %sListAppFieldReply_Field.%s: %s%s",
-		key,
-		e.field,
-		e.reason,
-		cause)
-}
-
-var _ error = ListAppFieldReply_FieldValidationError{}
-
-var _ interface {
-	Field() string
-	Reason() string
-	Key() bool
-	Cause() error
-	ErrorName() string
-} = ListAppFieldReply_FieldValidationError{}
-
-// Validate checks the field values on ListAppFieldReply_Data with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the first error encountered is returned, or nil if there are no violations.
-func (m *ListAppFieldReply_Data) Validate() error {
-	return m.validate(false)
-}
-
-// ValidateAll checks the field values on ListAppFieldReply_Data with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the result is a list of violation errors wrapped in
-// ListAppFieldReply_DataMultiError, or nil if none found.
-func (m *ListAppFieldReply_Data) ValidateAll() error {
-	return m.validate(true)
-}
-
-func (m *ListAppFieldReply_Data) validate(all bool) error {
-	if m == nil {
-		return nil
-	}
-
-	var errors []error
-
-	// no validation rules for Id
-
-	// no validation rules for AppId
-
-	// no validation rules for FieldId
-
-	// no validation rules for CreatedAt
-
-	// no validation rules for UpdatedAt
-
-	if all {
-		switch v := interface{}(m.GetField()).(type) {
-		case interface{ ValidateAll() error }:
-			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, ListAppFieldReply_DataValidationError{
-					field:  "Field",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		case interface{ Validate() error }:
-			if err := v.Validate(); err != nil {
-				errors = append(errors, ListAppFieldReply_DataValidationError{
-					field:  "Field",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		}
-	} else if v, ok := interface{}(m.GetField()).(interface{ Validate() error }); ok {
-		if err := v.Validate(); err != nil {
-			return ListAppFieldReply_DataValidationError{
-				field:  "Field",
-				reason: "embedded message failed validation",
-				cause:  err,
-			}
-		}
-	}
-
-	if len(errors) > 0 {
-		return ListAppFieldReply_DataMultiError(errors)
-	}
-
-	return nil
-}
-
-// ListAppFieldReply_DataMultiError is an error wrapping multiple validation
-// errors returned by ListAppFieldReply_Data.ValidateAll() if the designated
-// constraints aren't met.
-type ListAppFieldReply_DataMultiError []error
-
-// Error returns a concatenation of all the error messages it wraps.
-func (m ListAppFieldReply_DataMultiError) Error() string {
-	var msgs []string
-	for _, err := range m {
-		msgs = append(msgs, err.Error())
-	}
-	return strings.Join(msgs, "; ")
-}
-
-// AllErrors returns a list of validation violation errors.
-func (m ListAppFieldReply_DataMultiError) AllErrors() []error { return m }
-
-// ListAppFieldReply_DataValidationError is the validation error returned by
-// ListAppFieldReply_Data.Validate if the designated constraints aren't met.
-type ListAppFieldReply_DataValidationError struct {
-	field  string
-	reason string
-	cause  error
-	key    bool
-}
-
-// Field function returns field value.
-func (e ListAppFieldReply_DataValidationError) Field() string { return e.field }
-
-// Reason function returns reason value.
-func (e ListAppFieldReply_DataValidationError) Reason() string { return e.reason }
-
-// Cause function returns cause value.
-func (e ListAppFieldReply_DataValidationError) Cause() error { return e.cause }
-
-// Key function returns key value.
-func (e ListAppFieldReply_DataValidationError) Key() bool { return e.key }
-
-// ErrorName returns error name.
-func (e ListAppFieldReply_DataValidationError) ErrorName() string {
-	return "ListAppFieldReply_DataValidationError"
-}
-
-// Error satisfies the builtin error interface
-func (e ListAppFieldReply_DataValidationError) Error() string {
-	cause := ""
-	if e.cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.cause)
-	}
-
-	key := ""
-	if e.key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %sListAppFieldReply_Data.%s: %s%s",
-		key,
-		e.field,
-		e.reason,
-		cause)
-}
-
-var _ error = ListAppFieldReply_DataValidationError{}
-
-var _ interface {
-	Field() string
-	Reason() string
-	Key() bool
-	Cause() error
-	ErrorName() string
-} = ListAppFieldReply_DataValidationError{}
+} = ListAppReply_DataValidationError{}

@@ -3,12 +3,14 @@ package app
 import (
 	"context"
 
+	"github.com/go-kratos/kratos/v2/transport/grpc"
+
+	"github.com/go-kratos/kratos/v2/transport/http"
+
 	"github.com/limes-cloud/manager/internal/core"
 
 	"github.com/limes-cloud/manager/api/system"
 
-	"github.com/go-kratos/kratos/v2/transport/grpc"
-	"github.com/go-kratos/kratos/v2/transport/http"
 	"github.com/limes-cloud/manager/internal/domain/service"
 )
 
@@ -36,13 +38,11 @@ func (s *System) GetSystemSetting(c context.Context, _ *system.GetSystemSettingR
 	setting := s.srv.GetSystemSetting(core.MustContext(c))
 
 	reply := system.GetSystemSettingReply{
-		Debug:              setting.Debug,
-		Title:              setting.Title,
-		Desc:               setting.Desc,
-		Copyright:          setting.Copyright,
-		Logo:               setting.Logo,
-		Watermark:          setting.Watermark,
-		ChangePasswordType: setting.ChangePasswordType,
+		Title:       setting.Title,
+		Description: setting.Description,
+		Copyright:   setting.Copyright,
+		Logo:        setting.Logo,
+		Watermark:   setting.Watermark,
 	}
 	//if len(setting.Dictionaries) != 0 {
 	//	dictArr := make(map[string]*system.GetSystemSettingReply_DictionaryValueList)

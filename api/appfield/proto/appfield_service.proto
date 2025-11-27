@@ -1,0 +1,42 @@
+syntax = "proto3";
+
+package manager.api.appfield;
+
+option go_package = "manager/api/appfield;appfield";
+option java_multiple_files = true;
+option java_package = "manager.api.appfield";
+
+import "google/api/annotations.proto";
+import "api/appfield/proto/appfield.proto";
+
+service AppField{
+  // ListAppField 获取应用字段信息
+  rpc ListAppField (ListAppFieldRequest) returns (ListAppFieldReply) {
+    option (google.api.http) = {
+      get: "/manager/api/app/fields",
+    };
+  }
+
+  // CreateApp 创建应用字段信息
+  rpc CreateAppField (CreateAppFieldRequest) returns (CreateAppFieldReply) {
+    option (google.api.http) = {
+      post: "/manager/api/app/field",
+      body: "*"
+    };
+  }
+
+  // CreateApp 创建应用字段信息
+  rpc UpdateAppField (UpdateAppFieldRequest) returns (UpdateAppFieldReply) {
+    option (google.api.http) = {
+      put: "/manager/api/app/field",
+      body: "*"
+    };
+  }
+
+  // DeleteApp 删除应用字段信息
+  rpc DeleteAppField (DeleteAppFieldRequest) returns (DeleteAppFieldReply) {
+    option (google.api.http) = {
+      delete: "/manager/api/app/field",
+    };
+  }
+}

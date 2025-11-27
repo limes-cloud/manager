@@ -1,0 +1,46 @@
+syntax = "proto3";
+
+package manager.api.tenantadmin;
+
+option go_package = "manager/api/tenantadmin;tenantadmin";
+option java_multiple_files = true;
+option java_package = "manager.api.tenantadmin.proto";
+
+import "validate/validate.proto";
+
+
+message CreateTenantAdminRequest {
+  uint32 tenantId = 1[(validate.rules).uint32 = {gte: 1}];
+  uint32 userId = 2[(validate.rules).uint32 = {gte: 1}];
+}
+
+message CreateTenantAdminReply {
+  uint32 id = 1;
+}
+
+
+message DeleteTenantAdminRequest {
+  uint32 tenantId = 1[(validate.rules).uint32 = {gte: 1}];
+  uint32 userId = 2[(validate.rules).uint32 = {gte: 1}];
+}
+message DeleteTenantAdminReply {}
+
+
+message ListTenantAdminRequest {
+  uint32 page = 1[(validate.rules).uint32 = {gte: 1}];
+  uint32 pageSize = 2[(validate.rules).uint32 = {gte: 1,lte:50}];
+  uint32 tenantId = 3[(validate.rules).uint32 = {gte: 1}];
+}
+
+message ListTenantAdminReply {
+  message Data{
+    uint32 id = 1;
+    string avatar = 2;
+    string username = 3;
+    string nickname = 4;
+    uint32 createdAt = 5;
+  }
+  repeated Data list = 1;
+  uint32 total = 2;
+}
+

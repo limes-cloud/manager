@@ -1,0 +1,85 @@
+syntax = "proto3";
+
+package manager.api.log;
+
+option go_package = "manager/api/log;log";
+option java_multiple_files = true;
+option java_package = "manager.api.log";
+
+import "validate/validate.proto";
+
+
+message ListLoginLogRequest {
+  uint32 page = 1[(validate.rules).uint32 = {gte: 1}];
+  uint32 pageSize = 2[(validate.rules).uint32 = {gte: 1,lte:50}];
+  optional string username = 3;
+  repeated int64 createdAts = 4;
+}
+
+message ListLoginLogReply {
+  message User{
+    uint32 id = 1;
+    string username = 2;
+    string nickname = 3;
+    string avatar = 4;
+  }
+  message App{
+    uint32 id = 1;
+    string name = 2;
+    string keyword = 3;
+    string logo = 4;
+  }
+  message Log {
+    uint32 appId = 1;
+    string type = 2;
+    string ip = 3;
+    string address = 4;
+    string browser = 5;
+    string device = 6;
+    int32 code = 7;
+    string description = 8;
+    uint32 createdAt = 9;
+    User user = 10;
+    App app = 11;
+  }
+
+  uint32 total = 1;
+  repeated Log list = 2;
+}
+
+message ListAuthLogRequest {
+  uint32 page = 1[(validate.rules).uint32 = {gte: 1}];
+  uint32 pageSize = 2[(validate.rules).uint32 = {gte: 1,lte:50}];
+  optional string username = 3;
+  repeated int64 createdAts = 4;
+}
+
+message ListAuthLogReply { // fixed code
+  message Log {
+    message User{
+      uint32 id = 1;
+      string username = 2;
+      string nickname = 3;
+      string avatar = 4;
+    }
+    message App{
+      uint32 id = 1;
+      string name = 2;
+      string keyword = 3;
+      string logo = 4;
+    }
+    message Menu{
+      string api = 5;
+      string method = 6;
+      string title = 7;
+    }
+
+    User user = 1;
+    App app = 2;
+    Menu menu = 3;
+    uint32 createdAt = 4;
+  }
+
+  uint32 total = 1;
+  repeated Log list = 2;
+}

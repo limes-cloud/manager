@@ -101,32 +101,6 @@ func (m *CreateRoleEntityRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	if m.Fields != nil {
-		if utf8.RuneCountInString(m.GetFields()) < 1 {
-			err := CreateRoleEntityRequestValidationError{
-				field:  "Fields",
-				reason: "value length must be at least 1 runes",
-			}
-			if !all {
-				return err
-			}
-			errors = append(errors, err)
-		}
-	}
-
-	if m.Rules != nil {
-		if utf8.RuneCountInString(m.GetRules()) < 1 {
-			err := CreateRoleEntityRequestValidationError{
-				field:  "Rules",
-				reason: "value length must be at least 1 runes",
-			}
-			if !all {
-				return err
-			}
-			errors = append(errors, err)
-		}
-	}
-
 	if len(errors) > 0 {
 		return CreateRoleEntityRequestMultiError(errors)
 	}
@@ -673,32 +647,6 @@ func (m *UpdateRoleEntityRequest) validate(all bool) error {
 		if utf8.RuneCountInString(m.GetScope()) < 1 {
 			err := UpdateRoleEntityRequestValidationError{
 				field:  "Scope",
-				reason: "value length must be at least 1 runes",
-			}
-			if !all {
-				return err
-			}
-			errors = append(errors, err)
-		}
-	}
-
-	if m.Fields != nil {
-		if utf8.RuneCountInString(m.GetFields()) < 1 {
-			err := UpdateRoleEntityRequestValidationError{
-				field:  "Fields",
-				reason: "value length must be at least 1 runes",
-			}
-			if !all {
-				return err
-			}
-			errors = append(errors, err)
-		}
-	}
-
-	if m.Rules != nil {
-		if utf8.RuneCountInString(m.GetRules()) < 1 {
-			err := UpdateRoleEntityRequestValidationError{
-				field:  "Rules",
 				reason: "value length must be at least 1 runes",
 			}
 			if !all {
@@ -1379,10 +1327,6 @@ func (m *ListRoleEntityReply_Data) validate(all bool) error {
 	// no validation rules for Action
 
 	// no validation rules for Scope
-
-	// no validation rules for Fields
-
-	// no validation rules for Rules
 
 	// no validation rules for CreatedAt
 

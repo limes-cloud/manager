@@ -714,10 +714,6 @@ func (m *UpdateDeptClassifyRequest) validate(all bool) error {
 		// no validation rules for Description
 	}
 
-	if m.Status != nil {
-		// no validation rules for Status
-	}
-
 	if m.Weight != nil {
 		// no validation rules for Weight
 	}
@@ -1230,110 +1226,6 @@ var _ interface {
 	ErrorName() string
 } = GetDeptRequestValidationError{}
 
-// Validate checks the field values on Role with the rules defined in the proto
-// definition for this message. If any rules are violated, the first error
-// encountered is returned, or nil if there are no violations.
-func (m *Role) Validate() error {
-	return m.validate(false)
-}
-
-// ValidateAll checks the field values on Role with the rules defined in the
-// proto definition for this message. If any rules are violated, the result is
-// a list of violation errors wrapped in RoleMultiError, or nil if none found.
-func (m *Role) ValidateAll() error {
-	return m.validate(true)
-}
-
-func (m *Role) validate(all bool) error {
-	if m == nil {
-		return nil
-	}
-
-	var errors []error
-
-	// no validation rules for Id
-
-	// no validation rules for Name
-
-	// no validation rules for Keyword
-
-	if len(errors) > 0 {
-		return RoleMultiError(errors)
-	}
-
-	return nil
-}
-
-// RoleMultiError is an error wrapping multiple validation errors returned by
-// Role.ValidateAll() if the designated constraints aren't met.
-type RoleMultiError []error
-
-// Error returns a concatenation of all the error messages it wraps.
-func (m RoleMultiError) Error() string {
-	var msgs []string
-	for _, err := range m {
-		msgs = append(msgs, err.Error())
-	}
-	return strings.Join(msgs, "; ")
-}
-
-// AllErrors returns a list of validation violation errors.
-func (m RoleMultiError) AllErrors() []error { return m }
-
-// RoleValidationError is the validation error returned by Role.Validate if the
-// designated constraints aren't met.
-type RoleValidationError struct {
-	field  string
-	reason string
-	cause  error
-	key    bool
-}
-
-// Field function returns field value.
-func (e RoleValidationError) Field() string { return e.field }
-
-// Reason function returns reason value.
-func (e RoleValidationError) Reason() string { return e.reason }
-
-// Cause function returns cause value.
-func (e RoleValidationError) Cause() error { return e.cause }
-
-// Key function returns key value.
-func (e RoleValidationError) Key() bool { return e.key }
-
-// ErrorName returns error name.
-func (e RoleValidationError) ErrorName() string { return "RoleValidationError" }
-
-// Error satisfies the builtin error interface
-func (e RoleValidationError) Error() string {
-	cause := ""
-	if e.cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.cause)
-	}
-
-	key := ""
-	if e.key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %sRole.%s: %s%s",
-		key,
-		e.field,
-		e.reason,
-		cause)
-}
-
-var _ error = RoleValidationError{}
-
-var _ interface {
-	Field() string
-	Reason() string
-	Key() bool
-	Cause() error
-	ErrorName() string
-} = RoleValidationError{}
-
 // Validate checks the field values on GetDeptReply with the rules defined in
 // the proto definition for this message. If any rules are violated, the first
 // error encountered is returned, or nil if there are no violations.
@@ -1364,46 +1256,20 @@ func (m *GetDeptReply) validate(all bool) error {
 
 	// no validation rules for Name
 
+	// no validation rules for Keyword
+
+	// no validation rules for Logo
+
 	// no validation rules for CreatedAt
 
 	// no validation rules for UpdatedAt
 
-	for idx, item := range m.GetRoles() {
-		_, _ = idx, item
-
-		if all {
-			switch v := interface{}(item).(type) {
-			case interface{ ValidateAll() error }:
-				if err := v.ValidateAll(); err != nil {
-					errors = append(errors, GetDeptReplyValidationError{
-						field:  fmt.Sprintf("Roles[%v]", idx),
-						reason: "embedded message failed validation",
-						cause:  err,
-					})
-				}
-			case interface{ Validate() error }:
-				if err := v.Validate(); err != nil {
-					errors = append(errors, GetDeptReplyValidationError{
-						field:  fmt.Sprintf("Roles[%v]", idx),
-						reason: "embedded message failed validation",
-						cause:  err,
-					})
-				}
-			}
-		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
-			if err := v.Validate(); err != nil {
-				return GetDeptReplyValidationError{
-					field:  fmt.Sprintf("Roles[%v]", idx),
-					reason: "embedded message failed validation",
-					cause:  err,
-				}
-			}
-		}
-
-	}
-
 	if m.Description != nil {
 		// no validation rules for Description
+	}
+
+	if m.Status != nil {
+		// no validation rules for Status
 	}
 
 	if m.Classify != nil {
@@ -1538,10 +1404,6 @@ func (m *ListDeptRequest) validate(all bool) error {
 
 	if m.Name != nil {
 		// no validation rules for Name
-	}
-
-	if m.RootId != nil {
-		// no validation rules for RootId
 	}
 
 	if m.ClassifyId != nil {
@@ -1808,6 +1670,17 @@ func (m *CreateDeptRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
+	if l := utf8.RuneCountInString(m.GetKeyword()); l < 1 || l > 128 {
+		err := CreateDeptRequestValidationError{
+			field:  "Keyword",
+			reason: "value length must be between 1 and 128 runes, inclusive",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
 	if l := utf8.RuneCountInString(m.GetName()); l < 1 || l > 128 {
 		err := CreateDeptRequestValidationError{
 			field:  "Name",
@@ -1819,8 +1692,26 @@ func (m *CreateDeptRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	if m.Description != nil {
-		// no validation rules for Description
+	if utf8.RuneCountInString(m.GetLogo()) > 256 {
+		err := CreateDeptRequestValidationError{
+			field:  "Logo",
+			reason: "value length must be at most 256 runes",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if utf8.RuneCountInString(m.GetDescription()) > 256 {
+		err := CreateDeptRequestValidationError{
+			field:  "Description",
+			reason: "value length must be at most 256 runes",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
 	}
 
 	if len(errors) > 0 {
@@ -2640,7 +2531,9 @@ func (m *ListDeptReply_Dept) validate(all bool) error {
 
 	// no validation rules for Name
 
-	// no validation rules for Status
+	// no validation rules for Keyword
+
+	// no validation rules for Logo
 
 	// no validation rules for CreatedAt
 
@@ -2680,42 +2573,12 @@ func (m *ListDeptReply_Dept) validate(all bool) error {
 
 	}
 
-	for idx, item := range m.GetRoles() {
-		_, _ = idx, item
-
-		if all {
-			switch v := interface{}(item).(type) {
-			case interface{ ValidateAll() error }:
-				if err := v.ValidateAll(); err != nil {
-					errors = append(errors, ListDeptReply_DeptValidationError{
-						field:  fmt.Sprintf("Roles[%v]", idx),
-						reason: "embedded message failed validation",
-						cause:  err,
-					})
-				}
-			case interface{ Validate() error }:
-				if err := v.Validate(); err != nil {
-					errors = append(errors, ListDeptReply_DeptValidationError{
-						field:  fmt.Sprintf("Roles[%v]", idx),
-						reason: "embedded message failed validation",
-						cause:  err,
-					})
-				}
-			}
-		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
-			if err := v.Validate(); err != nil {
-				return ListDeptReply_DeptValidationError{
-					field:  fmt.Sprintf("Roles[%v]", idx),
-					reason: "embedded message failed validation",
-					cause:  err,
-				}
-			}
-		}
-
-	}
-
 	if m.Description != nil {
 		// no validation rules for Description
+	}
+
+	if m.Status != nil {
+		// no validation rules for Status
 	}
 
 	if m.Classify != nil {

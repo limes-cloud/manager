@@ -7,12 +7,10 @@ import (
 )
 
 type DeptRole interface {
-	// ListRoleDept 获取角色的菜单列表
-	ListRoleDept(ctx core.Context, req *types.ListRoleDeptRequest) ([]*entity.Dept, uint32, error)
-	// ListDeptRole 获取指定菜单的角色列表
+	// ListDeptRole 获取部门角色列表
 	ListDeptRole(ctx core.Context, req *types.ListDeptRoleRequest) ([]*entity.Role, uint32, error)
-	// CreateDeptRoles 创建角色菜单的关联信息
-	CreateDeptRoles(ctx core.Context, drs []*entity.DeptRole) error
-	// DeleteDeptRoles 删除角色菜单关联信息
-	DeleteDeptRoles(ctx core.Context, drs []*entity.DeptRole) error
+	// CreateDeptRole 创建部门角色信息
+	CreateDeptRole(ctx core.Context, deptId, roleId uint32) error
+	// DeleteDeptRole 删除部门角色信息
+	DeleteDeptRole(ctx core.Context, deptId, roleId uint32) error
 }

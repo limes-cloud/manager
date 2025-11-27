@@ -8,28 +8,27 @@ option java_package = "manager.api.menu";
 
 import "api/menu/proto/menu.proto";
 import "google/api/annotations.proto";
-import "google/protobuf/empty.proto";
 
 service Menu{
 
   // ListMenu 获取菜单信息列表
   rpc ListCurrentMenu (ListCurrentMenuRequest) returns (ListMenuReply) {
     option (google.api.http) = {
-      get: "/manager/api/v1/current/menus",
+      get: "/manager/api/current/menus",
     };
   }
 
   // ListMenu 获取菜单信息列表
   rpc ListMenu (ListMenuRequest) returns (ListMenuReply) {
     option (google.api.http) = {
-      get: "/manager/api/v1/menus",
+      get: "/manager/api/menus",
     };
   }
 
   // CreateMenu 创建菜单信息
   rpc CreateMenu (CreateMenuRequest) returns (CreateMenuReply) {
     option (google.api.http) = {
-      post: "/manager/api/v1/menu",
+      post: "/manager/api/menu",
       body: "*"
     };
   }
@@ -37,7 +36,7 @@ service Menu{
   // UpdateMenu 更新菜单信息
   rpc UpdateMenu (UpdateMenuRequest) returns (UpdateMenuReply) {
     option (google.api.http) = {
-      put: "/manager/api/v1/menu",
+      put: "/manager/api/menu",
       body: "*"
     };
   }
@@ -45,7 +44,7 @@ service Menu{
   // DeleteMenu 删除菜单信息
   rpc DeleteMenu (DeleteMenuRequest) returns (DeleteMenuReply) {
     option (google.api.http) = {
-      delete: "/manager/api/v1/menu",
+      delete: "/manager/api/menu",
     };
   }
 

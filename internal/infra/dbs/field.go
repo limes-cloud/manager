@@ -29,12 +29,14 @@ func NewField() *Field {
 func (r Field) ListField(ctx core.Context, req *types.ListFieldRequest) ([]*entity.Field, uint32, error) {
 	var (
 		list  []*entity.Field
-		fs    = []string{"*"}
 		total int64
 	)
 
-	db := ctx.DB().Model(entity.Field{}).Select(fs)
+	db := ctx.DB().Model(entity.Field{})
 
+	if req.Keywords != nil {
+		db = db.Where("keywords in ?", req.Keywords)
+	}
 	if req.Keyword != nil {
 		db = db.Where("keyword = ?", *req.Keyword)
 	}
@@ -44,12 +46,22 @@ func (r Field) ListField(ctx core.Context, req *types.ListFieldRequest) ([]*enti
 	if req.Status != nil {
 		db = db.Where("status = ?", *req.Status)
 	}
-
-	if err := db.Count(&total).Error; err != nil {
-		return nil, 0, err
+	if req.Required != nil {
+		db = db.Where("required = ?", *req.Required)
+	}
+	if req.Unique != nil {
+		db = db.Where("unique = ?", *req.Unique)
 	}
 
-	db = page.SearchScopes(db, &req.Search)
+	if req.Search != nil {
+		// 查询条件下数据总数
+		if err := db.Count(&total).Error; err != nil {
+			return nil, 0, err
+		}
+
+		// 分页排序
+		db = page.SearchScopes(db, req.Search)
+	}
 
 	return list, uint32(total), db.Find(&list).Error
 }

@@ -3,12 +3,15 @@ package app
 import (
 	"context"
 
+	"github.com/limes-cloud/kratosx/model"
+
+	"github.com/go-kratos/kratos/v2/transport/grpc"
+	"github.com/go-kratos/kratos/v2/transport/http"
+
 	"github.com/limes-cloud/manager/internal/domain/entity"
 
 	"github.com/limes-cloud/kratosx/model/page"
 
-	"github.com/go-kratos/kratos/v2/transport/grpc"
-	"github.com/go-kratos/kratos/v2/transport/http"
 	"github.com/limes-cloud/kratosx/pkg/value"
 	"github.com/limes-cloud/manager/api/errors"
 	"github.com/limes-cloud/manager/api/userdept"
@@ -47,12 +50,13 @@ func (s *UserDept) ListUserDept(c context.Context, req *userdept.ListUserDeptReq
 
 	// 调用服务
 	list, total, err := s.srv.ListUserDept(ctx, &types.ListUserDeptRequest{
-		Search: page.Search{
+		Search: &page.Search{
 			Page:     req.Page,
 			PageSize: req.PageSize,
 		},
 		UserId: req.UserId,
-		Name:   req.Name,
+		Dept:   req.Dept,
+		Job:    req.Job,
 	})
 	if err != nil {
 		return nil, err
@@ -68,33 +72,13 @@ func (s *UserDept) ListUserDept(c context.Context, req *userdept.ListUserDeptReq
 	return &reply, nil
 }
 
-func (s *UserDept) ListDeptUser(c context.Context, req *userdept.ListDeptUserRequest) (*userdept.ListDeptUserReply, error) {
-	ctx := core.MustContext(c)
-	list, total, err := s.srv.ListDeptUser(ctx, &types.ListDeptUserRequest{
-		Search: page.Search{
-			Page:     req.Page,
-			PageSize: req.PageSize,
-		},
-		DeptId: req.DeptId,
-		Name:   req.Name,
-	})
-	if err != nil {
-		return nil, err
-	}
-	reply := userdept.ListDeptUserReply{Total: total}
-	if err := value.Transform(list, &reply.List); err != nil {
-		ctx.Logger().Errorw("msg", "list role job \resp transform error", "err", err)
-		return nil, errors.TransformError()
-	}
-	return &reply, nil
-}
-
 func (s *UserDept) CreateUserDept(c context.Context, req *userdept.CreateUserDeptRequest) (*userdept.CreateUserDeptReply, error) {
 	ctx := core.MustContext(c)
 	err := s.srv.CreateUserDept(ctx, &entity.UserDept{
 		UserId: req.UserId,
 		DeptId: req.DeptId,
 		JobId:  req.JobId,
+		Main:   value.Pointer(req.Main),
 	})
 	if err != nil {
 		return nil, err
@@ -102,12 +86,24 @@ func (s *UserDept) CreateUserDept(c context.Context, req *userdept.CreateUserDep
 	return &userdept.CreateUserDeptReply{}, nil
 }
 
+func (s *UserDept) UpdateUserDept(c context.Context, req *userdept.UpdateUserDeptRequest) (*userdept.UpdateUserDeptReply, error) {
+	ctx := core.MustContext(c)
+	err := s.srv.UpdateUserDept(ctx, &entity.UserDept{
+		BaseModel: model.BaseModel{Id: req.Id},
+		UserId:    req.UserId,
+		DeptId:    req.DeptId,
+		JobId:     req.JobId,
+		Main:      value.Pointer(req.Main),
+	})
+	if err != nil {
+		return nil, err
+	}
+	return &userdept.UpdateUserDeptReply{}, nil
+}
+
 func (s *UserDept) DeleteUserDept(c context.Context, req *userdept.DeleteUserDeptRequest) (*userdept.DeleteUserDeptReply, error) {
 	ctx := core.MustContext(c)
-	err := s.srv.DeleteUserDept(ctx, &entity.UserDept{
-		UserId: req.UserId,
-		DeptId: req.DeptId,
-	})
+	err := s.srv.DeleteUserDept(ctx, req.Id)
 	if err != nil {
 		return nil, err
 	}

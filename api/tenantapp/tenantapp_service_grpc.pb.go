@@ -8,6 +8,7 @@ package tenantapp
 
 import (
 	context "context"
+
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -19,18 +20,18 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	Tenant_GetTenantAppMenuIds_FullMethodName = "/manager.api.tenantapp.Tenant/GetTenantAppMenuIds"
-	Tenant_ListTenantApp_FullMethodName       = "/manager.api.tenantapp.Tenant/ListTenantApp"
-	Tenant_CreateTenantApp_FullMethodName     = "/manager.api.tenantapp.Tenant/CreateTenantApp"
-	Tenant_UpdateTenantApp_FullMethodName     = "/manager.api.tenantapp.Tenant/UpdateTenantApp"
-	Tenant_DeleteTenantApp_FullMethodName     = "/manager.api.tenantapp.Tenant/DeleteTenantApp"
+	Tenant_GetTenantApp_FullMethodName    = "/manager.api.tenantapp.Tenant/GetTenantApp"
+	Tenant_ListTenantApp_FullMethodName   = "/manager.api.tenantapp.Tenant/ListTenantApp"
+	Tenant_CreateTenantApp_FullMethodName = "/manager.api.tenantapp.Tenant/CreateTenantApp"
+	Tenant_UpdateTenantApp_FullMethodName = "/manager.api.tenantapp.Tenant/UpdateTenantApp"
+	Tenant_DeleteTenantApp_FullMethodName = "/manager.api.tenantapp.Tenant/DeleteTenantApp"
 )
 
 // TenantClient is the client API for Tenant service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type TenantClient interface {
-	GetTenantAppMenuIds(ctx context.Context, in *GetTenantAppMenuIdsRequest, opts ...grpc.CallOption) (*GetTenantAppMenuIdsReply, error)
+	GetTenantApp(ctx context.Context, in *GetTenantAppRequest, opts ...grpc.CallOption) (*GetTenantAppReply, error)
 	ListTenantApp(ctx context.Context, in *ListTenantAppRequest, opts ...grpc.CallOption) (*ListTenantAppReply, error)
 	CreateTenantApp(ctx context.Context, in *CreateTenantAppRequest, opts ...grpc.CallOption) (*CreateTenantAppReply, error)
 	UpdateTenantApp(ctx context.Context, in *UpdateTenantAppRequest, opts ...grpc.CallOption) (*UpdateTenantAppReply, error)
@@ -45,9 +46,9 @@ func NewTenantClient(cc grpc.ClientConnInterface) TenantClient {
 	return &tenantClient{cc}
 }
 
-func (c *tenantClient) GetTenantAppMenuIds(ctx context.Context, in *GetTenantAppMenuIdsRequest, opts ...grpc.CallOption) (*GetTenantAppMenuIdsReply, error) {
-	out := new(GetTenantAppMenuIdsReply)
-	err := c.cc.Invoke(ctx, Tenant_GetTenantAppMenuIds_FullMethodName, in, out, opts...)
+func (c *tenantClient) GetTenantApp(ctx context.Context, in *GetTenantAppRequest, opts ...grpc.CallOption) (*GetTenantAppReply, error) {
+	out := new(GetTenantAppReply)
+	err := c.cc.Invoke(ctx, Tenant_GetTenantApp_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -94,7 +95,7 @@ func (c *tenantClient) DeleteTenantApp(ctx context.Context, in *DeleteTenantAppR
 // All implementations must embed UnimplementedTenantServer
 // for forward compatibility
 type TenantServer interface {
-	GetTenantAppMenuIds(context.Context, *GetTenantAppMenuIdsRequest) (*GetTenantAppMenuIdsReply, error)
+	GetTenantApp(context.Context, *GetTenantAppRequest) (*GetTenantAppReply, error)
 	ListTenantApp(context.Context, *ListTenantAppRequest) (*ListTenantAppReply, error)
 	CreateTenantApp(context.Context, *CreateTenantAppRequest) (*CreateTenantAppReply, error)
 	UpdateTenantApp(context.Context, *UpdateTenantAppRequest) (*UpdateTenantAppReply, error)
@@ -103,21 +104,24 @@ type TenantServer interface {
 }
 
 // UnimplementedTenantServer must be embedded to have forward compatible implementations.
-type UnimplementedTenantServer struct {
+type UnimplementedTenantServer struct{}
+
+func (UnimplementedTenantServer) GetTenantApp(context.Context, *GetTenantAppRequest) (*GetTenantAppReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetTenantApp not implemented")
 }
 
-func (UnimplementedTenantServer) GetTenantAppMenuIds(context.Context, *GetTenantAppMenuIdsRequest) (*GetTenantAppMenuIdsReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetTenantAppMenuIds not implemented")
-}
 func (UnimplementedTenantServer) ListTenantApp(context.Context, *ListTenantAppRequest) (*ListTenantAppReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListTenantApp not implemented")
 }
+
 func (UnimplementedTenantServer) CreateTenantApp(context.Context, *CreateTenantAppRequest) (*CreateTenantAppReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateTenantApp not implemented")
 }
+
 func (UnimplementedTenantServer) UpdateTenantApp(context.Context, *UpdateTenantAppRequest) (*UpdateTenantAppReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateTenantApp not implemented")
 }
+
 func (UnimplementedTenantServer) DeleteTenantApp(context.Context, *DeleteTenantAppRequest) (*DeleteTenantAppReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteTenantApp not implemented")
 }
@@ -134,20 +138,20 @@ func RegisterTenantServer(s grpc.ServiceRegistrar, srv TenantServer) {
 	s.RegisterService(&Tenant_ServiceDesc, srv)
 }
 
-func _Tenant_GetTenantAppMenuIds_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetTenantAppMenuIdsRequest)
+func _Tenant_GetTenantApp_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetTenantAppRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(TenantServer).GetTenantAppMenuIds(ctx, in)
+		return srv.(TenantServer).GetTenantApp(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Tenant_GetTenantAppMenuIds_FullMethodName,
+		FullMethod: Tenant_GetTenantApp_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(TenantServer).GetTenantAppMenuIds(ctx, req.(*GetTenantAppMenuIdsRequest))
+		return srv.(TenantServer).GetTenantApp(ctx, req.(*GetTenantAppRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -232,8 +236,8 @@ var Tenant_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*TenantServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "GetTenantAppMenuIds",
-			Handler:    _Tenant_GetTenantAppMenuIds_Handler,
+			MethodName: "GetTenantApp",
+			Handler:    _Tenant_GetTenantApp_Handler,
 		},
 		{
 			MethodName: "ListTenantApp",

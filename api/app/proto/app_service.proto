@@ -10,31 +10,31 @@ import "api/app/proto/app.proto";
 import "google/api/annotations.proto";
 
 service App{
-  // GetApp 获取指定的应用信息
-  rpc GetApp (GetAppRequest) returns (GetAppReply) {
+  // GetSampleApp 获取应用基础信息
+  rpc GetSampleApp (GetSampleAppRequest) returns (GetSampleAppReply) {
     option (google.api.http) = {
-      get: "/manager/api/v1/app"
+      get: "/manager/api/sample/app"
     };
   }
 
-  // ListApp 获取应用信息列表
-  rpc ListCurrentApp (ListAppRequest) returns (ListAppReply) {
+  // GetApp 获取指定的应用信息
+  rpc GetApp (GetAppRequest) returns (GetAppReply) {
     option (google.api.http) = {
-      get: "/manager/api/v1/current/apps",
+      get: "/manager/api/app"
     };
   }
 
   // ListApp 获取应用信息列表
   rpc ListApp (ListAppRequest) returns (ListAppReply) {
     option (google.api.http) = {
-      get: "/manager/api/v1/apps",
+      get: "/manager/api/apps",
     };
   }
 
   // CreateApp 创建应用信息
   rpc CreateApp (CreateAppRequest) returns (CreateAppReply) {
     option (google.api.http) = {
-      post: "/manager/api/v1/app",
+      post: "/manager/api/app",
       body: "*"
     };
   }
@@ -42,7 +42,7 @@ service App{
   // UpdateApp 更新应用信息
   rpc UpdateApp (UpdateAppRequest) returns (UpdateAppReply) {
     option (google.api.http) = {
-      put: "/manager/api/v1/app",
+      put: "/manager/api/app",
       body: "*"
     };
   }
@@ -50,59 +50,8 @@ service App{
   // DeleteApp 删除应用信息
   rpc DeleteApp (DeleteAppRequest) returns (DeleteAppReply) {
     option (google.api.http) = {
-      delete: "/manager/api/v1/app",
+      delete: "/manager/api/app",
     };
   }
 
-
-  // ListAppOAuthChannel 获取应用渠道信息
-  rpc ListAppOAuthChannel (ListAppOAuthChannelRequest) returns (ListAppOAuthChannelReply) {
-    option (google.api.http) = {
-      get: "/manager/api/v1/app/channels",
-    };
-  }
-
-  // ListAppOAuthChannel 获取应用渠道信息
-  rpc ListTenantAppOAuthChannel (ListTenantAppOAuthChannelRequest) returns (ListTenantAppOAuthChannelReply) {
-    option (google.api.http) = {
-      get: "/manager/api/v1/app/tenant/channels",
-    };
-  }
-
-  // CreateApp 创建应用渠道信息
-  rpc CreateAppOAuthChannel (CreateAppOAuthChannelRequest) returns (CreateAppOAuthChannelReply) {
-    option (google.api.http) = {
-      post: "/manager/api/v1/app/channel",
-      body: "*"
-    };
-  }
-
-  // DeleteApp 删除应用渠道信息
-  rpc DeleteAppOAuthChannel (DeleteAppOAuthChannelRequest) returns (DeleteAppOAuthChannelReply) {
-    option (google.api.http) = {
-      delete: "/manager/api/v1/app/channel",
-    };
-  }
-
-  // ListAppField 获取应用字段信息
-  rpc ListAppField (ListAppFieldRequest) returns (ListAppFieldReply) {
-    option (google.api.http) = {
-      get: "/manager/api/v1/app/fields",
-    };
-  }
-
-  // CreateApp 创建应用字段信息
-  rpc CreateAppField (CreateAppFieldRequest) returns (CreateAppFieldReply) {
-    option (google.api.http) = {
-      post: "/manager/api/v1/app/field",
-      body: "*"
-    };
-  }
-
-  // DeleteApp 删除应用字段信息
-  rpc DeleteAppField (DeleteAppFieldRequest) returns (DeleteAppFieldReply) {
-    option (google.api.http) = {
-      delete: "/manager/api/v1/app/field",
-    };
-  }
 }

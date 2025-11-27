@@ -35,6 +35,139 @@ var (
 	_ = sort.Sort
 )
 
+// Validate checks the field values on TenantSetting with the rules defined in
+// the proto definition for this message. If any rules are violated, the first
+// error encountered is returned, or nil if there are no violations.
+func (m *TenantSetting) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on TenantSetting with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// result is a list of violation errors wrapped in TenantSettingMultiError, or
+// nil if none found.
+func (m *TenantSetting) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *TenantSetting) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if l := utf8.RuneCountInString(m.GetDefaultUserPassword()); l < 1 || l > 128 {
+		err := TenantSettingValidationError{
+			field:  "DefaultUserPassword",
+			reason: "value length must be between 1 and 128 runes, inclusive",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if l := utf8.RuneCountInString(m.GetDefaultUserAvatar()); l < 1 || l > 128 {
+		err := TenantSettingValidationError{
+			field:  "DefaultUserAvatar",
+			reason: "value length must be between 1 and 128 runes, inclusive",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if l := utf8.RuneCountInString(m.GetDefaultUserNickname()); l < 1 || l > 32 {
+		err := TenantSettingValidationError{
+			field:  "DefaultUserNickname",
+			reason: "value length must be between 1 and 32 runes, inclusive",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if len(errors) > 0 {
+		return TenantSettingMultiError(errors)
+	}
+
+	return nil
+}
+
+// TenantSettingMultiError is an error wrapping multiple validation errors
+// returned by TenantSetting.ValidateAll() if the designated constraints
+// aren't met.
+type TenantSettingMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m TenantSettingMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m TenantSettingMultiError) AllErrors() []error { return m }
+
+// TenantSettingValidationError is the validation error returned by
+// TenantSetting.Validate if the designated constraints aren't met.
+type TenantSettingValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e TenantSettingValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e TenantSettingValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e TenantSettingValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e TenantSettingValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e TenantSettingValidationError) ErrorName() string { return "TenantSettingValidationError" }
+
+// Error satisfies the builtin error interface
+func (e TenantSettingValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sTenantSetting.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = TenantSettingValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = TenantSettingValidationError{}
+
 // Validate checks the field values on CreateTenantRequest with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
@@ -103,8 +236,33 @@ func (m *CreateTenantRequest) validate(all bool) error {
 
 	// no validation rules for Weight
 
-	if m.Status != nil {
-		// no validation rules for Status
+	if all {
+		switch v := interface{}(m.GetSetting()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, CreateTenantRequestValidationError{
+					field:  "Setting",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, CreateTenantRequestValidationError{
+					field:  "Setting",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetSetting()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return CreateTenantRequestValidationError{
+				field:  "Setting",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
 	}
 
 	if len(errors) > 0 {
@@ -369,6 +527,37 @@ func (m *UpdateTenantRequest) validate(all bool) error {
 
 	if m.Weight != nil {
 		// no validation rules for Weight
+	}
+
+	if m.Setting != nil {
+		if all {
+			switch v := interface{}(m.GetSetting()).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, UpdateTenantRequestValidationError{
+						field:  "Setting",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, UpdateTenantRequestValidationError{
+						field:  "Setting",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(m.GetSetting()).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return UpdateTenantRequestValidationError{
+					field:  "Setting",
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
 	}
 
 	if len(errors) > 0 {
@@ -790,7 +979,19 @@ func (m *GetTenantRequest) validate(all bool) error {
 
 	var errors []error
 
-	if m.Id != nil {
+	switch v := m.Param.(type) {
+	case *GetTenantRequest_Id:
+		if v == nil {
+			err := GetTenantRequestValidationError{
+				field:  "Param",
+				reason: "oneof value cannot be a typed-nil",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
 		if m.GetId() < 1 {
 			err := GetTenantRequestValidationError{
 				field:  "Id",
@@ -801,9 +1002,19 @@ func (m *GetTenantRequest) validate(all bool) error {
 			}
 			errors = append(errors, err)
 		}
-	}
 
-	if m.Keyword != nil {
+	case *GetTenantRequest_Keyword:
+		if v == nil {
+			err := GetTenantRequestValidationError{
+				field:  "Param",
+				reason: "oneof value cannot be a typed-nil",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
 		if utf8.RuneCountInString(m.GetKeyword()) < 1 {
 			err := GetTenantRequestValidationError{
 				field:  "Keyword",
@@ -814,6 +1025,9 @@ func (m *GetTenantRequest) validate(all bool) error {
 			}
 			errors = append(errors, err)
 		}
+
+	default:
+		_ = v // ensures v is used
 	}
 
 	if len(errors) > 0 {
@@ -920,7 +1134,11 @@ func (m *GetTenantReply) validate(all bool) error {
 
 	// no validation rules for Keyword
 
+	// no validation rules for Logo
+
 	// no validation rules for Name
+
+	// no validation rules for Status
 
 	// no validation rules for Description
 
@@ -930,8 +1148,33 @@ func (m *GetTenantReply) validate(all bool) error {
 
 	// no validation rules for UpdatedAt
 
-	if m.Status != nil {
-		// no validation rules for Status
+	if all {
+		switch v := interface{}(m.GetSetting()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, GetTenantReplyValidationError{
+					field:  "Setting",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, GetTenantReplyValidationError{
+					field:  "Setting",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetSetting()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return GetTenantReplyValidationError{
+				field:  "Setting",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
 	}
 
 	if len(errors) > 0 {
@@ -1057,7 +1300,16 @@ func (m *ListTenantRequest) validate(all bool) error {
 	}
 
 	if m.Order != nil {
-		// no validation rules for Order
+		if _, ok := _ListTenantRequest_Order_InLookup[m.GetOrder()]; !ok {
+			err := ListTenantRequestValidationError{
+				field:  "Order",
+				reason: "value must be in list [asc desc]",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
 	}
 
 	if m.OrderBy != nil {
@@ -1074,6 +1326,10 @@ func (m *ListTenantRequest) validate(all bool) error {
 
 	if m.Status != nil {
 		// no validation rules for Status
+	}
+
+	if m.App != nil {
+		// no validation rules for App
 	}
 
 	if len(errors) > 0 {
@@ -1155,6 +1411,11 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = ListTenantRequestValidationError{}
+
+var _ListTenantRequest_Order_InLookup = map[string]struct{}{
+	"asc":  {},
+	"desc": {},
+}
 
 // Validate checks the field values on ListTenantReply with the rules defined
 // in the proto definition for this message. If any rules are violated, the
@@ -1292,6 +1553,255 @@ var _ interface {
 	ErrorName() string
 } = ListTenantReplyValidationError{}
 
+// Validate checks the field values on ListAppTenantRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *ListAppTenantRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on ListAppTenantRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// ListAppTenantRequestMultiError, or nil if none found.
+func (m *ListAppTenantRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *ListAppTenantRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if utf8.RuneCountInString(m.GetApp()) < 1 {
+		err := ListAppTenantRequestValidationError{
+			field:  "App",
+			reason: "value length must be at least 1 runes",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if len(errors) > 0 {
+		return ListAppTenantRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// ListAppTenantRequestMultiError is an error wrapping multiple validation
+// errors returned by ListAppTenantRequest.ValidateAll() if the designated
+// constraints aren't met.
+type ListAppTenantRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m ListAppTenantRequestMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m ListAppTenantRequestMultiError) AllErrors() []error { return m }
+
+// ListAppTenantRequestValidationError is the validation error returned by
+// ListAppTenantRequest.Validate if the designated constraints aren't met.
+type ListAppTenantRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e ListAppTenantRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e ListAppTenantRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e ListAppTenantRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e ListAppTenantRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e ListAppTenantRequestValidationError) ErrorName() string {
+	return "ListAppTenantRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e ListAppTenantRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sListAppTenantRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = ListAppTenantRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = ListAppTenantRequestValidationError{}
+
+// Validate checks the field values on ListAppTenantReply with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *ListAppTenantReply) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on ListAppTenantReply with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// ListAppTenantReplyMultiError, or nil if none found.
+func (m *ListAppTenantReply) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *ListAppTenantReply) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	for idx, item := range m.GetList() {
+		_, _ = idx, item
+
+		if all {
+			switch v := interface{}(item).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, ListAppTenantReplyValidationError{
+						field:  fmt.Sprintf("List[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, ListAppTenantReplyValidationError{
+						field:  fmt.Sprintf("List[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return ListAppTenantReplyValidationError{
+					field:  fmt.Sprintf("List[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	if len(errors) > 0 {
+		return ListAppTenantReplyMultiError(errors)
+	}
+
+	return nil
+}
+
+// ListAppTenantReplyMultiError is an error wrapping multiple validation errors
+// returned by ListAppTenantReply.ValidateAll() if the designated constraints
+// aren't met.
+type ListAppTenantReplyMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m ListAppTenantReplyMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m ListAppTenantReplyMultiError) AllErrors() []error { return m }
+
+// ListAppTenantReplyValidationError is the validation error returned by
+// ListAppTenantReply.Validate if the designated constraints aren't met.
+type ListAppTenantReplyValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e ListAppTenantReplyValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e ListAppTenantReplyValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e ListAppTenantReplyValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e ListAppTenantReplyValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e ListAppTenantReplyValidationError) ErrorName() string {
+	return "ListAppTenantReplyValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e ListAppTenantReplyValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sListAppTenantReply.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = ListAppTenantReplyValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = ListAppTenantReplyValidationError{}
+
 // Validate checks the field values on ListTenantReply_Data with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
@@ -1322,6 +1832,8 @@ func (m *ListTenantReply_Data) validate(all bool) error {
 
 	// no validation rules for Name
 
+	// no validation rules for Status
+
 	// no validation rules for Description
 
 	// no validation rules for Weight
@@ -1329,10 +1841,6 @@ func (m *ListTenantReply_Data) validate(all bool) error {
 	// no validation rules for CreatedAt
 
 	// no validation rules for UpdatedAt
-
-	if m.Status != nil {
-		// no validation rules for Status
-	}
 
 	if len(errors) > 0 {
 		return ListTenantReply_DataMultiError(errors)
@@ -1413,3 +1921,113 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = ListTenantReply_DataValidationError{}
+
+// Validate checks the field values on ListAppTenantReply_Data with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *ListAppTenantReply_Data) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on ListAppTenantReply_Data with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// ListAppTenantReply_DataMultiError, or nil if none found.
+func (m *ListAppTenantReply_Data) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *ListAppTenantReply_Data) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Id
+
+	// no validation rules for Keyword
+
+	// no validation rules for Logo
+
+	// no validation rules for Name
+
+	if len(errors) > 0 {
+		return ListAppTenantReply_DataMultiError(errors)
+	}
+
+	return nil
+}
+
+// ListAppTenantReply_DataMultiError is an error wrapping multiple validation
+// errors returned by ListAppTenantReply_Data.ValidateAll() if the designated
+// constraints aren't met.
+type ListAppTenantReply_DataMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m ListAppTenantReply_DataMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m ListAppTenantReply_DataMultiError) AllErrors() []error { return m }
+
+// ListAppTenantReply_DataValidationError is the validation error returned by
+// ListAppTenantReply_Data.Validate if the designated constraints aren't met.
+type ListAppTenantReply_DataValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e ListAppTenantReply_DataValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e ListAppTenantReply_DataValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e ListAppTenantReply_DataValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e ListAppTenantReply_DataValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e ListAppTenantReply_DataValidationError) ErrorName() string {
+	return "ListAppTenantReply_DataValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e ListAppTenantReply_DataValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sListAppTenantReply_Data.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = ListAppTenantReply_DataValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = ListAppTenantReply_DataValidationError{}

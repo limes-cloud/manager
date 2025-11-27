@@ -8,13 +8,19 @@ option java_package = "manager.api.tenant.proto";
 
 import "validate/validate.proto";
 
+message TenantSetting {
+  string defaultUserPassword = 1[(validate.rules).string = {min_len: 1,max_len:128}];
+  string defaultUserAvatar = 2[(validate.rules).string = {min_len: 1,max_len:128}];
+  string defaultUserNickname = 3[(validate.rules).string = {min_len: 1,max_len:32}];
+}
+
 message CreateTenantRequest {
   string logo = 1[(validate.rules).string = {min_len: 1,max_len:128}];
   string keyword = 2[(validate.rules).string = {min_len: 1,max_len:32}];
   string name = 3[(validate.rules).string = {min_len: 1,max_len:64}];
-  optional bool status = 4;
-  string description = 5[(validate.rules).string = {max_len:256}];
-  uint32 weight = 6;
+  string description = 4[(validate.rules).string = {max_len:256}];
+  uint32 weight = 5;
+  TenantSetting setting = 6;
 }
 
 message CreateTenantReply {
@@ -28,7 +34,9 @@ message UpdateTenantRequest {
   optional bool status = 4;
   optional string description = 5[(validate.rules).string = {max_len:256}];
   optional uint32 weight = 6;
+  optional TenantSetting setting = 7;
 }
+
 message UpdateTenantReply {
 }
 
@@ -38,29 +46,34 @@ message DeleteTenantRequest {
 message DeleteTenantReply {}
 
 message GetTenantRequest {
-  optional uint32 id = 1[(validate.rules).uint32 = {gte: 1}];
-  optional string keyword = 2[(validate.rules).string = {min_len: 1}];
+  oneof param{
+    uint32 id = 1[(validate.rules).uint32 = {gte: 1}];
+    string keyword = 2[(validate.rules).string = {min_len: 1}];
+  }
 }
 
 message GetTenantReply {
   uint32 id = 1;
   string keyword = 2;
-  string name = 3;
-  optional bool status = 4;
-  string description = 5;
-  uint32 weight = 6;
-  uint32 createdAt = 7;
-  uint32 updatedAt = 8;
+  string logo = 3;
+  string name = 4;
+  bool status = 5;
+  string description = 6;
+  uint32 weight = 7;
+  uint32 createdAt = 8;
+  uint32 updatedAt = 9;
+  TenantSetting setting = 10;
 }
 
 message ListTenantRequest {
   uint32 page = 1[(validate.rules).uint32 = {gte: 1}];
   uint32 pageSize = 2[(validate.rules).uint32 = {gte: 1,lte:50}];
-  optional string order = 3;
+  optional string order = 3[(validate.rules).string = {in: ["asc","desc"]}];
   optional string orderBy = 4;
   optional string name = 5;
   optional string keyword = 6;
   optional bool status = 7;
+  optional string app = 8;
 }
 
 message ListTenantReply {
@@ -69,7 +82,7 @@ message ListTenantReply {
     string keyword = 2;
     string logo = 3;
     string name = 4;
-    optional bool status = 5;
+    bool status = 5;
     string description = 6;
     uint32 weight = 7;
     uint32 createdAt = 8;
@@ -79,3 +92,16 @@ message ListTenantReply {
   uint32 total = 2;
 }
 
+message ListAppTenantRequest{
+  string app = 1[(validate.rules).string = {min_len: 1}];
+}
+
+message ListAppTenantReply{
+  message Data{
+    uint32 id = 1;
+    string keyword = 2;
+    string logo = 3;
+    string name = 4;
+  }
+  repeated Data list = 1;
+}

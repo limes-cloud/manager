@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+package manager.api.tenantadmin;
+
+option go_package = "manager/api/tenantadmin;tenantadmin";
+option java_multiple_files = true;
+option java_package = "manager.api.tenantadmin.proto";
+
+import "google/api/annotations.proto";
+import "api/tenantadmin/proto/tenantadmin.proto";
+
+service TenantAdmin {
+
+
+	rpc ListTenantAdmin (ListTenantAdminRequest) returns (ListTenantAdminReply){
+		option (google.api.http) = {
+			get: "/manager/api/tenant/admins"
+		};
+	}
+
+	rpc CreateTenantAdmin (CreateTenantAdminRequest) returns (CreateTenantAdminReply){
+		option (google.api.http) = {
+			post: "/manager/api/tenant/admin",
+			body: "*"
+		};
+	}
+
+	rpc DeleteTenantAdmin (DeleteTenantAdminRequest) returns (DeleteTenantAdminReply){
+		option (google.api.http) = {
+			delete: "/manager/api/tenant/admin",
+		};
+	}
+}

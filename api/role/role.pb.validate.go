@@ -302,6 +302,18 @@ func (m *ListRoleRequest) validate(all bool) error {
 
 	var errors []error
 
+	if m.Keyword != nil {
+		// no validation rules for Keyword
+	}
+
+	if m.Name != nil {
+		// no validation rules for Name
+	}
+
+	if m.Status != nil {
+		// no validation rules for Status
+	}
+
 	if len(errors) > 0 {
 		return ListRoleRequestMultiError(errors)
 	}

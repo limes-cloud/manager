@@ -20,29 +20,22 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	App_GetApp_FullMethodName                    = "/manager.api.app.App/GetApp"
-	App_ListCurrentApp_FullMethodName            = "/manager.api.app.App/ListCurrentApp"
-	App_ListApp_FullMethodName                   = "/manager.api.app.App/ListApp"
-	App_CreateApp_FullMethodName                 = "/manager.api.app.App/CreateApp"
-	App_UpdateApp_FullMethodName                 = "/manager.api.app.App/UpdateApp"
-	App_DeleteApp_FullMethodName                 = "/manager.api.app.App/DeleteApp"
-	App_ListAppOAuthChannel_FullMethodName       = "/manager.api.app.App/ListAppOAuthChannel"
-	App_ListTenantAppOAuthChannel_FullMethodName = "/manager.api.app.App/ListTenantAppOAuthChannel"
-	App_CreateAppOAuthChannel_FullMethodName     = "/manager.api.app.App/CreateAppOAuthChannel"
-	App_DeleteAppOAuthChannel_FullMethodName     = "/manager.api.app.App/DeleteAppOAuthChannel"
-	App_ListAppField_FullMethodName              = "/manager.api.app.App/ListAppField"
-	App_CreateAppField_FullMethodName            = "/manager.api.app.App/CreateAppField"
-	App_DeleteAppField_FullMethodName            = "/manager.api.app.App/DeleteAppField"
+	App_GetSampleApp_FullMethodName = "/manager.api.app.App/GetSampleApp"
+	App_GetApp_FullMethodName       = "/manager.api.app.App/GetApp"
+	App_ListApp_FullMethodName      = "/manager.api.app.App/ListApp"
+	App_CreateApp_FullMethodName    = "/manager.api.app.App/CreateApp"
+	App_UpdateApp_FullMethodName    = "/manager.api.app.App/UpdateApp"
+	App_DeleteApp_FullMethodName    = "/manager.api.app.App/DeleteApp"
 )
 
 // AppClient is the client API for App service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type AppClient interface {
+	// GetSampleApp 获取应用基础信息
+	GetSampleApp(ctx context.Context, in *GetSampleAppRequest, opts ...grpc.CallOption) (*GetSampleAppReply, error)
 	// GetApp 获取指定的应用信息
 	GetApp(ctx context.Context, in *GetAppRequest, opts ...grpc.CallOption) (*GetAppReply, error)
-	// ListApp 获取应用信息列表
-	ListCurrentApp(ctx context.Context, in *ListAppRequest, opts ...grpc.CallOption) (*ListAppReply, error)
 	// ListApp 获取应用信息列表
 	ListApp(ctx context.Context, in *ListAppRequest, opts ...grpc.CallOption) (*ListAppReply, error)
 	// CreateApp 创建应用信息
@@ -51,20 +44,6 @@ type AppClient interface {
 	UpdateApp(ctx context.Context, in *UpdateAppRequest, opts ...grpc.CallOption) (*UpdateAppReply, error)
 	// DeleteApp 删除应用信息
 	DeleteApp(ctx context.Context, in *DeleteAppRequest, opts ...grpc.CallOption) (*DeleteAppReply, error)
-	// ListAppOAuthChannel 获取应用渠道信息
-	ListAppOAuthChannel(ctx context.Context, in *ListAppOAuthChannelRequest, opts ...grpc.CallOption) (*ListAppOAuthChannelReply, error)
-	// ListAppOAuthChannel 获取应用渠道信息
-	ListTenantAppOAuthChannel(ctx context.Context, in *ListTenantAppOAuthChannelRequest, opts ...grpc.CallOption) (*ListTenantAppOAuthChannelReply, error)
-	// CreateApp 创建应用渠道信息
-	CreateAppOAuthChannel(ctx context.Context, in *CreateAppOAuthChannelRequest, opts ...grpc.CallOption) (*CreateAppOAuthChannelReply, error)
-	// DeleteApp 删除应用渠道信息
-	DeleteAppOAuthChannel(ctx context.Context, in *DeleteAppOAuthChannelRequest, opts ...grpc.CallOption) (*DeleteAppOAuthChannelReply, error)
-	// ListAppField 获取应用字段信息
-	ListAppField(ctx context.Context, in *ListAppFieldRequest, opts ...grpc.CallOption) (*ListAppFieldReply, error)
-	// CreateApp 创建应用字段信息
-	CreateAppField(ctx context.Context, in *CreateAppFieldRequest, opts ...grpc.CallOption) (*CreateAppFieldReply, error)
-	// DeleteApp 删除应用字段信息
-	DeleteAppField(ctx context.Context, in *DeleteAppFieldRequest, opts ...grpc.CallOption) (*DeleteAppFieldReply, error)
 }
 
 type appClient struct {
@@ -75,18 +54,18 @@ func NewAppClient(cc grpc.ClientConnInterface) AppClient {
 	return &appClient{cc}
 }
 
-func (c *appClient) GetApp(ctx context.Context, in *GetAppRequest, opts ...grpc.CallOption) (*GetAppReply, error) {
-	out := new(GetAppReply)
-	err := c.cc.Invoke(ctx, App_GetApp_FullMethodName, in, out, opts...)
+func (c *appClient) GetSampleApp(ctx context.Context, in *GetSampleAppRequest, opts ...grpc.CallOption) (*GetSampleAppReply, error) {
+	out := new(GetSampleAppReply)
+	err := c.cc.Invoke(ctx, App_GetSampleApp_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *appClient) ListCurrentApp(ctx context.Context, in *ListAppRequest, opts ...grpc.CallOption) (*ListAppReply, error) {
-	out := new(ListAppReply)
-	err := c.cc.Invoke(ctx, App_ListCurrentApp_FullMethodName, in, out, opts...)
+func (c *appClient) GetApp(ctx context.Context, in *GetAppRequest, opts ...grpc.CallOption) (*GetAppReply, error) {
+	out := new(GetAppReply)
+	err := c.cc.Invoke(ctx, App_GetApp_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -129,77 +108,14 @@ func (c *appClient) DeleteApp(ctx context.Context, in *DeleteAppRequest, opts ..
 	return out, nil
 }
 
-func (c *appClient) ListAppOAuthChannel(ctx context.Context, in *ListAppOAuthChannelRequest, opts ...grpc.CallOption) (*ListAppOAuthChannelReply, error) {
-	out := new(ListAppOAuthChannelReply)
-	err := c.cc.Invoke(ctx, App_ListAppOAuthChannel_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *appClient) ListTenantAppOAuthChannel(ctx context.Context, in *ListTenantAppOAuthChannelRequest, opts ...grpc.CallOption) (*ListTenantAppOAuthChannelReply, error) {
-	out := new(ListTenantAppOAuthChannelReply)
-	err := c.cc.Invoke(ctx, App_ListTenantAppOAuthChannel_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *appClient) CreateAppOAuthChannel(ctx context.Context, in *CreateAppOAuthChannelRequest, opts ...grpc.CallOption) (*CreateAppOAuthChannelReply, error) {
-	out := new(CreateAppOAuthChannelReply)
-	err := c.cc.Invoke(ctx, App_CreateAppOAuthChannel_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *appClient) DeleteAppOAuthChannel(ctx context.Context, in *DeleteAppOAuthChannelRequest, opts ...grpc.CallOption) (*DeleteAppOAuthChannelReply, error) {
-	out := new(DeleteAppOAuthChannelReply)
-	err := c.cc.Invoke(ctx, App_DeleteAppOAuthChannel_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *appClient) ListAppField(ctx context.Context, in *ListAppFieldRequest, opts ...grpc.CallOption) (*ListAppFieldReply, error) {
-	out := new(ListAppFieldReply)
-	err := c.cc.Invoke(ctx, App_ListAppField_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *appClient) CreateAppField(ctx context.Context, in *CreateAppFieldRequest, opts ...grpc.CallOption) (*CreateAppFieldReply, error) {
-	out := new(CreateAppFieldReply)
-	err := c.cc.Invoke(ctx, App_CreateAppField_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *appClient) DeleteAppField(ctx context.Context, in *DeleteAppFieldRequest, opts ...grpc.CallOption) (*DeleteAppFieldReply, error) {
-	out := new(DeleteAppFieldReply)
-	err := c.cc.Invoke(ctx, App_DeleteAppField_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 // AppServer is the server API for App service.
 // All implementations must embed UnimplementedAppServer
 // for forward compatibility
 type AppServer interface {
+	// GetSampleApp 获取应用基础信息
+	GetSampleApp(context.Context, *GetSampleAppRequest) (*GetSampleAppReply, error)
 	// GetApp 获取指定的应用信息
 	GetApp(context.Context, *GetAppRequest) (*GetAppReply, error)
-	// ListApp 获取应用信息列表
-	ListCurrentApp(context.Context, *ListAppRequest) (*ListAppReply, error)
 	// ListApp 获取应用信息列表
 	ListApp(context.Context, *ListAppRequest) (*ListAppReply, error)
 	// CreateApp 创建应用信息
@@ -208,32 +124,18 @@ type AppServer interface {
 	UpdateApp(context.Context, *UpdateAppRequest) (*UpdateAppReply, error)
 	// DeleteApp 删除应用信息
 	DeleteApp(context.Context, *DeleteAppRequest) (*DeleteAppReply, error)
-	// ListAppOAuthChannel 获取应用渠道信息
-	ListAppOAuthChannel(context.Context, *ListAppOAuthChannelRequest) (*ListAppOAuthChannelReply, error)
-	// ListAppOAuthChannel 获取应用渠道信息
-	ListTenantAppOAuthChannel(context.Context, *ListTenantAppOAuthChannelRequest) (*ListTenantAppOAuthChannelReply, error)
-	// CreateApp 创建应用渠道信息
-	CreateAppOAuthChannel(context.Context, *CreateAppOAuthChannelRequest) (*CreateAppOAuthChannelReply, error)
-	// DeleteApp 删除应用渠道信息
-	DeleteAppOAuthChannel(context.Context, *DeleteAppOAuthChannelRequest) (*DeleteAppOAuthChannelReply, error)
-	// ListAppField 获取应用字段信息
-	ListAppField(context.Context, *ListAppFieldRequest) (*ListAppFieldReply, error)
-	// CreateApp 创建应用字段信息
-	CreateAppField(context.Context, *CreateAppFieldRequest) (*CreateAppFieldReply, error)
-	// DeleteApp 删除应用字段信息
-	DeleteAppField(context.Context, *DeleteAppFieldRequest) (*DeleteAppFieldReply, error)
 	mustEmbedUnimplementedAppServer()
 }
 
 // UnimplementedAppServer must be embedded to have forward compatible implementations.
 type UnimplementedAppServer struct{}
 
-func (UnimplementedAppServer) GetApp(context.Context, *GetAppRequest) (*GetAppReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetApp not implemented")
+func (UnimplementedAppServer) GetSampleApp(context.Context, *GetSampleAppRequest) (*GetSampleAppReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetSampleApp not implemented")
 }
 
-func (UnimplementedAppServer) ListCurrentApp(context.Context, *ListAppRequest) (*ListAppReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ListCurrentApp not implemented")
+func (UnimplementedAppServer) GetApp(context.Context, *GetAppRequest) (*GetAppReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetApp not implemented")
 }
 
 func (UnimplementedAppServer) ListApp(context.Context, *ListAppRequest) (*ListAppReply, error) {
@@ -251,34 +153,6 @@ func (UnimplementedAppServer) UpdateApp(context.Context, *UpdateAppRequest) (*Up
 func (UnimplementedAppServer) DeleteApp(context.Context, *DeleteAppRequest) (*DeleteAppReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteApp not implemented")
 }
-
-func (UnimplementedAppServer) ListAppOAuthChannel(context.Context, *ListAppOAuthChannelRequest) (*ListAppOAuthChannelReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ListAppOAuthChannel not implemented")
-}
-
-func (UnimplementedAppServer) ListTenantAppOAuthChannel(context.Context, *ListTenantAppOAuthChannelRequest) (*ListTenantAppOAuthChannelReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ListTenantAppOAuthChannel not implemented")
-}
-
-func (UnimplementedAppServer) CreateAppOAuthChannel(context.Context, *CreateAppOAuthChannelRequest) (*CreateAppOAuthChannelReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method CreateAppOAuthChannel not implemented")
-}
-
-func (UnimplementedAppServer) DeleteAppOAuthChannel(context.Context, *DeleteAppOAuthChannelRequest) (*DeleteAppOAuthChannelReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method DeleteAppOAuthChannel not implemented")
-}
-
-func (UnimplementedAppServer) ListAppField(context.Context, *ListAppFieldRequest) (*ListAppFieldReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ListAppField not implemented")
-}
-
-func (UnimplementedAppServer) CreateAppField(context.Context, *CreateAppFieldRequest) (*CreateAppFieldReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method CreateAppField not implemented")
-}
-
-func (UnimplementedAppServer) DeleteAppField(context.Context, *DeleteAppFieldRequest) (*DeleteAppFieldReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method DeleteAppField not implemented")
-}
 func (UnimplementedAppServer) mustEmbedUnimplementedAppServer() {}
 
 // UnsafeAppServer may be embedded to opt out of forward compatibility for this service.
@@ -290,6 +164,24 @@ type UnsafeAppServer interface {
 
 func RegisterAppServer(s grpc.ServiceRegistrar, srv AppServer) {
 	s.RegisterService(&App_ServiceDesc, srv)
+}
+
+func _App_GetSampleApp_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetSampleAppRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AppServer).GetSampleApp(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: App_GetSampleApp_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AppServer).GetSampleApp(ctx, req.(*GetSampleAppRequest))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _App_GetApp_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -306,24 +198,6 @@ func _App_GetApp_Handler(srv interface{}, ctx context.Context, dec func(interfac
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(AppServer).GetApp(ctx, req.(*GetAppRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _App_ListCurrentApp_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListAppRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AppServer).ListCurrentApp(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: App_ListCurrentApp_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AppServer).ListCurrentApp(ctx, req.(*ListAppRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -400,132 +274,6 @@ func _App_DeleteApp_Handler(srv interface{}, ctx context.Context, dec func(inter
 	return interceptor(ctx, in, info, handler)
 }
 
-func _App_ListAppOAuthChannel_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListAppOAuthChannelRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AppServer).ListAppOAuthChannel(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: App_ListAppOAuthChannel_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AppServer).ListAppOAuthChannel(ctx, req.(*ListAppOAuthChannelRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _App_ListTenantAppOAuthChannel_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListTenantAppOAuthChannelRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AppServer).ListTenantAppOAuthChannel(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: App_ListTenantAppOAuthChannel_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AppServer).ListTenantAppOAuthChannel(ctx, req.(*ListTenantAppOAuthChannelRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _App_CreateAppOAuthChannel_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CreateAppOAuthChannelRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AppServer).CreateAppOAuthChannel(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: App_CreateAppOAuthChannel_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AppServer).CreateAppOAuthChannel(ctx, req.(*CreateAppOAuthChannelRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _App_DeleteAppOAuthChannel_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DeleteAppOAuthChannelRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AppServer).DeleteAppOAuthChannel(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: App_DeleteAppOAuthChannel_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AppServer).DeleteAppOAuthChannel(ctx, req.(*DeleteAppOAuthChannelRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _App_ListAppField_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListAppFieldRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AppServer).ListAppField(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: App_ListAppField_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AppServer).ListAppField(ctx, req.(*ListAppFieldRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _App_CreateAppField_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CreateAppFieldRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AppServer).CreateAppField(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: App_CreateAppField_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AppServer).CreateAppField(ctx, req.(*CreateAppFieldRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _App_DeleteAppField_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DeleteAppFieldRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AppServer).DeleteAppField(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: App_DeleteAppField_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AppServer).DeleteAppField(ctx, req.(*DeleteAppFieldRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 // App_ServiceDesc is the grpc.ServiceDesc for App service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -534,12 +282,12 @@ var App_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*AppServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "GetApp",
-			Handler:    _App_GetApp_Handler,
+			MethodName: "GetSampleApp",
+			Handler:    _App_GetSampleApp_Handler,
 		},
 		{
-			MethodName: "ListCurrentApp",
-			Handler:    _App_ListCurrentApp_Handler,
+			MethodName: "GetApp",
+			Handler:    _App_GetApp_Handler,
 		},
 		{
 			MethodName: "ListApp",
@@ -556,34 +304,6 @@ var App_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DeleteApp",
 			Handler:    _App_DeleteApp_Handler,
-		},
-		{
-			MethodName: "ListAppOAuthChannel",
-			Handler:    _App_ListAppOAuthChannel_Handler,
-		},
-		{
-			MethodName: "ListTenantAppOAuthChannel",
-			Handler:    _App_ListTenantAppOAuthChannel_Handler,
-		},
-		{
-			MethodName: "CreateAppOAuthChannel",
-			Handler:    _App_CreateAppOAuthChannel_Handler,
-		},
-		{
-			MethodName: "DeleteAppOAuthChannel",
-			Handler:    _App_DeleteAppOAuthChannel_Handler,
-		},
-		{
-			MethodName: "ListAppField",
-			Handler:    _App_ListAppField_Handler,
-		},
-		{
-			MethodName: "CreateAppField",
-			Handler:    _App_CreateAppField_Handler,
-		},
-		{
-			MethodName: "DeleteAppField",
-			Handler:    _App_DeleteAppField_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

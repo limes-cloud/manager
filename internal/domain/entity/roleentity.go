@@ -2,6 +2,13 @@ package entity
 
 import "github.com/limes-cloud/kratosx/model"
 
+const (
+	ActionCreate = "create"
+	ActionRead   = "read"
+	ActionUpdate = "update"
+	ActionDelete = "delete"
+)
+
 type RoleEntity struct {
 	RoleId   uint32  `json:"roleId" gorm:"column:role_id"`
 	EntityId uint32  `json:"entityId" gorm:"column:entity_id"`

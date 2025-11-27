@@ -26,6 +26,7 @@ type EntityField struct {
 type EntityRule struct {
 	EntityId    uint32 `json:"entityId" gorm:"column:entity_id"`
 	Name        string `json:"name" gorm:"column:name"`
+	Status      *bool  `json:"status" gorm:"column:status"`
 	Expression  string `json:"expression" gorm:"column:expression"`
 	Description string `json:"description" gorm:"column:description"`
 	Entity      Entity `gorm:"foreignKey:EntityId;references:Id"`

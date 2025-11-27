@@ -8,7 +8,6 @@ option java_package = "manager.api.rolemenu";
 
 import "validate/validate.proto";
 
-
 message GetRoleMenuIdsRequest {
   uint32 roleId = 1[(validate.rules).uint32 = {gte: 1}];
   optional uint32 appId = 2[(validate.rules).uint32 = {gte: 1}];

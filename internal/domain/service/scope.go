@@ -11,50 +11,59 @@ import (
 )
 
 type Scope struct {
-	repo repository.Scope
-	user repository.User
+	repo     repository.Scope
+	userdept repository.UserDept
+	tad      repository.TenantAdmin
 }
 
 type resp struct {
-	ctx   core.Context
-	scope *types.GetScopeResponse
-	user  repository.User
+	ctx      core.Context
+	scope    *types.GetScopeResponse
+	userdept repository.UserDept
+	tad      repository.TenantAdmin
 }
 
 func (r *resp) Condition() *mhook.ConditionGroup {
-	return r.scope.Rule
+	return nil
+	// return r.scope.Rule
 }
 
 func (r *resp) Fields() []string {
-	return r.scope.Fields
+	return []string{}
+	// return r.scope.Fields
 }
 
-func NewScope(repo repository.Scope, user repository.User) *Scope {
-	return &Scope{repo: repo, user: user}
+func NewScope(
+	repo repository.Scope,
+	userdept repository.UserDept,
+	tad repository.TenantAdmin,
+) *Scope {
+	return &Scope{
+		repo:     repo,
+		userdept: userdept,
+		tad:      tad,
+	}
 }
 
 func (h *Scope) Hook(ctx context.Context, database string, model string, method string) (mhook.ScopeResponse, error) {
 	return &resp{
-		ctx:   core.MustContext(ctx),
-		scope: h.repo.GetScope(core.MustContext(ctx), database, model, method),
+		ctx:      core.MustContext(ctx),
+		scope:    h.repo.GetScope(core.MustContext(ctx), database, model, method),
+		userdept: h.userdept,
+		tad:      h.tad,
 	}, nil
 }
 
-func (h *Scope) GetUserDeptId(u uint32) uint32 {
-	return h.user.GetUserDeptId(u)
-}
-
 func (r *resp) DeptScopes() (bool, []uint32) {
-	if r.ctx.IsSuperAdmin() {
+	if r.tad.IsAdmin(r.TenantId(), r.UserId()) {
 		return true, nil
 	}
-
 	// 获取实体信息
 	return r.scope.AllDept, r.scope.DeptScopes
 }
 
-func (r *resp) UserDeptId(u uint32) uint32 {
-	return r.user.GetUserDeptId(u)
+func (r *resp) UserDeptId(uid uint32) uint32 {
+	return r.userdept.GetUserMainDeptId(uid)
 }
 
 func (r *resp) DeptId() uint32 {

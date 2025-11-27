@@ -6,7 +6,59 @@ info:
     title: JobRole API
     version: 0.0.1
 paths:
-    /manager/api/v1/job/roles:
+    /manager/api/job/role:
+        post:
+            tags:
+                - JobRole
+            operationId: JobRole_CreateJobRole
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/CreateJobRoleRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/CreateJobRoleReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+        delete:
+            tags:
+                - JobRole
+            operationId: JobRole_DeleteJobRole
+            parameters:
+                - name: jobId
+                  in: query
+                  schema:
+                    type: integer
+                    format: uint32
+                - name: roleId
+                  in: query
+                  schema:
+                    type: integer
+                    format: uint32
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/DeleteJobRoleReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /manager/api/job/roles:
         get:
             tags:
                 - JobRole
@@ -44,194 +96,23 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/Status'
-        post:
-            tags:
-                - JobRole
-            operationId: JobRole_CreateJobRoles
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/CreateJobRolesRequest'
-                required: true
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/CreateJobRolesReply'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/Status'
-        delete:
-            tags:
-                - JobRole
-            operationId: JobRole_DeleteJobRoles
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/DeleteJobRolesRequest'
-                required: true
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/DeleteJobRolesReply'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/Status'
-    /manager/api/v1/role/jobs:
-        get:
-            tags:
-                - JobRole
-            operationId: JobRole_ListRoleJob
-            parameters:
-                - name: page
-                  in: query
-                  schema:
-                    type: integer
-                    format: uint32
-                - name: pageSize
-                  in: query
-                  schema:
-                    type: integer
-                    format: uint32
-                - name: roleId
-                  in: query
-                  schema:
-                    type: integer
-                    format: uint32
-                - name: name
-                  in: query
-                  schema:
-                    type: string
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/ListRoleJobReply'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/Status'
-        post:
-            tags:
-                - JobRole
-            operationId: JobRole_CreateRoleJobs
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/CreateRoleJobsRequest'
-                required: true
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/CreateRoleJobsReply'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/Status'
-        delete:
-            tags:
-                - JobRole
-            operationId: JobRole_DeleteRoleJobs
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: '#/components/schemas/DeleteRoleJobsRequest'
-                required: true
-            responses:
-                "200":
-                    description: OK
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/DeleteRoleJobsReply'
-                default:
-                    description: Default error response
-                    content:
-                        application/json:
-                            schema:
-                                $ref: '#/components/schemas/Status'
 components:
     schemas:
-        CreateJobRolesReply:
+        CreateJobRoleReply:
             type: object
             properties: {}
-        CreateJobRolesRequest:
+        CreateJobRoleRequest:
             type: object
             properties:
                 jobId:
                     type: integer
                     format: uint32
-                roleIds:
-                    type: array
-                    items:
-                        type: integer
-                        format: uint32
-        CreateRoleJobsReply:
-            type: object
-            properties: {}
-        CreateRoleJobsRequest:
-            type: object
-            properties:
                 roleId:
                     type: integer
                     format: uint32
-                jobIds:
-                    type: array
-                    items:
-                        type: integer
-                        format: uint32
-        DeleteJobRolesReply:
+        DeleteJobRoleReply:
             type: object
             properties: {}
-        DeleteJobRolesRequest:
-            type: object
-            properties:
-                jobId:
-                    type: integer
-                    format: uint32
-                roleIds:
-                    type: array
-                    items:
-                        type: integer
-                        format: uint32
-        DeleteRoleJobsReply:
-            type: object
-            properties: {}
-        DeleteRoleJobsRequest:
-            type: object
-            properties:
-                jobIds:
-                    type: array
-                    items:
-                        type: integer
-                        format: uint32
-                roleId:
-                    type: integer
-                    format: uint32
         GoogleProtobufAny:
             type: object
             properties:
@@ -256,36 +137,10 @@ components:
                 id:
                     type: integer
                     format: uint32
+                keyword:
+                    type: string
                 name:
                     type: string
-        ListRoleJobReply:
-            type: object
-            properties:
-                list:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/ListRoleJobReply_Data'
-                total:
-                    type: integer
-                    format: uint32
-        ListRoleJobReply_Classify:
-            type: object
-            properties:
-                id:
-                    type: integer
-                    format: uint32
-                name:
-                    type: string
-        ListRoleJobReply_Data:
-            type: object
-            properties:
-                id:
-                    type: integer
-                    format: uint32
-                name:
-                    type: string
-                classify:
-                    $ref: '#/components/schemas/ListRoleJobReply_Classify'
         Status:
             type: object
             properties:

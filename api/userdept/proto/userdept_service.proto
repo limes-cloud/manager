@@ -13,27 +13,27 @@ service UserDept {
 
 	rpc ListUserDept (ListUserDeptRequest) returns (ListUserDeptReply){
 		option (google.api.http) = {
-			get: "/manager/api/v1/user/depts"
+			get: "/manager/api/userdepts"
 		};
 	}
 
 	rpc CreateUserDept (CreateUserDeptRequest) returns (CreateUserDeptReply){
 		option (google.api.http) = {
-			post: "/manager/api/v1/user/dept",
+			post: "/manager/api/userdept",
+			body: "*"
+		};
+	}
+
+	rpc UpdateUserDept (UpdateUserDeptRequest) returns (UpdateUserDeptReply){
+		option (google.api.http) = {
+			put: "/manager/api/userdept",
 			body: "*"
 		};
 	}
 
 	rpc DeleteUserDept (DeleteUserDeptRequest) returns (DeleteUserDeptReply){
 		option (google.api.http) = {
-			delete: "/manager/api/v1/user/dept",
-			body: "*"
-		};
-	}
-
-	rpc ListDeptUser (ListDeptUserRequest) returns (ListDeptUserReply){
-		option (google.api.http) = {
-			get: "/manager/api/v1/dept/users"
+			delete: "/manager/api/userdept"
 		};
 	}
 

@@ -3,6 +3,11 @@ package app
 import (
 	"context"
 
+	"github.com/limes-cloud/kratosx/pkg/value"
+
+	"github.com/go-kratos/kratos/v2/transport/grpc"
+	"github.com/go-kratos/kratos/v2/transport/http"
+
 	"github.com/limes-cloud/manager/internal/core"
 
 	"github.com/limes-cloud/kratosx/model"
@@ -11,8 +16,6 @@ import (
 
 	"github.com/limes-cloud/manager/api/field"
 
-	"github.com/go-kratos/kratos/v2/transport/grpc"
-	"github.com/go-kratos/kratos/v2/transport/http"
 	"github.com/limes-cloud/manager/internal/domain/entity"
 	"github.com/limes-cloud/manager/internal/domain/service"
 	"github.com/limes-cloud/manager/internal/infra/dbs"
@@ -54,10 +57,30 @@ func (fd *Field) ListFieldType(c context.Context, req *field.ListFieldTypeReques
 	return &reply, nil
 }
 
+// ListRequiredField 获取必填用户字段列表
+func (fd *Field) ListRequiredField(c context.Context, _ *field.ListRequiredFieldRequest) (*field.ListRequiredFieldReply, error) {
+	list, _, err := fd.srv.ListField(core.MustContext(c), &types.ListFieldRequest{
+		Status:   value.Pointer(true),
+		Required: value.Pointer(true),
+	})
+	if err != nil {
+		return nil, err
+	}
+	reply := field.ListRequiredFieldReply{}
+	for _, item := range list {
+		reply.List = append(reply.List, &field.ListRequiredFieldReply_Field{
+			Keyword: item.Keyword,
+			Type:    item.Type,
+			Name:    item.Name,
+		})
+	}
+	return &reply, nil
+}
+
 // ListField 获取用户字段列表
 func (fd *Field) ListField(c context.Context, req *field.ListFieldRequest) (*field.ListFieldReply, error) {
 	list, total, err := fd.srv.ListField(core.MustContext(c), &types.ListFieldRequest{
-		Search: page.Search{
+		Search: &page.Search{
 			Page:     req.Page,
 			PageSize: req.PageSize,
 			Order:    req.Order,
@@ -78,6 +101,8 @@ func (fd *Field) ListField(c context.Context, req *field.ListFieldRequest) (*fie
 			Type:        item.Type,
 			Name:        item.Name,
 			Status:      item.Status,
+			Required:    item.Required,
+			Unique:      item.Unique,
 			Description: item.Description,
 			CreatedAt:   uint32(item.CreatedAt),
 			UpdatedAt:   uint32(item.UpdatedAt),
@@ -92,6 +117,8 @@ func (fd *Field) CreateField(c context.Context, req *field.CreateFieldRequest) (
 		Keyword:     req.Keyword,
 		Type:        req.Type,
 		Name:        req.Name,
+		Required:    &req.Required,
+		Unique:      &req.Unique,
 		Description: req.Description,
 	})
 	if err != nil {
@@ -108,6 +135,8 @@ func (fd *Field) UpdateField(c context.Context, req *field.UpdateFieldRequest) (
 		Type:            req.Type,
 		Name:            req.Name,
 		Status:          req.Status,
+		Required:        req.Required,
+		Unique:          req.Unique,
 		Description:     req.Description,
 	}); err != nil {
 		return nil, err

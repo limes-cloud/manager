@@ -12,9 +12,7 @@ import (
 var conf = &Conf{}
 
 type Conf struct {
-	DefaultUserAvatar   string // 默认头像
-	DefaultUserPassword string // 默认密码
-	Setting             struct {
+	Setting struct {
 		Name      string
 		Debug     bool
 		Title     string
@@ -22,10 +20,13 @@ type Conf struct {
 		Copyright string
 		Logo      string
 		Watermark string
-		PopupType string
 	}
-	DictionaryKeywords []string
 	ChangePasswordType string
+
+	// jwt 白名单
+	JWT struct {
+		Whitelist map[string]bool
+	}
 }
 
 func configSource() kconfig.Source {

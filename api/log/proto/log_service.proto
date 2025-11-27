@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+package manager.api.log;
+
+option go_package = "manager/api/log;log";
+option java_multiple_files = true;
+option java_package = "manager.api.log";
+
+import "google/api/annotations.proto";
+import "api/log/proto/log.proto";
+
+service Log {
+  // ListLoginLog 获取用户登陆信息列表
+  rpc ListLoginLog (ListLoginLogRequest) returns (ListLoginLogReply) {
+    option (google.api.http) = {
+      get: "/manager/api/login/logs",
+    };
+  }
+
+  // ListAuthLog 获取用户登陆信息列表
+  rpc ListAuthLog (ListAuthLogRequest) returns (ListAuthLogReply) {
+    option (google.api.http) = {
+      get: "/manager/api/auth/logs",
+    };
+  }
+}

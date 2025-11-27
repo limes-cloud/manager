@@ -3,10 +3,11 @@ package app
 import (
 	"context"
 
-	"github.com/limes-cloud/kratosx/model/page"
-
 	"github.com/go-kratos/kratos/v2/transport/grpc"
 	"github.com/go-kratos/kratos/v2/transport/http"
+
+	"github.com/limes-cloud/kratosx/model/page"
+
 	"github.com/limes-cloud/kratosx/pkg/value"
 	"github.com/limes-cloud/manager/api/deptrole"
 	"github.com/limes-cloud/manager/api/errors"
@@ -26,6 +27,7 @@ func NewDeptRole() *DeptRole {
 		srv: service.NewDeptRole(
 			dbs.NewDeptRole(),
 			dbs.NewScope(),
+			dbs.NewTenantAdmin(),
 		),
 	}
 }
@@ -65,71 +67,26 @@ func (s *DeptRole) ListDeptRole(c context.Context, req *deptrole.ListDeptRoleReq
 	return &reply, nil
 }
 
-func (s *DeptRole) ListRoleDept(c context.Context, req *deptrole.ListRoleDeptRequest) (*deptrole.ListRoleDeptReply, error) {
+func (s *DeptRole) CreateDeptRole(c context.Context, req *deptrole.CreateDeptRoleRequest) (*deptrole.CreateDeptRoleReply, error) {
 	ctx := core.MustContext(c)
-	list, total, err := s.srv.ListRoleDept(ctx, &types.ListRoleDeptRequest{
-		Search: page.Search{
-			Page:     req.Page,
-			PageSize: req.PageSize,
-		},
+	err := s.srv.CreateDeptRole(ctx, &types.CreateDeptRoleRequest{
+		DeptId: req.DeptId,
 		RoleId: req.RoleId,
-		Name:   req.Name,
 	})
 	if err != nil {
 		return nil, err
 	}
-	reply := deptrole.ListRoleDeptReply{Total: total}
-	if err := value.Transform(list, &reply.List); err != nil {
-		ctx.Logger().Errorw("msg", "list role dept \resp transform error", "err", err)
-		return nil, errors.TransformError()
-	}
-	return &reply, nil
+	return &deptrole.CreateDeptRoleReply{}, nil
 }
 
-func (s *DeptRole) CreateRoleDepts(c context.Context, req *deptrole.CreateRoleDeptsRequest) (*deptrole.CreateRoleDeptsReply, error) {
+func (s *DeptRole) DeleteDeptRole(c context.Context, req *deptrole.DeleteDeptRoleRequest) (*deptrole.DeleteDeptRoleReply, error) {
 	ctx := core.MustContext(c)
-	err := s.srv.CreateRoleDepts(ctx, &types.CreateRoleDeptsRequest{
-		RoleId:  req.RoleId,
-		DeptIds: req.DeptIds,
+	err := s.srv.DeleteDeptRole(ctx, &types.DeleteDeptRoleRequest{
+		DeptId: req.DeptId,
+		RoleId: req.RoleId,
 	})
 	if err != nil {
 		return nil, err
 	}
-	return &deptrole.CreateRoleDeptsReply{}, nil
-}
-
-func (s *DeptRole) CreateDeptRoles(c context.Context, req *deptrole.CreateDeptRolesRequest) (*deptrole.CreateDeptRolesReply, error) {
-	ctx := core.MustContext(c)
-	err := s.srv.CreateDeptRoles(ctx, &types.CreateDeptRolesRequest{
-		DeptId:  req.DeptId,
-		RoleIds: req.RoleIds,
-	})
-	if err != nil {
-		return nil, err
-	}
-	return &deptrole.CreateDeptRolesReply{}, nil
-}
-
-func (s *DeptRole) DeleteDeptRoles(c context.Context, req *deptrole.DeleteDeptRolesRequest) (*deptrole.DeleteDeptRolesReply, error) {
-	ctx := core.MustContext(c)
-	err := s.srv.DeleteDeptRoles(ctx, &types.DeleteDeptRolesRequest{
-		DeptId:  req.DeptId,
-		RoleIds: req.RoleIds,
-	})
-	if err != nil {
-		return nil, err
-	}
-	return &deptrole.DeleteDeptRolesReply{}, nil
-}
-
-func (s *DeptRole) DeleteRoleDepts(c context.Context, req *deptrole.DeleteRoleDeptsRequest) (*deptrole.DeleteRoleDeptsReply, error) {
-	ctx := core.MustContext(c)
-	err := s.srv.DeleteRoleDepts(ctx, &types.DeleteRoleDeptsRequest{
-		DeptIds: req.DeptIds,
-		RoleId:  req.RoleId,
-	})
-	if err != nil {
-		return nil, err
-	}
-	return &deptrole.DeleteRoleDeptsReply{}, nil
+	return &deptrole.DeleteDeptRoleReply{}, nil
 }

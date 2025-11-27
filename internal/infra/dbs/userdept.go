@@ -2,10 +2,9 @@ package dbs
 
 import (
 	"context"
-	"fmt"
-	"strconv"
-	"strings"
 	"sync"
+
+	"github.com/limes-cloud/kratosx/pkg/value"
 
 	"github.com/limes-cloud/kratosx/model/page"
 
@@ -18,7 +17,7 @@ import (
 )
 
 type UserDept struct {
-	cache *cache.Cache[string, struct{}]
+	cache *cache.Cache[uint32, []*entity.UserDept]
 }
 
 var (
@@ -38,11 +37,11 @@ func NewUserDept() *UserDept {
 			kratosx.WithSkipDBHook(),
 		)
 		ctx.BeforeStart("load cache user dept", func() {
-			udIns.cache = cache.NewCacheAndInit[string, struct{}](
+			udIns.cache = cache.NewCacheAndInit[uint32, []*entity.UserDept](
 				ctx,
 				ctx.Redis(),
 				udCacheKey,
-				cache.HookLoad(func() (map[string]struct{}, error) {
+				cache.HookLoad(func() (map[uint32][]*entity.UserDept, error) {
 					return udIns.load(ctx)
 				}),
 			)
@@ -83,22 +82,29 @@ func (ud *UserDept) ListUserDept(ctx core.Context, req *types.ListUserDeptReques
 		list  []*entity.UserDept
 	)
 	db := ctx.DB().
-		Model(&entity.UserDept{}).Preload("Job").Preload("Dept").
-		Joins("left join dept on dept.id = user_dept.dept_id").
-		Where("user_dept.dept_id is not null").
-		Where("dept.status = 1")
+		Model(&entity.UserDept{}).Where("user_id = ?", req.UserId).
+		Joins("Dept", ctx.DB().Where("Dept.status=1")).
+		Joins("Job", ctx.DB().Where("Job.status=1")).
+		Where("Job.status is not null").
+		Where("Dept.status is not null")
 
-	if req.Name != nil {
-		db = db.Where("dept.name like ?", *req.Name+"%")
+	if req.Dept != nil {
+		db = db.Where("dept.name like ?", *req.Dept+"%")
+	}
+	if req.Job != nil {
+		db = db.Where("job.name like ?", *req.Job+"%")
 	}
 	if req.InDeptIds != nil {
 		db = db.Where("dept.id in ?", req.InDeptIds)
 	}
-	if err := db.Count(&total).Error; err != nil {
-		return nil, 0, err
+
+	if req.Search != nil {
+		if err := db.Count(&total).Error; err != nil {
+			return nil, 0, err
+		}
+		db = page.SearchScopes(db, req.Search)
 	}
 
-	db = page.SearchScopes(db, &req.Search)
 	return list, uint32(total), db.Find(&list).Error
 }
 
@@ -112,121 +118,122 @@ func (ud *UserDept) CreateUserDept(ctx core.Context, ent *entity.UserDept) error
 			return err
 		}
 
-		return op.Puts(ud.transvals([]*entity.UserDept{ent})).Do()
+		if value.Value(ent.Main) {
+			if err := ctx.DB().Model(ent).
+				Where("user_id = ? and id != ?", ent.UserId, ent.Id).
+				Update("main", false).Error; err != nil {
+				return err
+			}
+		}
+
+		// 获取当前用户的全量部门更新。
+		list, _, err := ud.ListUserDept(ctx, &types.ListUserDeptRequest{
+			UserId: ent.UserId,
+		})
+		if err != nil {
+			return err
+		}
+
+		return op.Put(ent.UserId, list).Do()
+	})
+}
+
+// UpdateUserDept 更新绑定部门部门角色关系
+func (ud *UserDept) UpdateUserDept(ctx core.Context, ent *entity.UserDept) error {
+	// 查询之前的数据
+	var oud entity.UserDept
+	if err := ctx.DB().Where("id = ?", ent.Id).First(&oud).Error; err != nil {
+		return err
+	}
+
+	op := ud.cache.OP(ctx)
+	return ctx.Transaction(func(ctx core.Context) error {
+		if err := ctx.DB().Where("id = ?", ent.Id).Updates(ent).Error; err != nil {
+			return err
+		}
+
+		if value.Value(ent.Main) {
+			if err := ctx.DB().Model(&entity.UserDept{}).
+				Where("user_id = ? and id != ?", ent.UserId, ent.Id).
+				Update("main", false).Error; err != nil {
+				return err
+			}
+		}
+
+		// 获取当前用户的全量部门更新。
+		list, _, err := ud.ListUserDept(ctx, &types.ListUserDeptRequest{
+			UserId: ent.UserId,
+		})
+		if err != nil {
+			return err
+		}
+
+		return op.Put(ent.UserId, list).Do()
 	})
 }
 
 // DeleteUserDept 获取指定菜单的角色列表
-func (ud *UserDept) DeleteUserDept(ctx core.Context, ent *entity.UserDept) error {
+func (ud *UserDept) DeleteUserDept(ctx core.Context, id uint32) error {
+	ent := &entity.UserDept{}
+	if err := ctx.DB().First(&ent, id).Error; err != nil {
+		return err
+	}
+
 	op := ud.cache.OP(ctx)
 	return ctx.Transaction(func(ctx core.Context) error {
 		if err := ctx.DB().Where("dept_id = ? AND user_id = ?", ent.DeptId, ent.UserId).Delete(&entity.UserDept{}).Error; err != nil {
 			return err
 		}
 
-		// 从缓存中删除
-		return op.Deletes(ud.transkeys([]*entity.UserDept{ent})).Do()
+		// 获取当前用户的全量部门更新。
+		list, _, err := ud.ListUserDept(ctx, &types.ListUserDeptRequest{
+			UserId: ent.UserId,
+		})
+		if err != nil {
+			return err
+		}
+
+		return op.Put(ent.UserId, list).Do()
 	})
+}
+
+func (ud *UserDept) GetUserMainDeptId(uid uint32) uint32 {
+	list, _ := ud.cache.Get(uid)
+	for _, item := range list {
+		if value.Value(item.Main) {
+			return item.DeptId
+		}
+	}
+	return 0
 }
 
 // GetDeptIdsByUserId 获取指定部门绑定的所有角色ID
 func (ud *UserDept) GetDeptIdsByUserId(userId uint32) []uint32 {
-	var (
-		ids  = make([]uint32, 0)
-		keys = ud.cache.Keys()
-	)
-
-	for _, key := range keys {
-		uid, did, _ := ud.splitCacheKey(key)
-		if did != 0 && uid == userId {
-			ids = append(ids, did)
-		}
-
+	var ids []uint32
+	list, _ := ud.cache.Get(userId)
+	for _, item := range list {
+		ids = append(ids, item.DeptId)
 	}
 	return ids
 }
 
 // ListUserDeptByUserId 获取指定部门绑定的所有角色ID
 func (ud *UserDept) ListUserDeptByUserId(id uint32) []*entity.UserDept {
-	var (
-		list []*entity.UserDept
-		keys = ud.cache.Keys()
-	)
-
-	for _, key := range keys {
-		uid, did, jid := ud.splitCacheKey(key)
-		if uid == id {
-			list = append(list, &entity.UserDept{
-				UserId: uid,
-				DeptId: did,
-				JobId:  jid,
-			})
-		}
-
-	}
+	list, _ := ud.cache.Get(id)
 	return list
 }
 
-// GetUserIdsByDeptId 获取指定角色绑定的所有部门ID
-func (ud *UserDept) GetUserIdsByDeptId(deptId uint32) []uint32 {
-	var (
-		ids  = make([]uint32, 0)
-		keys = ud.cache.Keys()
-	)
-
-	for _, key := range keys {
-		uid, did, _ := ud.splitCacheKey(key)
-		if uid != 0 && did == deptId {
-			ids = append(ids, uid)
-		}
-	}
-	return ids
-}
-
-func (ud *UserDept) transvals(uds []*entity.UserDept) map[string]struct{} {
-	kvs := map[string]struct{}{}
-	for _, item := range uds {
-		kvs[ud.getCacheKey(item.UserId, item.DeptId, item.JobId)] = struct{}{}
-	}
-	return kvs
-}
-
-func (ud *UserDept) transkeys(uds []*entity.UserDept) []string {
-	var keys []string
-	for _, item := range uds {
-		keys = append(keys, ud.getCacheKey(item.UserId, item.DeptId, item.JobId))
-	}
-	return keys
-}
-
 // load 加载全量的数据
-func (ud *UserDept) load(ctx core.Context) (map[string]struct{}, error) {
+func (ud *UserDept) load(ctx core.Context) (map[uint32][]*entity.UserDept, error) {
 	var list []*entity.UserDept
 	if err := ctx.DB().Model(&entity.UserDept{}).Find(&list).Error; err != nil {
 		return nil, err
 	}
 
-	bucket := map[string]struct{}{}
+	bucket := map[uint32][]*entity.UserDept{}
 	for _, item := range list {
-		bucket[ud.getCacheKey(item.UserId, item.DeptId, item.JobId)] = struct{}{}
+		bucket[item.UserId] = append(bucket[item.UserId], item)
 	}
 
 	return bucket, nil
-}
-
-// getCacheKey 获取缓存的key
-func (ud *UserDept) getCacheKey(userId uint32, deptId uint32, jobId uint32) string {
-	return fmt.Sprintf("%d:%d:%d", userId, deptId, jobId)
-}
-
-// splitCacheKey 通过key获取id
-func (ud *UserDept) splitCacheKey(key string) (uint32, uint32, uint32) {
-	arr := strings.Split(key, ":")
-	if len(arr) != 2 {
-		return 0, 0, 0
-	}
-	userId, _ := strconv.Atoi(arr[0])
-	deptId, _ := strconv.Atoi(arr[1])
-	jobId, _ := strconv.Atoi(arr[2])
-	return uint32(userId), uint32(deptId), uint32(jobId)
 }

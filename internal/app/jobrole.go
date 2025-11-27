@@ -3,10 +3,11 @@ package app
 import (
 	"context"
 
-	"github.com/limes-cloud/kratosx/model/page"
-
 	"github.com/go-kratos/kratos/v2/transport/grpc"
 	"github.com/go-kratos/kratos/v2/transport/http"
+
+	"github.com/limes-cloud/kratosx/model/page"
+
 	"github.com/limes-cloud/kratosx/pkg/value"
 	"github.com/limes-cloud/manager/api/errors"
 	"github.com/limes-cloud/manager/api/jobrole"
@@ -26,6 +27,7 @@ func NewJobRole() *JobRole {
 		srv: service.NewJobRole(
 			dbs.NewJobRole(),
 			dbs.NewScope(),
+			dbs.NewTenantAdmin(),
 		),
 	}
 }
@@ -65,71 +67,26 @@ func (s *JobRole) ListJobRole(c context.Context, req *jobrole.ListJobRoleRequest
 	return &reply, nil
 }
 
-func (s *JobRole) ListRoleJob(c context.Context, req *jobrole.ListRoleJobRequest) (*jobrole.ListRoleJobReply, error) {
+func (s *JobRole) CreateJobRole(c context.Context, req *jobrole.CreateJobRoleRequest) (*jobrole.CreateJobRoleReply, error) {
 	ctx := core.MustContext(c)
-	list, total, err := s.srv.ListRoleJob(ctx, &types.ListRoleJobRequest{
-		Search: page.Search{
-			Page:     req.Page,
-			PageSize: req.PageSize,
-		},
-		RoleId: req.RoleId,
-		Name:   req.Name,
-	})
-	if err != nil {
-		return nil, err
-	}
-	reply := jobrole.ListRoleJobReply{Total: total}
-	if err := value.Transform(list, &reply.List); err != nil {
-		ctx.Logger().Errorw("msg", "list role job \resp transform error", "err", err)
-		return nil, errors.TransformError()
-	}
-	return &reply, nil
-}
-
-func (s *JobRole) CreateRoleJobs(c context.Context, req *jobrole.CreateRoleJobsRequest) (*jobrole.CreateRoleJobsReply, error) {
-	ctx := core.MustContext(c)
-	err := s.srv.CreateRoleJobs(ctx, &types.CreateRoleJobsRequest{
-		RoleId: req.RoleId,
-		JobIds: req.JobIds,
-	})
-	if err != nil {
-		return nil, err
-	}
-	return &jobrole.CreateRoleJobsReply{}, nil
-}
-
-func (s *JobRole) CreateJobRoles(c context.Context, req *jobrole.CreateJobRolesRequest) (*jobrole.CreateJobRolesReply, error) {
-	ctx := core.MustContext(c)
-	err := s.srv.CreateJobRoles(ctx, &types.CreateJobRolesRequest{
-		JobId:   req.JobId,
-		RoleIds: req.RoleIds,
-	})
-	if err != nil {
-		return nil, err
-	}
-	return &jobrole.CreateJobRolesReply{}, nil
-}
-
-func (s *JobRole) DeleteJobRoles(c context.Context, req *jobrole.DeleteJobRolesRequest) (*jobrole.DeleteJobRolesReply, error) {
-	ctx := core.MustContext(c)
-	err := s.srv.DeleteJobRoles(ctx, &types.DeleteJobRolesRequest{
-		JobId:   req.JobId,
-		RoleIds: req.RoleIds,
-	})
-	if err != nil {
-		return nil, err
-	}
-	return &jobrole.DeleteJobRolesReply{}, nil
-}
-
-func (s *JobRole) DeleteRoleJobs(c context.Context, req *jobrole.DeleteRoleJobsRequest) (*jobrole.DeleteRoleJobsReply, error) {
-	ctx := core.MustContext(c)
-	err := s.srv.DeleteRoleJobs(ctx, &types.DeleteRoleJobsRequest{
-		JobIds: req.JobIds,
+	err := s.srv.CreateJobRole(ctx, &types.CreateJobRoleRequest{
+		JobId:  req.JobId,
 		RoleId: req.RoleId,
 	})
 	if err != nil {
 		return nil, err
 	}
-	return &jobrole.DeleteRoleJobsReply{}, nil
+	return &jobrole.CreateJobRoleReply{}, nil
+}
+
+func (s *JobRole) DeleteJobRole(c context.Context, req *jobrole.DeleteJobRoleRequest) (*jobrole.DeleteJobRoleReply, error) {
+	ctx := core.MustContext(c)
+	err := s.srv.DeleteJobRole(ctx, &types.DeleteJobRoleRequest{
+		JobId:  req.JobId,
+		RoleId: req.RoleId,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return &jobrole.DeleteJobRoleReply{}, nil
 }

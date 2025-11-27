@@ -23,17 +23,15 @@ var (
 const _ = http.SupportPackageIsVersion1
 
 const (
-	OperationDictionaryCreateDictionary            = "/manager.api.dictionary.Dictionary/CreateDictionary"
-	OperationDictionaryCreateDictionaryValue       = "/manager.api.dictionary.Dictionary/CreateDictionaryValue"
-	OperationDictionaryDeleteDictionary            = "/manager.api.dictionary.Dictionary/DeleteDictionary"
-	OperationDictionaryDeleteDictionaryValue       = "/manager.api.dictionary.Dictionary/DeleteDictionaryValue"
-	OperationDictionaryGetDictionary               = "/manager.api.dictionary.Dictionary/GetDictionary"
-	OperationDictionaryGetDictionaryValues         = "/manager.api.dictionary.Dictionary/GetDictionaryValues"
-	OperationDictionaryListDictionary              = "/manager.api.dictionary.Dictionary/ListDictionary"
-	OperationDictionaryListDictionaryValue         = "/manager.api.dictionary.Dictionary/ListDictionaryValue"
-	OperationDictionaryUpdateDictionary            = "/manager.api.dictionary.Dictionary/UpdateDictionary"
-	OperationDictionaryUpdateDictionaryValue       = "/manager.api.dictionary.Dictionary/UpdateDictionaryValue"
-	OperationDictionaryUpdateDictionaryValueStatus = "/manager.api.dictionary.Dictionary/UpdateDictionaryValueStatus"
+	OperationDictionaryCreateDictionary      = "/manager.api.dictionary.Dictionary/CreateDictionary"
+	OperationDictionaryCreateDictionaryValue = "/manager.api.dictionary.Dictionary/CreateDictionaryValue"
+	OperationDictionaryDeleteDictionary      = "/manager.api.dictionary.Dictionary/DeleteDictionary"
+	OperationDictionaryDeleteDictionaryValue = "/manager.api.dictionary.Dictionary/DeleteDictionaryValue"
+	OperationDictionaryGetDictionary         = "/manager.api.dictionary.Dictionary/GetDictionary"
+	OperationDictionaryListDictionary        = "/manager.api.dictionary.Dictionary/ListDictionary"
+	OperationDictionaryListDictionaryValue   = "/manager.api.dictionary.Dictionary/ListDictionaryValue"
+	OperationDictionaryUpdateDictionary      = "/manager.api.dictionary.Dictionary/UpdateDictionary"
+	OperationDictionaryUpdateDictionaryValue = "/manager.api.dictionary.Dictionary/UpdateDictionaryValue"
 )
 
 type DictionaryHTTPServer interface {
@@ -47,8 +45,6 @@ type DictionaryHTTPServer interface {
 	DeleteDictionaryValue(context.Context, *DeleteDictionaryValueRequest) (*DeleteDictionaryValueReply, error)
 	// GetDictionary GetDictionary 获取指定的字典目录
 	GetDictionary(context.Context, *GetDictionaryRequest) (*GetDictionaryReply, error)
-	// GetDictionaryValues GetDictionaryValues 获取指定keys的所有值
-	GetDictionaryValues(context.Context, *GetDictionaryValuesRequest) (*GetDictionaryValuesReply, error)
 	// ListDictionary ListDictionary 获取字典目录列表
 	ListDictionary(context.Context, *ListDictionaryRequest) (*ListDictionaryReply, error)
 	// ListDictionaryValue ListDictionaryValue 获取字典值目录列表
@@ -57,24 +53,38 @@ type DictionaryHTTPServer interface {
 	UpdateDictionary(context.Context, *UpdateDictionaryRequest) (*UpdateDictionaryReply, error)
 	// UpdateDictionaryValue UpdateDictionaryValue 更新字典值目录
 	UpdateDictionaryValue(context.Context, *UpdateDictionaryValueRequest) (*UpdateDictionaryValueReply, error)
-	// UpdateDictionaryValueStatus UpdateDictionaryValueStatus 更新字典值目录状态
-	UpdateDictionaryValueStatus(context.Context, *UpdateDictionaryValueStatusRequest) (*UpdateDictionaryValueStatusReply, error)
 }
 
 func RegisterDictionaryHTTPServer(s *http.Server, srv DictionaryHTTPServer) {
 	r := s.Route("/")
-	r.GET("/manager/api/v1/dictionaries", _Dictionary_ListDictionary0_HTTP_Handler(srv))
-	r.POST("/manager/api/v1/dictionary", _Dictionary_CreateDictionary0_HTTP_Handler(srv))
-	r.PUT("/manager/api/v1/dictionary", _Dictionary_UpdateDictionary0_HTTP_Handler(srv))
-	r.DELETE("/manager/api/v1/dictionary", _Dictionary_DeleteDictionary0_HTTP_Handler(srv))
-	r.POST("/manager/client/v1/dictionary/values", _Dictionary_GetDictionaryValues0_HTTP_Handler(srv))
-	r.POST("/manager/api/v1/dictionary/values", _Dictionary_GetDictionaryValues1_HTTP_Handler(srv))
-	r.GET("/manager/api/v1/dictionary_values", _Dictionary_ListDictionaryValue0_HTTP_Handler(srv))
-	r.POST("/manager/api/v1/dictionary_value", _Dictionary_CreateDictionaryValue0_HTTP_Handler(srv))
-	r.PUT("/manager/api/v1/dictionary_value", _Dictionary_UpdateDictionaryValue0_HTTP_Handler(srv))
-	r.PUT("/manager/api/v1/dictionary_value/status", _Dictionary_UpdateDictionaryValueStatus0_HTTP_Handler(srv))
-	r.DELETE("/manager/api/v1/dictionary_value", _Dictionary_DeleteDictionaryValue0_HTTP_Handler(srv))
-	r.GET("/manager/api/v1/dictionary", _Dictionary_GetDictionary0_HTTP_Handler(srv))
+	r.GET("/manager/api/dictionary", _Dictionary_GetDictionary0_HTTP_Handler(srv))
+	r.GET("/manager/api/dictionaries", _Dictionary_ListDictionary0_HTTP_Handler(srv))
+	r.POST("/manager/api/dictionary", _Dictionary_CreateDictionary0_HTTP_Handler(srv))
+	r.PUT("/manager/api/dictionary", _Dictionary_UpdateDictionary0_HTTP_Handler(srv))
+	r.DELETE("/manager/api/dictionary", _Dictionary_DeleteDictionary0_HTTP_Handler(srv))
+	r.GET("/manager/api/dictionary/values", _Dictionary_ListDictionaryValue0_HTTP_Handler(srv))
+	r.POST("/manager/api/dictionary/value", _Dictionary_CreateDictionaryValue0_HTTP_Handler(srv))
+	r.PUT("/manager/api/dictionary/value", _Dictionary_UpdateDictionaryValue0_HTTP_Handler(srv))
+	r.DELETE("/manager/api/dictionary/value", _Dictionary_DeleteDictionaryValue0_HTTP_Handler(srv))
+}
+
+func _Dictionary_GetDictionary0_HTTP_Handler(srv DictionaryHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in GetDictionaryRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationDictionaryGetDictionary)
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
+			return srv.GetDictionary(ctx, req.(*GetDictionaryRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*GetDictionaryReply)
+		return ctx.Result(200, reply)
+	}
 }
 
 func _Dictionary_ListDictionary0_HTTP_Handler(srv DictionaryHTTPServer) func(ctx http.Context) error {
@@ -159,50 +169,6 @@ func _Dictionary_DeleteDictionary0_HTTP_Handler(srv DictionaryHTTPServer) func(c
 	}
 }
 
-func _Dictionary_GetDictionaryValues0_HTTP_Handler(srv DictionaryHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in GetDictionaryValuesRequest
-		if err := ctx.Bind(&in); err != nil {
-			return err
-		}
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationDictionaryGetDictionaryValues)
-		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
-			return srv.GetDictionaryValues(ctx, req.(*GetDictionaryValuesRequest))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*GetDictionaryValuesReply)
-		return ctx.Result(200, reply)
-	}
-}
-
-func _Dictionary_GetDictionaryValues1_HTTP_Handler(srv DictionaryHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in GetDictionaryValuesRequest
-		if err := ctx.Bind(&in); err != nil {
-			return err
-		}
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationDictionaryGetDictionaryValues)
-		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
-			return srv.GetDictionaryValues(ctx, req.(*GetDictionaryValuesRequest))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*GetDictionaryValuesReply)
-		return ctx.Result(200, reply)
-	}
-}
-
 func _Dictionary_ListDictionaryValue0_HTTP_Handler(srv DictionaryHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in ListDictionaryValueRequest
@@ -266,28 +232,6 @@ func _Dictionary_UpdateDictionaryValue0_HTTP_Handler(srv DictionaryHTTPServer) f
 	}
 }
 
-func _Dictionary_UpdateDictionaryValueStatus0_HTTP_Handler(srv DictionaryHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in UpdateDictionaryValueStatusRequest
-		if err := ctx.Bind(&in); err != nil {
-			return err
-		}
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationDictionaryUpdateDictionaryValueStatus)
-		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
-			return srv.UpdateDictionaryValueStatus(ctx, req.(*UpdateDictionaryValueStatusRequest))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*UpdateDictionaryValueStatusReply)
-		return ctx.Result(200, reply)
-	}
-}
-
 func _Dictionary_DeleteDictionaryValue0_HTTP_Handler(srv DictionaryHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in DeleteDictionaryValueRequest
@@ -307,37 +251,16 @@ func _Dictionary_DeleteDictionaryValue0_HTTP_Handler(srv DictionaryHTTPServer) f
 	}
 }
 
-func _Dictionary_GetDictionary0_HTTP_Handler(srv DictionaryHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in GetDictionaryRequest
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationDictionaryGetDictionary)
-		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
-			return srv.GetDictionary(ctx, req.(*GetDictionaryRequest))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*GetDictionaryReply)
-		return ctx.Result(200, reply)
-	}
-}
-
 type DictionaryHTTPClient interface {
 	CreateDictionary(ctx context.Context, req *CreateDictionaryRequest, opts ...http.CallOption) (rsp *CreateDictionaryReply, err error)
 	CreateDictionaryValue(ctx context.Context, req *CreateDictionaryValueRequest, opts ...http.CallOption) (rsp *CreateDictionaryValueReply, err error)
 	DeleteDictionary(ctx context.Context, req *DeleteDictionaryRequest, opts ...http.CallOption) (rsp *DeleteDictionaryReply, err error)
 	DeleteDictionaryValue(ctx context.Context, req *DeleteDictionaryValueRequest, opts ...http.CallOption) (rsp *DeleteDictionaryValueReply, err error)
 	GetDictionary(ctx context.Context, req *GetDictionaryRequest, opts ...http.CallOption) (rsp *GetDictionaryReply, err error)
-	GetDictionaryValues(ctx context.Context, req *GetDictionaryValuesRequest, opts ...http.CallOption) (rsp *GetDictionaryValuesReply, err error)
 	ListDictionary(ctx context.Context, req *ListDictionaryRequest, opts ...http.CallOption) (rsp *ListDictionaryReply, err error)
 	ListDictionaryValue(ctx context.Context, req *ListDictionaryValueRequest, opts ...http.CallOption) (rsp *ListDictionaryValueReply, err error)
 	UpdateDictionary(ctx context.Context, req *UpdateDictionaryRequest, opts ...http.CallOption) (rsp *UpdateDictionaryReply, err error)
 	UpdateDictionaryValue(ctx context.Context, req *UpdateDictionaryValueRequest, opts ...http.CallOption) (rsp *UpdateDictionaryValueReply, err error)
-	UpdateDictionaryValueStatus(ctx context.Context, req *UpdateDictionaryValueStatusRequest, opts ...http.CallOption) (rsp *UpdateDictionaryValueStatusReply, err error)
 }
 
 type DictionaryHTTPClientImpl struct {
@@ -350,7 +273,7 @@ func NewDictionaryHTTPClient(client *http.Client) DictionaryHTTPClient {
 
 func (c *DictionaryHTTPClientImpl) CreateDictionary(ctx context.Context, in *CreateDictionaryRequest, opts ...http.CallOption) (*CreateDictionaryReply, error) {
 	var out CreateDictionaryReply
-	pattern := "/manager/api/v1/dictionary"
+	pattern := "/manager/api/dictionary"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationDictionaryCreateDictionary))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -363,7 +286,7 @@ func (c *DictionaryHTTPClientImpl) CreateDictionary(ctx context.Context, in *Cre
 
 func (c *DictionaryHTTPClientImpl) CreateDictionaryValue(ctx context.Context, in *CreateDictionaryValueRequest, opts ...http.CallOption) (*CreateDictionaryValueReply, error) {
 	var out CreateDictionaryValueReply
-	pattern := "/manager/api/v1/dictionary_value"
+	pattern := "/manager/api/dictionary/value"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationDictionaryCreateDictionaryValue))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -376,7 +299,7 @@ func (c *DictionaryHTTPClientImpl) CreateDictionaryValue(ctx context.Context, in
 
 func (c *DictionaryHTTPClientImpl) DeleteDictionary(ctx context.Context, in *DeleteDictionaryRequest, opts ...http.CallOption) (*DeleteDictionaryReply, error) {
 	var out DeleteDictionaryReply
-	pattern := "/manager/api/v1/dictionary"
+	pattern := "/manager/api/dictionary"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationDictionaryDeleteDictionary))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -389,7 +312,7 @@ func (c *DictionaryHTTPClientImpl) DeleteDictionary(ctx context.Context, in *Del
 
 func (c *DictionaryHTTPClientImpl) DeleteDictionaryValue(ctx context.Context, in *DeleteDictionaryValueRequest, opts ...http.CallOption) (*DeleteDictionaryValueReply, error) {
 	var out DeleteDictionaryValueReply
-	pattern := "/manager/api/v1/dictionary_value"
+	pattern := "/manager/api/dictionary/value"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationDictionaryDeleteDictionaryValue))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -402,7 +325,7 @@ func (c *DictionaryHTTPClientImpl) DeleteDictionaryValue(ctx context.Context, in
 
 func (c *DictionaryHTTPClientImpl) GetDictionary(ctx context.Context, in *GetDictionaryRequest, opts ...http.CallOption) (*GetDictionaryReply, error) {
 	var out GetDictionaryReply
-	pattern := "/manager/api/v1/dictionary"
+	pattern := "/manager/api/dictionary"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationDictionaryGetDictionary))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -413,22 +336,9 @@ func (c *DictionaryHTTPClientImpl) GetDictionary(ctx context.Context, in *GetDic
 	return &out, err
 }
 
-func (c *DictionaryHTTPClientImpl) GetDictionaryValues(ctx context.Context, in *GetDictionaryValuesRequest, opts ...http.CallOption) (*GetDictionaryValuesReply, error) {
-	var out GetDictionaryValuesReply
-	pattern := "/manager/api/v1/dictionary/values"
-	path := binding.EncodeURL(pattern, in, false)
-	opts = append(opts, http.Operation(OperationDictionaryGetDictionaryValues))
-	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return &out, err
-}
-
 func (c *DictionaryHTTPClientImpl) ListDictionary(ctx context.Context, in *ListDictionaryRequest, opts ...http.CallOption) (*ListDictionaryReply, error) {
 	var out ListDictionaryReply
-	pattern := "/manager/api/v1/dictionaries"
+	pattern := "/manager/api/dictionaries"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationDictionaryListDictionary))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -441,7 +351,7 @@ func (c *DictionaryHTTPClientImpl) ListDictionary(ctx context.Context, in *ListD
 
 func (c *DictionaryHTTPClientImpl) ListDictionaryValue(ctx context.Context, in *ListDictionaryValueRequest, opts ...http.CallOption) (*ListDictionaryValueReply, error) {
 	var out ListDictionaryValueReply
-	pattern := "/manager/api/v1/dictionary_values"
+	pattern := "/manager/api/dictionary/values"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationDictionaryListDictionaryValue))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -454,7 +364,7 @@ func (c *DictionaryHTTPClientImpl) ListDictionaryValue(ctx context.Context, in *
 
 func (c *DictionaryHTTPClientImpl) UpdateDictionary(ctx context.Context, in *UpdateDictionaryRequest, opts ...http.CallOption) (*UpdateDictionaryReply, error) {
 	var out UpdateDictionaryReply
-	pattern := "/manager/api/v1/dictionary"
+	pattern := "/manager/api/dictionary"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationDictionaryUpdateDictionary))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -467,22 +377,9 @@ func (c *DictionaryHTTPClientImpl) UpdateDictionary(ctx context.Context, in *Upd
 
 func (c *DictionaryHTTPClientImpl) UpdateDictionaryValue(ctx context.Context, in *UpdateDictionaryValueRequest, opts ...http.CallOption) (*UpdateDictionaryValueReply, error) {
 	var out UpdateDictionaryValueReply
-	pattern := "/manager/api/v1/dictionary_value"
+	pattern := "/manager/api/dictionary/value"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationDictionaryUpdateDictionaryValue))
-	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "PUT", path, in, &out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return &out, err
-}
-
-func (c *DictionaryHTTPClientImpl) UpdateDictionaryValueStatus(ctx context.Context, in *UpdateDictionaryValueStatusRequest, opts ...http.CallOption) (*UpdateDictionaryValueStatusReply, error) {
-	var out UpdateDictionaryValueStatusReply
-	pattern := "/manager/api/v1/dictionary_value/status"
-	path := binding.EncodeURL(pattern, in, false)
-	opts = append(opts, http.Operation(OperationDictionaryUpdateDictionaryValueStatus))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "PUT", path, in, &out, opts...)
 	if err != nil {

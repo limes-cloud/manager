@@ -14,8 +14,6 @@ import (
 	"github.com/limes-cloud/manager/api/errors"
 	"github.com/limes-cloud/manager/api/feedback"
 
-	"github.com/go-kratos/kratos/v2/transport/grpc"
-	"github.com/go-kratos/kratos/v2/transport/http"
 	"github.com/limes-cloud/manager/internal/domain/entity"
 	"github.com/limes-cloud/manager/internal/domain/service"
 	"github.com/limes-cloud/manager/internal/infra/dbs"
@@ -35,13 +33,13 @@ func NewFeedback() *Feedback {
 	}
 }
 
-func init() {
-	register(func(hs *http.Server, gs *grpc.Server) {
-		srv := NewFeedback()
-		feedback.RegisterFeedbackHTTPServer(hs, srv)
-		feedback.RegisterFeedbackServer(gs, srv)
-	})
-}
+//func init() {
+//	register(func(hs *http.Server, gs *grpc.Server) {
+//		srv := NewFeedback()
+//		feedback.RegisterFeedbackHTTPServer(hs, srv)
+//		feedback.RegisterFeedbackServer(gs, srv)
+//	})
+//}
 
 // ListFeedbackCategory 获取反馈建议分类列表
 func (fb *Feedback) ListFeedbackCategory(c context.Context, req *feedback.ListFeedbackCategoryRequest) (*feedback.ListFeedbackCategoryReply, error) {

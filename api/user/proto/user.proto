@@ -8,15 +8,6 @@ option java_package = "manager.api.user";
 
 import "validate/validate.proto";
 
-message Result {
-  uint32 id = 1;
-  string name = 2;
-}
-
-message Info{
-  string field = 1;
-  string value = 2;
-}
 
 message GetCurrentUserRequest{
   optional string app = 1;
@@ -29,6 +20,25 @@ message GetUserRequest{
 }
 
 message UserObject {
+  message Dept {
+    uint32 id = 1;
+    string name = 2;
+    string logo = 3;
+    bool main = 4;
+  }
+
+  message Job {
+    uint32 id = 1;
+    string name = 2;
+  }
+
+  message UserDept{
+    uint32 deptId = 1;
+    uint32 jobId = 2;
+    Dept dept = 3;
+    Job job = 4;
+  }
+
   uint32 id = 1;
   string nickname = 2;
   string username = 3;
@@ -37,19 +47,16 @@ message UserObject {
   uint32 loggedAt = 6;
   uint32 createdAt = 7;
   uint32 updatedAt = 8;
-  uint32 deptId = 9;
-  uint32 jobId = 10;
   string setting = 11;
-  repeated Info infos = 12;
-  Result dept = 13;
-  Result job = 14;
-
+  map<string, string> infos = 12;
+  repeated UserDept userDepts = 9;
 }
 
 message ListUserRequest{
   uint32 page = 1[(validate.rules).uint32 = {gte: 1}];
   uint32 pageSize = 2[(validate.rules).uint32 = {gte: 1,lte:50}];
-  optional uint32 deptId = 3;
+  optional uint32 appId = 3;
+  optional uint32 deptId = 4;
   optional uint32 jobId = 5;
   optional string username = 6;
   optional bool status = 7;
@@ -65,10 +72,10 @@ message ListUserReply {
 }
 
 message CreateUserRequest {
-  string nickname = 1[(validate.rules).string = {min_len: 4,max_len: 64}];
-  string username = 2[(validate.rules).string = {min_len: 6,max_len: 32}];
-  uint32 deptId = 3[(validate.rules).uint32 = {gte: 1}];
-  uint32 jobId = 4[(validate.rules).uint32 = {gte: 1}];
+  string avatar = 1;
+  string nickname = 2[(validate.rules).string = {min_len: 4,max_len: 64}];
+  string username = 3[(validate.rules).string = {min_len: 6,max_len: 32}];
+  map<string, string> infos = 6;
 }
 
 message CreateUserReply {
@@ -77,10 +84,11 @@ message CreateUserReply {
 
 message UpdateUserRequest {
   uint32 id = 1[(validate.rules).uint32 = {gte: 1}];
-  optional string nickname = 2[(validate.rules).string = {min_len: 4,max_len: 64}];
-  optional uint32 deptId = 3[(validate.rules).uint32 = {gte: 1}];
-  optional uint32 jobId = 4[(validate.rules).uint32 = {gte: 1}];
-  optional bool status = 5;
+  optional string avatar = 2;
+  optional string nickname = 3[(validate.rules).string = {min_len: 4,max_len: 64}];
+  optional bool status = 6;
+  optional string reason = 7;
+  map<string, string> infos = 8;
 }
 
 message UpdateUserReply {
@@ -105,9 +113,19 @@ message UpdateCurrentUserSettingRequest{
 message UpdateCurrentUserRequest {
   optional string nickname = 1[(validate.rules).string = {min_len: 1,max_len: 64}];
   optional string avatar= 2[(validate.rules).string = {min_len: 1,max_len: 64}];
+  map<string, string> infos = 3;
 }
 
 message UpdateCurrentUserReply {
+}
+
+
+message UpdateCurrentUserPasswordRequest {
+   string oldPassword = 1[(validate.rules).string = {min_len: 1,max_len: 64}];
+   string password= 2[(validate.rules).string = {min_len: 1,max_len: 64}];
+}
+
+message UpdateCurrentUserPasswordReply {
 }
 
 message UpdateUserinfoRequest {
@@ -119,3 +137,13 @@ message UpdateUserinfoRequest {
 }
 
 message UpdateUserinfoReply {}
+
+
+message ResetUserPasswordRequest{
+    uint32 id = 1[(validate.rules).uint32 = {gte: 1}];
+}
+
+message OfflineUserRequest{
+  uint32 userId = 1[(validate.rules).uint32 = {gte: 1}];
+  repeated uint32 appIds = 2;
+}

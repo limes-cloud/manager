@@ -13,14 +13,14 @@ service Job{
   // ListJob 获取部门列表
   rpc ListJob (ListJobRequest) returns (ListJobReply) {
     option (google.api.http) = {
-      get: "/manager/api/v1/jobs",
+      get: "/manager/api/jobs",
     };
   }
 
   // CreateJob 创建部门
   rpc CreateJob (CreateJobRequest) returns (CreateJobReply) {
     option (google.api.http) = {
-      post: "/manager/api/v1/job",
+      post: "/manager/api/job",
       body: "*"
     };
   }
@@ -28,7 +28,7 @@ service Job{
   // UpdateJob 更新部门
   rpc UpdateJob (UpdateJobRequest) returns (UpdateJobReply) {
     option (google.api.http) = {
-      put: "/manager/api/v1/job",
+      put: "/manager/api/job",
       body: "*"
     };
   }
@@ -36,7 +36,7 @@ service Job{
   // DeleteJob 删除部门
   rpc DeleteJob (DeleteJobRequest) returns (DeleteJobReply) {
     option (google.api.http) = {
-      delete: "/manager/api/v1/job",
+      delete: "/manager/api/job",
     };
   }
 

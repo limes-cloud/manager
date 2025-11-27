@@ -42,10 +42,10 @@ type RoleEntityHTTPServer interface {
 
 func RegisterRoleEntityHTTPServer(s *http.Server, srv RoleEntityHTTPServer) {
 	r := s.Route("/")
-	r.GET("/manager/api/v1/role/entities", _RoleEntity_ListRoleEntity0_HTTP_Handler(srv))
-	r.POST("/manager/api/v1/role/entity", _RoleEntity_CreateRoleEntity0_HTTP_Handler(srv))
-	r.PUT("/manager/api/v1/role/entity", _RoleEntity_UpdateRoleEntity0_HTTP_Handler(srv))
-	r.DELETE("/manager/api/v1/role/entity", _RoleEntity_DeleteRoleEntity0_HTTP_Handler(srv))
+	r.GET("/manager/api/role/entities", _RoleEntity_ListRoleEntity0_HTTP_Handler(srv))
+	r.POST("/manager/api/role/entity", _RoleEntity_CreateRoleEntity0_HTTP_Handler(srv))
+	r.PUT("/manager/api/role/entity", _RoleEntity_UpdateRoleEntity0_HTTP_Handler(srv))
+	r.DELETE("/manager/api/role/entity", _RoleEntity_DeleteRoleEntity0_HTTP_Handler(srv))
 }
 
 func _RoleEntity_ListRoleEntity0_HTTP_Handler(srv RoleEntityHTTPServer) func(ctx http.Context) error {
@@ -114,9 +114,6 @@ func _RoleEntity_UpdateRoleEntity0_HTTP_Handler(srv RoleEntityHTTPServer) func(c
 func _RoleEntity_DeleteRoleEntity0_HTTP_Handler(srv RoleEntityHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in DeleteRoleEntityRequest
-		if err := ctx.Bind(&in); err != nil {
-			return err
-		}
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
@@ -150,7 +147,7 @@ func NewRoleEntityHTTPClient(client *http.Client) RoleEntityHTTPClient {
 
 func (c *RoleEntityHTTPClientImpl) CreateRoleEntity(ctx context.Context, in *CreateRoleEntityRequest, opts ...http.CallOption) (*CreateRoleEntityReply, error) {
 	var out CreateRoleEntityReply
-	pattern := "/manager/api/v1/role/entity"
+	pattern := "/manager/api/role/entity"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationRoleEntityCreateRoleEntity))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -163,11 +160,11 @@ func (c *RoleEntityHTTPClientImpl) CreateRoleEntity(ctx context.Context, in *Cre
 
 func (c *RoleEntityHTTPClientImpl) DeleteRoleEntity(ctx context.Context, in *DeleteRoleEntityRequest, opts ...http.CallOption) (*DeleteRoleEntityReply, error) {
 	var out DeleteRoleEntityReply
-	pattern := "/manager/api/v1/role/entity"
-	path := binding.EncodeURL(pattern, in, false)
+	pattern := "/manager/api/role/entity"
+	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationRoleEntityDeleteRoleEntity))
 	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "DELETE", path, in, &out, opts...)
+	err := c.cc.Invoke(ctx, "DELETE", path, nil, &out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -176,7 +173,7 @@ func (c *RoleEntityHTTPClientImpl) DeleteRoleEntity(ctx context.Context, in *Del
 
 func (c *RoleEntityHTTPClientImpl) ListRoleEntity(ctx context.Context, in *ListRoleEntityRequest, opts ...http.CallOption) (*ListRoleEntityReply, error) {
 	var out ListRoleEntityReply
-	pattern := "/manager/api/v1/role/entities"
+	pattern := "/manager/api/role/entities"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationRoleEntityListRoleEntity))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -189,7 +186,7 @@ func (c *RoleEntityHTTPClientImpl) ListRoleEntity(ctx context.Context, in *ListR
 
 func (c *RoleEntityHTTPClientImpl) UpdateRoleEntity(ctx context.Context, in *UpdateRoleEntityRequest, opts ...http.CallOption) (*UpdateRoleEntityReply, error) {
 	var out UpdateRoleEntityReply
-	pattern := "/manager/api/v1/role/entity"
+	pattern := "/manager/api/role/entity"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationRoleEntityUpdateRoleEntity))
 	opts = append(opts, http.PathTemplate(pattern))

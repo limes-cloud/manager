@@ -20,23 +20,23 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	Dictionary_ListDictionary_FullMethodName              = "/manager.api.dictionary.Dictionary/ListDictionary"
-	Dictionary_CreateDictionary_FullMethodName            = "/manager.api.dictionary.Dictionary/CreateDictionary"
-	Dictionary_UpdateDictionary_FullMethodName            = "/manager.api.dictionary.Dictionary/UpdateDictionary"
-	Dictionary_DeleteDictionary_FullMethodName            = "/manager.api.dictionary.Dictionary/DeleteDictionary"
-	Dictionary_GetDictionaryValues_FullMethodName         = "/manager.api.dictionary.Dictionary/GetDictionaryValues"
-	Dictionary_ListDictionaryValue_FullMethodName         = "/manager.api.dictionary.Dictionary/ListDictionaryValue"
-	Dictionary_CreateDictionaryValue_FullMethodName       = "/manager.api.dictionary.Dictionary/CreateDictionaryValue"
-	Dictionary_UpdateDictionaryValue_FullMethodName       = "/manager.api.dictionary.Dictionary/UpdateDictionaryValue"
-	Dictionary_UpdateDictionaryValueStatus_FullMethodName = "/manager.api.dictionary.Dictionary/UpdateDictionaryValueStatus"
-	Dictionary_DeleteDictionaryValue_FullMethodName       = "/manager.api.dictionary.Dictionary/DeleteDictionaryValue"
-	Dictionary_GetDictionary_FullMethodName               = "/manager.api.dictionary.Dictionary/GetDictionary"
+	Dictionary_GetDictionary_FullMethodName         = "/manager.api.dictionary.Dictionary/GetDictionary"
+	Dictionary_ListDictionary_FullMethodName        = "/manager.api.dictionary.Dictionary/ListDictionary"
+	Dictionary_CreateDictionary_FullMethodName      = "/manager.api.dictionary.Dictionary/CreateDictionary"
+	Dictionary_UpdateDictionary_FullMethodName      = "/manager.api.dictionary.Dictionary/UpdateDictionary"
+	Dictionary_DeleteDictionary_FullMethodName      = "/manager.api.dictionary.Dictionary/DeleteDictionary"
+	Dictionary_ListDictionaryValue_FullMethodName   = "/manager.api.dictionary.Dictionary/ListDictionaryValue"
+	Dictionary_CreateDictionaryValue_FullMethodName = "/manager.api.dictionary.Dictionary/CreateDictionaryValue"
+	Dictionary_UpdateDictionaryValue_FullMethodName = "/manager.api.dictionary.Dictionary/UpdateDictionaryValue"
+	Dictionary_DeleteDictionaryValue_FullMethodName = "/manager.api.dictionary.Dictionary/DeleteDictionaryValue"
 )
 
 // DictionaryClient is the client API for Dictionary service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type DictionaryClient interface {
+	// GetDictionary 获取指定的字典目录
+	GetDictionary(ctx context.Context, in *GetDictionaryRequest, opts ...grpc.CallOption) (*GetDictionaryReply, error)
 	// ListDictionary 获取字典目录列表
 	ListDictionary(ctx context.Context, in *ListDictionaryRequest, opts ...grpc.CallOption) (*ListDictionaryReply, error)
 	// CreateDictionary 创建字典目录
@@ -45,20 +45,14 @@ type DictionaryClient interface {
 	UpdateDictionary(ctx context.Context, in *UpdateDictionaryRequest, opts ...grpc.CallOption) (*UpdateDictionaryReply, error)
 	// DeleteDictionary 删除字典目录
 	DeleteDictionary(ctx context.Context, in *DeleteDictionaryRequest, opts ...grpc.CallOption) (*DeleteDictionaryReply, error)
-	// GetDictionaryValues 获取指定keys的所有值
-	GetDictionaryValues(ctx context.Context, in *GetDictionaryValuesRequest, opts ...grpc.CallOption) (*GetDictionaryValuesReply, error)
 	// ListDictionaryValue 获取字典值目录列表
 	ListDictionaryValue(ctx context.Context, in *ListDictionaryValueRequest, opts ...grpc.CallOption) (*ListDictionaryValueReply, error)
 	// CreateDictionaryValue 创建字典值目录
 	CreateDictionaryValue(ctx context.Context, in *CreateDictionaryValueRequest, opts ...grpc.CallOption) (*CreateDictionaryValueReply, error)
 	// UpdateDictionaryValue 更新字典值目录
 	UpdateDictionaryValue(ctx context.Context, in *UpdateDictionaryValueRequest, opts ...grpc.CallOption) (*UpdateDictionaryValueReply, error)
-	// UpdateDictionaryValueStatus 更新字典值目录状态
-	UpdateDictionaryValueStatus(ctx context.Context, in *UpdateDictionaryValueStatusRequest, opts ...grpc.CallOption) (*UpdateDictionaryValueStatusReply, error)
 	// DeleteDictionaryValue 删除字典值目录
 	DeleteDictionaryValue(ctx context.Context, in *DeleteDictionaryValueRequest, opts ...grpc.CallOption) (*DeleteDictionaryValueReply, error)
-	// GetDictionary 获取指定的字典目录
-	GetDictionary(ctx context.Context, in *GetDictionaryRequest, opts ...grpc.CallOption) (*GetDictionaryReply, error)
 }
 
 type dictionaryClient struct {
@@ -67,6 +61,15 @@ type dictionaryClient struct {
 
 func NewDictionaryClient(cc grpc.ClientConnInterface) DictionaryClient {
 	return &dictionaryClient{cc}
+}
+
+func (c *dictionaryClient) GetDictionary(ctx context.Context, in *GetDictionaryRequest, opts ...grpc.CallOption) (*GetDictionaryReply, error) {
+	out := new(GetDictionaryReply)
+	err := c.cc.Invoke(ctx, Dictionary_GetDictionary_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *dictionaryClient) ListDictionary(ctx context.Context, in *ListDictionaryRequest, opts ...grpc.CallOption) (*ListDictionaryReply, error) {
@@ -105,15 +108,6 @@ func (c *dictionaryClient) DeleteDictionary(ctx context.Context, in *DeleteDicti
 	return out, nil
 }
 
-func (c *dictionaryClient) GetDictionaryValues(ctx context.Context, in *GetDictionaryValuesRequest, opts ...grpc.CallOption) (*GetDictionaryValuesReply, error) {
-	out := new(GetDictionaryValuesReply)
-	err := c.cc.Invoke(ctx, Dictionary_GetDictionaryValues_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *dictionaryClient) ListDictionaryValue(ctx context.Context, in *ListDictionaryValueRequest, opts ...grpc.CallOption) (*ListDictionaryValueReply, error) {
 	out := new(ListDictionaryValueReply)
 	err := c.cc.Invoke(ctx, Dictionary_ListDictionaryValue_FullMethodName, in, out, opts...)
@@ -141,27 +135,9 @@ func (c *dictionaryClient) UpdateDictionaryValue(ctx context.Context, in *Update
 	return out, nil
 }
 
-func (c *dictionaryClient) UpdateDictionaryValueStatus(ctx context.Context, in *UpdateDictionaryValueStatusRequest, opts ...grpc.CallOption) (*UpdateDictionaryValueStatusReply, error) {
-	out := new(UpdateDictionaryValueStatusReply)
-	err := c.cc.Invoke(ctx, Dictionary_UpdateDictionaryValueStatus_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *dictionaryClient) DeleteDictionaryValue(ctx context.Context, in *DeleteDictionaryValueRequest, opts ...grpc.CallOption) (*DeleteDictionaryValueReply, error) {
 	out := new(DeleteDictionaryValueReply)
 	err := c.cc.Invoke(ctx, Dictionary_DeleteDictionaryValue_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *dictionaryClient) GetDictionary(ctx context.Context, in *GetDictionaryRequest, opts ...grpc.CallOption) (*GetDictionaryReply, error) {
-	out := new(GetDictionaryReply)
-	err := c.cc.Invoke(ctx, Dictionary_GetDictionary_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -172,6 +148,8 @@ func (c *dictionaryClient) GetDictionary(ctx context.Context, in *GetDictionaryR
 // All implementations must embed UnimplementedDictionaryServer
 // for forward compatibility
 type DictionaryServer interface {
+	// GetDictionary 获取指定的字典目录
+	GetDictionary(context.Context, *GetDictionaryRequest) (*GetDictionaryReply, error)
 	// ListDictionary 获取字典目录列表
 	ListDictionary(context.Context, *ListDictionaryRequest) (*ListDictionaryReply, error)
 	// CreateDictionary 创建字典目录
@@ -180,25 +158,23 @@ type DictionaryServer interface {
 	UpdateDictionary(context.Context, *UpdateDictionaryRequest) (*UpdateDictionaryReply, error)
 	// DeleteDictionary 删除字典目录
 	DeleteDictionary(context.Context, *DeleteDictionaryRequest) (*DeleteDictionaryReply, error)
-	// GetDictionaryValues 获取指定keys的所有值
-	GetDictionaryValues(context.Context, *GetDictionaryValuesRequest) (*GetDictionaryValuesReply, error)
 	// ListDictionaryValue 获取字典值目录列表
 	ListDictionaryValue(context.Context, *ListDictionaryValueRequest) (*ListDictionaryValueReply, error)
 	// CreateDictionaryValue 创建字典值目录
 	CreateDictionaryValue(context.Context, *CreateDictionaryValueRequest) (*CreateDictionaryValueReply, error)
 	// UpdateDictionaryValue 更新字典值目录
 	UpdateDictionaryValue(context.Context, *UpdateDictionaryValueRequest) (*UpdateDictionaryValueReply, error)
-	// UpdateDictionaryValueStatus 更新字典值目录状态
-	UpdateDictionaryValueStatus(context.Context, *UpdateDictionaryValueStatusRequest) (*UpdateDictionaryValueStatusReply, error)
 	// DeleteDictionaryValue 删除字典值目录
 	DeleteDictionaryValue(context.Context, *DeleteDictionaryValueRequest) (*DeleteDictionaryValueReply, error)
-	// GetDictionary 获取指定的字典目录
-	GetDictionary(context.Context, *GetDictionaryRequest) (*GetDictionaryReply, error)
 	mustEmbedUnimplementedDictionaryServer()
 }
 
 // UnimplementedDictionaryServer must be embedded to have forward compatible implementations.
 type UnimplementedDictionaryServer struct{}
+
+func (UnimplementedDictionaryServer) GetDictionary(context.Context, *GetDictionaryRequest) (*GetDictionaryReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetDictionary not implemented")
+}
 
 func (UnimplementedDictionaryServer) ListDictionary(context.Context, *ListDictionaryRequest) (*ListDictionaryReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListDictionary not implemented")
@@ -216,10 +192,6 @@ func (UnimplementedDictionaryServer) DeleteDictionary(context.Context, *DeleteDi
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteDictionary not implemented")
 }
 
-func (UnimplementedDictionaryServer) GetDictionaryValues(context.Context, *GetDictionaryValuesRequest) (*GetDictionaryValuesReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetDictionaryValues not implemented")
-}
-
 func (UnimplementedDictionaryServer) ListDictionaryValue(context.Context, *ListDictionaryValueRequest) (*ListDictionaryValueReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListDictionaryValue not implemented")
 }
@@ -232,16 +204,8 @@ func (UnimplementedDictionaryServer) UpdateDictionaryValue(context.Context, *Upd
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateDictionaryValue not implemented")
 }
 
-func (UnimplementedDictionaryServer) UpdateDictionaryValueStatus(context.Context, *UpdateDictionaryValueStatusRequest) (*UpdateDictionaryValueStatusReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpdateDictionaryValueStatus not implemented")
-}
-
 func (UnimplementedDictionaryServer) DeleteDictionaryValue(context.Context, *DeleteDictionaryValueRequest) (*DeleteDictionaryValueReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteDictionaryValue not implemented")
-}
-
-func (UnimplementedDictionaryServer) GetDictionary(context.Context, *GetDictionaryRequest) (*GetDictionaryReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetDictionary not implemented")
 }
 func (UnimplementedDictionaryServer) mustEmbedUnimplementedDictionaryServer() {}
 
@@ -254,6 +218,24 @@ type UnsafeDictionaryServer interface {
 
 func RegisterDictionaryServer(s grpc.ServiceRegistrar, srv DictionaryServer) {
 	s.RegisterService(&Dictionary_ServiceDesc, srv)
+}
+
+func _Dictionary_GetDictionary_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetDictionaryRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(DictionaryServer).GetDictionary(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Dictionary_GetDictionary_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(DictionaryServer).GetDictionary(ctx, req.(*GetDictionaryRequest))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _Dictionary_ListDictionary_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -328,24 +310,6 @@ func _Dictionary_DeleteDictionary_Handler(srv interface{}, ctx context.Context, 
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Dictionary_GetDictionaryValues_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetDictionaryValuesRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(DictionaryServer).GetDictionaryValues(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Dictionary_GetDictionaryValues_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DictionaryServer).GetDictionaryValues(ctx, req.(*GetDictionaryValuesRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _Dictionary_ListDictionaryValue_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ListDictionaryValueRequest)
 	if err := dec(in); err != nil {
@@ -400,24 +364,6 @@ func _Dictionary_UpdateDictionaryValue_Handler(srv interface{}, ctx context.Cont
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Dictionary_UpdateDictionaryValueStatus_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpdateDictionaryValueStatusRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(DictionaryServer).UpdateDictionaryValueStatus(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Dictionary_UpdateDictionaryValueStatus_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DictionaryServer).UpdateDictionaryValueStatus(ctx, req.(*UpdateDictionaryValueStatusRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _Dictionary_DeleteDictionaryValue_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(DeleteDictionaryValueRequest)
 	if err := dec(in); err != nil {
@@ -436,24 +382,6 @@ func _Dictionary_DeleteDictionaryValue_Handler(srv interface{}, ctx context.Cont
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Dictionary_GetDictionary_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetDictionaryRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(DictionaryServer).GetDictionary(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Dictionary_GetDictionary_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DictionaryServer).GetDictionary(ctx, req.(*GetDictionaryRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 // Dictionary_ServiceDesc is the grpc.ServiceDesc for Dictionary service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -461,6 +389,10 @@ var Dictionary_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "manager.api.dictionary.Dictionary",
 	HandlerType: (*DictionaryServer)(nil),
 	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "GetDictionary",
+			Handler:    _Dictionary_GetDictionary_Handler,
+		},
 		{
 			MethodName: "ListDictionary",
 			Handler:    _Dictionary_ListDictionary_Handler,
@@ -478,10 +410,6 @@ var Dictionary_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Dictionary_DeleteDictionary_Handler,
 		},
 		{
-			MethodName: "GetDictionaryValues",
-			Handler:    _Dictionary_GetDictionaryValues_Handler,
-		},
-		{
 			MethodName: "ListDictionaryValue",
 			Handler:    _Dictionary_ListDictionaryValue_Handler,
 		},
@@ -494,16 +422,8 @@ var Dictionary_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Dictionary_UpdateDictionaryValue_Handler,
 		},
 		{
-			MethodName: "UpdateDictionaryValueStatus",
-			Handler:    _Dictionary_UpdateDictionaryValueStatus_Handler,
-		},
-		{
 			MethodName: "DeleteDictionaryValue",
 			Handler:    _Dictionary_DeleteDictionaryValue_Handler,
-		},
-		{
-			MethodName: "GetDictionary",
-			Handler:    _Dictionary_GetDictionary_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

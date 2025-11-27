@@ -45,11 +45,11 @@ type MenuHTTPServer interface {
 
 func RegisterMenuHTTPServer(s *http.Server, srv MenuHTTPServer) {
 	r := s.Route("/")
-	r.GET("/manager/api/v1/current/menus", _Menu_ListCurrentMenu0_HTTP_Handler(srv))
-	r.GET("/manager/api/v1/menus", _Menu_ListMenu0_HTTP_Handler(srv))
-	r.POST("/manager/api/v1/menu", _Menu_CreateMenu0_HTTP_Handler(srv))
-	r.PUT("/manager/api/v1/menu", _Menu_UpdateMenu0_HTTP_Handler(srv))
-	r.DELETE("/manager/api/v1/menu", _Menu_DeleteMenu0_HTTP_Handler(srv))
+	r.GET("/manager/api/current/menus", _Menu_ListCurrentMenu0_HTTP_Handler(srv))
+	r.GET("/manager/api/menus", _Menu_ListMenu0_HTTP_Handler(srv))
+	r.POST("/manager/api/menu", _Menu_CreateMenu0_HTTP_Handler(srv))
+	r.PUT("/manager/api/menu", _Menu_UpdateMenu0_HTTP_Handler(srv))
+	r.DELETE("/manager/api/menu", _Menu_DeleteMenu0_HTTP_Handler(srv))
 }
 
 func _Menu_ListCurrentMenu0_HTTP_Handler(srv MenuHTTPServer) func(ctx http.Context) error {
@@ -171,7 +171,7 @@ func NewMenuHTTPClient(client *http.Client) MenuHTTPClient {
 
 func (c *MenuHTTPClientImpl) CreateMenu(ctx context.Context, in *CreateMenuRequest, opts ...http.CallOption) (*CreateMenuReply, error) {
 	var out CreateMenuReply
-	pattern := "/manager/api/v1/menu"
+	pattern := "/manager/api/menu"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationMenuCreateMenu))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -184,7 +184,7 @@ func (c *MenuHTTPClientImpl) CreateMenu(ctx context.Context, in *CreateMenuReque
 
 func (c *MenuHTTPClientImpl) DeleteMenu(ctx context.Context, in *DeleteMenuRequest, opts ...http.CallOption) (*DeleteMenuReply, error) {
 	var out DeleteMenuReply
-	pattern := "/manager/api/v1/menu"
+	pattern := "/manager/api/menu"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationMenuDeleteMenu))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -197,7 +197,7 @@ func (c *MenuHTTPClientImpl) DeleteMenu(ctx context.Context, in *DeleteMenuReque
 
 func (c *MenuHTTPClientImpl) ListCurrentMenu(ctx context.Context, in *ListCurrentMenuRequest, opts ...http.CallOption) (*ListMenuReply, error) {
 	var out ListMenuReply
-	pattern := "/manager/api/v1/current/menus"
+	pattern := "/manager/api/current/menus"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationMenuListCurrentMenu))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -210,7 +210,7 @@ func (c *MenuHTTPClientImpl) ListCurrentMenu(ctx context.Context, in *ListCurren
 
 func (c *MenuHTTPClientImpl) ListMenu(ctx context.Context, in *ListMenuRequest, opts ...http.CallOption) (*ListMenuReply, error) {
 	var out ListMenuReply
-	pattern := "/manager/api/v1/menus"
+	pattern := "/manager/api/menus"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationMenuListMenu))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -223,7 +223,7 @@ func (c *MenuHTTPClientImpl) ListMenu(ctx context.Context, in *ListMenuRequest, 
 
 func (c *MenuHTTPClientImpl) UpdateMenu(ctx context.Context, in *UpdateMenuRequest, opts ...http.CallOption) (*UpdateMenuReply, error) {
 	var out UpdateMenuReply
-	pattern := "/manager/api/v1/menu"
+	pattern := "/manager/api/menu"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationMenuUpdateMenu))
 	opts = append(opts, http.PathTemplate(pattern))

@@ -41,7 +41,9 @@ func (infra *Job) ListJob(ctx core.Context, req *types.ListJobRequest) ([]*entit
 	if req.Keyword != nil {
 		db = db.Where("keyword LIKE ?", *req.Keyword+"%")
 	}
-
+	if err := db.Count(&total).Error; err != nil {
+		return nil, 0, err
+	}
 	db = page.SearchScopes(db, &req.Search)
 	return list, uint32(total), db.Find(&list).Error
 }

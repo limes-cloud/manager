@@ -2,6 +2,13 @@ package app
 
 import (
 	"context"
+	"encoding/json"
+
+	"github.com/limes-cloud/kratosx/model"
+
+	"github.com/go-kratos/kratos/v2/transport/grpc"
+
+	"github.com/go-kratos/kratos/v2/transport/http"
 
 	"google.golang.org/protobuf/types/known/emptypb"
 
@@ -12,8 +19,6 @@ import (
 	"github.com/limes-cloud/kratosx/pkg/value"
 	"github.com/limes-cloud/manager/api/errors"
 
-	"github.com/go-kratos/kratos/v2/transport/grpc"
-	"github.com/go-kratos/kratos/v2/transport/http"
 	apientity "github.com/limes-cloud/manager/api/entity"
 	"github.com/limes-cloud/manager/internal/core"
 	"github.com/limes-cloud/manager/internal/domain/service"
@@ -88,7 +93,7 @@ func (app *Entity) LoadEntity(c context.Context, _ *emptypb.Empty) (*apientity.L
 	return &reply, nil
 }
 
-// ListEntity 获取租户信息列表
+// ListEntity 获取实体列表
 func (app *Entity) ListEntity(c context.Context, req *apientity.ListEntityRequest) (*apientity.ListEntityReply, error) {
 	var (
 		ctx = core.MustContext(c)
@@ -116,7 +121,7 @@ func (app *Entity) ListEntity(c context.Context, req *apientity.ListEntityReques
 	return &reply, nil
 }
 
-// CreateEntity 创建租户信息
+// CreateEntity 创建实体
 func (app *Entity) CreateEntity(c context.Context, req *apientity.CreateEntityRequest) (*apientity.CreateEntityReply, error) {
 	var (
 		ctx = core.MustContext(c)
@@ -138,7 +143,7 @@ func (app *Entity) CreateEntity(c context.Context, req *apientity.CreateEntityRe
 	return &apientity.CreateEntityReply{Id: id}, nil
 }
 
-// UpdateEntity 更新租户信息
+// UpdateEntity 更新实体
 func (app *Entity) UpdateEntity(c context.Context, req *apientity.UpdateEntityRequest) (*apientity.UpdateEntityReply, error) {
 	var (
 		ctx = core.MustContext(c)
@@ -159,12 +164,12 @@ func (app *Entity) UpdateEntity(c context.Context, req *apientity.UpdateEntityRe
 	return &apientity.UpdateEntityReply{}, nil
 }
 
-// DeleteEntity 删除租户信息
+// DeleteEntity 删除实体
 func (app *Entity) DeleteEntity(c context.Context, req *apientity.DeleteEntityRequest) (*apientity.DeleteEntityReply, error) {
 	return &apientity.DeleteEntityReply{}, app.srv.DeleteEntity(core.MustContext(c), req.Id)
 }
 
-// ListEntityField 获取租户信息列表
+// ListEntityField 获取实体列表
 func (app *Entity) ListEntityField(c context.Context, req *apientity.ListEntityFieldRequest) (*apientity.ListEntityFieldReply, error) {
 	var (
 		ctx = core.MustContext(c)
@@ -192,7 +197,7 @@ func (app *Entity) ListEntityField(c context.Context, req *apientity.ListEntityF
 	return &reply, nil
 }
 
-// CreateEntityField 创建租户信息
+// CreateEntityField 创建实体
 func (app *Entity) CreateEntityField(c context.Context, req *apientity.CreateEntityFieldRequest) (*apientity.CreateEntityFieldReply, error) {
 	var (
 		ctx = core.MustContext(c)
@@ -214,7 +219,7 @@ func (app *Entity) CreateEntityField(c context.Context, req *apientity.CreateEnt
 	return &apientity.CreateEntityFieldReply{Id: id}, nil
 }
 
-// UpdateEntityField 更新租户信息
+// UpdateEntityField 更新实体
 func (app *Entity) UpdateEntityField(c context.Context, req *apientity.UpdateEntityFieldRequest) (*apientity.UpdateEntityFieldReply, error) {
 	var (
 		ctx = core.MustContext(c)
@@ -235,7 +240,7 @@ func (app *Entity) UpdateEntityField(c context.Context, req *apientity.UpdateEnt
 	return &apientity.UpdateEntityFieldReply{}, nil
 }
 
-// DeleteEntityField 删除租户信息
+// DeleteEntityField 删除实体
 func (app *Entity) DeleteEntityField(c context.Context, req *apientity.DeleteEntityFieldRequest) (*apientity.DeleteEntityFieldReply, error) {
 	return &apientity.DeleteEntityFieldReply{}, app.srv.DeleteEntityField(core.MustContext(c), req.Id)
 }
@@ -261,28 +266,34 @@ func (app *Entity) ListEntityRule(c context.Context, req *apientity.ListEntityRu
 
 	// 处理返回数据
 	reply := apientity.ListEntityRuleReply{Total: total}
-	if err := value.Transform(list, &reply.List); err != nil {
-		ctx.Logger().Errorw("msg", "get entity classify resp transform error", "err", err)
-		return nil, errors.TransformError()
+	for _, v := range list {
+		item := &apientity.EntityRule{
+			Id:          v.Id,
+			EntityId:    v.EntityId,
+			Name:        v.Name,
+			Description: v.Description,
+			Status:      value.Value(v.Status),
+			CreatedAt:   uint32(v.CreatedAt),
+			UpdatedAt:   uint32(v.UpdatedAt),
+		}
+		_ = json.Unmarshal([]byte(v.Expression), &item.Expression)
+		reply.List = append(reply.List, item)
 	}
+
 	return &reply, nil
 }
 
 // CreateEntityRule 创建实体规则
 func (app *Entity) CreateEntityRule(c context.Context, req *apientity.CreateEntityRuleRequest) (*apientity.CreateEntityRuleReply, error) {
-	var (
-		ctx = core.MustContext(c)
-		in  = entity.EntityRule{}
-	)
-
-	// 处理请求参数
-	if err := value.Transform(req, &in); err != nil {
-		ctx.Logger().Errorw("msg", "create entity classify req transform error", "err", err)
-		return nil, errors.TransformError()
-	}
+	ctx := core.MustContext(c)
 
 	// 调用服务
-	id, err := app.srv.CreateEntityRule(ctx, &in)
+	id, err := app.srv.CreateEntityRule(ctx, &entity.EntityRule{
+		EntityId:    req.EntityId,
+		Name:        req.Name,
+		Expression:  value.ObjToString(req.Expression),
+		Description: req.Description,
+	})
 	if err != nil {
 		return nil, err
 	}
@@ -292,19 +303,17 @@ func (app *Entity) CreateEntityRule(c context.Context, req *apientity.CreateEnti
 
 // UpdateEntityRule 更新实体规则
 func (app *Entity) UpdateEntityRule(c context.Context, req *apientity.UpdateEntityRuleRequest) (*apientity.UpdateEntityRuleReply, error) {
-	var (
-		ctx = core.MustContext(c)
-		in  = entity.EntityRule{}
-	)
-
-	// 处理请求参数
-	if err := value.Transform(req, &in); err != nil {
-		ctx.Logger().Errorw("msg", "create entity classify req transform error", "err", err)
-		return nil, errors.TransformError()
-	}
+	ctx := core.MustContext(c)
 
 	// 调用服务
-	if err := app.srv.UpdateEntityRule(ctx, &in); err != nil {
+	if err := app.srv.UpdateEntityRule(ctx, &entity.EntityRule{
+		BaseTenantModel: model.BaseTenantModel{Id: req.Id},
+		EntityId:        value.Value(req.EntityId),
+		Name:            value.Value(req.Name),
+		Status:          req.Status,
+		Expression:      value.ObjToString(req.Expression),
+		Description:     value.Value(req.Description),
+	}); err != nil {
 		return nil, err
 	}
 

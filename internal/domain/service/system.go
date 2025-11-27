@@ -18,12 +18,12 @@ func NewSystem() *System {
 func (u *System) GetSystemSetting(ctx core.Context) *types.GetSystemSettingReply {
 	setting := ctx.Config().Setting
 	reply := types.GetSystemSettingReply{
-		Debug:     setting.Debug,
-		Title:     setting.Title,
-		Desc:      setting.Desc,
-		Copyright: setting.Copyright,
-		Logo:      setting.Logo,
-		Watermark: setting.Watermark,
+		Debug:       setting.Debug,
+		Title:       setting.Title,
+		Description: setting.Desc,
+		Copyright:   setting.Copyright,
+		Logo:        setting.Logo,
+		Watermark:   setting.Watermark,
 		// ChangePasswordType: u.conf.ChangePasswordType,
 	}
 

@@ -14,14 +14,14 @@ service RoleEntity{
   // ListRoleEntity获取角色数据列表
   rpc ListRoleEntity(ListRoleEntityRequest) returns (ListRoleEntityReply) {
     option (google.api.http) = {
-      get: "/manager/api/v1/role/entities",
+      get: "/manager/api/role/entities",
     };
   }
 
   // CreateRoleEntity 创建角色数据信息
   rpc CreateRoleEntity (CreateRoleEntityRequest) returns (CreateRoleEntityReply) {
     option (google.api.http) = {
-      post: "/manager/api/v1/role/entity",
+      post: "/manager/api/role/entity",
       body: "*"
     };
   }
@@ -29,7 +29,7 @@ service RoleEntity{
   // CreateRoleEntity 创建角色数据信息
   rpc UpdateRoleEntity (UpdateRoleEntityRequest) returns (UpdateRoleEntityReply) {
     option (google.api.http) = {
-      put: "/manager/api/v1/role/entity",
+      put: "/manager/api/role/entity",
       body: "*"
     };
   }
@@ -37,8 +37,7 @@ service RoleEntity{
   // DeleteRoleEntity 删除角色数据信息
   rpc DeleteRoleEntity (DeleteRoleEntityRequest) returns (DeleteRoleEntityReply) {
     option (google.api.http) = {
-      delete: "/manager/api/v1/role/entity",
-      body: "*"
+      delete: "/manager/api/role/entity",
     };
   }
 

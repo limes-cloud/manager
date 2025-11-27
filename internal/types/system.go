@@ -5,7 +5,7 @@ type GetSystemSettingRequest struct{}
 type GetSystemSettingReply struct {
 	Debug              bool   `json:"debug"`
 	Title              string `json:"title"`
-	Desc               string `json:"desc"`
+	Description        string `json:"description"`
 	Copyright          string `json:"copyright"`
 	Logo               string `json:"logo"`
 	ChangePasswordType string `json:"changePasswordType"`

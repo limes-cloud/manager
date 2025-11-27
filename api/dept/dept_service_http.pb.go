@@ -60,16 +60,16 @@ type DeptHTTPServer interface {
 
 func RegisterDeptHTTPServer(s *http.Server, srv DeptHTTPServer) {
 	r := s.Route("/")
-	r.GET("/manager/api/v1/dept/classifies", _Dept_ListDeptClassify0_HTTP_Handler(srv))
-	r.POST("/manager/api/v1/dept/classify", _Dept_CreateDeptClassify0_HTTP_Handler(srv))
-	r.PUT("/manager/api/v1/dept/classify", _Dept_UpdateDeptClassify0_HTTP_Handler(srv))
-	r.DELETE("/manager/api/v1/dept/classify", _Dept_DeleteDeptClassify0_HTTP_Handler(srv))
-	r.GET("/manager/api/v1/current/depts", _Dept_ListCurrentDept0_HTTP_Handler(srv))
-	r.GET("/manager/api/v1/depts", _Dept_ListDept0_HTTP_Handler(srv))
-	r.POST("/manager/api/v1/dept", _Dept_CreateDept0_HTTP_Handler(srv))
-	r.PUT("/manager/api/v1/dept", _Dept_UpdateDept0_HTTP_Handler(srv))
-	r.DELETE("/manager/api/v1/dept", _Dept_DeleteDept0_HTTP_Handler(srv))
-	r.GET("/manager/api/v1/dept", _Dept_GetDept0_HTTP_Handler(srv))
+	r.GET("/manager/api/dept/classifies", _Dept_ListDeptClassify0_HTTP_Handler(srv))
+	r.POST("/manager/api/dept/classify", _Dept_CreateDeptClassify0_HTTP_Handler(srv))
+	r.PUT("/manager/api/dept/classify", _Dept_UpdateDeptClassify0_HTTP_Handler(srv))
+	r.DELETE("/manager/api/dept/classify", _Dept_DeleteDeptClassify0_HTTP_Handler(srv))
+	r.GET("/manager/api/depts/current", _Dept_ListCurrentDept0_HTTP_Handler(srv))
+	r.GET("/manager/api/depts", _Dept_ListDept0_HTTP_Handler(srv))
+	r.POST("/manager/api/dept", _Dept_CreateDept0_HTTP_Handler(srv))
+	r.PUT("/manager/api/dept", _Dept_UpdateDept0_HTTP_Handler(srv))
+	r.DELETE("/manager/api/dept", _Dept_DeleteDept0_HTTP_Handler(srv))
+	r.GET("/manager/api/dept", _Dept_GetDept0_HTTP_Handler(srv))
 }
 
 func _Dept_ListDeptClassify0_HTTP_Handler(srv DeptHTTPServer) func(ctx http.Context) error {
@@ -297,7 +297,7 @@ func NewDeptHTTPClient(client *http.Client) DeptHTTPClient {
 
 func (c *DeptHTTPClientImpl) CreateDept(ctx context.Context, in *CreateDeptRequest, opts ...http.CallOption) (*CreateDeptReply, error) {
 	var out CreateDeptReply
-	pattern := "/manager/api/v1/dept"
+	pattern := "/manager/api/dept"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationDeptCreateDept))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -310,7 +310,7 @@ func (c *DeptHTTPClientImpl) CreateDept(ctx context.Context, in *CreateDeptReque
 
 func (c *DeptHTTPClientImpl) CreateDeptClassify(ctx context.Context, in *CreateDeptClassifyRequest, opts ...http.CallOption) (*CreateDeptClassifyReply, error) {
 	var out CreateDeptClassifyReply
-	pattern := "/manager/api/v1/dept/classify"
+	pattern := "/manager/api/dept/classify"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationDeptCreateDeptClassify))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -323,7 +323,7 @@ func (c *DeptHTTPClientImpl) CreateDeptClassify(ctx context.Context, in *CreateD
 
 func (c *DeptHTTPClientImpl) DeleteDept(ctx context.Context, in *DeleteDeptRequest, opts ...http.CallOption) (*DeleteDeptReply, error) {
 	var out DeleteDeptReply
-	pattern := "/manager/api/v1/dept"
+	pattern := "/manager/api/dept"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationDeptDeleteDept))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -336,7 +336,7 @@ func (c *DeptHTTPClientImpl) DeleteDept(ctx context.Context, in *DeleteDeptReque
 
 func (c *DeptHTTPClientImpl) DeleteDeptClassify(ctx context.Context, in *DeleteDeptClassifyRequest, opts ...http.CallOption) (*DeleteDeptClassifyReply, error) {
 	var out DeleteDeptClassifyReply
-	pattern := "/manager/api/v1/dept/classify"
+	pattern := "/manager/api/dept/classify"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationDeptDeleteDeptClassify))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -349,7 +349,7 @@ func (c *DeptHTTPClientImpl) DeleteDeptClassify(ctx context.Context, in *DeleteD
 
 func (c *DeptHTTPClientImpl) GetDept(ctx context.Context, in *GetDeptRequest, opts ...http.CallOption) (*GetDeptReply, error) {
 	var out GetDeptReply
-	pattern := "/manager/api/v1/dept"
+	pattern := "/manager/api/dept"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationDeptGetDept))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -362,7 +362,7 @@ func (c *DeptHTTPClientImpl) GetDept(ctx context.Context, in *GetDeptRequest, op
 
 func (c *DeptHTTPClientImpl) ListCurrentDept(ctx context.Context, in *ListDeptRequest, opts ...http.CallOption) (*ListDeptReply, error) {
 	var out ListDeptReply
-	pattern := "/manager/api/v1/current/depts"
+	pattern := "/manager/api/depts/current"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationDeptListCurrentDept))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -375,7 +375,7 @@ func (c *DeptHTTPClientImpl) ListCurrentDept(ctx context.Context, in *ListDeptRe
 
 func (c *DeptHTTPClientImpl) ListDept(ctx context.Context, in *ListDeptRequest, opts ...http.CallOption) (*ListDeptReply, error) {
 	var out ListDeptReply
-	pattern := "/manager/api/v1/depts"
+	pattern := "/manager/api/depts"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationDeptListDept))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -388,7 +388,7 @@ func (c *DeptHTTPClientImpl) ListDept(ctx context.Context, in *ListDeptRequest, 
 
 func (c *DeptHTTPClientImpl) ListDeptClassify(ctx context.Context, in *ListDeptClassifyRequest, opts ...http.CallOption) (*ListDeptClassifyReply, error) {
 	var out ListDeptClassifyReply
-	pattern := "/manager/api/v1/dept/classifies"
+	pattern := "/manager/api/dept/classifies"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationDeptListDeptClassify))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -401,7 +401,7 @@ func (c *DeptHTTPClientImpl) ListDeptClassify(ctx context.Context, in *ListDeptC
 
 func (c *DeptHTTPClientImpl) UpdateDept(ctx context.Context, in *UpdateDeptRequest, opts ...http.CallOption) (*UpdateDeptReply, error) {
 	var out UpdateDeptReply
-	pattern := "/manager/api/v1/dept"
+	pattern := "/manager/api/dept"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationDeptUpdateDept))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -414,7 +414,7 @@ func (c *DeptHTTPClientImpl) UpdateDept(ctx context.Context, in *UpdateDeptReque
 
 func (c *DeptHTTPClientImpl) UpdateDeptClassify(ctx context.Context, in *UpdateDeptClassifyRequest, opts ...http.CallOption) (*UpdateDeptClassifyReply, error) {
 	var out UpdateDeptClassifyReply
-	pattern := "/manager/api/v1/dept/classify"
+	pattern := "/manager/api/dept/classify"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationDeptUpdateDeptClassify))
 	opts = append(opts, http.PathTemplate(pattern))

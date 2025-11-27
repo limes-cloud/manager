@@ -7,8 +7,6 @@ import (
 )
 
 type User interface {
-	GetUserDeptId(id uint32) uint32
-
 	// GetUser 获取指定的用户信息
 	GetUser(ctx core.Context, id uint32) (*entity.User, error)
 
@@ -29,7 +27,4 @@ type User interface {
 
 	// DeleteUser 删除用户信息
 	DeleteUser(ctx core.Context, id uint32) error
-
-	// ClearTokenExpire 清空token
-	ClearTokenExpire(ctx core.Context, id uint32) error
 }

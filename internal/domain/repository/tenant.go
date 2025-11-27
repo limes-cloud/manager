@@ -7,9 +7,6 @@ import (
 )
 
 type Tenant interface {
-	// ExistTenant 判断是否存在租户
-	ExistTenant(ctx core.Context, keyword string) (bool, error)
-
 	// GetTenant 获取指定的租户
 	GetTenant(ctx core.Context, id uint32) (*entity.Tenant, error)
 

@@ -69,7 +69,22 @@ func (dept *Dept) ListDeptClassify(ctx core.Context, req *types.ListDeptClassify
 		return nil, 0, err
 	}
 
-	db = page.SearchScopes(db, &req.Search)
+	if req.Search != nil {
+		// 查询条件下数据总数
+		if err := db.Count(&total).Error; err != nil {
+			return nil, 0, err
+		}
+
+		if req.Order == nil {
+			req.Order = value.String("desc")
+		}
+		if req.OrderBy == nil {
+			req.OrderBy = value.String("weight")
+		}
+
+		// 分页排序
+		db = page.SearchScopes(db, req.Search)
+	}
 	return list, uint32(total), db.Find(&list).Error
 }
 
@@ -117,6 +132,9 @@ func (dept *Dept) ListDept(ctx core.Context, req *types.ListDeptRequest) ([]*ent
 		Select(fs).
 		Preload("Classify")
 
+	if req.Status != nil {
+		db = db.Where("status = ?", *req.Status)
+	}
 	if req.Name != nil {
 		db = db.Where("name LIKE ?", "%"+*req.Name+"%")
 	}
@@ -136,8 +154,9 @@ func (dept *Dept) CreateDept(ctx core.Context, req *entity.Dept) (uint32, error)
 		if err := ctx.DB().Create(req).Error; err != nil {
 			return err
 		}
-		if req.ParentId != 0 {
-			return dept.appendDeptChildren(ctx, req.ParentId, req.Id)
+		pid := value.Value(req.ParentId)
+		if pid != 0 {
+			return dept.appendDeptChildren(ctx, pid, req.Id)
 		}
 		return nil
 	})
@@ -145,7 +164,7 @@ func (dept *Dept) CreateDept(ctx core.Context, req *entity.Dept) (uint32, error)
 
 // UpdateDept 更新数据
 func (dept *Dept) UpdateDept(ctx core.Context, req *entity.Dept) error {
-	if req.Id == req.ParentId {
+	if req.Id == value.Value(req.ParentId) {
 		return errors.New("父级不能为自己")
 	}
 	old, err := dept.GetDept(ctx, req.Id)
@@ -153,13 +172,17 @@ func (dept *Dept) UpdateDept(ctx core.Context, req *entity.Dept) error {
 		return err
 	}
 
+	pid := value.Value(req.ParentId)
+
 	return ctx.Transaction(func(ctx core.Context) error {
 		if old.ParentId != req.ParentId {
 			if err := dept.removeDeptParent(ctx, req.Id); err != nil {
 				return err
 			}
-			if err := dept.appendDeptChildren(ctx, req.ParentId, req.Id); err != nil {
-				return err
+			if pid != 0 {
+				if err := dept.appendDeptChildren(ctx, pid, req.Id); err != nil {
+					return err
+				}
 			}
 		}
 		return ctx.DB().Updates(req).Error

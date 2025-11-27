@@ -151,6 +151,7 @@ message UpdateDictionaryValueRequest {
   optional string type = 7;
   optional string extra = 8;
   optional string description = 9;
+  optional bool status = 10;
 }
 
 message UpdateDictionaryValueReply {

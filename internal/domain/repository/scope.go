@@ -18,6 +18,9 @@ type Scope interface {
 	// RoleScopes 获取应用的权限列表
 	RoleScopes(ctx core.Context) []uint32
 
+	// SystemDeptScopes 获取当前系统的部门权限
+	SystemDeptScopes(ctx core.Context, entity string, action string) (bool, []uint32)
+
 	// DeptScopes 获取部门的权限列表
 	DeptScopes(ctx core.Context, database, entity, action string) (bool, []uint32)
 

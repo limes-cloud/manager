@@ -4,6 +4,7 @@ package errors
 
 import (
 	fmt "fmt"
+
 	errors "github.com/go-kratos/kratos/v2/errors"
 )
 
@@ -848,5 +849,45 @@ func TenantNotFoundError(args ...any) *errors.Error {
 	default:
 		msg := fmt.Sprintf(fmt.Sprint(args[0]), args[1:]...)
 		return errors.New(403, ErrorReason_TenantNotFoundError.String(), "租户不存在:"+msg)
+	}
+}
+
+func IsAppNotFoundError(err error) bool {
+	if err == nil {
+		return false
+	}
+	e := errors.FromError(err)
+	return e.Reason == ErrorReason_AppNotFoundError.String() && e.Code == 403
+}
+
+func AppNotFoundError(args ...any) *errors.Error {
+	switch len(args) {
+	case 0:
+		return errors.New(403, ErrorReason_AppNotFoundError.String(), "应用不存在")
+	case 1:
+		return errors.New(403, ErrorReason_AppNotFoundError.String(), "应用不存在:"+fmt.Sprint(args[0]))
+	default:
+		msg := fmt.Sprintf(fmt.Sprint(args[0]), args[1:]...)
+		return errors.New(403, ErrorReason_AppNotFoundError.String(), "应用不存在:"+msg)
+	}
+}
+
+func IsRegisterError(err error) bool {
+	if err == nil {
+		return false
+	}
+	e := errors.FromError(err)
+	return e.Reason == ErrorReason_RegisterError.String() && e.Code == 500
+}
+
+func RegisterError(args ...any) *errors.Error {
+	switch len(args) {
+	case 0:
+		return errors.New(500, ErrorReason_RegisterError.String(), "注册失败")
+	case 1:
+		return errors.New(500, ErrorReason_RegisterError.String(), "注册失败:"+fmt.Sprint(args[0]))
+	default:
+		msg := fmt.Sprintf(fmt.Sprint(args[0]), args[1:]...)
+		return errors.New(500, ErrorReason_RegisterError.String(), "注册失败:"+msg)
 	}
 }

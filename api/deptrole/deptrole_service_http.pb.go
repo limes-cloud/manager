@@ -23,31 +23,22 @@ var (
 const _ = http.SupportPackageIsVersion1
 
 const (
-	OperationDeptRoleCreateDeptRoles = "/manager.api.deptrole.DeptRole/CreateDeptRoles"
-	OperationDeptRoleCreateRoleDepts = "/manager.api.deptrole.DeptRole/CreateRoleDepts"
-	OperationDeptRoleDeleteDeptRoles = "/manager.api.deptrole.DeptRole/DeleteDeptRoles"
-	OperationDeptRoleDeleteRoleDepts = "/manager.api.deptrole.DeptRole/DeleteRoleDepts"
-	OperationDeptRoleListDeptRole    = "/manager.api.deptrole.DeptRole/ListDeptRole"
-	OperationDeptRoleListRoleDept    = "/manager.api.deptrole.DeptRole/ListRoleDept"
+	OperationDeptRoleCreateDeptRole = "/manager.api.deptrole.DeptRole/CreateDeptRole"
+	OperationDeptRoleDeleteDeptRole = "/manager.api.deptrole.DeptRole/DeleteDeptRole"
+	OperationDeptRoleListDeptRole   = "/manager.api.deptrole.DeptRole/ListDeptRole"
 )
 
 type DeptRoleHTTPServer interface {
-	CreateDeptRoles(context.Context, *CreateDeptRolesRequest) (*CreateDeptRolesReply, error)
-	CreateRoleDepts(context.Context, *CreateRoleDeptsRequest) (*CreateRoleDeptsReply, error)
-	DeleteDeptRoles(context.Context, *DeleteDeptRolesRequest) (*DeleteDeptRolesReply, error)
-	DeleteRoleDepts(context.Context, *DeleteRoleDeptsRequest) (*DeleteRoleDeptsReply, error)
+	CreateDeptRole(context.Context, *CreateDeptRoleRequest) (*CreateDeptRoleReply, error)
+	DeleteDeptRole(context.Context, *DeleteDeptRoleRequest) (*DeleteDeptRoleReply, error)
 	ListDeptRole(context.Context, *ListDeptRoleRequest) (*ListDeptRoleReply, error)
-	ListRoleDept(context.Context, *ListRoleDeptRequest) (*ListRoleDeptReply, error)
 }
 
 func RegisterDeptRoleHTTPServer(s *http.Server, srv DeptRoleHTTPServer) {
 	r := s.Route("/")
-	r.GET("/manager/api/v1/dept/roles", _DeptRole_ListDeptRole0_HTTP_Handler(srv))
-	r.POST("/manager/api/v1/dept/roles", _DeptRole_CreateDeptRoles0_HTTP_Handler(srv))
-	r.DELETE("/manager/api/v1/dept/roles", _DeptRole_DeleteDeptRoles0_HTTP_Handler(srv))
-	r.GET("/manager/api/v1/role/depts", _DeptRole_ListRoleDept0_HTTP_Handler(srv))
-	r.POST("/manager/api/v1/role/depts", _DeptRole_CreateRoleDepts0_HTTP_Handler(srv))
-	r.DELETE("/manager/api/v1/role/depts", _DeptRole_DeleteRoleDepts0_HTTP_Handler(srv))
+	r.GET("/manager/api/dept/roles", _DeptRole_ListDeptRole0_HTTP_Handler(srv))
+	r.POST("/manager/api/dept/role", _DeptRole_CreateDeptRole0_HTTP_Handler(srv))
+	r.DELETE("/manager/api/dept/role", _DeptRole_DeleteDeptRole0_HTTP_Handler(srv))
 }
 
 func _DeptRole_ListDeptRole0_HTTP_Handler(srv DeptRoleHTTPServer) func(ctx http.Context) error {
@@ -69,120 +60,54 @@ func _DeptRole_ListDeptRole0_HTTP_Handler(srv DeptRoleHTTPServer) func(ctx http.
 	}
 }
 
-func _DeptRole_CreateDeptRoles0_HTTP_Handler(srv DeptRoleHTTPServer) func(ctx http.Context) error {
+func _DeptRole_CreateDeptRole0_HTTP_Handler(srv DeptRoleHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in CreateDeptRolesRequest
+		var in CreateDeptRoleRequest
 		if err := ctx.Bind(&in); err != nil {
 			return err
 		}
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationDeptRoleCreateDeptRoles)
+		http.SetOperation(ctx, OperationDeptRoleCreateDeptRole)
 		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
-			return srv.CreateDeptRoles(ctx, req.(*CreateDeptRolesRequest))
+			return srv.CreateDeptRole(ctx, req.(*CreateDeptRoleRequest))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		reply := out.(*CreateDeptRolesReply)
+		reply := out.(*CreateDeptRoleReply)
 		return ctx.Result(200, reply)
 	}
 }
 
-func _DeptRole_DeleteDeptRoles0_HTTP_Handler(srv DeptRoleHTTPServer) func(ctx http.Context) error {
+func _DeptRole_DeleteDeptRole0_HTTP_Handler(srv DeptRoleHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in DeleteDeptRolesRequest
+		var in DeleteDeptRoleRequest
 		if err := ctx.Bind(&in); err != nil {
 			return err
 		}
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationDeptRoleDeleteDeptRoles)
+		http.SetOperation(ctx, OperationDeptRoleDeleteDeptRole)
 		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
-			return srv.DeleteDeptRoles(ctx, req.(*DeleteDeptRolesRequest))
+			return srv.DeleteDeptRole(ctx, req.(*DeleteDeptRoleRequest))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		reply := out.(*DeleteDeptRolesReply)
-		return ctx.Result(200, reply)
-	}
-}
-
-func _DeptRole_ListRoleDept0_HTTP_Handler(srv DeptRoleHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in ListRoleDeptRequest
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationDeptRoleListRoleDept)
-		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
-			return srv.ListRoleDept(ctx, req.(*ListRoleDeptRequest))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*ListRoleDeptReply)
-		return ctx.Result(200, reply)
-	}
-}
-
-func _DeptRole_CreateRoleDepts0_HTTP_Handler(srv DeptRoleHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in CreateRoleDeptsRequest
-		if err := ctx.Bind(&in); err != nil {
-			return err
-		}
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationDeptRoleCreateRoleDepts)
-		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
-			return srv.CreateRoleDepts(ctx, req.(*CreateRoleDeptsRequest))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*CreateRoleDeptsReply)
-		return ctx.Result(200, reply)
-	}
-}
-
-func _DeptRole_DeleteRoleDepts0_HTTP_Handler(srv DeptRoleHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in DeleteRoleDeptsRequest
-		if err := ctx.Bind(&in); err != nil {
-			return err
-		}
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationDeptRoleDeleteRoleDepts)
-		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
-			return srv.DeleteRoleDepts(ctx, req.(*DeleteRoleDeptsRequest))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*DeleteRoleDeptsReply)
+		reply := out.(*DeleteDeptRoleReply)
 		return ctx.Result(200, reply)
 	}
 }
 
 type DeptRoleHTTPClient interface {
-	CreateDeptRoles(ctx context.Context, req *CreateDeptRolesRequest, opts ...http.CallOption) (rsp *CreateDeptRolesReply, err error)
-	CreateRoleDepts(ctx context.Context, req *CreateRoleDeptsRequest, opts ...http.CallOption) (rsp *CreateRoleDeptsReply, err error)
-	DeleteDeptRoles(ctx context.Context, req *DeleteDeptRolesRequest, opts ...http.CallOption) (rsp *DeleteDeptRolesReply, err error)
-	DeleteRoleDepts(ctx context.Context, req *DeleteRoleDeptsRequest, opts ...http.CallOption) (rsp *DeleteRoleDeptsReply, err error)
+	CreateDeptRole(ctx context.Context, req *CreateDeptRoleRequest, opts ...http.CallOption) (rsp *CreateDeptRoleReply, err error)
+	DeleteDeptRole(ctx context.Context, req *DeleteDeptRoleRequest, opts ...http.CallOption) (rsp *DeleteDeptRoleReply, err error)
 	ListDeptRole(ctx context.Context, req *ListDeptRoleRequest, opts ...http.CallOption) (rsp *ListDeptRoleReply, err error)
-	ListRoleDept(ctx context.Context, req *ListRoleDeptRequest, opts ...http.CallOption) (rsp *ListRoleDeptReply, err error)
 }
 
 type DeptRoleHTTPClientImpl struct {
@@ -193,11 +118,11 @@ func NewDeptRoleHTTPClient(client *http.Client) DeptRoleHTTPClient {
 	return &DeptRoleHTTPClientImpl{client}
 }
 
-func (c *DeptRoleHTTPClientImpl) CreateDeptRoles(ctx context.Context, in *CreateDeptRolesRequest, opts ...http.CallOption) (*CreateDeptRolesReply, error) {
-	var out CreateDeptRolesReply
-	pattern := "/manager/api/v1/dept/roles"
+func (c *DeptRoleHTTPClientImpl) CreateDeptRole(ctx context.Context, in *CreateDeptRoleRequest, opts ...http.CallOption) (*CreateDeptRoleReply, error) {
+	var out CreateDeptRoleReply
+	pattern := "/manager/api/dept/role"
 	path := binding.EncodeURL(pattern, in, false)
-	opts = append(opts, http.Operation(OperationDeptRoleCreateDeptRoles))
+	opts = append(opts, http.Operation(OperationDeptRoleCreateDeptRole))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
 	if err != nil {
@@ -206,37 +131,11 @@ func (c *DeptRoleHTTPClientImpl) CreateDeptRoles(ctx context.Context, in *Create
 	return &out, err
 }
 
-func (c *DeptRoleHTTPClientImpl) CreateRoleDepts(ctx context.Context, in *CreateRoleDeptsRequest, opts ...http.CallOption) (*CreateRoleDeptsReply, error) {
-	var out CreateRoleDeptsReply
-	pattern := "/manager/api/v1/role/depts"
+func (c *DeptRoleHTTPClientImpl) DeleteDeptRole(ctx context.Context, in *DeleteDeptRoleRequest, opts ...http.CallOption) (*DeleteDeptRoleReply, error) {
+	var out DeleteDeptRoleReply
+	pattern := "/manager/api/dept/role"
 	path := binding.EncodeURL(pattern, in, false)
-	opts = append(opts, http.Operation(OperationDeptRoleCreateRoleDepts))
-	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return &out, err
-}
-
-func (c *DeptRoleHTTPClientImpl) DeleteDeptRoles(ctx context.Context, in *DeleteDeptRolesRequest, opts ...http.CallOption) (*DeleteDeptRolesReply, error) {
-	var out DeleteDeptRolesReply
-	pattern := "/manager/api/v1/dept/roles"
-	path := binding.EncodeURL(pattern, in, false)
-	opts = append(opts, http.Operation(OperationDeptRoleDeleteDeptRoles))
-	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "DELETE", path, in, &out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return &out, err
-}
-
-func (c *DeptRoleHTTPClientImpl) DeleteRoleDepts(ctx context.Context, in *DeleteRoleDeptsRequest, opts ...http.CallOption) (*DeleteRoleDeptsReply, error) {
-	var out DeleteRoleDeptsReply
-	pattern := "/manager/api/v1/role/depts"
-	path := binding.EncodeURL(pattern, in, false)
-	opts = append(opts, http.Operation(OperationDeptRoleDeleteRoleDepts))
+	opts = append(opts, http.Operation(OperationDeptRoleDeleteDeptRole))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "DELETE", path, in, &out, opts...)
 	if err != nil {
@@ -247,22 +146,9 @@ func (c *DeptRoleHTTPClientImpl) DeleteRoleDepts(ctx context.Context, in *Delete
 
 func (c *DeptRoleHTTPClientImpl) ListDeptRole(ctx context.Context, in *ListDeptRoleRequest, opts ...http.CallOption) (*ListDeptRoleReply, error) {
 	var out ListDeptRoleReply
-	pattern := "/manager/api/v1/dept/roles"
+	pattern := "/manager/api/dept/roles"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationDeptRoleListDeptRole))
-	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return &out, err
-}
-
-func (c *DeptRoleHTTPClientImpl) ListRoleDept(ctx context.Context, in *ListRoleDeptRequest, opts ...http.CallOption) (*ListRoleDeptReply, error) {
-	var out ListRoleDeptReply
-	pattern := "/manager/api/v1/role/depts"
-	path := binding.EncodeURL(pattern, in, true)
-	opts = append(opts, http.Operation(OperationDeptRoleListRoleDept))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {

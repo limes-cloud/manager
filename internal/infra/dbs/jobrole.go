@@ -16,7 +16,6 @@ import (
 	"github.com/limes-cloud/manager/internal/core"
 	"github.com/limes-cloud/manager/internal/domain/entity"
 	"github.com/limes-cloud/manager/internal/types"
-	"gorm.io/gorm/clause"
 )
 
 type JobRole struct {
@@ -51,34 +50,6 @@ func NewJobRole() *JobRole {
 	return jrIns
 }
 
-// ListRoleJob 获取指定角色绑定的所有部门
-func (jr *JobRole) ListRoleJob(ctx core.Context, req *types.ListRoleJobRequest) ([]*entity.Job, uint32, error) {
-	var (
-		total int64
-		list  []*entity.Job
-	)
-	db := ctx.DB().Model(&entity.Job{}).
-		Joins("left join job_role on job.id = job_role.job_id").
-		Joins("Classify", ctx.DB().Where("Classify.status=1")).
-		Where("job_role.role_id is not null").
-		Where("Classify.id is not null").
-		Where("job.status = 1")
-
-	if req.Name != nil {
-		db = db.Where("job.name like ?", *req.Name+"%")
-	}
-	if req.InJobIds != nil {
-		db = db.Where("job.id in ?", req.InJobIds)
-	}
-
-	if err := db.Count(&total).Error; err != nil {
-		return nil, 0, err
-	}
-
-	db = page.SearchScopes(db, &req.Search)
-	return list, uint32(total), db.Find(&list).Error
-}
-
 // ListJobRole 获取指定部门的角色列表
 func (jr *JobRole) ListJobRole(ctx core.Context, req *types.ListJobRoleRequest) ([]*entity.Role, uint32, error) {
 	var (
@@ -89,13 +60,15 @@ func (jr *JobRole) ListJobRole(ctx core.Context, req *types.ListJobRoleRequest) 
 		Model(&entity.Role{}).
 		Joins("left join job_role on role.id = job_role.role_id").
 		Where("job_role.role_id is not null").
-		Where("role.status = 1")
+		Where("role.status = 1").
+		Where("job_id = ?", req.JobId)
 	if req.Name != nil {
 		db = db.Where("role.name like ?", *req.Name+"%")
 	}
 	if req.InRoleIds != nil {
 		db = db.Where("role.id in ?", req.InRoleIds)
 	}
+
 	if err := db.Count(&total).Error; err != nil {
 		return nil, 0, err
 	}
@@ -104,34 +77,38 @@ func (jr *JobRole) ListJobRole(ctx core.Context, req *types.ListJobRoleRequest) 
 	return list, uint32(total), db.Find(&list).Error
 }
 
-// CreateJobRoles 批量绑定部门部门角色关系
-func (jr *JobRole) CreateJobRoles(ctx core.Context, jrs []*entity.JobRole) error {
+// CreateJobRole 批量绑定职位角色关系
+func (jr *JobRole) CreateJobRole(ctx core.Context, jobId, roleId uint32) error {
+	ent := &entity.JobRole{
+		JobId:  jobId,
+		RoleId: roleId,
+	}
 	op := jr.cache.OP(ctx)
 	return ctx.Transaction(func(ctx core.Context) error {
-		if err := ctx.DB().Model(&entity.JobRole{}).
-			Clauses(clause.OnConflict{UpdateAll: true}).
-			Create(&jrs).Error; err != nil {
+		if err := ctx.DB().Model(&entity.JobRole{}).Create(ent).Error; err != nil {
 			return err
 		}
-
-		return op.Puts(jr.transvals(jrs)).Do()
+		return op.Puts(jr.transvals([]*entity.JobRole{ent})).Do()
 	})
 }
 
-// DeleteJobRoles 获取指定菜单的角色列表
-func (jr *JobRole) DeleteJobRoles(ctx core.Context, jrs []*entity.JobRole) error {
+// DeleteJobRole 获取指定菜单的角色列表
+func (jr *JobRole) DeleteJobRole(ctx core.Context, jobId, roleId uint32) error {
+	ent := &entity.JobRole{
+		JobId:  jobId,
+		RoleId: roleId,
+	}
 	op := jr.cache.OP(ctx)
 	return ctx.Transaction(func(ctx core.Context) error {
-		db := ctx.DB()
-		for _, item := range jrs {
-			db = db.Or(ctx.DB().Where("role_id = ? AND job_id = ?", item.RoleId, item.JobId))
-		}
-		if err := db.Delete(&entity.JobRole{}).Error; err != nil {
+		if err := ctx.DB().
+			Where("job_id=?", jobId).
+			Where("role_id=?", roleId).
+			Delete(&ent).Error; err != nil {
 			return err
 		}
 
 		// 从缓存中删除
-		return op.Deletes(jr.transkeys(jrs)).Do()
+		return op.Deletes(jr.transkeys([]*entity.JobRole{ent})).Do()
 	})
 }
 

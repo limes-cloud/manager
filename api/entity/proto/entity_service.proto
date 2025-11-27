@@ -15,89 +15,89 @@ service Entity{
   // LoadEntity 载入全部系统的实体
   rpc LoadEntity (google.protobuf.Empty) returns (LoadEntityReply) {
     option (google.api.http) = {
-      get: "/manager/api/v1/load/entities"
+      get: "/manager/api/entity/load"
     };
   }
 
   // ImportEntity 载入全部系统的实体
   rpc ImportEntity (ImportEntityRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
-      post: "/manager/api/v1/import/entities",
+      post: "/manager/api/entity/import",
       body: "*"
     };
   }
   
-  // ListEntity 获取部门信息列表
+  // ListEntity 获取实体列表
   rpc ListEntity (ListEntityRequest) returns (ListEntityReply) {
     option (google.api.http) = {
-      get: "/manager/api/v1/entities",
+      get: "/manager/api/entities",
     };
   }
 
-  // CreateEntity 创建部门信息
+  // CreateEntity 创建实体
   rpc CreateEntity (CreateEntityRequest) returns (CreateEntityReply) {
     option (google.api.http) = {
-      post: "/manager/api/v1/entity",
+      post: "/manager/api/entity",
       body: "*"
     };
   }
 
-  // UpdateEntity 更新部门信息
+  // UpdateEntity 更新实体
   rpc UpdateEntity (UpdateEntityRequest) returns (UpdateEntityReply) {
     option (google.api.http) = {
-      put: "/manager/api/v1/entity",
+      put: "/manager/api/entity",
       body: "*"
     };
   }
 
-  // DeleteEntity 删除部门信息
+  // DeleteEntity 删除实体
   rpc DeleteEntity (DeleteEntityRequest) returns (DeleteEntityReply) {
     option (google.api.http) = {
-      delete: "/manager/api/v1/entity",
+      delete: "/manager/api/entity",
     };
   }
 
-  // ListEntityField 获取部门分类列表
+  // ListEntityField 获取实体字段列表
   rpc ListEntityField (ListEntityFieldRequest) returns (ListEntityFieldReply) {
     option (google.api.http) = {
-      get: "/manager/api/v1/entity/fields",
+      get: "/manager/api/entity/fields",
     };
   }
 
-  // CreateEntityField 创建部门分类
+  // CreateEntityField 创建实体字段
   rpc CreateEntityField (CreateEntityFieldRequest) returns (CreateEntityFieldReply) {
     option (google.api.http) = {
-      post: "/manager/api/v1/entity/field",
+      post: "/manager/api/entity/field",
       body: "*"
     };
   }
 
-  // UpdateEntityField 更新部门分类
+  // UpdateEntityField 更新实体字段
   rpc UpdateEntityField (UpdateEntityFieldRequest) returns (UpdateEntityFieldReply) {
     option (google.api.http) = {
-      put: "/manager/api/v1/entity/field",
+      put: "/manager/api/entity/field",
       body: "*"
     };
   }
 
-  // DeleteEntityField 删除部门分类
+  // DeleteEntityField 删除实体字段
   rpc DeleteEntityField (DeleteEntityFieldRequest) returns (DeleteEntityFieldReply) {
     option (google.api.http) = {
-      delete: "/manager/api/v1/entity/field",
+      delete: "/manager/api/entity/field",
     };
   }
 
   // ListEntityRule 获取实体规则列表
   rpc ListEntityRule (ListEntityRuleRequest) returns (ListEntityRuleReply) {
     option (google.api.http) = {
-      get: "/manager/api/v1/entity/rules",
+      get: "/manager/api/entity/rules",
     };
   }
 
   // CreateEntityRule 创建实体规则
   rpc CreateEntityRule (CreateEntityRuleRequest) returns (CreateEntityRuleReply) {
     option (google.api.http) = {
-      post: "/manager/api/v1/entity/rule",
+      post: "/manager/api/entity/rule",
       body: "*"
     };
   }
@@ -105,7 +105,7 @@ service Entity{
   // UpdateEntityRule 更新实体规则
   rpc UpdateEntityRule (UpdateEntityRuleRequest) returns (UpdateEntityRuleReply) {
     option (google.api.http) = {
-      put: "/manager/api/v1/entity/rule",
+      put: "/manager/api/entity/rule",
       body: "*"
     };
   }
@@ -113,7 +113,7 @@ service Entity{
   // DeleteEntityRule 删除实体规则
   rpc DeleteEntityRule (DeleteEntityRuleRequest) returns (DeleteEntityRuleReply) {
     option (google.api.http) = {
-      delete: "/manager/api/v1/entity/rule",
+      delete: "/manager/api/entity/rule",
     };
   }
 }

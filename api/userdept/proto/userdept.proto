@@ -12,56 +12,61 @@ message CreateUserDeptRequest {
   uint32 userId = 1[(validate.rules).uint32 = {gte: 1}];
   uint32 deptId = 2[(validate.rules).uint32 = {gte: 1}];
   uint32 jobId = 3[(validate.rules).uint32 = {gte: 1}];
+  bool main = 4;
 }
 
 message CreateUserDeptReply {
 }
 
+message UpdateUserDeptRequest {
+  uint32 id = 1[(validate.rules).uint32 = {gte: 1}];
+  uint32 userId = 2;
+  uint32 deptId = 3;
+  uint32 jobId = 4;
+  bool main = 5;
+}
+
+message UpdateUserDeptReply {
+}
 
 message ListUserDeptRequest {
   uint32 page = 1[(validate.rules).uint32 = {gte: 1}];
   uint32 pageSize = 2[(validate.rules).uint32 = {gte: 1,lte:50}];
   uint32 userId = 3[(validate.rules).uint32 = {gte: 1}];
-  optional string name = 4;
+  optional string job = 4;
+  optional string dept = 5;
 }
 
 message ListUserDeptReply {
-  message Data{
+  message Job{
     uint32 id = 1;
     string name = 2;
+  }
+
+  message Dept{
+    uint32 id = 1;
+    string name = 2;
+    string logo = 3;
   }
 
   message UserDept{
     uint32 id = 1;
     uint32 userId = 2;
-    Data dept = 3;
-    Data job = 4;
+    Dept dept = 3;
+    Job job = 4;
+    uint32 deptId = 5;
+    uint32 jobId = 6;
+    bool main = 7;
+    uint32 createdAt = 8;
+    uint32 updatedAt = 9;
   }
 
   repeated UserDept list = 1;
   uint32 total = 2;
 }
 
-message ListDeptUserRequest {
-  uint32 page = 1[(validate.rules).uint32 = {gte: 1}];
-  uint32 pageSize = 2[(validate.rules).uint32 = {gte: 1,lte:50}];
-  uint32 deptId = 3[(validate.rules).uint32 = {gte: 1}];
-  optional string name = 4;
-}
-
-message ListDeptUserReply {
-  message Data{
-    uint32 id = 1;
-    string username = 2;
-    string avatar = 3;
-  }
-
-  repeated Data list = 1;
-  uint32 total = 2;
-}
 
 message DeleteUserDeptRequest {
-  uint32 userId = 1[(validate.rules).uint32 = {gte: 1}];
-  uint32 deptId = 2[(validate.rules).uint32 = {gte: 1}];
+  uint32 id = 1[(validate.rules).uint32 = {gte: 1}];
 }
 message DeleteUserDeptReply {}

@@ -10,44 +10,41 @@ import "validate/validate.proto";
 
 message ListCurrentMenuRequest {
   optional uint32 appId = 1[(validate.rules).uint32 = {gte: 1}];
-  bool filterRoot= 2;
-  bool filterBaseApi = 3;
-  bool filterTenant = 4;
+  bool onlyMenu = 2;
 }
 
 
 message ListMenuRequest {
   uint32 appId = 1[(validate.rules).uint32 = {gte: 1}];
-  optional bool filterBaseApi = 2;
-}
-
-message MenuValue {
-  uint32 id = 1;
-  uint32 appId = 2;
-  uint32 parentId = 3;
-  string title = 4;
-  string type = 5;
-  optional string keyword = 6;
-  optional string icon = 7;
-  optional string api = 8;
-  optional string method = 9;
-  optional string path = 10;
-  optional string permission = 11;
-  optional string component = 12;
-  optional string redirect = 13;
-  optional int32 weight = 14;
-  optional bool isIframe = 15;
-  optional bool isHidden = 16;
-  optional bool isCache = 17;
-  optional bool isHome = 18;
-  optional bool isAffix = 19;
-  uint32 createdAt = 20;
-  uint32 updatedAt = 21;
-  repeated MenuValue children = 22;
 }
 
 message ListMenuReply {
-  repeated MenuValue list = 1;
+  message Data {
+    uint32 id = 1;
+    uint32 appId = 2;
+    uint32 parentId = 3;
+    string title = 4;
+    string type = 5;
+    optional string keyword = 6;
+    optional string icon = 7;
+    optional string api = 8;
+    optional string method = 9;
+    optional string path = 10;
+    optional string permission = 11;
+    optional string component = 12;
+    optional string url = 13;
+    optional string redirect = 23;
+    optional int32 weight = 14;
+    optional bool isIframe = 15;
+    optional bool isHidden = 16;
+    optional bool isCache = 17;
+    optional bool isHome = 18;
+    optional bool isAffix = 19;
+    uint32 createdAt = 20;
+    uint32 updatedAt = 21;
+    repeated Data children = 22;
+  }
+  repeated Data list = 1;
 }
 
 
@@ -63,7 +60,7 @@ message CreateMenuRequest {
   optional string path = 9;
   optional string permission = 10;
   optional string component = 11;
-  optional string redirect = 12;
+  optional string url = 12;
   optional int32 weight = 13;
   optional bool isIframe = 14;
   optional bool isHidden = 15;
@@ -78,9 +75,9 @@ message CreateMenuReply {
 
 message UpdateMenuRequest {
   uint32 id = 1[(validate.rules).uint32 = {gte: 1}];
-  uint32 parentId = 2;
-  string title = 3[(validate.rules).string = {min_len: 1}];
-  string type = 4[(validate.rules).string = {min_len: 1}];
+  optional uint32 parentId = 2;
+  optional string title = 3[(validate.rules).string = {min_len: 1}];
+  optional string type = 4[(validate.rules).string = {min_len: 1}];
   optional string keyword = 5;
   optional string icon = 6;
   optional string api = 7;
@@ -88,7 +85,7 @@ message UpdateMenuRequest {
   optional string path = 9;
   optional string permission = 10;
   optional string component = 11;
-  optional string redirect = 12;
+  optional string url = 12;
   optional int32 weight = 13;
   optional bool isHidden = 14;
   optional bool isIframe = 15;

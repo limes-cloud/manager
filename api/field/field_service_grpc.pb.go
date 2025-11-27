@@ -20,11 +20,12 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	Field_ListFieldType_FullMethodName = "/manager.api.field.Field/ListFieldType"
-	Field_ListField_FullMethodName     = "/manager.api.field.Field/ListField"
-	Field_CreateField_FullMethodName   = "/manager.api.field.Field/CreateField"
-	Field_UpdateField_FullMethodName   = "/manager.api.field.Field/UpdateField"
-	Field_DeleteField_FullMethodName   = "/manager.api.field.Field/DeleteField"
+	Field_ListFieldType_FullMethodName     = "/manager.api.field.Field/ListFieldType"
+	Field_ListField_FullMethodName         = "/manager.api.field.Field/ListField"
+	Field_ListRequiredField_FullMethodName = "/manager.api.field.Field/ListRequiredField"
+	Field_CreateField_FullMethodName       = "/manager.api.field.Field/CreateField"
+	Field_UpdateField_FullMethodName       = "/manager.api.field.Field/UpdateField"
+	Field_DeleteField_FullMethodName       = "/manager.api.field.Field/DeleteField"
 )
 
 // FieldClient is the client API for Field service.
@@ -35,6 +36,8 @@ type FieldClient interface {
 	ListFieldType(ctx context.Context, in *ListFieldTypeRequest, opts ...grpc.CallOption) (*ListFieldTypeReply, error)
 	// ListField 获取用户字段列表
 	ListField(ctx context.Context, in *ListFieldRequest, opts ...grpc.CallOption) (*ListFieldReply, error)
+	// ListRequiredField 获取必填的用户字段列表
+	ListRequiredField(ctx context.Context, in *ListRequiredFieldRequest, opts ...grpc.CallOption) (*ListRequiredFieldReply, error)
 	// CreateField 创建用户字段
 	CreateField(ctx context.Context, in *CreateFieldRequest, opts ...grpc.CallOption) (*CreateFieldReply, error)
 	// UpdateField 更新用户字段
@@ -63,6 +66,15 @@ func (c *fieldClient) ListFieldType(ctx context.Context, in *ListFieldTypeReques
 func (c *fieldClient) ListField(ctx context.Context, in *ListFieldRequest, opts ...grpc.CallOption) (*ListFieldReply, error) {
 	out := new(ListFieldReply)
 	err := c.cc.Invoke(ctx, Field_ListField_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *fieldClient) ListRequiredField(ctx context.Context, in *ListRequiredFieldRequest, opts ...grpc.CallOption) (*ListRequiredFieldReply, error) {
+	out := new(ListRequiredFieldReply)
+	err := c.cc.Invoke(ctx, Field_ListRequiredField_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -104,6 +116,8 @@ type FieldServer interface {
 	ListFieldType(context.Context, *ListFieldTypeRequest) (*ListFieldTypeReply, error)
 	// ListField 获取用户字段列表
 	ListField(context.Context, *ListFieldRequest) (*ListFieldReply, error)
+	// ListRequiredField 获取必填的用户字段列表
+	ListRequiredField(context.Context, *ListRequiredFieldRequest) (*ListRequiredFieldReply, error)
 	// CreateField 创建用户字段
 	CreateField(context.Context, *CreateFieldRequest) (*CreateFieldReply, error)
 	// UpdateField 更新用户字段
@@ -122,6 +136,10 @@ func (UnimplementedFieldServer) ListFieldType(context.Context, *ListFieldTypeReq
 
 func (UnimplementedFieldServer) ListField(context.Context, *ListFieldRequest) (*ListFieldReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListField not implemented")
+}
+
+func (UnimplementedFieldServer) ListRequiredField(context.Context, *ListRequiredFieldRequest) (*ListRequiredFieldReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListRequiredField not implemented")
 }
 
 func (UnimplementedFieldServer) CreateField(context.Context, *CreateFieldRequest) (*CreateFieldReply, error) {
@@ -180,6 +198,24 @@ func _Field_ListField_Handler(srv interface{}, ctx context.Context, dec func(int
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(FieldServer).ListField(ctx, req.(*ListFieldRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Field_ListRequiredField_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListRequiredFieldRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FieldServer).ListRequiredField(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Field_ListRequiredField_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FieldServer).ListRequiredField(ctx, req.(*ListRequiredFieldRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -252,6 +288,10 @@ var Field_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListField",
 			Handler:    _Field_ListField_Handler,
+		},
+		{
+			MethodName: "ListRequiredField",
+			Handler:    _Field_ListRequiredField_Handler,
 		},
 		{
 			MethodName: "CreateField",

@@ -31,7 +31,7 @@ type SystemHTTPServer interface {
 
 func RegisterSystemHTTPServer(s *http.Server, srv SystemHTTPServer) {
 	r := s.Route("/")
-	r.GET("/manager/api/v1/system/setting", _System_GetSystemSetting0_HTTP_Handler(srv))
+	r.GET("/manager/api/system/setting", _System_GetSystemSetting0_HTTP_Handler(srv))
 }
 
 func _System_GetSystemSetting0_HTTP_Handler(srv SystemHTTPServer) func(ctx http.Context) error {
@@ -67,7 +67,7 @@ func NewSystemHTTPClient(client *http.Client) SystemHTTPClient {
 
 func (c *SystemHTTPClientImpl) GetSystemSetting(ctx context.Context, in *GetSystemSettingRequest, opts ...http.CallOption) (*GetSystemSettingReply, error) {
 	var out GetSystemSettingReply
-	pattern := "/manager/api/v1/system/setting"
+	pattern := "/manager/api/system/setting"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationSystemGetSystemSetting))
 	opts = append(opts, http.PathTemplate(pattern))

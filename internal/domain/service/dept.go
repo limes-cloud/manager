@@ -29,7 +29,7 @@ func (u *Dept) ListDeptClassify(ctx core.Context, req *types.ListDeptClassifyReq
 	list, total, err := u.repo.ListDeptClassify(ctx, req)
 	if err != nil {
 		ctx.Logger().Warnw("msg", "list dept classify error", "err", err.Error())
-		return nil, 0, errors.ListError()
+		return nil, 0, errors.ListError(err.Error())
 	}
 	return list, total, nil
 }
@@ -39,7 +39,7 @@ func (u *Dept) CreateDeptClassify(ctx core.Context, req *entity.DeptClassify) (u
 	id, err := u.repo.CreateDeptClassify(ctx, req)
 	if err != nil {
 		ctx.Logger().Warnw("msg", "create dept classify error", "err", err.Error())
-		return 0, errors.CreateError()
+		return 0, errors.CreateError(err.Error())
 	}
 	return id, nil
 }
@@ -48,7 +48,7 @@ func (u *Dept) CreateDeptClassify(ctx core.Context, req *entity.DeptClassify) (u
 func (u *Dept) UpdateDeptClassify(ctx core.Context, req *entity.DeptClassify) error {
 	if err := u.repo.UpdateDeptClassify(ctx, req); err != nil {
 		ctx.Logger().Warnw("msg", "update dept classify error", "err", err.Error())
-		return errors.UpdateError()
+		return errors.UpdateError(err.Error())
 	}
 	return nil
 }
@@ -57,7 +57,7 @@ func (u *Dept) UpdateDeptClassify(ctx core.Context, req *entity.DeptClassify) er
 func (u *Dept) DeleteDeptClassify(ctx core.Context, id uint32) error {
 	if err := u.repo.DeleteDeptClassify(ctx, id); err != nil {
 		ctx.Logger().Warnw("msg", "delete dept classify error", "err", err.Error())
-		return errors.DeleteError()
+		return errors.DeleteError(err.Error())
 	}
 	return nil
 }
@@ -67,7 +67,7 @@ func (u *Dept) GetDept(ctx core.Context, id uint32) (*entity.Dept, error) {
 	res, err := u.repo.GetDept(ctx, id)
 	if err != nil {
 		ctx.Logger().Warnw("msg", "get app error", "err", err.Error())
-		return nil, errors.GetError()
+		return nil, errors.GetError(err.Error())
 	}
 	return res, nil
 }
@@ -77,7 +77,7 @@ func (u *Dept) ListDept(ctx core.Context, req *types.ListDeptRequest) ([]*entity
 	list, err := u.repo.ListDept(ctx, req)
 	if err != nil {
 		ctx.Logger().Warnw("msg", "list dept error", "err", err.Error())
-		return nil, errors.ListError()
+		return nil, errors.ListError(err.Error())
 	}
 
 	return tree.BuildArrayTree(list), nil
@@ -93,7 +93,7 @@ func (u *Dept) CreateDept(ctx core.Context, req *entity.Dept) (uint32, error) {
 	id, err := u.repo.CreateDept(ctx, req)
 	if err != nil {
 		ctx.Logger().Warnw("msg", "create dept error", "err", err.Error())
-		return 0, errors.CreateError()
+		return 0, errors.CreateError(err.Error())
 	}
 	return id, nil
 }
@@ -102,7 +102,7 @@ func (u *Dept) CreateDept(ctx core.Context, req *entity.Dept) (uint32, error) {
 func (u *Dept) UpdateDept(ctx core.Context, req *entity.Dept) error {
 	if err := u.repo.UpdateDept(ctx, req); err != nil {
 		ctx.Logger().Warnw("msg", "update dept error", "err", err.Error())
-		return errors.UpdateError()
+		return errors.UpdateError(err.Error())
 	}
 	return nil
 }
@@ -111,7 +111,7 @@ func (u *Dept) UpdateDept(ctx core.Context, req *entity.Dept) error {
 func (u *Dept) DeleteDept(ctx core.Context, id uint32) error {
 	if err := u.repo.DeleteDept(ctx, id); err != nil {
 		ctx.Logger().Warnw("msg", "delete dept error", "err", err.Error())
-		return errors.DeleteError()
+		return errors.DeleteError(err.Error())
 	}
 	return nil
 }

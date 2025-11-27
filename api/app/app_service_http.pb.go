@@ -23,65 +23,56 @@ var (
 const _ = http.SupportPackageIsVersion1
 
 const (
-	OperationAppCreateApp                 = "/manager.api.app.App/CreateApp"
-	OperationAppCreateAppField            = "/manager.api.app.App/CreateAppField"
-	OperationAppCreateAppOAuthChannel     = "/manager.api.app.App/CreateAppOAuthChannel"
-	OperationAppDeleteApp                 = "/manager.api.app.App/DeleteApp"
-	OperationAppDeleteAppField            = "/manager.api.app.App/DeleteAppField"
-	OperationAppDeleteAppOAuthChannel     = "/manager.api.app.App/DeleteAppOAuthChannel"
-	OperationAppGetApp                    = "/manager.api.app.App/GetApp"
-	OperationAppListApp                   = "/manager.api.app.App/ListApp"
-	OperationAppListAppField              = "/manager.api.app.App/ListAppField"
-	OperationAppListAppOAuthChannel       = "/manager.api.app.App/ListAppOAuthChannel"
-	OperationAppListCurrentApp            = "/manager.api.app.App/ListCurrentApp"
-	OperationAppListTenantAppOAuthChannel = "/manager.api.app.App/ListTenantAppOAuthChannel"
-	OperationAppUpdateApp                 = "/manager.api.app.App/UpdateApp"
+	OperationAppCreateApp    = "/manager.api.app.App/CreateApp"
+	OperationAppDeleteApp    = "/manager.api.app.App/DeleteApp"
+	OperationAppGetApp       = "/manager.api.app.App/GetApp"
+	OperationAppGetSampleApp = "/manager.api.app.App/GetSampleApp"
+	OperationAppListApp      = "/manager.api.app.App/ListApp"
+	OperationAppUpdateApp    = "/manager.api.app.App/UpdateApp"
 )
 
 type AppHTTPServer interface {
 	// CreateApp CreateApp 创建应用信息
 	CreateApp(context.Context, *CreateAppRequest) (*CreateAppReply, error)
-	// CreateAppField CreateApp 创建应用字段信息
-	CreateAppField(context.Context, *CreateAppFieldRequest) (*CreateAppFieldReply, error)
-	// CreateAppOAuthChannel CreateApp 创建应用渠道信息
-	CreateAppOAuthChannel(context.Context, *CreateAppOAuthChannelRequest) (*CreateAppOAuthChannelReply, error)
 	// DeleteApp DeleteApp 删除应用信息
 	DeleteApp(context.Context, *DeleteAppRequest) (*DeleteAppReply, error)
-	// DeleteAppField DeleteApp 删除应用字段信息
-	DeleteAppField(context.Context, *DeleteAppFieldRequest) (*DeleteAppFieldReply, error)
-	// DeleteAppOAuthChannel DeleteApp 删除应用渠道信息
-	DeleteAppOAuthChannel(context.Context, *DeleteAppOAuthChannelRequest) (*DeleteAppOAuthChannelReply, error)
 	// GetApp GetApp 获取指定的应用信息
 	GetApp(context.Context, *GetAppRequest) (*GetAppReply, error)
+	// GetSampleApp GetSampleApp 获取应用基础信息
+	GetSampleApp(context.Context, *GetSampleAppRequest) (*GetSampleAppReply, error)
 	// ListApp ListApp 获取应用信息列表
 	ListApp(context.Context, *ListAppRequest) (*ListAppReply, error)
-	// ListAppField ListAppField 获取应用字段信息
-	ListAppField(context.Context, *ListAppFieldRequest) (*ListAppFieldReply, error)
-	// ListAppOAuthChannel ListAppOAuthChannel 获取应用渠道信息
-	ListAppOAuthChannel(context.Context, *ListAppOAuthChannelRequest) (*ListAppOAuthChannelReply, error)
-	// ListCurrentApp ListApp 获取应用信息列表
-	ListCurrentApp(context.Context, *ListAppRequest) (*ListAppReply, error)
-	// ListTenantAppOAuthChannel ListAppOAuthChannel 获取应用渠道信息
-	ListTenantAppOAuthChannel(context.Context, *ListTenantAppOAuthChannelRequest) (*ListTenantAppOAuthChannelReply, error)
 	// UpdateApp UpdateApp 更新应用信息
 	UpdateApp(context.Context, *UpdateAppRequest) (*UpdateAppReply, error)
 }
 
 func RegisterAppHTTPServer(s *http.Server, srv AppHTTPServer) {
 	r := s.Route("/")
-	r.GET("/manager/api/v1/app", _App_GetApp0_HTTP_Handler(srv))
-	r.GET("/manager/api/v1/current/apps", _App_ListCurrentApp0_HTTP_Handler(srv))
-	r.GET("/manager/api/v1/apps", _App_ListApp0_HTTP_Handler(srv))
-	r.POST("/manager/api/v1/app", _App_CreateApp0_HTTP_Handler(srv))
-	r.PUT("/manager/api/v1/app", _App_UpdateApp0_HTTP_Handler(srv))
-	r.DELETE("/manager/api/v1/app", _App_DeleteApp0_HTTP_Handler(srv))
-	r.GET("/manager/api/v1/app/channels", _App_ListAppOAuthChannel0_HTTP_Handler(srv))
-	r.GET("/manager/api/v1/app/tenant/channels", _App_ListTenantAppOAuthChannel0_HTTP_Handler(srv))
-	r.POST("/manager/api/v1/app/channel", _App_CreateAppOAuthChannel0_HTTP_Handler(srv))
-	r.DELETE("/manager/api/v1/app/channel", _App_DeleteAppOAuthChannel0_HTTP_Handler(srv))
-	r.GET("/manager/api/v1/app/fields", _App_ListAppField0_HTTP_Handler(srv))
-	r.POST("/manager/api/v1/app/field", _App_CreateAppField0_HTTP_Handler(srv))
-	r.DELETE("/manager/api/v1/app/field", _App_DeleteAppField0_HTTP_Handler(srv))
+	r.GET("/manager/api/sample/app", _App_GetSampleApp0_HTTP_Handler(srv))
+	r.GET("/manager/api/app", _App_GetApp0_HTTP_Handler(srv))
+	r.GET("/manager/api/apps", _App_ListApp0_HTTP_Handler(srv))
+	r.POST("/manager/api/app", _App_CreateApp0_HTTP_Handler(srv))
+	r.PUT("/manager/api/app", _App_UpdateApp0_HTTP_Handler(srv))
+	r.DELETE("/manager/api/app", _App_DeleteApp0_HTTP_Handler(srv))
+}
+
+func _App_GetSampleApp0_HTTP_Handler(srv AppHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in GetSampleAppRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationAppGetSampleApp)
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
+			return srv.GetSampleApp(ctx, req.(*GetSampleAppRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*GetSampleAppReply)
+		return ctx.Result(200, reply)
+	}
 }
 
 func _App_GetApp0_HTTP_Handler(srv AppHTTPServer) func(ctx http.Context) error {
@@ -99,25 +90,6 @@ func _App_GetApp0_HTTP_Handler(srv AppHTTPServer) func(ctx http.Context) error {
 			return err
 		}
 		reply := out.(*GetAppReply)
-		return ctx.Result(200, reply)
-	}
-}
-
-func _App_ListCurrentApp0_HTTP_Handler(srv AppHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in ListAppRequest
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationAppListCurrentApp)
-		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
-			return srv.ListCurrentApp(ctx, req.(*ListAppRequest))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*ListAppReply)
 		return ctx.Result(200, reply)
 	}
 }
@@ -204,158 +176,12 @@ func _App_DeleteApp0_HTTP_Handler(srv AppHTTPServer) func(ctx http.Context) erro
 	}
 }
 
-func _App_ListAppOAuthChannel0_HTTP_Handler(srv AppHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in ListAppOAuthChannelRequest
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationAppListAppOAuthChannel)
-		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
-			return srv.ListAppOAuthChannel(ctx, req.(*ListAppOAuthChannelRequest))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*ListAppOAuthChannelReply)
-		return ctx.Result(200, reply)
-	}
-}
-
-func _App_ListTenantAppOAuthChannel0_HTTP_Handler(srv AppHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in ListTenantAppOAuthChannelRequest
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationAppListTenantAppOAuthChannel)
-		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
-			return srv.ListTenantAppOAuthChannel(ctx, req.(*ListTenantAppOAuthChannelRequest))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*ListTenantAppOAuthChannelReply)
-		return ctx.Result(200, reply)
-	}
-}
-
-func _App_CreateAppOAuthChannel0_HTTP_Handler(srv AppHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in CreateAppOAuthChannelRequest
-		if err := ctx.Bind(&in); err != nil {
-			return err
-		}
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationAppCreateAppOAuthChannel)
-		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
-			return srv.CreateAppOAuthChannel(ctx, req.(*CreateAppOAuthChannelRequest))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*CreateAppOAuthChannelReply)
-		return ctx.Result(200, reply)
-	}
-}
-
-func _App_DeleteAppOAuthChannel0_HTTP_Handler(srv AppHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in DeleteAppOAuthChannelRequest
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationAppDeleteAppOAuthChannel)
-		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
-			return srv.DeleteAppOAuthChannel(ctx, req.(*DeleteAppOAuthChannelRequest))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*DeleteAppOAuthChannelReply)
-		return ctx.Result(200, reply)
-	}
-}
-
-func _App_ListAppField0_HTTP_Handler(srv AppHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in ListAppFieldRequest
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationAppListAppField)
-		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
-			return srv.ListAppField(ctx, req.(*ListAppFieldRequest))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*ListAppFieldReply)
-		return ctx.Result(200, reply)
-	}
-}
-
-func _App_CreateAppField0_HTTP_Handler(srv AppHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in CreateAppFieldRequest
-		if err := ctx.Bind(&in); err != nil {
-			return err
-		}
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationAppCreateAppField)
-		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
-			return srv.CreateAppField(ctx, req.(*CreateAppFieldRequest))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*CreateAppFieldReply)
-		return ctx.Result(200, reply)
-	}
-}
-
-func _App_DeleteAppField0_HTTP_Handler(srv AppHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in DeleteAppFieldRequest
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationAppDeleteAppField)
-		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
-			return srv.DeleteAppField(ctx, req.(*DeleteAppFieldRequest))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*DeleteAppFieldReply)
-		return ctx.Result(200, reply)
-	}
-}
-
 type AppHTTPClient interface {
 	CreateApp(ctx context.Context, req *CreateAppRequest, opts ...http.CallOption) (rsp *CreateAppReply, err error)
-	CreateAppField(ctx context.Context, req *CreateAppFieldRequest, opts ...http.CallOption) (rsp *CreateAppFieldReply, err error)
-	CreateAppOAuthChannel(ctx context.Context, req *CreateAppOAuthChannelRequest, opts ...http.CallOption) (rsp *CreateAppOAuthChannelReply, err error)
 	DeleteApp(ctx context.Context, req *DeleteAppRequest, opts ...http.CallOption) (rsp *DeleteAppReply, err error)
-	DeleteAppField(ctx context.Context, req *DeleteAppFieldRequest, opts ...http.CallOption) (rsp *DeleteAppFieldReply, err error)
-	DeleteAppOAuthChannel(ctx context.Context, req *DeleteAppOAuthChannelRequest, opts ...http.CallOption) (rsp *DeleteAppOAuthChannelReply, err error)
 	GetApp(ctx context.Context, req *GetAppRequest, opts ...http.CallOption) (rsp *GetAppReply, err error)
+	GetSampleApp(ctx context.Context, req *GetSampleAppRequest, opts ...http.CallOption) (rsp *GetSampleAppReply, err error)
 	ListApp(ctx context.Context, req *ListAppRequest, opts ...http.CallOption) (rsp *ListAppReply, err error)
-	ListAppField(ctx context.Context, req *ListAppFieldRequest, opts ...http.CallOption) (rsp *ListAppFieldReply, err error)
-	ListAppOAuthChannel(ctx context.Context, req *ListAppOAuthChannelRequest, opts ...http.CallOption) (rsp *ListAppOAuthChannelReply, err error)
-	ListCurrentApp(ctx context.Context, req *ListAppRequest, opts ...http.CallOption) (rsp *ListAppReply, err error)
-	ListTenantAppOAuthChannel(ctx context.Context, req *ListTenantAppOAuthChannelRequest, opts ...http.CallOption) (rsp *ListTenantAppOAuthChannelReply, err error)
 	UpdateApp(ctx context.Context, req *UpdateAppRequest, opts ...http.CallOption) (rsp *UpdateAppReply, err error)
 }
 
@@ -369,7 +195,7 @@ func NewAppHTTPClient(client *http.Client) AppHTTPClient {
 
 func (c *AppHTTPClientImpl) CreateApp(ctx context.Context, in *CreateAppRequest, opts ...http.CallOption) (*CreateAppReply, error) {
 	var out CreateAppReply
-	pattern := "/manager/api/v1/app"
+	pattern := "/manager/api/app"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationAppCreateApp))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -380,35 +206,9 @@ func (c *AppHTTPClientImpl) CreateApp(ctx context.Context, in *CreateAppRequest,
 	return &out, err
 }
 
-func (c *AppHTTPClientImpl) CreateAppField(ctx context.Context, in *CreateAppFieldRequest, opts ...http.CallOption) (*CreateAppFieldReply, error) {
-	var out CreateAppFieldReply
-	pattern := "/manager/api/v1/app/field"
-	path := binding.EncodeURL(pattern, in, false)
-	opts = append(opts, http.Operation(OperationAppCreateAppField))
-	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return &out, err
-}
-
-func (c *AppHTTPClientImpl) CreateAppOAuthChannel(ctx context.Context, in *CreateAppOAuthChannelRequest, opts ...http.CallOption) (*CreateAppOAuthChannelReply, error) {
-	var out CreateAppOAuthChannelReply
-	pattern := "/manager/api/v1/app/channel"
-	path := binding.EncodeURL(pattern, in, false)
-	opts = append(opts, http.Operation(OperationAppCreateAppOAuthChannel))
-	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return &out, err
-}
-
 func (c *AppHTTPClientImpl) DeleteApp(ctx context.Context, in *DeleteAppRequest, opts ...http.CallOption) (*DeleteAppReply, error) {
 	var out DeleteAppReply
-	pattern := "/manager/api/v1/app"
+	pattern := "/manager/api/app"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationAppDeleteApp))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -419,35 +219,9 @@ func (c *AppHTTPClientImpl) DeleteApp(ctx context.Context, in *DeleteAppRequest,
 	return &out, err
 }
 
-func (c *AppHTTPClientImpl) DeleteAppField(ctx context.Context, in *DeleteAppFieldRequest, opts ...http.CallOption) (*DeleteAppFieldReply, error) {
-	var out DeleteAppFieldReply
-	pattern := "/manager/api/v1/app/field"
-	path := binding.EncodeURL(pattern, in, true)
-	opts = append(opts, http.Operation(OperationAppDeleteAppField))
-	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "DELETE", path, nil, &out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return &out, err
-}
-
-func (c *AppHTTPClientImpl) DeleteAppOAuthChannel(ctx context.Context, in *DeleteAppOAuthChannelRequest, opts ...http.CallOption) (*DeleteAppOAuthChannelReply, error) {
-	var out DeleteAppOAuthChannelReply
-	pattern := "/manager/api/v1/app/channel"
-	path := binding.EncodeURL(pattern, in, true)
-	opts = append(opts, http.Operation(OperationAppDeleteAppOAuthChannel))
-	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "DELETE", path, nil, &out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return &out, err
-}
-
 func (c *AppHTTPClientImpl) GetApp(ctx context.Context, in *GetAppRequest, opts ...http.CallOption) (*GetAppReply, error) {
 	var out GetAppReply
-	pattern := "/manager/api/v1/app"
+	pattern := "/manager/api/app"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationAppGetApp))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -458,9 +232,22 @@ func (c *AppHTTPClientImpl) GetApp(ctx context.Context, in *GetAppRequest, opts 
 	return &out, err
 }
 
+func (c *AppHTTPClientImpl) GetSampleApp(ctx context.Context, in *GetSampleAppRequest, opts ...http.CallOption) (*GetSampleAppReply, error) {
+	var out GetSampleAppReply
+	pattern := "/manager/api/sample/app"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationAppGetSampleApp))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
 func (c *AppHTTPClientImpl) ListApp(ctx context.Context, in *ListAppRequest, opts ...http.CallOption) (*ListAppReply, error) {
 	var out ListAppReply
-	pattern := "/manager/api/v1/apps"
+	pattern := "/manager/api/apps"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationAppListApp))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -471,61 +258,9 @@ func (c *AppHTTPClientImpl) ListApp(ctx context.Context, in *ListAppRequest, opt
 	return &out, err
 }
 
-func (c *AppHTTPClientImpl) ListAppField(ctx context.Context, in *ListAppFieldRequest, opts ...http.CallOption) (*ListAppFieldReply, error) {
-	var out ListAppFieldReply
-	pattern := "/manager/api/v1/app/fields"
-	path := binding.EncodeURL(pattern, in, true)
-	opts = append(opts, http.Operation(OperationAppListAppField))
-	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return &out, err
-}
-
-func (c *AppHTTPClientImpl) ListAppOAuthChannel(ctx context.Context, in *ListAppOAuthChannelRequest, opts ...http.CallOption) (*ListAppOAuthChannelReply, error) {
-	var out ListAppOAuthChannelReply
-	pattern := "/manager/api/v1/app/channels"
-	path := binding.EncodeURL(pattern, in, true)
-	opts = append(opts, http.Operation(OperationAppListAppOAuthChannel))
-	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return &out, err
-}
-
-func (c *AppHTTPClientImpl) ListCurrentApp(ctx context.Context, in *ListAppRequest, opts ...http.CallOption) (*ListAppReply, error) {
-	var out ListAppReply
-	pattern := "/manager/api/v1/current/apps"
-	path := binding.EncodeURL(pattern, in, true)
-	opts = append(opts, http.Operation(OperationAppListCurrentApp))
-	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return &out, err
-}
-
-func (c *AppHTTPClientImpl) ListTenantAppOAuthChannel(ctx context.Context, in *ListTenantAppOAuthChannelRequest, opts ...http.CallOption) (*ListTenantAppOAuthChannelReply, error) {
-	var out ListTenantAppOAuthChannelReply
-	pattern := "/manager/api/v1/app/tenant/channels"
-	path := binding.EncodeURL(pattern, in, true)
-	opts = append(opts, http.Operation(OperationAppListTenantAppOAuthChannel))
-	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return &out, err
-}
-
 func (c *AppHTTPClientImpl) UpdateApp(ctx context.Context, in *UpdateAppRequest, opts ...http.CallOption) (*UpdateAppReply, error) {
 	var out UpdateAppReply
-	pattern := "/manager/api/v1/app"
+	pattern := "/manager/api/app"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationAppUpdateApp))
 	opts = append(opts, http.PathTemplate(pattern))

@@ -22,17 +22,17 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-type CreateJobRolesRequest struct {
+type CreateJobRoleRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	JobId   uint32   `protobuf:"varint,1,opt,name=jobId,proto3" json:"jobId,omitempty"`
-	RoleIds []uint32 `protobuf:"varint,2,rep,packed,name=roleIds,proto3" json:"roleIds,omitempty"`
+	JobId  uint32 `protobuf:"varint,1,opt,name=jobId,proto3" json:"jobId,omitempty"`
+	RoleId uint32 `protobuf:"varint,2,opt,name=roleId,proto3" json:"roleId,omitempty"`
 }
 
-func (x *CreateJobRolesRequest) Reset() {
-	*x = CreateJobRolesRequest{}
+func (x *CreateJobRoleRequest) Reset() {
+	*x = CreateJobRoleRequest{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_api_jobrole_proto_jobrole_proto_msgTypes[0]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -40,13 +40,13 @@ func (x *CreateJobRolesRequest) Reset() {
 	}
 }
 
-func (x *CreateJobRolesRequest) String() string {
+func (x *CreateJobRoleRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*CreateJobRolesRequest) ProtoMessage() {}
+func (*CreateJobRoleRequest) ProtoMessage() {}
 
-func (x *CreateJobRolesRequest) ProtoReflect() protoreflect.Message {
+func (x *CreateJobRoleRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_api_jobrole_proto_jobrole_proto_msgTypes[0]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -58,33 +58,33 @@ func (x *CreateJobRolesRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use CreateJobRolesRequest.ProtoReflect.Descriptor instead.
-func (*CreateJobRolesRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use CreateJobRoleRequest.ProtoReflect.Descriptor instead.
+func (*CreateJobRoleRequest) Descriptor() ([]byte, []int) {
 	return file_api_jobrole_proto_jobrole_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *CreateJobRolesRequest) GetJobId() uint32 {
+func (x *CreateJobRoleRequest) GetJobId() uint32 {
 	if x != nil {
 		return x.JobId
 	}
 	return 0
 }
 
-func (x *CreateJobRolesRequest) GetRoleIds() []uint32 {
+func (x *CreateJobRoleRequest) GetRoleId() uint32 {
 	if x != nil {
-		return x.RoleIds
+		return x.RoleId
 	}
-	return nil
+	return 0
 }
 
-type CreateJobRolesReply struct {
+type CreateJobRoleReply struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 }
 
-func (x *CreateJobRolesReply) Reset() {
-	*x = CreateJobRolesReply{}
+func (x *CreateJobRoleReply) Reset() {
+	*x = CreateJobRoleReply{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_api_jobrole_proto_jobrole_proto_msgTypes[1]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -92,13 +92,13 @@ func (x *CreateJobRolesReply) Reset() {
 	}
 }
 
-func (x *CreateJobRolesReply) String() string {
+func (x *CreateJobRoleReply) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*CreateJobRolesReply) ProtoMessage() {}
+func (*CreateJobRoleReply) ProtoMessage() {}
 
-func (x *CreateJobRolesReply) ProtoReflect() protoreflect.Message {
+func (x *CreateJobRoleReply) ProtoReflect() protoreflect.Message {
 	mi := &file_api_jobrole_proto_jobrole_proto_msgTypes[1]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -110,102 +110,9 @@ func (x *CreateJobRolesReply) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use CreateJobRolesReply.ProtoReflect.Descriptor instead.
-func (*CreateJobRolesReply) Descriptor() ([]byte, []int) {
+// Deprecated: Use CreateJobRoleReply.ProtoReflect.Descriptor instead.
+func (*CreateJobRoleReply) Descriptor() ([]byte, []int) {
 	return file_api_jobrole_proto_jobrole_proto_rawDescGZIP(), []int{1}
-}
-
-type CreateRoleJobsRequest struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
-
-	RoleId uint32   `protobuf:"varint,1,opt,name=roleId,proto3" json:"roleId,omitempty"`
-	JobIds []uint32 `protobuf:"varint,2,rep,packed,name=jobIds,proto3" json:"jobIds,omitempty"`
-}
-
-func (x *CreateRoleJobsRequest) Reset() {
-	*x = CreateRoleJobsRequest{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_api_jobrole_proto_jobrole_proto_msgTypes[2]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
-}
-
-func (x *CreateRoleJobsRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*CreateRoleJobsRequest) ProtoMessage() {}
-
-func (x *CreateRoleJobsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_api_jobrole_proto_jobrole_proto_msgTypes[2]
-	if protoimpl.UnsafeEnabled && x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use CreateRoleJobsRequest.ProtoReflect.Descriptor instead.
-func (*CreateRoleJobsRequest) Descriptor() ([]byte, []int) {
-	return file_api_jobrole_proto_jobrole_proto_rawDescGZIP(), []int{2}
-}
-
-func (x *CreateRoleJobsRequest) GetRoleId() uint32 {
-	if x != nil {
-		return x.RoleId
-	}
-	return 0
-}
-
-func (x *CreateRoleJobsRequest) GetJobIds() []uint32 {
-	if x != nil {
-		return x.JobIds
-	}
-	return nil
-}
-
-type CreateRoleJobsReply struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
-}
-
-func (x *CreateRoleJobsReply) Reset() {
-	*x = CreateRoleJobsReply{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_api_jobrole_proto_jobrole_proto_msgTypes[3]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
-}
-
-func (x *CreateRoleJobsReply) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*CreateRoleJobsReply) ProtoMessage() {}
-
-func (x *CreateRoleJobsReply) ProtoReflect() protoreflect.Message {
-	mi := &file_api_jobrole_proto_jobrole_proto_msgTypes[3]
-	if protoimpl.UnsafeEnabled && x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use CreateRoleJobsReply.ProtoReflect.Descriptor instead.
-func (*CreateRoleJobsReply) Descriptor() ([]byte, []int) {
-	return file_api_jobrole_proto_jobrole_proto_rawDescGZIP(), []int{3}
 }
 
 type ListJobRoleRequest struct {
@@ -222,7 +129,7 @@ type ListJobRoleRequest struct {
 func (x *ListJobRoleRequest) Reset() {
 	*x = ListJobRoleRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_api_jobrole_proto_jobrole_proto_msgTypes[4]
+		mi := &file_api_jobrole_proto_jobrole_proto_msgTypes[2]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -235,7 +142,7 @@ func (x *ListJobRoleRequest) String() string {
 func (*ListJobRoleRequest) ProtoMessage() {}
 
 func (x *ListJobRoleRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_api_jobrole_proto_jobrole_proto_msgTypes[4]
+	mi := &file_api_jobrole_proto_jobrole_proto_msgTypes[2]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -248,7 +155,7 @@ func (x *ListJobRoleRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListJobRoleRequest.ProtoReflect.Descriptor instead.
 func (*ListJobRoleRequest) Descriptor() ([]byte, []int) {
-	return file_api_jobrole_proto_jobrole_proto_rawDescGZIP(), []int{4}
+	return file_api_jobrole_proto_jobrole_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *ListJobRoleRequest) GetPage() uint32 {
@@ -291,7 +198,7 @@ type ListJobRoleReply struct {
 func (x *ListJobRoleReply) Reset() {
 	*x = ListJobRoleReply{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_api_jobrole_proto_jobrole_proto_msgTypes[5]
+		mi := &file_api_jobrole_proto_jobrole_proto_msgTypes[3]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -304,7 +211,7 @@ func (x *ListJobRoleReply) String() string {
 func (*ListJobRoleReply) ProtoMessage() {}
 
 func (x *ListJobRoleReply) ProtoReflect() protoreflect.Message {
-	mi := &file_api_jobrole_proto_jobrole_proto_msgTypes[5]
+	mi := &file_api_jobrole_proto_jobrole_proto_msgTypes[3]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -317,7 +224,7 @@ func (x *ListJobRoleReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListJobRoleReply.ProtoReflect.Descriptor instead.
 func (*ListJobRoleReply) Descriptor() ([]byte, []int) {
-	return file_api_jobrole_proto_jobrole_proto_rawDescGZIP(), []int{5}
+	return file_api_jobrole_proto_jobrole_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *ListJobRoleReply) GetList() []*ListJobRoleReply_Role {
@@ -334,34 +241,32 @@ func (x *ListJobRoleReply) GetTotal() uint32 {
 	return 0
 }
 
-type ListRoleJobRequest struct {
+type DeleteJobRoleRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Page     uint32  `protobuf:"varint,1,opt,name=page,proto3" json:"page,omitempty"`
-	PageSize uint32  `protobuf:"varint,2,opt,name=pageSize,proto3" json:"pageSize,omitempty"`
-	RoleId   uint32  `protobuf:"varint,3,opt,name=roleId,proto3" json:"roleId,omitempty"`
-	Name     *string `protobuf:"bytes,4,opt,name=name,proto3,oneof" json:"name,omitempty"`
+	JobId  uint32 `protobuf:"varint,1,opt,name=jobId,proto3" json:"jobId,omitempty"`
+	RoleId uint32 `protobuf:"varint,2,opt,name=roleId,proto3" json:"roleId,omitempty"`
 }
 
-func (x *ListRoleJobRequest) Reset() {
-	*x = ListRoleJobRequest{}
+func (x *DeleteJobRoleRequest) Reset() {
+	*x = DeleteJobRoleRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_api_jobrole_proto_jobrole_proto_msgTypes[6]
+		mi := &file_api_jobrole_proto_jobrole_proto_msgTypes[4]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
 }
 
-func (x *ListRoleJobRequest) String() string {
+func (x *DeleteJobRoleRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*ListRoleJobRequest) ProtoMessage() {}
+func (*DeleteJobRoleRequest) ProtoMessage() {}
 
-func (x *ListRoleJobRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_api_jobrole_proto_jobrole_proto_msgTypes[6]
+func (x *DeleteJobRoleRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_api_jobrole_proto_jobrole_proto_msgTypes[4]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -372,265 +277,48 @@ func (x *ListRoleJobRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use ListRoleJobRequest.ProtoReflect.Descriptor instead.
-func (*ListRoleJobRequest) Descriptor() ([]byte, []int) {
-	return file_api_jobrole_proto_jobrole_proto_rawDescGZIP(), []int{6}
+// Deprecated: Use DeleteJobRoleRequest.ProtoReflect.Descriptor instead.
+func (*DeleteJobRoleRequest) Descriptor() ([]byte, []int) {
+	return file_api_jobrole_proto_jobrole_proto_rawDescGZIP(), []int{4}
 }
 
-func (x *ListRoleJobRequest) GetPage() uint32 {
-	if x != nil {
-		return x.Page
-	}
-	return 0
-}
-
-func (x *ListRoleJobRequest) GetPageSize() uint32 {
-	if x != nil {
-		return x.PageSize
-	}
-	return 0
-}
-
-func (x *ListRoleJobRequest) GetRoleId() uint32 {
-	if x != nil {
-		return x.RoleId
-	}
-	return 0
-}
-
-func (x *ListRoleJobRequest) GetName() string {
-	if x != nil && x.Name != nil {
-		return *x.Name
-	}
-	return ""
-}
-
-type ListRoleJobReply struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
-
-	List  []*ListRoleJobReply_Data `protobuf:"bytes,1,rep,name=list,proto3" json:"list,omitempty"`
-	Total uint32                   `protobuf:"varint,2,opt,name=total,proto3" json:"total,omitempty"`
-}
-
-func (x *ListRoleJobReply) Reset() {
-	*x = ListRoleJobReply{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_api_jobrole_proto_jobrole_proto_msgTypes[7]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
-}
-
-func (x *ListRoleJobReply) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*ListRoleJobReply) ProtoMessage() {}
-
-func (x *ListRoleJobReply) ProtoReflect() protoreflect.Message {
-	mi := &file_api_jobrole_proto_jobrole_proto_msgTypes[7]
-	if protoimpl.UnsafeEnabled && x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use ListRoleJobReply.ProtoReflect.Descriptor instead.
-func (*ListRoleJobReply) Descriptor() ([]byte, []int) {
-	return file_api_jobrole_proto_jobrole_proto_rawDescGZIP(), []int{7}
-}
-
-func (x *ListRoleJobReply) GetList() []*ListRoleJobReply_Data {
-	if x != nil {
-		return x.List
-	}
-	return nil
-}
-
-func (x *ListRoleJobReply) GetTotal() uint32 {
-	if x != nil {
-		return x.Total
-	}
-	return 0
-}
-
-type DeleteJobRolesRequest struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
-
-	JobId   uint32   `protobuf:"varint,1,opt,name=jobId,proto3" json:"jobId,omitempty"`
-	RoleIds []uint32 `protobuf:"varint,2,rep,packed,name=roleIds,proto3" json:"roleIds,omitempty"`
-}
-
-func (x *DeleteJobRolesRequest) Reset() {
-	*x = DeleteJobRolesRequest{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_api_jobrole_proto_jobrole_proto_msgTypes[8]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
-}
-
-func (x *DeleteJobRolesRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*DeleteJobRolesRequest) ProtoMessage() {}
-
-func (x *DeleteJobRolesRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_api_jobrole_proto_jobrole_proto_msgTypes[8]
-	if protoimpl.UnsafeEnabled && x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use DeleteJobRolesRequest.ProtoReflect.Descriptor instead.
-func (*DeleteJobRolesRequest) Descriptor() ([]byte, []int) {
-	return file_api_jobrole_proto_jobrole_proto_rawDescGZIP(), []int{8}
-}
-
-func (x *DeleteJobRolesRequest) GetJobId() uint32 {
+func (x *DeleteJobRoleRequest) GetJobId() uint32 {
 	if x != nil {
 		return x.JobId
 	}
 	return 0
 }
 
-func (x *DeleteJobRolesRequest) GetRoleIds() []uint32 {
-	if x != nil {
-		return x.RoleIds
-	}
-	return nil
-}
-
-type DeleteJobRolesReply struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
-}
-
-func (x *DeleteJobRolesReply) Reset() {
-	*x = DeleteJobRolesReply{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_api_jobrole_proto_jobrole_proto_msgTypes[9]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
-}
-
-func (x *DeleteJobRolesReply) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*DeleteJobRolesReply) ProtoMessage() {}
-
-func (x *DeleteJobRolesReply) ProtoReflect() protoreflect.Message {
-	mi := &file_api_jobrole_proto_jobrole_proto_msgTypes[9]
-	if protoimpl.UnsafeEnabled && x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use DeleteJobRolesReply.ProtoReflect.Descriptor instead.
-func (*DeleteJobRolesReply) Descriptor() ([]byte, []int) {
-	return file_api_jobrole_proto_jobrole_proto_rawDescGZIP(), []int{9}
-}
-
-type DeleteRoleJobsRequest struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
-
-	JobIds []uint32 `protobuf:"varint,1,rep,packed,name=jobIds,proto3" json:"jobIds,omitempty"`
-	RoleId uint32   `protobuf:"varint,2,opt,name=roleId,proto3" json:"roleId,omitempty"`
-}
-
-func (x *DeleteRoleJobsRequest) Reset() {
-	*x = DeleteRoleJobsRequest{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_api_jobrole_proto_jobrole_proto_msgTypes[10]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
-}
-
-func (x *DeleteRoleJobsRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*DeleteRoleJobsRequest) ProtoMessage() {}
-
-func (x *DeleteRoleJobsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_api_jobrole_proto_jobrole_proto_msgTypes[10]
-	if protoimpl.UnsafeEnabled && x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use DeleteRoleJobsRequest.ProtoReflect.Descriptor instead.
-func (*DeleteRoleJobsRequest) Descriptor() ([]byte, []int) {
-	return file_api_jobrole_proto_jobrole_proto_rawDescGZIP(), []int{10}
-}
-
-func (x *DeleteRoleJobsRequest) GetJobIds() []uint32 {
-	if x != nil {
-		return x.JobIds
-	}
-	return nil
-}
-
-func (x *DeleteRoleJobsRequest) GetRoleId() uint32 {
+func (x *DeleteJobRoleRequest) GetRoleId() uint32 {
 	if x != nil {
 		return x.RoleId
 	}
 	return 0
 }
 
-type DeleteRoleJobsReply struct {
+type DeleteJobRoleReply struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 }
 
-func (x *DeleteRoleJobsReply) Reset() {
-	*x = DeleteRoleJobsReply{}
+func (x *DeleteJobRoleReply) Reset() {
+	*x = DeleteJobRoleReply{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_api_jobrole_proto_jobrole_proto_msgTypes[11]
+		mi := &file_api_jobrole_proto_jobrole_proto_msgTypes[5]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
 }
 
-func (x *DeleteRoleJobsReply) String() string {
+func (x *DeleteJobRoleReply) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*DeleteRoleJobsReply) ProtoMessage() {}
+func (*DeleteJobRoleReply) ProtoMessage() {}
 
-func (x *DeleteRoleJobsReply) ProtoReflect() protoreflect.Message {
-	mi := &file_api_jobrole_proto_jobrole_proto_msgTypes[11]
+func (x *DeleteJobRoleReply) ProtoReflect() protoreflect.Message {
+	mi := &file_api_jobrole_proto_jobrole_proto_msgTypes[5]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -641,9 +329,9 @@ func (x *DeleteRoleJobsReply) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use DeleteRoleJobsReply.ProtoReflect.Descriptor instead.
-func (*DeleteRoleJobsReply) Descriptor() ([]byte, []int) {
-	return file_api_jobrole_proto_jobrole_proto_rawDescGZIP(), []int{11}
+// Deprecated: Use DeleteJobRoleReply.ProtoReflect.Descriptor instead.
+func (*DeleteJobRoleReply) Descriptor() ([]byte, []int) {
+	return file_api_jobrole_proto_jobrole_proto_rawDescGZIP(), []int{5}
 }
 
 type ListJobRoleReply_Role struct {
@@ -651,14 +339,15 @@ type ListJobRoleReply_Role struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Id   uint32 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	Name string `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+	Id      uint32 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	Keyword string `protobuf:"bytes,2,opt,name=keyword,proto3" json:"keyword,omitempty"`
+	Name    string `protobuf:"bytes,3,opt,name=name,proto3" json:"name,omitempty"`
 }
 
 func (x *ListJobRoleReply_Role) Reset() {
 	*x = ListJobRoleReply_Role{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_api_jobrole_proto_jobrole_proto_msgTypes[12]
+		mi := &file_api_jobrole_proto_jobrole_proto_msgTypes[6]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -671,7 +360,7 @@ func (x *ListJobRoleReply_Role) String() string {
 func (*ListJobRoleReply_Role) ProtoMessage() {}
 
 func (x *ListJobRoleReply_Role) ProtoReflect() protoreflect.Message {
-	mi := &file_api_jobrole_proto_jobrole_proto_msgTypes[12]
+	mi := &file_api_jobrole_proto_jobrole_proto_msgTypes[6]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -684,7 +373,7 @@ func (x *ListJobRoleReply_Role) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListJobRoleReply_Role.ProtoReflect.Descriptor instead.
 func (*ListJobRoleReply_Role) Descriptor() ([]byte, []int) {
-	return file_api_jobrole_proto_jobrole_proto_rawDescGZIP(), []int{5, 0}
+	return file_api_jobrole_proto_jobrole_proto_rawDescGZIP(), []int{3, 0}
 }
 
 func (x *ListJobRoleReply_Role) GetId() uint32 {
@@ -694,129 +383,18 @@ func (x *ListJobRoleReply_Role) GetId() uint32 {
 	return 0
 }
 
+func (x *ListJobRoleReply_Role) GetKeyword() string {
+	if x != nil {
+		return x.Keyword
+	}
+	return ""
+}
+
 func (x *ListJobRoleReply_Role) GetName() string {
 	if x != nil {
 		return x.Name
 	}
 	return ""
-}
-
-type ListRoleJobReply_Classify struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
-
-	Id   uint32 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	Name string `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
-}
-
-func (x *ListRoleJobReply_Classify) Reset() {
-	*x = ListRoleJobReply_Classify{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_api_jobrole_proto_jobrole_proto_msgTypes[13]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
-}
-
-func (x *ListRoleJobReply_Classify) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*ListRoleJobReply_Classify) ProtoMessage() {}
-
-func (x *ListRoleJobReply_Classify) ProtoReflect() protoreflect.Message {
-	mi := &file_api_jobrole_proto_jobrole_proto_msgTypes[13]
-	if protoimpl.UnsafeEnabled && x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use ListRoleJobReply_Classify.ProtoReflect.Descriptor instead.
-func (*ListRoleJobReply_Classify) Descriptor() ([]byte, []int) {
-	return file_api_jobrole_proto_jobrole_proto_rawDescGZIP(), []int{7, 0}
-}
-
-func (x *ListRoleJobReply_Classify) GetId() uint32 {
-	if x != nil {
-		return x.Id
-	}
-	return 0
-}
-
-func (x *ListRoleJobReply_Classify) GetName() string {
-	if x != nil {
-		return x.Name
-	}
-	return ""
-}
-
-type ListRoleJobReply_Data struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
-
-	Id       uint32                     `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	Name     string                     `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
-	Classify *ListRoleJobReply_Classify `protobuf:"bytes,3,opt,name=classify,proto3" json:"classify,omitempty"`
-}
-
-func (x *ListRoleJobReply_Data) Reset() {
-	*x = ListRoleJobReply_Data{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_api_jobrole_proto_jobrole_proto_msgTypes[14]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
-}
-
-func (x *ListRoleJobReply_Data) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*ListRoleJobReply_Data) ProtoMessage() {}
-
-func (x *ListRoleJobReply_Data) ProtoReflect() protoreflect.Message {
-	mi := &file_api_jobrole_proto_jobrole_proto_msgTypes[14]
-	if protoimpl.UnsafeEnabled && x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use ListRoleJobReply_Data.ProtoReflect.Descriptor instead.
-func (*ListRoleJobReply_Data) Descriptor() ([]byte, []int) {
-	return file_api_jobrole_proto_jobrole_proto_rawDescGZIP(), []int{7, 1}
-}
-
-func (x *ListRoleJobReply_Data) GetId() uint32 {
-	if x != nil {
-		return x.Id
-	}
-	return 0
-}
-
-func (x *ListRoleJobReply_Data) GetName() string {
-	if x != nil {
-		return x.Name
-	}
-	return ""
-}
-
-func (x *ListRoleJobReply_Data) GetClassify() *ListRoleJobReply_Classify {
-	if x != nil {
-		return x.Classify
-	}
-	return nil
 }
 
 var File_api_jobrole_proto_jobrole_proto protoreflect.FileDescriptor
@@ -827,86 +405,45 @@ var file_api_jobrole_proto_jobrole_proto_rawDesc = []byte{
 	0x6f, 0x12, 0x13, 0x6d, 0x61, 0x6e, 0x61, 0x67, 0x65, 0x72, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x6a,
 	0x6f, 0x62, 0x72, 0x6f, 0x6c, 0x65, 0x1a, 0x17, 0x76, 0x61, 0x6c, 0x69, 0x64, 0x61, 0x74, 0x65,
 	0x2f, 0x76, 0x61, 0x6c, 0x69, 0x64, 0x61, 0x74, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x22,
-	0x5a, 0x0a, 0x15, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x4a, 0x6f, 0x62, 0x52, 0x6f, 0x6c, 0x65,
-	0x73, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x1d, 0x0a, 0x05, 0x6a, 0x6f, 0x62, 0x49,
-	0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0d, 0x42, 0x07, 0xfa, 0x42, 0x04, 0x2a, 0x02, 0x28, 0x01,
-	0x52, 0x05, 0x6a, 0x6f, 0x62, 0x49, 0x64, 0x12, 0x22, 0x0a, 0x07, 0x72, 0x6f, 0x6c, 0x65, 0x49,
-	0x64, 0x73, 0x18, 0x02, 0x20, 0x03, 0x28, 0x0d, 0x42, 0x08, 0xfa, 0x42, 0x05, 0x92, 0x01, 0x02,
-	0x08, 0x01, 0x52, 0x07, 0x72, 0x6f, 0x6c, 0x65, 0x49, 0x64, 0x73, 0x22, 0x15, 0x0a, 0x13, 0x43,
-	0x72, 0x65, 0x61, 0x74, 0x65, 0x4a, 0x6f, 0x62, 0x52, 0x6f, 0x6c, 0x65, 0x73, 0x52, 0x65, 0x70,
-	0x6c, 0x79, 0x22, 0x5a, 0x0a, 0x15, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x52, 0x6f, 0x6c, 0x65,
-	0x4a, 0x6f, 0x62, 0x73, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x1f, 0x0a, 0x06, 0x72,
-	0x6f, 0x6c, 0x65, 0x49, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0d, 0x42, 0x07, 0xfa, 0x42, 0x04,
-	0x2a, 0x02, 0x28, 0x01, 0x52, 0x06, 0x72, 0x6f, 0x6c, 0x65, 0x49, 0x64, 0x12, 0x20, 0x0a, 0x06,
-	0x6a, 0x6f, 0x62, 0x49, 0x64, 0x73, 0x18, 0x02, 0x20, 0x03, 0x28, 0x0d, 0x42, 0x08, 0xfa, 0x42,
-	0x05, 0x92, 0x01, 0x02, 0x08, 0x01, 0x52, 0x06, 0x6a, 0x6f, 0x62, 0x49, 0x64, 0x73, 0x22, 0x15,
-	0x0a, 0x13, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x52, 0x6f, 0x6c, 0x65, 0x4a, 0x6f, 0x62, 0x73,
-	0x52, 0x65, 0x70, 0x6c, 0x79, 0x22, 0x99, 0x01, 0x0a, 0x12, 0x4c, 0x69, 0x73, 0x74, 0x4a, 0x6f,
-	0x62, 0x52, 0x6f, 0x6c, 0x65, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x1b, 0x0a, 0x04,
-	0x70, 0x61, 0x67, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0d, 0x42, 0x07, 0xfa, 0x42, 0x04, 0x2a,
-	0x02, 0x28, 0x01, 0x52, 0x04, 0x70, 0x61, 0x67, 0x65, 0x12, 0x25, 0x0a, 0x08, 0x70, 0x61, 0x67,
-	0x65, 0x53, 0x69, 0x7a, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0d, 0x42, 0x09, 0xfa, 0x42, 0x06,
-	0x2a, 0x04, 0x18, 0x32, 0x28, 0x01, 0x52, 0x08, 0x70, 0x61, 0x67, 0x65, 0x53, 0x69, 0x7a, 0x65,
-	0x12, 0x1d, 0x0a, 0x05, 0x6a, 0x6f, 0x62, 0x49, 0x64, 0x18, 0x03, 0x20, 0x01, 0x28, 0x0d, 0x42,
-	0x07, 0xfa, 0x42, 0x04, 0x2a, 0x02, 0x28, 0x01, 0x52, 0x05, 0x6a, 0x6f, 0x62, 0x49, 0x64, 0x12,
-	0x17, 0x0a, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x04, 0x20, 0x01, 0x28, 0x09, 0x48, 0x00, 0x52,
-	0x04, 0x6e, 0x61, 0x6d, 0x65, 0x88, 0x01, 0x01, 0x42, 0x07, 0x0a, 0x05, 0x5f, 0x6e, 0x61, 0x6d,
-	0x65, 0x22, 0x94, 0x01, 0x0a, 0x10, 0x4c, 0x69, 0x73, 0x74, 0x4a, 0x6f, 0x62, 0x52, 0x6f, 0x6c,
-	0x65, 0x52, 0x65, 0x70, 0x6c, 0x79, 0x12, 0x3e, 0x0a, 0x04, 0x6c, 0x69, 0x73, 0x74, 0x18, 0x01,
-	0x20, 0x03, 0x28, 0x0b, 0x32, 0x2a, 0x2e, 0x6d, 0x61, 0x6e, 0x61, 0x67, 0x65, 0x72, 0x2e, 0x61,
-	0x70, 0x69, 0x2e, 0x6a, 0x6f, 0x62, 0x72, 0x6f, 0x6c, 0x65, 0x2e, 0x4c, 0x69, 0x73, 0x74, 0x4a,
-	0x6f, 0x62, 0x52, 0x6f, 0x6c, 0x65, 0x52, 0x65, 0x70, 0x6c, 0x79, 0x2e, 0x52, 0x6f, 0x6c, 0x65,
-	0x52, 0x04, 0x6c, 0x69, 0x73, 0x74, 0x12, 0x14, 0x0a, 0x05, 0x74, 0x6f, 0x74, 0x61, 0x6c, 0x18,
-	0x02, 0x20, 0x01, 0x28, 0x0d, 0x52, 0x05, 0x74, 0x6f, 0x74, 0x61, 0x6c, 0x1a, 0x2a, 0x0a, 0x04,
-	0x52, 0x6f, 0x6c, 0x65, 0x12, 0x0e, 0x0a, 0x02, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0d,
-	0x52, 0x02, 0x69, 0x64, 0x12, 0x12, 0x0a, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x02, 0x20, 0x01,
-	0x28, 0x09, 0x52, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x22, 0x9b, 0x01, 0x0a, 0x12, 0x4c, 0x69, 0x73,
-	0x74, 0x52, 0x6f, 0x6c, 0x65, 0x4a, 0x6f, 0x62, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12,
-	0x1b, 0x0a, 0x04, 0x70, 0x61, 0x67, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0d, 0x42, 0x07, 0xfa,
-	0x42, 0x04, 0x2a, 0x02, 0x28, 0x01, 0x52, 0x04, 0x70, 0x61, 0x67, 0x65, 0x12, 0x25, 0x0a, 0x08,
-	0x70, 0x61, 0x67, 0x65, 0x53, 0x69, 0x7a, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0d, 0x42, 0x09,
-	0xfa, 0x42, 0x06, 0x2a, 0x04, 0x18, 0x32, 0x28, 0x01, 0x52, 0x08, 0x70, 0x61, 0x67, 0x65, 0x53,
-	0x69, 0x7a, 0x65, 0x12, 0x1f, 0x0a, 0x06, 0x72, 0x6f, 0x6c, 0x65, 0x49, 0x64, 0x18, 0x03, 0x20,
-	0x01, 0x28, 0x0d, 0x42, 0x07, 0xfa, 0x42, 0x04, 0x2a, 0x02, 0x28, 0x01, 0x52, 0x06, 0x72, 0x6f,
-	0x6c, 0x65, 0x49, 0x64, 0x12, 0x17, 0x0a, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x04, 0x20, 0x01,
-	0x28, 0x09, 0x48, 0x00, 0x52, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x88, 0x01, 0x01, 0x42, 0x07, 0x0a,
-	0x05, 0x5f, 0x6e, 0x61, 0x6d, 0x65, 0x22, 0x90, 0x02, 0x0a, 0x10, 0x4c, 0x69, 0x73, 0x74, 0x52,
-	0x6f, 0x6c, 0x65, 0x4a, 0x6f, 0x62, 0x52, 0x65, 0x70, 0x6c, 0x79, 0x12, 0x3e, 0x0a, 0x04, 0x6c,
-	0x69, 0x73, 0x74, 0x18, 0x01, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x2a, 0x2e, 0x6d, 0x61, 0x6e, 0x61,
-	0x67, 0x65, 0x72, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x6a, 0x6f, 0x62, 0x72, 0x6f, 0x6c, 0x65, 0x2e,
-	0x4c, 0x69, 0x73, 0x74, 0x52, 0x6f, 0x6c, 0x65, 0x4a, 0x6f, 0x62, 0x52, 0x65, 0x70, 0x6c, 0x79,
-	0x2e, 0x44, 0x61, 0x74, 0x61, 0x52, 0x04, 0x6c, 0x69, 0x73, 0x74, 0x12, 0x14, 0x0a, 0x05, 0x74,
-	0x6f, 0x74, 0x61, 0x6c, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0d, 0x52, 0x05, 0x74, 0x6f, 0x74, 0x61,
-	0x6c, 0x1a, 0x2e, 0x0a, 0x08, 0x43, 0x6c, 0x61, 0x73, 0x73, 0x69, 0x66, 0x79, 0x12, 0x0e, 0x0a,
-	0x02, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0d, 0x52, 0x02, 0x69, 0x64, 0x12, 0x12, 0x0a,
-	0x04, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x6e, 0x61, 0x6d,
-	0x65, 0x1a, 0x76, 0x0a, 0x04, 0x44, 0x61, 0x74, 0x61, 0x12, 0x0e, 0x0a, 0x02, 0x69, 0x64, 0x18,
-	0x01, 0x20, 0x01, 0x28, 0x0d, 0x52, 0x02, 0x69, 0x64, 0x12, 0x12, 0x0a, 0x04, 0x6e, 0x61, 0x6d,
-	0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x12, 0x4a, 0x0a,
-	0x08, 0x63, 0x6c, 0x61, 0x73, 0x73, 0x69, 0x66, 0x79, 0x18, 0x03, 0x20, 0x01, 0x28, 0x0b, 0x32,
-	0x2e, 0x2e, 0x6d, 0x61, 0x6e, 0x61, 0x67, 0x65, 0x72, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x6a, 0x6f,
-	0x62, 0x72, 0x6f, 0x6c, 0x65, 0x2e, 0x4c, 0x69, 0x73, 0x74, 0x52, 0x6f, 0x6c, 0x65, 0x4a, 0x6f,
-	0x62, 0x52, 0x65, 0x70, 0x6c, 0x79, 0x2e, 0x43, 0x6c, 0x61, 0x73, 0x73, 0x69, 0x66, 0x79, 0x52,
-	0x08, 0x63, 0x6c, 0x61, 0x73, 0x73, 0x69, 0x66, 0x79, 0x22, 0x5a, 0x0a, 0x15, 0x44, 0x65, 0x6c,
-	0x65, 0x74, 0x65, 0x4a, 0x6f, 0x62, 0x52, 0x6f, 0x6c, 0x65, 0x73, 0x52, 0x65, 0x71, 0x75, 0x65,
+	0x56, 0x0a, 0x14, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x4a, 0x6f, 0x62, 0x52, 0x6f, 0x6c, 0x65,
+	0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x1d, 0x0a, 0x05, 0x6a, 0x6f, 0x62, 0x49, 0x64,
+	0x18, 0x01, 0x20, 0x01, 0x28, 0x0d, 0x42, 0x07, 0xfa, 0x42, 0x04, 0x2a, 0x02, 0x28, 0x01, 0x52,
+	0x05, 0x6a, 0x6f, 0x62, 0x49, 0x64, 0x12, 0x1f, 0x0a, 0x06, 0x72, 0x6f, 0x6c, 0x65, 0x49, 0x64,
+	0x18, 0x02, 0x20, 0x01, 0x28, 0x0d, 0x42, 0x07, 0xfa, 0x42, 0x04, 0x2a, 0x02, 0x28, 0x01, 0x52,
+	0x06, 0x72, 0x6f, 0x6c, 0x65, 0x49, 0x64, 0x22, 0x14, 0x0a, 0x12, 0x43, 0x72, 0x65, 0x61, 0x74,
+	0x65, 0x4a, 0x6f, 0x62, 0x52, 0x6f, 0x6c, 0x65, 0x52, 0x65, 0x70, 0x6c, 0x79, 0x22, 0x99, 0x01,
+	0x0a, 0x12, 0x4c, 0x69, 0x73, 0x74, 0x4a, 0x6f, 0x62, 0x52, 0x6f, 0x6c, 0x65, 0x52, 0x65, 0x71,
+	0x75, 0x65, 0x73, 0x74, 0x12, 0x1b, 0x0a, 0x04, 0x70, 0x61, 0x67, 0x65, 0x18, 0x01, 0x20, 0x01,
+	0x28, 0x0d, 0x42, 0x07, 0xfa, 0x42, 0x04, 0x2a, 0x02, 0x28, 0x01, 0x52, 0x04, 0x70, 0x61, 0x67,
+	0x65, 0x12, 0x25, 0x0a, 0x08, 0x70, 0x61, 0x67, 0x65, 0x53, 0x69, 0x7a, 0x65, 0x18, 0x02, 0x20,
+	0x01, 0x28, 0x0d, 0x42, 0x09, 0xfa, 0x42, 0x06, 0x2a, 0x04, 0x18, 0x32, 0x28, 0x01, 0x52, 0x08,
+	0x70, 0x61, 0x67, 0x65, 0x53, 0x69, 0x7a, 0x65, 0x12, 0x1d, 0x0a, 0x05, 0x6a, 0x6f, 0x62, 0x49,
+	0x64, 0x18, 0x03, 0x20, 0x01, 0x28, 0x0d, 0x42, 0x07, 0xfa, 0x42, 0x04, 0x2a, 0x02, 0x28, 0x01,
+	0x52, 0x05, 0x6a, 0x6f, 0x62, 0x49, 0x64, 0x12, 0x17, 0x0a, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x18,
+	0x04, 0x20, 0x01, 0x28, 0x09, 0x48, 0x00, 0x52, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x88, 0x01, 0x01,
+	0x42, 0x07, 0x0a, 0x05, 0x5f, 0x6e, 0x61, 0x6d, 0x65, 0x22, 0xae, 0x01, 0x0a, 0x10, 0x4c, 0x69,
+	0x73, 0x74, 0x4a, 0x6f, 0x62, 0x52, 0x6f, 0x6c, 0x65, 0x52, 0x65, 0x70, 0x6c, 0x79, 0x12, 0x3e,
+	0x0a, 0x04, 0x6c, 0x69, 0x73, 0x74, 0x18, 0x01, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x2a, 0x2e, 0x6d,
+	0x61, 0x6e, 0x61, 0x67, 0x65, 0x72, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x6a, 0x6f, 0x62, 0x72, 0x6f,
+	0x6c, 0x65, 0x2e, 0x4c, 0x69, 0x73, 0x74, 0x4a, 0x6f, 0x62, 0x52, 0x6f, 0x6c, 0x65, 0x52, 0x65,
+	0x70, 0x6c, 0x79, 0x2e, 0x52, 0x6f, 0x6c, 0x65, 0x52, 0x04, 0x6c, 0x69, 0x73, 0x74, 0x12, 0x14,
+	0x0a, 0x05, 0x74, 0x6f, 0x74, 0x61, 0x6c, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0d, 0x52, 0x05, 0x74,
+	0x6f, 0x74, 0x61, 0x6c, 0x1a, 0x44, 0x0a, 0x04, 0x52, 0x6f, 0x6c, 0x65, 0x12, 0x0e, 0x0a, 0x02,
+	0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0d, 0x52, 0x02, 0x69, 0x64, 0x12, 0x18, 0x0a, 0x07,
+	0x6b, 0x65, 0x79, 0x77, 0x6f, 0x72, 0x64, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x6b,
+	0x65, 0x79, 0x77, 0x6f, 0x72, 0x64, 0x12, 0x12, 0x0a, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x03,
+	0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x22, 0x56, 0x0a, 0x14, 0x44, 0x65,
+	0x6c, 0x65, 0x74, 0x65, 0x4a, 0x6f, 0x62, 0x52, 0x6f, 0x6c, 0x65, 0x52, 0x65, 0x71, 0x75, 0x65,
 	0x73, 0x74, 0x12, 0x1d, 0x0a, 0x05, 0x6a, 0x6f, 0x62, 0x49, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28,
 	0x0d, 0x42, 0x07, 0xfa, 0x42, 0x04, 0x2a, 0x02, 0x28, 0x01, 0x52, 0x05, 0x6a, 0x6f, 0x62, 0x49,
-	0x64, 0x12, 0x22, 0x0a, 0x07, 0x72, 0x6f, 0x6c, 0x65, 0x49, 0x64, 0x73, 0x18, 0x02, 0x20, 0x03,
-	0x28, 0x0d, 0x42, 0x08, 0xfa, 0x42, 0x05, 0x92, 0x01, 0x02, 0x08, 0x01, 0x52, 0x07, 0x72, 0x6f,
-	0x6c, 0x65, 0x49, 0x64, 0x73, 0x22, 0x15, 0x0a, 0x13, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x4a,
-	0x6f, 0x62, 0x52, 0x6f, 0x6c, 0x65, 0x73, 0x52, 0x65, 0x70, 0x6c, 0x79, 0x22, 0x5a, 0x0a, 0x15,
-	0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x52, 0x6f, 0x6c, 0x65, 0x4a, 0x6f, 0x62, 0x73, 0x52, 0x65,
-	0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x20, 0x0a, 0x06, 0x6a, 0x6f, 0x62, 0x49, 0x64, 0x73, 0x18,
-	0x01, 0x20, 0x03, 0x28, 0x0d, 0x42, 0x08, 0xfa, 0x42, 0x05, 0x92, 0x01, 0x02, 0x08, 0x01, 0x52,
-	0x06, 0x6a, 0x6f, 0x62, 0x49, 0x64, 0x73, 0x12, 0x1f, 0x0a, 0x06, 0x72, 0x6f, 0x6c, 0x65, 0x49,
-	0x64, 0x18, 0x02, 0x20, 0x01, 0x28, 0x0d, 0x42, 0x07, 0xfa, 0x42, 0x04, 0x2a, 0x02, 0x28, 0x01,
-	0x52, 0x06, 0x72, 0x6f, 0x6c, 0x65, 0x49, 0x64, 0x22, 0x15, 0x0a, 0x13, 0x44, 0x65, 0x6c, 0x65,
-	0x74, 0x65, 0x52, 0x6f, 0x6c, 0x65, 0x4a, 0x6f, 0x62, 0x73, 0x52, 0x65, 0x70, 0x6c, 0x79, 0x42,
-	0x3a, 0x0a, 0x19, 0x6d, 0x61, 0x6e, 0x61, 0x67, 0x65, 0x72, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x6a,
-	0x6f, 0x62, 0x72, 0x6f, 0x6c, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x50, 0x01, 0x5a, 0x1b,
-	0x6d, 0x61, 0x6e, 0x61, 0x67, 0x65, 0x72, 0x2f, 0x61, 0x70, 0x69, 0x2f, 0x6a, 0x6f, 0x62, 0x72,
-	0x6f, 0x6c, 0x65, 0x3b, 0x6a, 0x6f, 0x62, 0x72, 0x6f, 0x6c, 0x65, 0x62, 0x06, 0x70, 0x72, 0x6f,
-	0x74, 0x6f, 0x33,
+	0x64, 0x12, 0x1f, 0x0a, 0x06, 0x72, 0x6f, 0x6c, 0x65, 0x49, 0x64, 0x18, 0x02, 0x20, 0x01, 0x28,
+	0x0d, 0x42, 0x07, 0xfa, 0x42, 0x04, 0x2a, 0x02, 0x28, 0x01, 0x52, 0x06, 0x72, 0x6f, 0x6c, 0x65,
+	0x49, 0x64, 0x22, 0x14, 0x0a, 0x12, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x4a, 0x6f, 0x62, 0x52,
+	0x6f, 0x6c, 0x65, 0x52, 0x65, 0x70, 0x6c, 0x79, 0x42, 0x3a, 0x0a, 0x19, 0x6d, 0x61, 0x6e, 0x61,
+	0x67, 0x65, 0x72, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x6a, 0x6f, 0x62, 0x72, 0x6f, 0x6c, 0x65, 0x2e,
+	0x70, 0x72, 0x6f, 0x74, 0x6f, 0x50, 0x01, 0x5a, 0x1b, 0x6d, 0x61, 0x6e, 0x61, 0x67, 0x65, 0x72,
+	0x2f, 0x61, 0x70, 0x69, 0x2f, 0x6a, 0x6f, 0x62, 0x72, 0x6f, 0x6c, 0x65, 0x3b, 0x6a, 0x6f, 0x62,
+	0x72, 0x6f, 0x6c, 0x65, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -922,35 +459,25 @@ func file_api_jobrole_proto_jobrole_proto_rawDescGZIP() []byte {
 }
 
 var (
-	file_api_jobrole_proto_jobrole_proto_msgTypes = make([]protoimpl.MessageInfo, 15)
+	file_api_jobrole_proto_jobrole_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
 	file_api_jobrole_proto_jobrole_proto_goTypes  = []interface{}{
-		(*CreateJobRolesRequest)(nil),     // 0: manager.api.jobrole.CreateJobRolesRequest
-		(*CreateJobRolesReply)(nil),       // 1: manager.api.jobrole.CreateJobRolesReply
-		(*CreateRoleJobsRequest)(nil),     // 2: manager.api.jobrole.CreateRoleJobsRequest
-		(*CreateRoleJobsReply)(nil),       // 3: manager.api.jobrole.CreateRoleJobsReply
-		(*ListJobRoleRequest)(nil),        // 4: manager.api.jobrole.ListJobRoleRequest
-		(*ListJobRoleReply)(nil),          // 5: manager.api.jobrole.ListJobRoleReply
-		(*ListRoleJobRequest)(nil),        // 6: manager.api.jobrole.ListRoleJobRequest
-		(*ListRoleJobReply)(nil),          // 7: manager.api.jobrole.ListRoleJobReply
-		(*DeleteJobRolesRequest)(nil),     // 8: manager.api.jobrole.DeleteJobRolesRequest
-		(*DeleteJobRolesReply)(nil),       // 9: manager.api.jobrole.DeleteJobRolesReply
-		(*DeleteRoleJobsRequest)(nil),     // 10: manager.api.jobrole.DeleteRoleJobsRequest
-		(*DeleteRoleJobsReply)(nil),       // 11: manager.api.jobrole.DeleteRoleJobsReply
-		(*ListJobRoleReply_Role)(nil),     // 12: manager.api.jobrole.ListJobRoleReply.Role
-		(*ListRoleJobReply_Classify)(nil), // 13: manager.api.jobrole.ListRoleJobReply.Classify
-		(*ListRoleJobReply_Data)(nil),     // 14: manager.api.jobrole.ListRoleJobReply.Data
+		(*CreateJobRoleRequest)(nil),  // 0: manager.api.jobrole.CreateJobRoleRequest
+		(*CreateJobRoleReply)(nil),    // 1: manager.api.jobrole.CreateJobRoleReply
+		(*ListJobRoleRequest)(nil),    // 2: manager.api.jobrole.ListJobRoleRequest
+		(*ListJobRoleReply)(nil),      // 3: manager.api.jobrole.ListJobRoleReply
+		(*DeleteJobRoleRequest)(nil),  // 4: manager.api.jobrole.DeleteJobRoleRequest
+		(*DeleteJobRoleReply)(nil),    // 5: manager.api.jobrole.DeleteJobRoleReply
+		(*ListJobRoleReply_Role)(nil), // 6: manager.api.jobrole.ListJobRoleReply.Role
 	}
 )
 
 var file_api_jobrole_proto_jobrole_proto_depIdxs = []int32{
-	12, // 0: manager.api.jobrole.ListJobRoleReply.list:type_name -> manager.api.jobrole.ListJobRoleReply.Role
-	14, // 1: manager.api.jobrole.ListRoleJobReply.list:type_name -> manager.api.jobrole.ListRoleJobReply.Data
-	13, // 2: manager.api.jobrole.ListRoleJobReply.Data.classify:type_name -> manager.api.jobrole.ListRoleJobReply.Classify
-	3,  // [3:3] is the sub-list for method output_type
-	3,  // [3:3] is the sub-list for method input_type
-	3,  // [3:3] is the sub-list for extension type_name
-	3,  // [3:3] is the sub-list for extension extendee
-	0,  // [0:3] is the sub-list for field type_name
+	6, // 0: manager.api.jobrole.ListJobRoleReply.list:type_name -> manager.api.jobrole.ListJobRoleReply.Role
+	1, // [1:1] is the sub-list for method output_type
+	1, // [1:1] is the sub-list for method input_type
+	1, // [1:1] is the sub-list for extension type_name
+	1, // [1:1] is the sub-list for extension extendee
+	0, // [0:1] is the sub-list for field type_name
 }
 
 func init() { file_api_jobrole_proto_jobrole_proto_init() }
@@ -960,7 +487,7 @@ func file_api_jobrole_proto_jobrole_proto_init() {
 	}
 	if !protoimpl.UnsafeEnabled {
 		file_api_jobrole_proto_jobrole_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*CreateJobRolesRequest); i {
+			switch v := v.(*CreateJobRoleRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -972,7 +499,7 @@ func file_api_jobrole_proto_jobrole_proto_init() {
 			}
 		}
 		file_api_jobrole_proto_jobrole_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*CreateJobRolesReply); i {
+			switch v := v.(*CreateJobRoleReply); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -984,30 +511,6 @@ func file_api_jobrole_proto_jobrole_proto_init() {
 			}
 		}
 		file_api_jobrole_proto_jobrole_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*CreateRoleJobsRequest); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_api_jobrole_proto_jobrole_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*CreateRoleJobsReply); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_api_jobrole_proto_jobrole_proto_msgTypes[4].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*ListJobRoleRequest); i {
 			case 0:
 				return &v.state
@@ -1019,7 +522,7 @@ func file_api_jobrole_proto_jobrole_proto_init() {
 				return nil
 			}
 		}
-		file_api_jobrole_proto_jobrole_proto_msgTypes[5].Exporter = func(v interface{}, i int) interface{} {
+		file_api_jobrole_proto_jobrole_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*ListJobRoleReply); i {
 			case 0:
 				return &v.state
@@ -1031,79 +534,31 @@ func file_api_jobrole_proto_jobrole_proto_init() {
 				return nil
 			}
 		}
+		file_api_jobrole_proto_jobrole_proto_msgTypes[4].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*DeleteJobRoleRequest); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_api_jobrole_proto_jobrole_proto_msgTypes[5].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*DeleteJobRoleReply); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
 		file_api_jobrole_proto_jobrole_proto_msgTypes[6].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ListRoleJobRequest); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_api_jobrole_proto_jobrole_proto_msgTypes[7].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ListRoleJobReply); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_api_jobrole_proto_jobrole_proto_msgTypes[8].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*DeleteJobRolesRequest); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_api_jobrole_proto_jobrole_proto_msgTypes[9].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*DeleteJobRolesReply); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_api_jobrole_proto_jobrole_proto_msgTypes[10].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*DeleteRoleJobsRequest); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_api_jobrole_proto_jobrole_proto_msgTypes[11].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*DeleteRoleJobsReply); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_api_jobrole_proto_jobrole_proto_msgTypes[12].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*ListJobRoleReply_Role); i {
 			case 0:
 				return &v.state
@@ -1115,40 +570,15 @@ func file_api_jobrole_proto_jobrole_proto_init() {
 				return nil
 			}
 		}
-		file_api_jobrole_proto_jobrole_proto_msgTypes[13].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ListRoleJobReply_Classify); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_api_jobrole_proto_jobrole_proto_msgTypes[14].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*ListRoleJobReply_Data); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
 	}
-	file_api_jobrole_proto_jobrole_proto_msgTypes[4].OneofWrappers = []interface{}{}
-	file_api_jobrole_proto_jobrole_proto_msgTypes[6].OneofWrappers = []interface{}{}
+	file_api_jobrole_proto_jobrole_proto_msgTypes[2].OneofWrappers = []interface{}{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_api_jobrole_proto_jobrole_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   15,
+			NumMessages:   7,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

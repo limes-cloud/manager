@@ -14,14 +14,22 @@ service User{
   // GetCurrentUser 获取当前用户信息
   rpc GetCurrentUser (GetCurrentUserRequest) returns (UserObject) {
     option (google.api.http) = {
-      get: "/manager/api/v1/current/user",
+      get: "/manager/api/current/user",
+    };
+  }
+
+  // UpdateCurrentUserPassword 更新当前用户密码
+  rpc UpdateCurrentUserPassword (UpdateCurrentUserPasswordRequest) returns (UpdateCurrentUserPasswordReply) {
+    option (google.api.http) = {
+      post: "/manager/api/current/user/password",
+      body: "*"
     };
   }
 
   // UpdateCurrentUserSetting 更新当前用户设置
   rpc UpdateCurrentUserSetting (UpdateCurrentUserSettingRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
-      put: "/manager/api/v1/current/user/setting",
+      put: "/manager/api/current/user/setting",
       body: "*"
     };
   }
@@ -29,60 +37,68 @@ service User{
   // UpdateCurrentUserSetting 更新当前用户设置
   rpc UpdateCurrentUser (UpdateCurrentUserRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
-      put: "/manager/api/v1/current/user",
+      put: "/manager/api/current/user",
       body: "*"
     };
   }
 
-  // GetUser 获取角色信息
+  // GetUser 获取用户信息
   rpc GetUser (GetUserRequest) returns (UserObject) {
     option (google.api.http) = {
-      get: "/manager/api/v1/user",
+      get: "/manager/api/user",
     };
   }
 
-  // ListUser 获取角色信息列表
+  // ListUser 获取用户信息列表
   rpc ListUser (ListUserRequest) returns (ListUserReply) {
     option (google.api.http) = {
-      get: "/manager/api/v1/users",
+      get: "/manager/api/users",
     };
   }
 
-  // CreateUser 创建角色信息
+  // CreateUser 创建用户信息
   rpc CreateUser (CreateUserRequest) returns (CreateUserReply) {
     option (google.api.http) = {
-      post: "/manager/api/v1/user",
+      post: "/manager/api/user",
       body: "*"
     };
   }
 
-  // UpdateUser 更新角色信息
+  // UpdateUser 更新用户信息
   rpc ResetPassword (ResetPasswordRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
-      post: "/manager/api/v1/user/password/reset",
+      post: "/manager/api/user/password/reset",
       body: "*"
     };
   }
 
-  // UpdateUser 更新角色信息
+  // UpdateUser 更新用户信息
   rpc UpdateUser (UpdateUserRequest) returns (UpdateUserReply) {
     option (google.api.http) = {
-      put: "/manager/api/v1/user",
+      put: "/manager/api/user",
       body: "*"
     };
   }
 
-  // DeleteUser 删除角色信息
+  // DeleteUser 删除用户信息
   rpc DeleteUser (DeleteUserRequest) returns (DeleteUserReply) {
     option (google.api.http) = {
-      delete: "/manager/api/v1/user",
+      delete: "/manager/api/user",
     };
   }
 
-  // UpdateUserinfo 更新角色信息
+  // UpdateUserinfo 更新用户信息
   rpc UpdateUserinfo (UpdateUserinfoRequest) returns (UpdateUserinfoReply) {
     option (google.api.http) = {
-      put: "/manager/api/v1/user/info",
+      put: "/manager/api/user/info",
+      body: "*"
+    };
+  }
+
+  // OfflineUser 下线用户信息
+  rpc OfflineUser (OfflineUserRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/manager/api/user/offline",
       body: "*"
     };
   }

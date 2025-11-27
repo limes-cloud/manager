@@ -8,6 +8,7 @@ package userdept
 
 import (
 	context "context"
+
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -21,8 +22,8 @@ const _ = grpc.SupportPackageIsVersion7
 const (
 	UserDept_ListUserDept_FullMethodName   = "/manager.api.userdept.UserDept/ListUserDept"
 	UserDept_CreateUserDept_FullMethodName = "/manager.api.userdept.UserDept/CreateUserDept"
+	UserDept_UpdateUserDept_FullMethodName = "/manager.api.userdept.UserDept/UpdateUserDept"
 	UserDept_DeleteUserDept_FullMethodName = "/manager.api.userdept.UserDept/DeleteUserDept"
-	UserDept_ListDeptUser_FullMethodName   = "/manager.api.userdept.UserDept/ListDeptUser"
 )
 
 // UserDeptClient is the client API for UserDept service.
@@ -31,8 +32,8 @@ const (
 type UserDeptClient interface {
 	ListUserDept(ctx context.Context, in *ListUserDeptRequest, opts ...grpc.CallOption) (*ListUserDeptReply, error)
 	CreateUserDept(ctx context.Context, in *CreateUserDeptRequest, opts ...grpc.CallOption) (*CreateUserDeptReply, error)
+	UpdateUserDept(ctx context.Context, in *UpdateUserDeptRequest, opts ...grpc.CallOption) (*UpdateUserDeptReply, error)
 	DeleteUserDept(ctx context.Context, in *DeleteUserDeptRequest, opts ...grpc.CallOption) (*DeleteUserDeptReply, error)
-	ListDeptUser(ctx context.Context, in *ListDeptUserRequest, opts ...grpc.CallOption) (*ListDeptUserReply, error)
 }
 
 type userDeptClient struct {
@@ -61,18 +62,18 @@ func (c *userDeptClient) CreateUserDept(ctx context.Context, in *CreateUserDeptR
 	return out, nil
 }
 
-func (c *userDeptClient) DeleteUserDept(ctx context.Context, in *DeleteUserDeptRequest, opts ...grpc.CallOption) (*DeleteUserDeptReply, error) {
-	out := new(DeleteUserDeptReply)
-	err := c.cc.Invoke(ctx, UserDept_DeleteUserDept_FullMethodName, in, out, opts...)
+func (c *userDeptClient) UpdateUserDept(ctx context.Context, in *UpdateUserDeptRequest, opts ...grpc.CallOption) (*UpdateUserDeptReply, error) {
+	out := new(UpdateUserDeptReply)
+	err := c.cc.Invoke(ctx, UserDept_UpdateUserDept_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *userDeptClient) ListDeptUser(ctx context.Context, in *ListDeptUserRequest, opts ...grpc.CallOption) (*ListDeptUserReply, error) {
-	out := new(ListDeptUserReply)
-	err := c.cc.Invoke(ctx, UserDept_ListDeptUser_FullMethodName, in, out, opts...)
+func (c *userDeptClient) DeleteUserDept(ctx context.Context, in *DeleteUserDeptRequest, opts ...grpc.CallOption) (*DeleteUserDeptReply, error) {
+	out := new(DeleteUserDeptReply)
+	err := c.cc.Invoke(ctx, UserDept_DeleteUserDept_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -85,26 +86,28 @@ func (c *userDeptClient) ListDeptUser(ctx context.Context, in *ListDeptUserReque
 type UserDeptServer interface {
 	ListUserDept(context.Context, *ListUserDeptRequest) (*ListUserDeptReply, error)
 	CreateUserDept(context.Context, *CreateUserDeptRequest) (*CreateUserDeptReply, error)
+	UpdateUserDept(context.Context, *UpdateUserDeptRequest) (*UpdateUserDeptReply, error)
 	DeleteUserDept(context.Context, *DeleteUserDeptRequest) (*DeleteUserDeptReply, error)
-	ListDeptUser(context.Context, *ListDeptUserRequest) (*ListDeptUserReply, error)
 	mustEmbedUnimplementedUserDeptServer()
 }
 
 // UnimplementedUserDeptServer must be embedded to have forward compatible implementations.
-type UnimplementedUserDeptServer struct {
-}
+type UnimplementedUserDeptServer struct{}
 
 func (UnimplementedUserDeptServer) ListUserDept(context.Context, *ListUserDeptRequest) (*ListUserDeptReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListUserDept not implemented")
 }
+
 func (UnimplementedUserDeptServer) CreateUserDept(context.Context, *CreateUserDeptRequest) (*CreateUserDeptReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateUserDept not implemented")
 }
+
+func (UnimplementedUserDeptServer) UpdateUserDept(context.Context, *UpdateUserDeptRequest) (*UpdateUserDeptReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateUserDept not implemented")
+}
+
 func (UnimplementedUserDeptServer) DeleteUserDept(context.Context, *DeleteUserDeptRequest) (*DeleteUserDeptReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteUserDept not implemented")
-}
-func (UnimplementedUserDeptServer) ListDeptUser(context.Context, *ListDeptUserRequest) (*ListDeptUserReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ListDeptUser not implemented")
 }
 func (UnimplementedUserDeptServer) mustEmbedUnimplementedUserDeptServer() {}
 
@@ -155,6 +158,24 @@ func _UserDept_CreateUserDept_Handler(srv interface{}, ctx context.Context, dec 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _UserDept_UpdateUserDept_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateUserDeptRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserDeptServer).UpdateUserDept(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UserDept_UpdateUserDept_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserDeptServer).UpdateUserDept(ctx, req.(*UpdateUserDeptRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _UserDept_DeleteUserDept_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(DeleteUserDeptRequest)
 	if err := dec(in); err != nil {
@@ -169,24 +190,6 @@ func _UserDept_DeleteUserDept_Handler(srv interface{}, ctx context.Context, dec 
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(UserDeptServer).DeleteUserDept(ctx, req.(*DeleteUserDeptRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _UserDept_ListDeptUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListDeptUserRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(UserDeptServer).ListDeptUser(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: UserDept_ListDeptUser_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(UserDeptServer).ListDeptUser(ctx, req.(*ListDeptUserRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -207,12 +210,12 @@ var UserDept_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _UserDept_CreateUserDept_Handler,
 		},
 		{
-			MethodName: "DeleteUserDept",
-			Handler:    _UserDept_DeleteUserDept_Handler,
+			MethodName: "UpdateUserDept",
+			Handler:    _UserDept_UpdateUserDept_Handler,
 		},
 		{
-			MethodName: "ListDeptUser",
-			Handler:    _UserDept_ListDeptUser_Handler,
+			MethodName: "DeleteUserDept",
+			Handler:    _UserDept_DeleteUserDept_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

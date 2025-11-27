@@ -6,7 +6,7 @@ info:
     title: User API
     version: 0.0.1
 paths:
-    /manager/api/v1/current/user:
+    /manager/api/current/user:
         get:
             tags:
                 - User
@@ -51,7 +51,7 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/Status'
-    /manager/api/v1/current/user/setting:
+    /manager/api/current/user/setting:
         put:
             tags:
                 - User
@@ -73,11 +73,11 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/Status'
-    /manager/api/v1/user:
+    /manager/api/user:
         get:
             tags:
                 - User
-            description: GetUser 获取角色信息
+            description: GetUser 获取用户信息
             operationId: User_GetUser
             parameters:
                 - name: id
@@ -109,7 +109,7 @@ paths:
         put:
             tags:
                 - User
-            description: UpdateUser 更新角色信息
+            description: UpdateUser 更新用户信息
             operationId: User_UpdateUser
             requestBody:
                 content:
@@ -133,7 +133,7 @@ paths:
         post:
             tags:
                 - User
-            description: CreateUser 创建角色信息
+            description: CreateUser 创建用户信息
             operationId: User_CreateUser
             requestBody:
                 content:
@@ -157,7 +157,7 @@ paths:
         delete:
             tags:
                 - User
-            description: DeleteUser 删除角色信息
+            description: DeleteUser 删除用户信息
             operationId: User_DeleteUser
             parameters:
                 - name: id
@@ -178,11 +178,58 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/Status'
-    /manager/api/v1/user/password/reset:
+    /manager/api/user/info:
+        put:
+            tags:
+                - User
+            description: UpdateUserinfo 更新用户信息
+            operationId: User_UpdateUserinfo
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/UpdateUserinfoRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/UpdateUserinfoReply'
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /manager/api/user/offline:
         post:
             tags:
                 - User
-            description: UpdateUser 更新角色信息
+            description: OfflineUser 下线用户信息
+            operationId: User_OfflineUser
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/OfflineUserRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content: {}
+                default:
+                    description: Default error response
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/Status'
+    /manager/api/user/password/reset:
+        post:
+            tags:
+                - User
+            description: UpdateUser 更新用户信息
             operationId: User_ResetPassword
             requestBody:
                 content:
@@ -200,11 +247,11 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/Status'
-    /manager/api/v1/users:
+    /manager/api/users:
         get:
             tags:
                 - User
-            description: ListUser 获取角色信息列表
+            description: ListUser 获取用户信息列表
             operationId: User_ListUser
             parameters:
                 - name: page
@@ -213,6 +260,11 @@ paths:
                     type: integer
                     format: uint32
                 - name: pageSize
+                  in: query
+                  schema:
+                    type: integer
+                    format: uint32
+                - name: appId
                   in: query
                   schema:
                     type: integer
@@ -247,6 +299,20 @@ paths:
                     type: array
                     items:
                         type: string
+                - name: inIds
+                  in: query
+                  schema:
+                    type: array
+                    items:
+                        type: integer
+                        format: uint32
+                - name: notInIds
+                  in: query
+                  schema:
+                    type: array
+                    items:
+                        type: integer
+                        format: uint32
             responses:
                 "200":
                     description: OK
@@ -271,16 +337,16 @@ components:
         CreateUserRequest:
             type: object
             properties:
+                avatar:
+                    type: string
                 nickname:
                     type: string
                 username:
                     type: string
-                deptId:
-                    type: integer
-                    format: uint32
-                jobId:
-                    type: integer
-                    format: uint32
+                infos:
+                    type: object
+                    additionalProperties:
+                        type: string
         DeleteUserReply:
             type: object
             properties: {}
@@ -292,13 +358,6 @@ components:
                     description: The type of the serialized message.
             additionalProperties: true
             description: Contains an arbitrary serialized message along with a @type that describes the type of the serialized message.
-        Info:
-            type: object
-            properties:
-                field:
-                    type: string
-                value:
-                    type: string
         ListUserReply:
             type: object
             properties:
@@ -309,20 +368,23 @@ components:
                     type: array
                     items:
                         $ref: '#/components/schemas/UserObject'
+        OfflineUserRequest:
+            type: object
+            properties:
+                userId:
+                    type: integer
+                    format: uint32
+                appIds:
+                    type: array
+                    items:
+                        type: integer
+                        format: uint32
         ResetPasswordRequest:
             type: object
             properties:
                 id:
                     type: integer
                     format: uint32
-        Result:
-            type: object
-            properties:
-                id:
-                    type: integer
-                    format: uint32
-                name:
-                    type: string
         Status:
             type: object
             properties:
@@ -346,6 +408,10 @@ components:
                     type: string
                 avatar:
                     type: string
+                infos:
+                    type: object
+                    additionalProperties:
+                        type: string
         UpdateCurrentUserSettingRequest:
             type: object
             properties:
@@ -362,16 +428,27 @@ components:
                 id:
                     type: integer
                     format: uint32
+                avatar:
+                    type: string
                 nickname:
                     type: string
-                deptId:
-                    type: integer
-                    format: uint32
-                jobId:
-                    type: integer
-                    format: uint32
                 status:
                     type: boolean
+                reason:
+                    type: string
+                infos:
+                    type: object
+                    additionalProperties:
+                        type: string
+        UpdateUserinfoReply:
+            type: object
+            properties: {}
+        UpdateUserinfoRequest:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: uint32
         UserObject:
             type: object
             properties:
@@ -395,21 +472,46 @@ components:
                 updatedAt:
                     type: integer
                     format: uint32
+                setting:
+                    type: string
+                infos:
+                    type: object
+                    additionalProperties:
+                        type: string
+                userDepts:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/UserObject_UserDept'
+        UserObject_Dept:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: uint32
+                name:
+                    type: string
+                logo:
+                    type: string
+        UserObject_Job:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: uint32
+                name:
+                    type: string
+        UserObject_UserDept:
+            type: object
+            properties:
                 deptId:
                     type: integer
                     format: uint32
                 jobId:
                     type: integer
                     format: uint32
-                setting:
-                    type: string
-                infos:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/Info'
                 dept:
-                    $ref: '#/components/schemas/Result'
+                    $ref: '#/components/schemas/UserObject_Dept'
                 job:
-                    $ref: '#/components/schemas/Result'
+                    $ref: '#/components/schemas/UserObject_Job'
 tags:
     - name: User

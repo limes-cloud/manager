@@ -17,12 +17,30 @@ func NewTenantApp(repo repository.TenantApp) *TenantApp {
 	return &TenantApp{repo: repo}
 }
 
+// GetTenantApp 获取租户列表
+func (u *TenantApp) GetTenantApp(ctx core.Context, req *types.GetTenantAppRequest) (*entity.TenantApp, error) {
+	res, err := u.repo.GetTenantApp(ctx, req)
+	if err != nil {
+		ctx.Logger().Warnw("msg", "list TenantApp error", "err", err.Error())
+		return nil, errors.ListError(err.Error())
+	}
+
+	// 获取菜单ID
+	menuIds, err := u.repo.GetTenantAppMenuIds(ctx, req.TenantId, req.AppId)
+	if err != nil {
+		ctx.Logger().Warnw("msg", "list TenantApp error", "err", err.Error())
+		return nil, errors.ListError(err.Error())
+	}
+	res.MenuIds = menuIds
+	return res, nil
+}
+
 // ListTenantApp 获取租户列表
 func (u *TenantApp) ListTenantApp(ctx core.Context, req *types.ListTenantAppRequest) ([]*entity.TenantApp, uint32, error) {
 	list, total, err := u.repo.ListTenantApp(ctx, req)
 	if err != nil {
 		ctx.Logger().Warnw("msg", "list TenantApp error", "err", err.Error())
-		return nil, 0, errors.ListError()
+		return nil, 0, errors.ListError(err.Error())
 	}
 	return list, total, nil
 }
@@ -39,6 +57,7 @@ func (u *TenantApp) CreateTenantApp(ctx core.Context, req *types.CreateTenantApp
 			TenantId:  req.TenantId,
 			AppId:     req.AppId,
 			ExpiredAt: req.ExpiredAt,
+			Setting:   req.Setting,
 		})
 		if err != nil {
 			return err
@@ -70,6 +89,7 @@ func (u *TenantApp) UpdateTenantApp(ctx core.Context, req *types.UpdateTenantApp
 			TenantId:  req.TenantId,
 			AppId:     req.AppId,
 			ExpiredAt: req.ExpiredAt,
+			Setting:   req.Setting,
 		})
 		if err != nil {
 			return err

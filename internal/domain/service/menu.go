@@ -5,11 +5,10 @@ import (
 	"github.com/limes-cloud/kratosx/pkg/value"
 	"github.com/limes-cloud/manager/api/errors"
 	"github.com/limes-cloud/manager/internal/core"
-	"github.com/samber/lo"
-
 	"github.com/limes-cloud/manager/internal/domain/entity"
 	"github.com/limes-cloud/manager/internal/domain/repository"
 	"github.com/limes-cloud/manager/internal/types"
+	"github.com/samber/lo"
 )
 
 type Menu struct {
@@ -18,6 +17,7 @@ type Menu struct {
 	rm    repository.RoleMenu
 	scope repository.Scope
 	ta    repository.TenantApp
+	tad   repository.TenantAdmin
 }
 
 func NewMenu(
@@ -26,6 +26,7 @@ func NewMenu(
 	rm repository.RoleMenu,
 	scope repository.Scope,
 	ta repository.TenantApp,
+	tad repository.TenantAdmin,
 ) *Menu {
 	uc := &Menu{
 		repo:  repo,
@@ -33,6 +34,7 @@ func NewMenu(
 		rm:    rm,
 		scope: scope,
 		ta:    ta,
+		tad:   tad,
 	}
 	return uc
 }
@@ -40,23 +42,19 @@ func NewMenu(
 // ListCurrentMenu 获取当前的菜单信息列表树
 func (u *Menu) ListCurrentMenu(ctx core.Context, req *types.ListMenuRequest) ([]*entity.Menu, error) {
 	// 获取当前的角色列表
-	if ctx.IsSuperAdmin() && req.FilterTenant {
-		req.InIds = u.ta.GetTenantMenuIds(ctx.Auth().TenantId)
+	info := ctx.Auth()
+	if info.UserId != 1 {
+		// todo 切换到应用模式
+		req.InIds = u.ta.GetTenantMenuIds(info.TenantId)
 	}
-	if !ctx.IsSuperAdmin() {
+
+	if !u.tad.IsAdmin(info.TenantId, info.UserId) {
 		rids := u.scope.RoleScopes(ctx)
-		mids := u.rm.GetMenuIdsByRoleIds(rids)
-		tmids := u.ta.GetTenantMenuIds(ctx.Auth().TenantId)
-
-		if req.AppId != nil {
-			ids, err := u.ta.GetTenantAppMenuIds(ctx, ctx.Auth().TenantId, *req.AppId)
-			if err != nil {
-				return nil, errors.SystemError()
-			}
-			tmids = ids
+		if len(rids) == 0 {
+			return nil, errors.AppScopeError("当前用户没有分配菜单权限")
 		}
-		req.InIds = lo.Intersect(mids, tmids)
-
+		mids := u.rm.GetMenuIdsByRoleIds(rids)
+		req.InIds = lo.Intersect(mids, req.InIds)
 	}
 
 	// 获取当前角色有权限的菜单ID
@@ -67,7 +65,7 @@ func (u *Menu) ListCurrentMenu(ctx core.Context, req *types.ListMenuRequest) ([]
 	}
 
 	// 构建树
-	if req.FilterRoot {
+	if req.OnlyMenu {
 		return list, nil
 	}
 
@@ -123,7 +121,8 @@ func (u *Menu) ListMenu(ctx core.Context, req *types.ListMenuRequest) ([]*entity
 		if item.Type == entity.MenuTypeGroup {
 			gms[item.Id] = index
 		}
-		mb[item.ParentId] = append(mb[item.ParentId], item.Id)
+		pid := value.Value(item.ParentId)
+		mb[pid] = append(mb[pid], item.Id)
 	}
 
 	// 如果是G，但是没有子节点，则去除G
@@ -143,11 +142,6 @@ func (u *Menu) CreateMenu(ctx core.Context, menu *entity.Menu) (uint32, error) {
 		err error
 	)
 
-	// 判断是否具有应用权限
-	if !u.scope.HasAppScope(ctx, menu.AppId) {
-		return 0, errors.AppScopeError()
-	}
-
 	// 开启事务
 	if err = ctx.Transaction(func(ctx core.Context) error {
 		// 创建菜单
@@ -165,6 +159,7 @@ func (u *Menu) CreateMenu(ctx core.Context, menu *entity.Menu) (uint32, error) {
 
 		return nil
 	}); err != nil {
+		ctx.Logger().Warnw("msg", "create menu error", "err", err.Error())
 		return 0, errors.CreateError(err.Error())
 	}
 	return id, nil
@@ -172,41 +167,16 @@ func (u *Menu) CreateMenu(ctx core.Context, menu *entity.Menu) (uint32, error) {
 
 // UpdateMenu 更新菜单信息
 func (u *Menu) UpdateMenu(ctx core.Context, menu *entity.Menu) error {
-	// 获取之前的菜单信息
-	old, err := u.repo.GetMenu(ctx, menu.Id)
-	if err != nil {
-		return err
-	}
-
-	// 判断是否具有应用权限
-	if !u.scope.HasAppScope(ctx, old.AppId) {
-		return errors.AppScopeError()
-	}
-
-	// 置空应用ID,不允许修改为其他的应用ID
-	menu.AppId = 0
-
 	// 变更菜单
 	if err := u.repo.UpdateMenu(ctx, menu); err != nil {
+		ctx.Logger().Warnw("msg", "update menu error", "err", err.Error())
 		return errors.UpdateError(err.Error())
 	}
-
 	return nil
 }
 
 // DeleteMenu 删除菜单信息
 func (u *Menu) DeleteMenu(ctx core.Context, id uint32) error {
-	// 获取之前的菜单信息
-	old, err := u.repo.GetMenu(ctx, id)
-	if err != nil {
-		return err
-	}
-
-	// 判断是否具有应用权限
-	if !u.scope.HasAppScope(ctx, old.AppId) {
-		return errors.AppScopeError()
-	}
-
 	// 查询下级菜单
 	mids, err := u.repo.GetMenuChildrenIds(ctx, id)
 	if err != nil {
@@ -220,8 +190,8 @@ func (u *Menu) DeleteMenu(ctx core.Context, id uint32) error {
 		if err = u.repo.DeleteMenu(ctx, id); err != nil {
 			return err
 		}
-
+		return nil
 		// 删除权限
-		return u.rm.DeleteMenus(ctx, mids)
+		// return u.rm.DeleteMenus(ctx, mids)
 	})
 }

@@ -23,31 +23,22 @@ var (
 const _ = http.SupportPackageIsVersion1
 
 const (
-	OperationJobRoleCreateJobRoles = "/manager.api.jobrole.JobRole/CreateJobRoles"
-	OperationJobRoleCreateRoleJobs = "/manager.api.jobrole.JobRole/CreateRoleJobs"
-	OperationJobRoleDeleteJobRoles = "/manager.api.jobrole.JobRole/DeleteJobRoles"
-	OperationJobRoleDeleteRoleJobs = "/manager.api.jobrole.JobRole/DeleteRoleJobs"
-	OperationJobRoleListJobRole    = "/manager.api.jobrole.JobRole/ListJobRole"
-	OperationJobRoleListRoleJob    = "/manager.api.jobrole.JobRole/ListRoleJob"
+	OperationJobRoleCreateJobRole = "/manager.api.jobrole.JobRole/CreateJobRole"
+	OperationJobRoleDeleteJobRole = "/manager.api.jobrole.JobRole/DeleteJobRole"
+	OperationJobRoleListJobRole   = "/manager.api.jobrole.JobRole/ListJobRole"
 )
 
 type JobRoleHTTPServer interface {
-	CreateJobRoles(context.Context, *CreateJobRolesRequest) (*CreateJobRolesReply, error)
-	CreateRoleJobs(context.Context, *CreateRoleJobsRequest) (*CreateRoleJobsReply, error)
-	DeleteJobRoles(context.Context, *DeleteJobRolesRequest) (*DeleteJobRolesReply, error)
-	DeleteRoleJobs(context.Context, *DeleteRoleJobsRequest) (*DeleteRoleJobsReply, error)
+	CreateJobRole(context.Context, *CreateJobRoleRequest) (*CreateJobRoleReply, error)
+	DeleteJobRole(context.Context, *DeleteJobRoleRequest) (*DeleteJobRoleReply, error)
 	ListJobRole(context.Context, *ListJobRoleRequest) (*ListJobRoleReply, error)
-	ListRoleJob(context.Context, *ListRoleJobRequest) (*ListRoleJobReply, error)
 }
 
 func RegisterJobRoleHTTPServer(s *http.Server, srv JobRoleHTTPServer) {
 	r := s.Route("/")
-	r.GET("/manager/api/v1/job/roles", _JobRole_ListJobRole0_HTTP_Handler(srv))
-	r.POST("/manager/api/v1/job/roles", _JobRole_CreateJobRoles0_HTTP_Handler(srv))
-	r.DELETE("/manager/api/v1/job/roles", _JobRole_DeleteJobRoles0_HTTP_Handler(srv))
-	r.GET("/manager/api/v1/role/jobs", _JobRole_ListRoleJob0_HTTP_Handler(srv))
-	r.POST("/manager/api/v1/role/jobs", _JobRole_CreateRoleJobs0_HTTP_Handler(srv))
-	r.DELETE("/manager/api/v1/role/jobs", _JobRole_DeleteRoleJobs0_HTTP_Handler(srv))
+	r.GET("/manager/api/job/roles", _JobRole_ListJobRole0_HTTP_Handler(srv))
+	r.POST("/manager/api/job/role", _JobRole_CreateJobRole0_HTTP_Handler(srv))
+	r.DELETE("/manager/api/job/role", _JobRole_DeleteJobRole0_HTTP_Handler(srv))
 }
 
 func _JobRole_ListJobRole0_HTTP_Handler(srv JobRoleHTTPServer) func(ctx http.Context) error {
@@ -69,120 +60,51 @@ func _JobRole_ListJobRole0_HTTP_Handler(srv JobRoleHTTPServer) func(ctx http.Con
 	}
 }
 
-func _JobRole_CreateJobRoles0_HTTP_Handler(srv JobRoleHTTPServer) func(ctx http.Context) error {
+func _JobRole_CreateJobRole0_HTTP_Handler(srv JobRoleHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in CreateJobRolesRequest
+		var in CreateJobRoleRequest
 		if err := ctx.Bind(&in); err != nil {
 			return err
 		}
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationJobRoleCreateJobRoles)
+		http.SetOperation(ctx, OperationJobRoleCreateJobRole)
 		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
-			return srv.CreateJobRoles(ctx, req.(*CreateJobRolesRequest))
+			return srv.CreateJobRole(ctx, req.(*CreateJobRoleRequest))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		reply := out.(*CreateJobRolesReply)
+		reply := out.(*CreateJobRoleReply)
 		return ctx.Result(200, reply)
 	}
 }
 
-func _JobRole_DeleteJobRoles0_HTTP_Handler(srv JobRoleHTTPServer) func(ctx http.Context) error {
+func _JobRole_DeleteJobRole0_HTTP_Handler(srv JobRoleHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in DeleteJobRolesRequest
-		if err := ctx.Bind(&in); err != nil {
-			return err
-		}
+		var in DeleteJobRoleRequest
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationJobRoleDeleteJobRoles)
+		http.SetOperation(ctx, OperationJobRoleDeleteJobRole)
 		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
-			return srv.DeleteJobRoles(ctx, req.(*DeleteJobRolesRequest))
+			return srv.DeleteJobRole(ctx, req.(*DeleteJobRoleRequest))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		reply := out.(*DeleteJobRolesReply)
-		return ctx.Result(200, reply)
-	}
-}
-
-func _JobRole_ListRoleJob0_HTTP_Handler(srv JobRoleHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in ListRoleJobRequest
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationJobRoleListRoleJob)
-		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
-			return srv.ListRoleJob(ctx, req.(*ListRoleJobRequest))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*ListRoleJobReply)
-		return ctx.Result(200, reply)
-	}
-}
-
-func _JobRole_CreateRoleJobs0_HTTP_Handler(srv JobRoleHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in CreateRoleJobsRequest
-		if err := ctx.Bind(&in); err != nil {
-			return err
-		}
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationJobRoleCreateRoleJobs)
-		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
-			return srv.CreateRoleJobs(ctx, req.(*CreateRoleJobsRequest))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*CreateRoleJobsReply)
-		return ctx.Result(200, reply)
-	}
-}
-
-func _JobRole_DeleteRoleJobs0_HTTP_Handler(srv JobRoleHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in DeleteRoleJobsRequest
-		if err := ctx.Bind(&in); err != nil {
-			return err
-		}
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationJobRoleDeleteRoleJobs)
-		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
-			return srv.DeleteRoleJobs(ctx, req.(*DeleteRoleJobsRequest))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*DeleteRoleJobsReply)
+		reply := out.(*DeleteJobRoleReply)
 		return ctx.Result(200, reply)
 	}
 }
 
 type JobRoleHTTPClient interface {
-	CreateJobRoles(ctx context.Context, req *CreateJobRolesRequest, opts ...http.CallOption) (rsp *CreateJobRolesReply, err error)
-	CreateRoleJobs(ctx context.Context, req *CreateRoleJobsRequest, opts ...http.CallOption) (rsp *CreateRoleJobsReply, err error)
-	DeleteJobRoles(ctx context.Context, req *DeleteJobRolesRequest, opts ...http.CallOption) (rsp *DeleteJobRolesReply, err error)
-	DeleteRoleJobs(ctx context.Context, req *DeleteRoleJobsRequest, opts ...http.CallOption) (rsp *DeleteRoleJobsReply, err error)
+	CreateJobRole(ctx context.Context, req *CreateJobRoleRequest, opts ...http.CallOption) (rsp *CreateJobRoleReply, err error)
+	DeleteJobRole(ctx context.Context, req *DeleteJobRoleRequest, opts ...http.CallOption) (rsp *DeleteJobRoleReply, err error)
 	ListJobRole(ctx context.Context, req *ListJobRoleRequest, opts ...http.CallOption) (rsp *ListJobRoleReply, err error)
-	ListRoleJob(ctx context.Context, req *ListRoleJobRequest, opts ...http.CallOption) (rsp *ListRoleJobReply, err error)
 }
 
 type JobRoleHTTPClientImpl struct {
@@ -193,11 +115,11 @@ func NewJobRoleHTTPClient(client *http.Client) JobRoleHTTPClient {
 	return &JobRoleHTTPClientImpl{client}
 }
 
-func (c *JobRoleHTTPClientImpl) CreateJobRoles(ctx context.Context, in *CreateJobRolesRequest, opts ...http.CallOption) (*CreateJobRolesReply, error) {
-	var out CreateJobRolesReply
-	pattern := "/manager/api/v1/job/roles"
+func (c *JobRoleHTTPClientImpl) CreateJobRole(ctx context.Context, in *CreateJobRoleRequest, opts ...http.CallOption) (*CreateJobRoleReply, error) {
+	var out CreateJobRoleReply
+	pattern := "/manager/api/job/role"
 	path := binding.EncodeURL(pattern, in, false)
-	opts = append(opts, http.Operation(OperationJobRoleCreateJobRoles))
+	opts = append(opts, http.Operation(OperationJobRoleCreateJobRole))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
 	if err != nil {
@@ -206,39 +128,13 @@ func (c *JobRoleHTTPClientImpl) CreateJobRoles(ctx context.Context, in *CreateJo
 	return &out, err
 }
 
-func (c *JobRoleHTTPClientImpl) CreateRoleJobs(ctx context.Context, in *CreateRoleJobsRequest, opts ...http.CallOption) (*CreateRoleJobsReply, error) {
-	var out CreateRoleJobsReply
-	pattern := "/manager/api/v1/role/jobs"
-	path := binding.EncodeURL(pattern, in, false)
-	opts = append(opts, http.Operation(OperationJobRoleCreateRoleJobs))
+func (c *JobRoleHTTPClientImpl) DeleteJobRole(ctx context.Context, in *DeleteJobRoleRequest, opts ...http.CallOption) (*DeleteJobRoleReply, error) {
+	var out DeleteJobRoleReply
+	pattern := "/manager/api/job/role"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationJobRoleDeleteJobRole))
 	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return &out, err
-}
-
-func (c *JobRoleHTTPClientImpl) DeleteJobRoles(ctx context.Context, in *DeleteJobRolesRequest, opts ...http.CallOption) (*DeleteJobRolesReply, error) {
-	var out DeleteJobRolesReply
-	pattern := "/manager/api/v1/job/roles"
-	path := binding.EncodeURL(pattern, in, false)
-	opts = append(opts, http.Operation(OperationJobRoleDeleteJobRoles))
-	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "DELETE", path, in, &out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return &out, err
-}
-
-func (c *JobRoleHTTPClientImpl) DeleteRoleJobs(ctx context.Context, in *DeleteRoleJobsRequest, opts ...http.CallOption) (*DeleteRoleJobsReply, error) {
-	var out DeleteRoleJobsReply
-	pattern := "/manager/api/v1/role/jobs"
-	path := binding.EncodeURL(pattern, in, false)
-	opts = append(opts, http.Operation(OperationJobRoleDeleteRoleJobs))
-	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "DELETE", path, in, &out, opts...)
+	err := c.cc.Invoke(ctx, "DELETE", path, nil, &out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -247,22 +143,9 @@ func (c *JobRoleHTTPClientImpl) DeleteRoleJobs(ctx context.Context, in *DeleteRo
 
 func (c *JobRoleHTTPClientImpl) ListJobRole(ctx context.Context, in *ListJobRoleRequest, opts ...http.CallOption) (*ListJobRoleReply, error) {
 	var out ListJobRoleReply
-	pattern := "/manager/api/v1/job/roles"
+	pattern := "/manager/api/job/roles"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationJobRoleListJobRole))
-	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return &out, err
-}
-
-func (c *JobRoleHTTPClientImpl) ListRoleJob(ctx context.Context, in *ListRoleJobRequest, opts ...http.CallOption) (*ListRoleJobReply, error) {
-	var out ListRoleJobReply
-	pattern := "/manager/api/v1/role/jobs"
-	path := binding.EncodeURL(pattern, in, true)
-	opts = append(opts, http.Operation(OperationJobRoleListRoleJob))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {

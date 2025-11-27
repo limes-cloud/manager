@@ -15,6 +15,8 @@ type ListEntityFieldRequest struct {
 }
 
 type ListEntityRuleRequest struct {
-	EntityId uint32  `json:"entityId"`
+	*page.Search
+	EntityId *uint32 `json:"entityId"`
 	Name     *string `json:"name"`
+	Status   *bool   `json:"status"`
 }

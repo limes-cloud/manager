@@ -48,12 +48,12 @@ type RoleMenuHTTPServer interface {
 
 func RegisterRoleMenuHTTPServer(s *http.Server, srv RoleMenuHTTPServer) {
 	r := s.Route("/")
-	r.GET("/manager/api/v1/role/menuids", _RoleMenu_GetRoleMenuIds0_HTTP_Handler(srv))
-	r.GET("/manager/api/v1/menu/roleids", _RoleMenu_GetMenuRoleIds0_HTTP_Handler(srv))
-	r.POST("/manager/api/v1/role/menus", _RoleMenu_CreateRoleMenus0_HTTP_Handler(srv))
-	r.POST("/manager/api/v1/menu/roles", _RoleMenu_CreateMenuRoles0_HTTP_Handler(srv))
-	r.DELETE("/manager/api/v1/role/menus", _RoleMenu_DeleteMenuRoles0_HTTP_Handler(srv))
-	r.DELETE("/manager/api/v1/role/menus", _RoleMenu_DeleteRoleMenus0_HTTP_Handler(srv))
+	r.GET("/manager/api/role/menuids", _RoleMenu_GetRoleMenuIds0_HTTP_Handler(srv))
+	r.GET("/manager/api/menu/roleids", _RoleMenu_GetMenuRoleIds0_HTTP_Handler(srv))
+	r.POST("/manager/api/role/menus", _RoleMenu_CreateRoleMenus0_HTTP_Handler(srv))
+	r.POST("/manager/api/menu/roles", _RoleMenu_CreateMenuRoles0_HTTP_Handler(srv))
+	r.DELETE("/manager/api/role/menus", _RoleMenu_DeleteMenuRoles0_HTTP_Handler(srv))
+	r.DELETE("/manager/api/role/menus", _RoleMenu_DeleteRoleMenus0_HTTP_Handler(srv))
 }
 
 func _RoleMenu_GetRoleMenuIds0_HTTP_Handler(srv RoleMenuHTTPServer) func(ctx http.Context) error {
@@ -141,9 +141,6 @@ func _RoleMenu_CreateMenuRoles0_HTTP_Handler(srv RoleMenuHTTPServer) func(ctx ht
 func _RoleMenu_DeleteMenuRoles0_HTTP_Handler(srv RoleMenuHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in DeleteMenuRolesRequest
-		if err := ctx.Bind(&in); err != nil {
-			return err
-		}
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
@@ -163,9 +160,6 @@ func _RoleMenu_DeleteMenuRoles0_HTTP_Handler(srv RoleMenuHTTPServer) func(ctx ht
 func _RoleMenu_DeleteRoleMenus0_HTTP_Handler(srv RoleMenuHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in DeleteRoleMenusRequest
-		if err := ctx.Bind(&in); err != nil {
-			return err
-		}
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
@@ -201,7 +195,7 @@ func NewRoleMenuHTTPClient(client *http.Client) RoleMenuHTTPClient {
 
 func (c *RoleMenuHTTPClientImpl) CreateMenuRoles(ctx context.Context, in *CreateMenuRolesRequest, opts ...http.CallOption) (*CreateMenuRolesReply, error) {
 	var out CreateMenuRolesReply
-	pattern := "/manager/api/v1/menu/roles"
+	pattern := "/manager/api/menu/roles"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationRoleMenuCreateMenuRoles))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -214,7 +208,7 @@ func (c *RoleMenuHTTPClientImpl) CreateMenuRoles(ctx context.Context, in *Create
 
 func (c *RoleMenuHTTPClientImpl) CreateRoleMenus(ctx context.Context, in *CreateRoleMenusRequest, opts ...http.CallOption) (*CreateRoleMenusReply, error) {
 	var out CreateRoleMenusReply
-	pattern := "/manager/api/v1/role/menus"
+	pattern := "/manager/api/role/menus"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationRoleMenuCreateRoleMenus))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -227,11 +221,11 @@ func (c *RoleMenuHTTPClientImpl) CreateRoleMenus(ctx context.Context, in *Create
 
 func (c *RoleMenuHTTPClientImpl) DeleteMenuRoles(ctx context.Context, in *DeleteMenuRolesRequest, opts ...http.CallOption) (*DeleteMenuRolesReply, error) {
 	var out DeleteMenuRolesReply
-	pattern := "/manager/api/v1/role/menus"
-	path := binding.EncodeURL(pattern, in, false)
+	pattern := "/manager/api/role/menus"
+	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationRoleMenuDeleteMenuRoles))
 	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "DELETE", path, in, &out, opts...)
+	err := c.cc.Invoke(ctx, "DELETE", path, nil, &out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -240,11 +234,11 @@ func (c *RoleMenuHTTPClientImpl) DeleteMenuRoles(ctx context.Context, in *Delete
 
 func (c *RoleMenuHTTPClientImpl) DeleteRoleMenus(ctx context.Context, in *DeleteRoleMenusRequest, opts ...http.CallOption) (*DeleteRoleMenusReply, error) {
 	var out DeleteRoleMenusReply
-	pattern := "/manager/api/v1/role/menus"
-	path := binding.EncodeURL(pattern, in, false)
+	pattern := "/manager/api/role/menus"
+	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationRoleMenuDeleteRoleMenus))
 	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "DELETE", path, in, &out, opts...)
+	err := c.cc.Invoke(ctx, "DELETE", path, nil, &out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -253,7 +247,7 @@ func (c *RoleMenuHTTPClientImpl) DeleteRoleMenus(ctx context.Context, in *Delete
 
 func (c *RoleMenuHTTPClientImpl) GetMenuRoleIds(ctx context.Context, in *GetMenuRoleIdsRequest, opts ...http.CallOption) (*GetMenuRoleIdsReply, error) {
 	var out GetMenuRoleIdsReply
-	pattern := "/manager/api/v1/menu/roleids"
+	pattern := "/manager/api/menu/roleids"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationRoleMenuGetMenuRoleIds))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -266,7 +260,7 @@ func (c *RoleMenuHTTPClientImpl) GetMenuRoleIds(ctx context.Context, in *GetMenu
 
 func (c *RoleMenuHTTPClientImpl) GetRoleMenuIds(ctx context.Context, in *GetRoleMenuIdsRequest, opts ...http.CallOption) (*GetRoleMenuIdsReply, error) {
 	var out GetRoleMenuIdsReply
-	pattern := "/manager/api/v1/role/menuids"
+	pattern := "/manager/api/role/menuids"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationRoleMenuGetRoleMenuIds))
 	opts = append(opts, http.PathTemplate(pattern))

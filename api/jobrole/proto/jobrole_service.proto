@@ -13,41 +13,21 @@ service JobRole {
 
 	rpc ListJobRole (ListJobRoleRequest) returns (ListJobRoleReply){
 		option (google.api.http) = {
-			get: "/manager/api/v1/job/roles"
+			get: "/manager/api/job/roles"
 		};
 	}
 
-	rpc CreateJobRoles (CreateJobRolesRequest) returns (CreateJobRolesReply){
+	rpc CreateJobRole (CreateJobRoleRequest) returns (CreateJobRoleReply){
 		option (google.api.http) = {
-			post: "/manager/api/v1/job/roles",
+			post: "/manager/api/job/role",
 			body: "*"
 		};
 	}
 
-	rpc DeleteJobRoles (DeleteJobRolesRequest) returns (DeleteJobRolesReply){
+	rpc DeleteJobRole (DeleteJobRoleRequest) returns (DeleteJobRoleReply){
 		option (google.api.http) = {
-			delete: "/manager/api/v1/job/roles",
-			body: "*"
+			delete: "/manager/api/job/role"
 		};
 	}
 
-	rpc ListRoleJob (ListRoleJobRequest) returns (ListRoleJobReply){
-		option (google.api.http) = {
-			get: "/manager/api/v1/role/jobs"
-		};
-	}
-
-	rpc CreateRoleJobs (CreateRoleJobsRequest) returns (CreateRoleJobsReply){
-		option (google.api.http) = {
-			post: "/manager/api/v1/role/jobs",
-			body: "*"
-		};
-	}
-
-	rpc DeleteRoleJobs (DeleteRoleJobsRequest) returns (DeleteRoleJobsReply){
-		option (google.api.http) = {
-			delete: "/manager/api/v1/role/jobs",
-			body: "*"
-		};
-	}
 }

@@ -24,7 +24,11 @@ message GetRoleReply {
   uint32 updatedAt = 8;
 }
 
-message ListRoleRequest{}
+message ListRoleRequest{
+  optional string keyword = 1;
+  optional uint32 name = 2;
+  optional bool status = 3;
+}
 
 message ListRoleReply {
   message Role {

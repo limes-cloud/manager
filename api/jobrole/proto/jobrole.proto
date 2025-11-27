@@ -8,20 +8,12 @@ option java_package = "manager.api.jobrole.proto";
 
 import "validate/validate.proto";
 
-message CreateJobRolesRequest {
+message CreateJobRoleRequest {
   uint32 jobId = 1[(validate.rules).uint32 = {gte: 1}];
-  repeated uint32 roleIds = 2[(validate.rules).repeated = {min_items: 1}];
+  uint32 roleId = 2[(validate.rules).uint32 = {gte: 1}];
 }
 
-message CreateJobRolesReply {
-}
-
-message CreateRoleJobsRequest {
-  uint32 roleId = 1[(validate.rules).uint32 = {gte: 1}];
-  repeated uint32 jobIds = 2[(validate.rules).repeated = {min_items: 1}];
-}
-
-message CreateRoleJobsReply {
+message CreateJobRoleReply {
 }
 
 message ListJobRoleRequest {
@@ -34,44 +26,16 @@ message ListJobRoleRequest {
 message ListJobRoleReply {
   message Role{
     uint32 id = 1;
-    string name = 2;
+    string keyword = 2;
+    string name = 3;
   }
 
   repeated Role list = 1;
   uint32 total = 2;
 }
 
-message ListRoleJobRequest {
-  uint32 page = 1[(validate.rules).uint32 = {gte: 1}];
-  uint32 pageSize = 2[(validate.rules).uint32 = {gte: 1,lte:50}];
-  uint32 roleId = 3[(validate.rules).uint32 = {gte: 1}];
-  optional string name = 4;
-}
-
-message ListRoleJobReply {
-  message Classify{
-    uint32 id = 1;
-    string name = 2;
-  }
-
-  message Data{
-    uint32 id = 1;
-    string name = 2;
-    Classify classify = 3;
-  }
-
-  repeated Data list = 1;
-  uint32 total = 2;
-}
-
-message DeleteJobRolesRequest {
+message DeleteJobRoleRequest {
   uint32 jobId = 1[(validate.rules).uint32 = {gte: 1}];
-  repeated uint32 roleIds = 2[(validate.rules).repeated = {min_items: 1}];
-}
-message DeleteJobRolesReply {}
-
-message DeleteRoleJobsRequest {
-  repeated uint32 jobIds = 1[(validate.rules).repeated = {min_items: 1}];
   uint32 roleId = 2[(validate.rules).uint32 = {gte: 1}];
 }
-message DeleteRoleJobsReply {}
+message DeleteJobRoleReply {}

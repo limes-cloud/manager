@@ -2,18 +2,21 @@ package app
 
 import (
 	"context"
+	"encoding/json"
+
+	"github.com/limes-cloud/kratosx/model"
+
+	"github.com/go-kratos/kratos/v2/transport/grpc"
+
+	"github.com/go-kratos/kratos/v2/transport/http"
 
 	"github.com/limes-cloud/kratosx/pkg/value"
-	"github.com/limes-cloud/manager/api/errors"
-
 	"github.com/limes-cloud/manager/api/roleentity"
 
 	"github.com/limes-cloud/manager/internal/core"
 
 	"github.com/limes-cloud/kratosx/model/page"
 
-	"github.com/go-kratos/kratos/v2/transport/grpc"
-	"github.com/go-kratos/kratos/v2/transport/http"
 	"github.com/limes-cloud/manager/internal/domain/entity"
 	"github.com/limes-cloud/manager/internal/domain/service"
 	"github.com/limes-cloud/manager/internal/infra/dbs"
@@ -58,9 +61,25 @@ func (fd *RoleEntity) ListRoleEntity(c context.Context, req *roleentity.ListRole
 
 	// 处理请求参数
 	reply := roleentity.ListRoleEntityReply{Total: total}
-	if err := value.Transform(list, &reply.List); err != nil {
-		ctx.Logger().Errorw("msg", "list role req transform error", "err", err)
-		return nil, errors.TransformError()
+	for _, v := range list {
+		item := &roleentity.ListRoleEntityReply_Data{
+			Id:        v.Id,
+			RoleId:    v.RoleId,
+			EntityId:  v.EntityId,
+			Action:    v.Action,
+			Scope:     v.Scope,
+			CreatedAt: uint32(v.CreatedAt),
+			UpdatedAt: uint32(v.UpdatedAt),
+			Entity: &roleentity.ListRoleEntityReply_Entity{
+				Id:      v.Entity.Id,
+				Name:    v.Entity.Name,
+				Comment: v.Entity.Comment,
+			},
+		}
+		_ = json.Unmarshal([]byte(v.Fields), &item.Fields)
+		_ = json.Unmarshal([]byte(v.Rules), &item.Rules)
+		_ = json.Unmarshal([]byte(v.Depts), &item.Depts)
+		reply.List = append(reply.List, item)
 	}
 
 	return &reply, nil
@@ -68,17 +87,17 @@ func (fd *RoleEntity) ListRoleEntity(c context.Context, req *roleentity.ListRole
 
 // CreateRoleEntity 创建用户字段
 func (fd *RoleEntity) CreateRoleEntity(c context.Context, req *roleentity.CreateRoleEntityRequest) (*roleentity.CreateRoleEntityReply, error) {
-	var (
-		ctx = core.MustContext(c)
-		in  = entity.RoleEntity{}
-	)
+	ctx := core.MustContext(c)
 
-	if err := value.Transform(req, &in); err != nil {
-		ctx.Logger().Errorw("msg", "create role req transform error", "err", err)
-		return nil, errors.TransformError()
-	}
-
-	id, err := fd.srv.CreateRoleEntity(ctx, &in)
+	id, err := fd.srv.CreateRoleEntity(ctx, &entity.RoleEntity{
+		RoleId:   req.RoleId,
+		EntityId: req.EntityId,
+		Action:   req.Action,
+		Scope:    req.Scope,
+		Fields:   value.ObjToString(req.Fields),
+		Rules:    value.ObjToString(req.Rules),
+		Depts:    value.ObjToString(req.Depts),
+	})
 	if err != nil {
 		return nil, err
 	}
@@ -87,17 +106,18 @@ func (fd *RoleEntity) CreateRoleEntity(c context.Context, req *roleentity.Create
 
 // UpdateRoleEntity 更新用户字段
 func (fd *RoleEntity) UpdateRoleEntity(c context.Context, req *roleentity.UpdateRoleEntityRequest) (*roleentity.UpdateRoleEntityReply, error) {
-	var (
-		ctx = core.MustContext(c)
-		in  = entity.RoleEntity{}
-	)
+	ctx := core.MustContext(c)
 
-	if err := value.Transform(req, &in); err != nil {
-		ctx.Logger().Errorw("msg", "update role req transform error", "err", err)
-		return nil, errors.TransformError()
-	}
-
-	err := fd.srv.UpdateRoleEntity(ctx, &in)
+	err := fd.srv.UpdateRoleEntity(ctx, &entity.RoleEntity{
+		BaseModel: model.BaseModel{Id: req.Id},
+		RoleId:    value.Value(req.RoleId),
+		EntityId:  value.Value(req.EntityId),
+		Action:    value.Value(req.Action),
+		Scope:     value.Value(req.Scope),
+		Fields:    value.ObjToString(req.Fields),
+		Rules:     value.ObjToString(req.Rules),
+		Depts:     value.ObjToString(req.Depts),
+	})
 	if err != nil {
 		return nil, err
 	}

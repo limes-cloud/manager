@@ -1,0 +1,50 @@
+syntax = "proto3";
+
+package manager.api.oauther;
+
+option go_package = "manager/api/oauther;oauther";
+option java_multiple_files = true;
+option java_package = "manager.api.oauther";
+
+import "api/oauther/proto/oauther.proto";
+import "google/api/annotations.proto";
+
+
+service OAuther{
+  // ListOAutherType 获取登陆渠道可用列表
+  rpc ListOAutherType (ListOAutherTypeRequest) returns (ListOAutherTypeReply) {
+    option (google.api.http) = {
+      get: "/manager/api/oauther/types",
+    };
+  }
+
+  // ListOAuther 获取登陆渠道列表
+  rpc ListOAuther (ListOAutherRequest) returns (ListOAutherReply) {
+    option (google.api.http) = {
+      get: "/manager/api/oauthers",
+    };
+  }
+
+  // CreateOAuther 创建登陆渠道
+  rpc CreateOAuther (CreateOAutherRequest) returns (CreateOAutherReply) {
+    option (google.api.http) = {
+      post: "/manager/api/oauther",
+      body: "*"
+    };
+  }
+
+  // UpdateOAuther 更新登陆渠道
+  rpc UpdateOAuther (UpdateOAutherRequest) returns (UpdateOAutherReply) {
+    option (google.api.http) = {
+      put: "/manager/api/oauther",
+      body: "*"
+    };
+  }
+
+  // DeleteOAuther 删除登陆渠道
+  rpc DeleteOAuther (DeleteOAutherRequest) returns (DeleteOAutherReply) {
+    option (google.api.http) = {
+      delete: "/manager/api/oauther",
+    };
+  }
+}

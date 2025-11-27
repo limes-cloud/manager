@@ -7,7 +7,11 @@ import (
 )
 
 type TenantApp interface {
+	// GetAppIds 获取租户应用ID列表
 	GetAppIds(tid uint32) []uint32
+
+	// GetTenantApp 获取租户应用
+	GetTenantApp(ctx core.Context, req *types.GetTenantAppRequest) (*entity.TenantApp, error)
 
 	// ListTenantApp 获取租户应用列表
 	ListTenantApp(ctx core.Context, req *types.ListTenantAppRequest) ([]*entity.TenantApp, uint32, error)
@@ -21,6 +25,9 @@ type TenantApp interface {
 	// DeleteTenantApp 删除租户应用
 	DeleteTenantApp(ctx core.Context, tid uint32, aid uint32) error
 
+	// GetTenantMenuIds 获取租户的菜单ids
+	GetTenantMenuIds(tid uint32) []uint32
+
 	// GetTenantAppMenuIds 获取租户应用的菜单ids
 	GetTenantAppMenuIds(ctx core.Context, tid uint32, aid uint32) ([]uint32, error)
 
@@ -29,6 +36,4 @@ type TenantApp interface {
 
 	// DeleteTenantAppMenuIds 获取租户应用的菜单ids
 	DeleteTenantAppMenuIds(ctx core.Context, tid, aid uint32, mids []uint32) error
-
-	GetTenantMenuIds(tid uint32) []uint32
 }

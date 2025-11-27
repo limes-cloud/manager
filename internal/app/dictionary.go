@@ -3,14 +3,15 @@ package app
 import (
 	"context"
 
+	"github.com/go-kratos/kratos/v2/transport/grpc"
+	"github.com/go-kratos/kratos/v2/transport/http"
+
 	"github.com/limes-cloud/kratosx/pkg/value"
 
 	"github.com/limes-cloud/kratosx/model"
 	"github.com/limes-cloud/manager/api/dictionary"
 	"github.com/limes-cloud/manager/api/errors"
 
-	"github.com/go-kratos/kratos/v2/transport/grpc"
-	"github.com/go-kratos/kratos/v2/transport/http"
 	"github.com/limes-cloud/kratosx"
 
 	"github.com/limes-cloud/manager/internal/domain/entity"
@@ -173,6 +174,7 @@ func (s *Dictionary) UpdateDictionaryValue(c context.Context, req *dictionary.Up
 		Type:         req.Type,
 		Extra:        req.Extra,
 		Description:  req.Description,
+		Status:       req.Status,
 	}); err != nil {
 		return nil, err
 	}

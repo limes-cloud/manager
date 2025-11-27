@@ -3,6 +3,9 @@ package app
 import (
 	"context"
 
+	"github.com/go-kratos/kratos/v2/transport/grpc"
+	"github.com/go-kratos/kratos/v2/transport/http"
+
 	"github.com/limes-cloud/manager/internal/domain/entity"
 
 	"github.com/limes-cloud/manager/internal/types"
@@ -10,8 +13,6 @@ import (
 	"github.com/limes-cloud/kratosx/pkg/value"
 	"github.com/limes-cloud/manager/api/errors"
 
-	"github.com/go-kratos/kratos/v2/transport/grpc"
-	"github.com/go-kratos/kratos/v2/transport/http"
 	"github.com/limes-cloud/manager/api/dept"
 	"github.com/limes-cloud/manager/internal/core"
 	"github.com/limes-cloud/manager/internal/domain/service"
@@ -128,6 +129,9 @@ func (app *Dept) CreateDept(c context.Context, req *dept.CreateDeptRequest) (*de
 	if err := value.Transform(req, &in); err != nil {
 		ctx.Logger().Errorw("msg", "create dept req transform error", "err", err)
 		return nil, errors.TransformError()
+	}
+	if in.ParentId == nil {
+		in.ParentId = value.Pointer(uint32(0))
 	}
 
 	// 调用服务

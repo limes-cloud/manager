@@ -27,7 +27,6 @@ const (
 	OperationRoleDeleteRole      = "/manager.api.role.Role/DeleteRole"
 	OperationRoleGetRole         = "/manager.api.role.Role/GetRole"
 	OperationRoleListCurrentRole = "/manager.api.role.Role/ListCurrentRole"
-	OperationRoleListRole        = "/manager.api.role.Role/ListRole"
 	OperationRoleUpdateRole      = "/manager.api.role.Role/UpdateRole"
 )
 
@@ -40,20 +39,17 @@ type RoleHTTPServer interface {
 	GetRole(context.Context, *GetRoleRequest) (*GetRoleReply, error)
 	// ListCurrentRole ListRole 获取角色信息列表
 	ListCurrentRole(context.Context, *ListRoleRequest) (*ListRoleReply, error)
-	// ListRole ListRole 获取角色信息列表
-	ListRole(context.Context, *ListRoleRequest) (*ListRoleReply, error)
 	// UpdateRole UpdateRole 更新角色信息
 	UpdateRole(context.Context, *UpdateRoleRequest) (*UpdateRoleReply, error)
 }
 
 func RegisterRoleHTTPServer(s *http.Server, srv RoleHTTPServer) {
 	r := s.Route("/")
-	r.GET("/manager/api/v1/role", _Role_GetRole0_HTTP_Handler(srv))
-	r.GET("/manager/api/v1/current/roles", _Role_ListCurrentRole0_HTTP_Handler(srv))
-	r.GET("/manager/api/v1/roles", _Role_ListRole0_HTTP_Handler(srv))
-	r.POST("/manager/api/v1/role", _Role_CreateRole0_HTTP_Handler(srv))
-	r.PUT("/manager/api/v1/role", _Role_UpdateRole0_HTTP_Handler(srv))
-	r.DELETE("/manager/api/v1/role", _Role_DeleteRole0_HTTP_Handler(srv))
+	r.GET("/manager/api/role", _Role_GetRole0_HTTP_Handler(srv))
+	r.GET("/manager/api/current/roles", _Role_ListCurrentRole0_HTTP_Handler(srv))
+	r.POST("/manager/api/role", _Role_CreateRole0_HTTP_Handler(srv))
+	r.PUT("/manager/api/role", _Role_UpdateRole0_HTTP_Handler(srv))
+	r.DELETE("/manager/api/role", _Role_DeleteRole0_HTTP_Handler(srv))
 }
 
 func _Role_GetRole0_HTTP_Handler(srv RoleHTTPServer) func(ctx http.Context) error {
@@ -84,25 +80,6 @@ func _Role_ListCurrentRole0_HTTP_Handler(srv RoleHTTPServer) func(ctx http.Conte
 		http.SetOperation(ctx, OperationRoleListCurrentRole)
 		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
 			return srv.ListCurrentRole(ctx, req.(*ListRoleRequest))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*ListRoleReply)
-		return ctx.Result(200, reply)
-	}
-}
-
-func _Role_ListRole0_HTTP_Handler(srv RoleHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in ListRoleRequest
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationRoleListRole)
-		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
-			return srv.ListRole(ctx, req.(*ListRoleRequest))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
@@ -181,7 +158,6 @@ type RoleHTTPClient interface {
 	DeleteRole(ctx context.Context, req *DeleteRoleRequest, opts ...http.CallOption) (rsp *DeleteRoleReply, err error)
 	GetRole(ctx context.Context, req *GetRoleRequest, opts ...http.CallOption) (rsp *GetRoleReply, err error)
 	ListCurrentRole(ctx context.Context, req *ListRoleRequest, opts ...http.CallOption) (rsp *ListRoleReply, err error)
-	ListRole(ctx context.Context, req *ListRoleRequest, opts ...http.CallOption) (rsp *ListRoleReply, err error)
 	UpdateRole(ctx context.Context, req *UpdateRoleRequest, opts ...http.CallOption) (rsp *UpdateRoleReply, err error)
 }
 
@@ -195,7 +171,7 @@ func NewRoleHTTPClient(client *http.Client) RoleHTTPClient {
 
 func (c *RoleHTTPClientImpl) CreateRole(ctx context.Context, in *CreateRoleRequest, opts ...http.CallOption) (*CreateRoleReply, error) {
 	var out CreateRoleReply
-	pattern := "/manager/api/v1/role"
+	pattern := "/manager/api/role"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationRoleCreateRole))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -208,7 +184,7 @@ func (c *RoleHTTPClientImpl) CreateRole(ctx context.Context, in *CreateRoleReque
 
 func (c *RoleHTTPClientImpl) DeleteRole(ctx context.Context, in *DeleteRoleRequest, opts ...http.CallOption) (*DeleteRoleReply, error) {
 	var out DeleteRoleReply
-	pattern := "/manager/api/v1/role"
+	pattern := "/manager/api/role"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationRoleDeleteRole))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -221,7 +197,7 @@ func (c *RoleHTTPClientImpl) DeleteRole(ctx context.Context, in *DeleteRoleReque
 
 func (c *RoleHTTPClientImpl) GetRole(ctx context.Context, in *GetRoleRequest, opts ...http.CallOption) (*GetRoleReply, error) {
 	var out GetRoleReply
-	pattern := "/manager/api/v1/role"
+	pattern := "/manager/api/role"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationRoleGetRole))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -234,7 +210,7 @@ func (c *RoleHTTPClientImpl) GetRole(ctx context.Context, in *GetRoleRequest, op
 
 func (c *RoleHTTPClientImpl) ListCurrentRole(ctx context.Context, in *ListRoleRequest, opts ...http.CallOption) (*ListRoleReply, error) {
 	var out ListRoleReply
-	pattern := "/manager/api/v1/current/roles"
+	pattern := "/manager/api/current/roles"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationRoleListCurrentRole))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -245,22 +221,9 @@ func (c *RoleHTTPClientImpl) ListCurrentRole(ctx context.Context, in *ListRoleRe
 	return &out, err
 }
 
-func (c *RoleHTTPClientImpl) ListRole(ctx context.Context, in *ListRoleRequest, opts ...http.CallOption) (*ListRoleReply, error) {
-	var out ListRoleReply
-	pattern := "/manager/api/v1/roles"
-	path := binding.EncodeURL(pattern, in, true)
-	opts = append(opts, http.Operation(OperationRoleListRole))
-	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return &out, err
-}
-
 func (c *RoleHTTPClientImpl) UpdateRole(ctx context.Context, in *UpdateRoleRequest, opts ...http.CallOption) (*UpdateRoleReply, error) {
 	var out UpdateRoleReply
-	pattern := "/manager/api/v1/role"
+	pattern := "/manager/api/role"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationRoleUpdateRole))
 	opts = append(opts, http.PathTemplate(pattern))

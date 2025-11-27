@@ -5,7 +5,6 @@ server:
     host: 127.0.0.1
     port: 7010
     timeout: 10s
-    formatResponse: false
     marshal:
       emitUnpopulated: true
       useProtoNames: true
@@ -41,7 +40,7 @@ database:
       password: root
       host: 127.0.0.1
       port: 3306
-      dbName: user_center
+      dbName: ns_manager
       option: ?charset=utf8mb4&parseTime=True&loc=Local
     config:
       transformError:
@@ -70,32 +69,11 @@ captcha:
     expire: 180s
     redis: cache
     refresh: true
-  changePassword:
-    type: email
+  email:
     length: 6
     expire: 180s
     redis: cache
-    template: captcha
-loader:
-  login: static/cert/login.pem
-email:
-  template:
-    captcha:
-      subject: 验证码发送通知
-      path: static/template/email/default.html
-      from: 统一应用管理中心
-      type: text/html
-  user: 860808187@qq.com
-  name: 青岑云
-  host: smtp.qq.com
-  port: 25
-  password: fyudafdzqmhwbfbd
-jwt:
-  redis: cache
-  secret: limes-cloud-test1
-  expire: 12h
-  renewal: 1h
-  whitelist: {"POST:/manager/api/v1/oauth/bind":true,"GET:/manager/api/v1/app":true,"POST:/manager/api/v1/login":true,"POST:/manager/api/v1/logout":true,"POST:/manager/api/v1/token/refresh":true,"GET:/manager/api/v1/system/setting":true,"GET:/manager/api/v1/login/captcha":true,"GET:/manager/api/v1/tenants":true,"GET:/manager/api/v1/app/tenant/channels":true,"POST:/manager/api/v1/oauth/handler":true,"POST:/manager/api/v1/oauth/login":true,"POST:/manager/api/v1/token/parse":true,"GRPC:/manager.api.auth.Auth/ParseToken":true, }
+    refreshTime: 60s
 pool: #并非池配置
   size: 10000 #最大协程数量
   expiryDuration: 30s #过期时间
@@ -103,6 +81,18 @@ pool: #并非池配置
   maxBlockingTasks: 1000 #最大的并发任务
   nonblocking: true #设置为true时maxBlockingTasks将失效，不限制并发任务
 business:
-  changePasswordType: password
-  defaultUserPassword: 12345678
-  setting: {"title":"统一应用管理平台","desc":"开放协作，拥抱未来，统一应用管理平台","copyright":"Copyright © 2024-2025 withu.baidu.com . All rights reserved.","logo":"http://p3-armor.byteimg.com/tos-cn-i-49unhts6dw/dfdba5317c0c20ce20e64fac803d52bc.svg~tplv-49unhts6dw-image.image","watermark":"emotion admin"}
+  setting:
+    title: "统一应用管理平台"
+    desc: "开放协作，拥抱未来，统一应用管理平台"
+    copyright: "Copyright © 2024-2025 withu.baidu.com . All rights reserved."
+    logo: "http://p3-armor.byteimg.com/tos-cn-i-49unhts6dw/dfdba5317c0c20ce20e64fac803d52bc.svg~tplv-49unhts6dw-image.image",
+    watermark: "GoPlatform"
+  jwt:
+    whitelist:
+      /manager/api/system/setting:GET: true
+      /manager/api/authorize/oauthers:GET: true
+      /manager/api/authorize/captcha/image:GET: true
+      /manager/api/authorize/login:POST: true
+      /manager/api/sample/app:GET: true
+      /manager/api/app/tenants:GET: true
+

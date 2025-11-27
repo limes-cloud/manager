@@ -355,6 +355,10 @@ func (m *ListFieldRequest) validate(all bool) error {
 		// no validation rules for Status
 	}
 
+	if m.Required != nil {
+		// no validation rules for Required
+	}
+
 	if len(errors) > 0 {
 		return ListFieldRequestMultiError(errors)
 	}
@@ -579,6 +583,244 @@ var _ interface {
 	ErrorName() string
 } = ListFieldReplyValidationError{}
 
+// Validate checks the field values on ListRequiredFieldRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *ListRequiredFieldRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on ListRequiredFieldRequest with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// ListRequiredFieldRequestMultiError, or nil if none found.
+func (m *ListRequiredFieldRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *ListRequiredFieldRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if len(errors) > 0 {
+		return ListRequiredFieldRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// ListRequiredFieldRequestMultiError is an error wrapping multiple validation
+// errors returned by ListRequiredFieldRequest.ValidateAll() if the designated
+// constraints aren't met.
+type ListRequiredFieldRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m ListRequiredFieldRequestMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m ListRequiredFieldRequestMultiError) AllErrors() []error { return m }
+
+// ListRequiredFieldRequestValidationError is the validation error returned by
+// ListRequiredFieldRequest.Validate if the designated constraints aren't met.
+type ListRequiredFieldRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e ListRequiredFieldRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e ListRequiredFieldRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e ListRequiredFieldRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e ListRequiredFieldRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e ListRequiredFieldRequestValidationError) ErrorName() string {
+	return "ListRequiredFieldRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e ListRequiredFieldRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sListRequiredFieldRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = ListRequiredFieldRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = ListRequiredFieldRequestValidationError{}
+
+// Validate checks the field values on ListRequiredFieldReply with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *ListRequiredFieldReply) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on ListRequiredFieldReply with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// ListRequiredFieldReplyMultiError, or nil if none found.
+func (m *ListRequiredFieldReply) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *ListRequiredFieldReply) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	for idx, item := range m.GetList() {
+		_, _ = idx, item
+
+		if all {
+			switch v := interface{}(item).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, ListRequiredFieldReplyValidationError{
+						field:  fmt.Sprintf("List[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, ListRequiredFieldReplyValidationError{
+						field:  fmt.Sprintf("List[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return ListRequiredFieldReplyValidationError{
+					field:  fmt.Sprintf("List[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	if len(errors) > 0 {
+		return ListRequiredFieldReplyMultiError(errors)
+	}
+
+	return nil
+}
+
+// ListRequiredFieldReplyMultiError is an error wrapping multiple validation
+// errors returned by ListRequiredFieldReply.ValidateAll() if the designated
+// constraints aren't met.
+type ListRequiredFieldReplyMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m ListRequiredFieldReplyMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m ListRequiredFieldReplyMultiError) AllErrors() []error { return m }
+
+// ListRequiredFieldReplyValidationError is the validation error returned by
+// ListRequiredFieldReply.Validate if the designated constraints aren't met.
+type ListRequiredFieldReplyValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e ListRequiredFieldReplyValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e ListRequiredFieldReplyValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e ListRequiredFieldReplyValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e ListRequiredFieldReplyValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e ListRequiredFieldReplyValidationError) ErrorName() string {
+	return "ListRequiredFieldReplyValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e ListRequiredFieldReplyValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sListRequiredFieldReply.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = ListRequiredFieldReplyValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = ListRequiredFieldReplyValidationError{}
+
 // Validate checks the field values on CreateFieldRequest with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
@@ -633,6 +875,10 @@ func (m *CreateFieldRequest) validate(all bool) error {
 		}
 		errors = append(errors, err)
 	}
+
+	// no validation rules for Required
+
+	// no validation rules for Unique
 
 	if m.Description != nil {
 		// no validation rules for Description
@@ -861,6 +1107,14 @@ func (m *UpdateFieldRequest) validate(all bool) error {
 
 	if m.Status != nil {
 		// no validation rules for Status
+	}
+
+	if m.Required != nil {
+		// no validation rules for Required
+	}
+
+	if m.Unique != nil {
+		// no validation rules for Unique
 	}
 
 	if m.Description != nil {
@@ -1408,6 +1662,14 @@ func (m *ListFieldReply_Field) validate(all bool) error {
 		// no validation rules for Description
 	}
 
+	if m.Required != nil {
+		// no validation rules for Required
+	}
+
+	if m.Unique != nil {
+		// no validation rules for Unique
+	}
+
 	if len(errors) > 0 {
 		return ListFieldReply_FieldMultiError(errors)
 	}
@@ -1487,3 +1749,112 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = ListFieldReply_FieldValidationError{}
+
+// Validate checks the field values on ListRequiredFieldReply_Field with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *ListRequiredFieldReply_Field) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on ListRequiredFieldReply_Field with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// ListRequiredFieldReply_FieldMultiError, or nil if none found.
+func (m *ListRequiredFieldReply_Field) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *ListRequiredFieldReply_Field) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Keyword
+
+	// no validation rules for Type
+
+	// no validation rules for Name
+
+	if len(errors) > 0 {
+		return ListRequiredFieldReply_FieldMultiError(errors)
+	}
+
+	return nil
+}
+
+// ListRequiredFieldReply_FieldMultiError is an error wrapping multiple
+// validation errors returned by ListRequiredFieldReply_Field.ValidateAll() if
+// the designated constraints aren't met.
+type ListRequiredFieldReply_FieldMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m ListRequiredFieldReply_FieldMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m ListRequiredFieldReply_FieldMultiError) AllErrors() []error { return m }
+
+// ListRequiredFieldReply_FieldValidationError is the validation error returned
+// by ListRequiredFieldReply_Field.Validate if the designated constraints
+// aren't met.
+type ListRequiredFieldReply_FieldValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e ListRequiredFieldReply_FieldValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e ListRequiredFieldReply_FieldValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e ListRequiredFieldReply_FieldValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e ListRequiredFieldReply_FieldValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e ListRequiredFieldReply_FieldValidationError) ErrorName() string {
+	return "ListRequiredFieldReply_FieldValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e ListRequiredFieldReply_FieldValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sListRequiredFieldReply_Field.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = ListRequiredFieldReply_FieldValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = ListRequiredFieldReply_FieldValidationError{}

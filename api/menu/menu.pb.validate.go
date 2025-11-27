@@ -57,11 +57,7 @@ func (m *ListCurrentMenuRequest) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for FilterRoot
-
-	// no validation rules for FilterBaseApi
-
-	// no validation rules for FilterTenant
+	// no validation rules for OnlyMenu
 
 	if m.AppId != nil {
 		if m.GetAppId() < 1 {
@@ -189,10 +185,6 @@ func (m *ListMenuRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	if m.FilterBaseApi != nil {
-		// no validation rules for FilterBaseApi
-	}
-
 	if len(errors) > 0 {
 		return ListMenuRequestMultiError(errors)
 	}
@@ -270,209 +262,6 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = ListMenuRequestValidationError{}
-
-// Validate checks the field values on MenuValue with the rules defined in the
-// proto definition for this message. If any rules are violated, the first
-// error encountered is returned, or nil if there are no violations.
-func (m *MenuValue) Validate() error {
-	return m.validate(false)
-}
-
-// ValidateAll checks the field values on MenuValue with the rules defined in
-// the proto definition for this message. If any rules are violated, the
-// result is a list of violation errors wrapped in MenuValueMultiError, or nil
-// if none found.
-func (m *MenuValue) ValidateAll() error {
-	return m.validate(true)
-}
-
-func (m *MenuValue) validate(all bool) error {
-	if m == nil {
-		return nil
-	}
-
-	var errors []error
-
-	// no validation rules for Id
-
-	// no validation rules for AppId
-
-	// no validation rules for ParentId
-
-	// no validation rules for Title
-
-	// no validation rules for Type
-
-	// no validation rules for CreatedAt
-
-	// no validation rules for UpdatedAt
-
-	for idx, item := range m.GetChildren() {
-		_, _ = idx, item
-
-		if all {
-			switch v := interface{}(item).(type) {
-			case interface{ ValidateAll() error }:
-				if err := v.ValidateAll(); err != nil {
-					errors = append(errors, MenuValueValidationError{
-						field:  fmt.Sprintf("Children[%v]", idx),
-						reason: "embedded message failed validation",
-						cause:  err,
-					})
-				}
-			case interface{ Validate() error }:
-				if err := v.Validate(); err != nil {
-					errors = append(errors, MenuValueValidationError{
-						field:  fmt.Sprintf("Children[%v]", idx),
-						reason: "embedded message failed validation",
-						cause:  err,
-					})
-				}
-			}
-		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
-			if err := v.Validate(); err != nil {
-				return MenuValueValidationError{
-					field:  fmt.Sprintf("Children[%v]", idx),
-					reason: "embedded message failed validation",
-					cause:  err,
-				}
-			}
-		}
-
-	}
-
-	if m.Keyword != nil {
-		// no validation rules for Keyword
-	}
-
-	if m.Icon != nil {
-		// no validation rules for Icon
-	}
-
-	if m.Api != nil {
-		// no validation rules for Api
-	}
-
-	if m.Method != nil {
-		// no validation rules for Method
-	}
-
-	if m.Path != nil {
-		// no validation rules for Path
-	}
-
-	if m.Permission != nil {
-		// no validation rules for Permission
-	}
-
-	if m.Component != nil {
-		// no validation rules for Component
-	}
-
-	if m.Redirect != nil {
-		// no validation rules for Redirect
-	}
-
-	if m.Weight != nil {
-		// no validation rules for Weight
-	}
-
-	if m.IsIframe != nil {
-		// no validation rules for IsIframe
-	}
-
-	if m.IsHidden != nil {
-		// no validation rules for IsHidden
-	}
-
-	if m.IsCache != nil {
-		// no validation rules for IsCache
-	}
-
-	if m.IsHome != nil {
-		// no validation rules for IsHome
-	}
-
-	if m.IsAffix != nil {
-		// no validation rules for IsAffix
-	}
-
-	if len(errors) > 0 {
-		return MenuValueMultiError(errors)
-	}
-
-	return nil
-}
-
-// MenuValueMultiError is an error wrapping multiple validation errors returned
-// by MenuValue.ValidateAll() if the designated constraints aren't met.
-type MenuValueMultiError []error
-
-// Error returns a concatenation of all the error messages it wraps.
-func (m MenuValueMultiError) Error() string {
-	var msgs []string
-	for _, err := range m {
-		msgs = append(msgs, err.Error())
-	}
-	return strings.Join(msgs, "; ")
-}
-
-// AllErrors returns a list of validation violation errors.
-func (m MenuValueMultiError) AllErrors() []error { return m }
-
-// MenuValueValidationError is the validation error returned by
-// MenuValue.Validate if the designated constraints aren't met.
-type MenuValueValidationError struct {
-	field  string
-	reason string
-	cause  error
-	key    bool
-}
-
-// Field function returns field value.
-func (e MenuValueValidationError) Field() string { return e.field }
-
-// Reason function returns reason value.
-func (e MenuValueValidationError) Reason() string { return e.reason }
-
-// Cause function returns cause value.
-func (e MenuValueValidationError) Cause() error { return e.cause }
-
-// Key function returns key value.
-func (e MenuValueValidationError) Key() bool { return e.key }
-
-// ErrorName returns error name.
-func (e MenuValueValidationError) ErrorName() string { return "MenuValueValidationError" }
-
-// Error satisfies the builtin error interface
-func (e MenuValueValidationError) Error() string {
-	cause := ""
-	if e.cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.cause)
-	}
-
-	key := ""
-	if e.key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %sMenuValue.%s: %s%s",
-		key,
-		e.field,
-		e.reason,
-		cause)
-}
-
-var _ error = MenuValueValidationError{}
-
-var _ interface {
-	Field() string
-	Reason() string
-	Key() bool
-	Cause() error
-	ErrorName() string
-} = MenuValueValidationError{}
 
 // Validate checks the field values on ListMenuReply with the rules defined in
 // the proto definition for this message. If any rules are violated, the first
@@ -693,8 +482,8 @@ func (m *CreateMenuRequest) validate(all bool) error {
 		// no validation rules for Component
 	}
 
-	if m.Redirect != nil {
-		// no validation rules for Redirect
+	if m.Url != nil {
+		// no validation rules for Url
 	}
 
 	if m.Weight != nil {
@@ -936,28 +725,34 @@ func (m *UpdateMenuRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	// no validation rules for ParentId
-
-	if utf8.RuneCountInString(m.GetTitle()) < 1 {
-		err := UpdateMenuRequestValidationError{
-			field:  "Title",
-			reason: "value length must be at least 1 runes",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
+	if m.ParentId != nil {
+		// no validation rules for ParentId
 	}
 
-	if utf8.RuneCountInString(m.GetType()) < 1 {
-		err := UpdateMenuRequestValidationError{
-			field:  "Type",
-			reason: "value length must be at least 1 runes",
+	if m.Title != nil {
+		if utf8.RuneCountInString(m.GetTitle()) < 1 {
+			err := UpdateMenuRequestValidationError{
+				field:  "Title",
+				reason: "value length must be at least 1 runes",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
 		}
-		if !all {
-			return err
+	}
+
+	if m.Type != nil {
+		if utf8.RuneCountInString(m.GetType()) < 1 {
+			err := UpdateMenuRequestValidationError{
+				field:  "Type",
+				reason: "value length must be at least 1 runes",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
 		}
-		errors = append(errors, err)
 	}
 
 	if m.Keyword != nil {
@@ -988,8 +783,8 @@ func (m *UpdateMenuRequest) validate(all bool) error {
 		// no validation rules for Component
 	}
 
-	if m.Redirect != nil {
-		// no validation rules for Redirect
+	if m.Url != nil {
+		// no validation rules for Url
 	}
 
 	if m.Weight != nil {
@@ -1408,3 +1203,213 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = DeleteMenuReplyValidationError{}
+
+// Validate checks the field values on ListMenuReply_Data with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *ListMenuReply_Data) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on ListMenuReply_Data with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// ListMenuReply_DataMultiError, or nil if none found.
+func (m *ListMenuReply_Data) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *ListMenuReply_Data) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Id
+
+	// no validation rules for AppId
+
+	// no validation rules for ParentId
+
+	// no validation rules for Title
+
+	// no validation rules for Type
+
+	// no validation rules for CreatedAt
+
+	// no validation rules for UpdatedAt
+
+	for idx, item := range m.GetChildren() {
+		_, _ = idx, item
+
+		if all {
+			switch v := interface{}(item).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, ListMenuReply_DataValidationError{
+						field:  fmt.Sprintf("Children[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, ListMenuReply_DataValidationError{
+						field:  fmt.Sprintf("Children[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return ListMenuReply_DataValidationError{
+					field:  fmt.Sprintf("Children[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	if m.Keyword != nil {
+		// no validation rules for Keyword
+	}
+
+	if m.Icon != nil {
+		// no validation rules for Icon
+	}
+
+	if m.Api != nil {
+		// no validation rules for Api
+	}
+
+	if m.Method != nil {
+		// no validation rules for Method
+	}
+
+	if m.Path != nil {
+		// no validation rules for Path
+	}
+
+	if m.Permission != nil {
+		// no validation rules for Permission
+	}
+
+	if m.Component != nil {
+		// no validation rules for Component
+	}
+
+	if m.Url != nil {
+		// no validation rules for Url
+	}
+
+	if m.Redirect != nil {
+		// no validation rules for Redirect
+	}
+
+	if m.Weight != nil {
+		// no validation rules for Weight
+	}
+
+	if m.IsIframe != nil {
+		// no validation rules for IsIframe
+	}
+
+	if m.IsHidden != nil {
+		// no validation rules for IsHidden
+	}
+
+	if m.IsCache != nil {
+		// no validation rules for IsCache
+	}
+
+	if m.IsHome != nil {
+		// no validation rules for IsHome
+	}
+
+	if m.IsAffix != nil {
+		// no validation rules for IsAffix
+	}
+
+	if len(errors) > 0 {
+		return ListMenuReply_DataMultiError(errors)
+	}
+
+	return nil
+}
+
+// ListMenuReply_DataMultiError is an error wrapping multiple validation errors
+// returned by ListMenuReply_Data.ValidateAll() if the designated constraints
+// aren't met.
+type ListMenuReply_DataMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m ListMenuReply_DataMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m ListMenuReply_DataMultiError) AllErrors() []error { return m }
+
+// ListMenuReply_DataValidationError is the validation error returned by
+// ListMenuReply_Data.Validate if the designated constraints aren't met.
+type ListMenuReply_DataValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e ListMenuReply_DataValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e ListMenuReply_DataValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e ListMenuReply_DataValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e ListMenuReply_DataValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e ListMenuReply_DataValidationError) ErrorName() string {
+	return "ListMenuReply_DataValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e ListMenuReply_DataValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sListMenuReply_Data.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = ListMenuReply_DataValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = ListMenuReply_DataValidationError{}

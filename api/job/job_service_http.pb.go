@@ -42,10 +42,10 @@ type JobHTTPServer interface {
 
 func RegisterJobHTTPServer(s *http.Server, srv JobHTTPServer) {
 	r := s.Route("/")
-	r.GET("/manager/api/v1/jobs", _Job_ListJob0_HTTP_Handler(srv))
-	r.POST("/manager/api/v1/job", _Job_CreateJob0_HTTP_Handler(srv))
-	r.PUT("/manager/api/v1/job", _Job_UpdateJob0_HTTP_Handler(srv))
-	r.DELETE("/manager/api/v1/job", _Job_DeleteJob0_HTTP_Handler(srv))
+	r.GET("/manager/api/jobs", _Job_ListJob0_HTTP_Handler(srv))
+	r.POST("/manager/api/job", _Job_CreateJob0_HTTP_Handler(srv))
+	r.PUT("/manager/api/job", _Job_UpdateJob0_HTTP_Handler(srv))
+	r.DELETE("/manager/api/job", _Job_DeleteJob0_HTTP_Handler(srv))
 }
 
 func _Job_ListJob0_HTTP_Handler(srv JobHTTPServer) func(ctx http.Context) error {
@@ -147,7 +147,7 @@ func NewJobHTTPClient(client *http.Client) JobHTTPClient {
 
 func (c *JobHTTPClientImpl) CreateJob(ctx context.Context, in *CreateJobRequest, opts ...http.CallOption) (*CreateJobReply, error) {
 	var out CreateJobReply
-	pattern := "/manager/api/v1/job"
+	pattern := "/manager/api/job"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationJobCreateJob))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -160,7 +160,7 @@ func (c *JobHTTPClientImpl) CreateJob(ctx context.Context, in *CreateJobRequest,
 
 func (c *JobHTTPClientImpl) DeleteJob(ctx context.Context, in *DeleteJobRequest, opts ...http.CallOption) (*DeleteJobReply, error) {
 	var out DeleteJobReply
-	pattern := "/manager/api/v1/job"
+	pattern := "/manager/api/job"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationJobDeleteJob))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -173,7 +173,7 @@ func (c *JobHTTPClientImpl) DeleteJob(ctx context.Context, in *DeleteJobRequest,
 
 func (c *JobHTTPClientImpl) ListJob(ctx context.Context, in *ListJobRequest, opts ...http.CallOption) (*ListJobReply, error) {
 	var out ListJobReply
-	pattern := "/manager/api/v1/jobs"
+	pattern := "/manager/api/jobs"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationJobListJob))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -186,7 +186,7 @@ func (c *JobHTTPClientImpl) ListJob(ctx context.Context, in *ListJobRequest, opt
 
 func (c *JobHTTPClientImpl) UpdateJob(ctx context.Context, in *UpdateJobRequest, opts ...http.CallOption) (*UpdateJobReply, error) {
 	var out UpdateJobReply
-	pattern := "/manager/api/v1/job"
+	pattern := "/manager/api/job"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationJobUpdateJob))
 	opts = append(opts, http.PathTemplate(pattern))

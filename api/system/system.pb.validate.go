@@ -271,11 +271,9 @@ func (m *GetSystemSettingReply) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for Debug
-
 	// no validation rules for Title
 
-	// no validation rules for Desc
+	// no validation rules for Description
 
 	// no validation rules for Copyright
 
@@ -284,6 +282,52 @@ func (m *GetSystemSettingReply) validate(all bool) error {
 	// no validation rules for ChangePasswordType
 
 	// no validation rules for Watermark
+
+	{
+		sorted_keys := make([]string, len(m.GetDictionaries()))
+		i := 0
+		for key := range m.GetDictionaries() {
+			sorted_keys[i] = key
+			i++
+		}
+		sort.Slice(sorted_keys, func(i, j int) bool { return sorted_keys[i] < sorted_keys[j] })
+		for _, key := range sorted_keys {
+			val := m.GetDictionaries()[key]
+			_ = val
+
+			// no validation rules for Dictionaries[key]
+
+			if all {
+				switch v := interface{}(val).(type) {
+				case interface{ ValidateAll() error }:
+					if err := v.ValidateAll(); err != nil {
+						errors = append(errors, GetSystemSettingReplyValidationError{
+							field:  fmt.Sprintf("Dictionaries[%v]", key),
+							reason: "embedded message failed validation",
+							cause:  err,
+						})
+					}
+				case interface{ Validate() error }:
+					if err := v.Validate(); err != nil {
+						errors = append(errors, GetSystemSettingReplyValidationError{
+							field:  fmt.Sprintf("Dictionaries[%v]", key),
+							reason: "embedded message failed validation",
+							cause:  err,
+						})
+					}
+				}
+			} else if v, ok := interface{}(val).(interface{ Validate() error }); ok {
+				if err := v.Validate(); err != nil {
+					return GetSystemSettingReplyValidationError{
+						field:  fmt.Sprintf("Dictionaries[%v]", key),
+						reason: "embedded message failed validation",
+						cause:  err,
+					}
+				}
+			}
+
+		}
+	}
 
 	if len(errors) > 0 {
 		return GetSystemSettingReplyMultiError(errors)
@@ -364,3 +408,143 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = GetSystemSettingReplyValidationError{}
+
+// Validate checks the field values on
+// GetSystemSettingReply_DictionaryValueList with the rules defined in the
+// proto definition for this message. If any rules are violated, the first
+// error encountered is returned, or nil if there are no violations.
+func (m *GetSystemSettingReply_DictionaryValueList) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on
+// GetSystemSettingReply_DictionaryValueList with the rules defined in the
+// proto definition for this message. If any rules are violated, the result is
+// a list of violation errors wrapped in
+// GetSystemSettingReply_DictionaryValueListMultiError, or nil if none found.
+func (m *GetSystemSettingReply_DictionaryValueList) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *GetSystemSettingReply_DictionaryValueList) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	for idx, item := range m.GetList() {
+		_, _ = idx, item
+
+		if all {
+			switch v := interface{}(item).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, GetSystemSettingReply_DictionaryValueListValidationError{
+						field:  fmt.Sprintf("List[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, GetSystemSettingReply_DictionaryValueListValidationError{
+						field:  fmt.Sprintf("List[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return GetSystemSettingReply_DictionaryValueListValidationError{
+					field:  fmt.Sprintf("List[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	if len(errors) > 0 {
+		return GetSystemSettingReply_DictionaryValueListMultiError(errors)
+	}
+
+	return nil
+}
+
+// GetSystemSettingReply_DictionaryValueListMultiError is an error wrapping
+// multiple validation errors returned by
+// GetSystemSettingReply_DictionaryValueList.ValidateAll() if the designated
+// constraints aren't met.
+type GetSystemSettingReply_DictionaryValueListMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m GetSystemSettingReply_DictionaryValueListMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m GetSystemSettingReply_DictionaryValueListMultiError) AllErrors() []error { return m }
+
+// GetSystemSettingReply_DictionaryValueListValidationError is the validation
+// error returned by GetSystemSettingReply_DictionaryValueList.Validate if the
+// designated constraints aren't met.
+type GetSystemSettingReply_DictionaryValueListValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e GetSystemSettingReply_DictionaryValueListValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e GetSystemSettingReply_DictionaryValueListValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e GetSystemSettingReply_DictionaryValueListValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e GetSystemSettingReply_DictionaryValueListValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e GetSystemSettingReply_DictionaryValueListValidationError) ErrorName() string {
+	return "GetSystemSettingReply_DictionaryValueListValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e GetSystemSettingReply_DictionaryValueListValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sGetSystemSettingReply_DictionaryValueList.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = GetSystemSettingReply_DictionaryValueListValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = GetSystemSettingReply_DictionaryValueListValidationError{}

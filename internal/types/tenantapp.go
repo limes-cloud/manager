@@ -5,10 +5,16 @@ import (
 	"github.com/limes-cloud/kratosx/model/page"
 )
 
+type GetTenantAppRequest struct {
+	AppId    uint32 `json:"appId"`
+	TenantId uint32 `json:"tenantId"` // 租户ID
+}
+
 type ListTenantAppRequest struct {
-	AppName  *string `json:"appName"`
-	TenantId uint32  `json:"tenantId"` // 租户ID
-	page.Search
+	*page.Search
+	AppName    *string `json:"appName"`
+	AppKeyword *string `json:"appKeyword"`
+	TenantId   uint32  `json:"tenantId"` // 租户ID
 }
 
 type CreateTenantAppRequest struct {
@@ -17,6 +23,7 @@ type CreateTenantAppRequest struct {
 	AppId     uint32   `json:"appId"`     // 应用ID
 	ExpiredAt uint32   `json:"expiredAt"` // 过期时间
 	MenuIds   []uint32 `json:"menuIds"`   // 菜单id
+	Setting   string   `json:"setting"`   // 配置
 }
 
 type UpdateTenantAppRequest struct {
@@ -25,4 +32,5 @@ type UpdateTenantAppRequest struct {
 	AppId     uint32   `json:"appId"`     // 应用ID
 	ExpiredAt uint32   `json:"expiredAt"` // 过期时间
 	MenuIds   []uint32 `json:"menuIds"`   // 菜单id
+	Setting   string   `json:"setting"`   // 配置
 }

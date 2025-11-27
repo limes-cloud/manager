@@ -3,6 +3,9 @@ package app
 import (
 	"context"
 
+	"github.com/go-kratos/kratos/v2/transport/grpc"
+	"github.com/go-kratos/kratos/v2/transport/http"
+
 	"github.com/limes-cloud/manager/api/rolemenu"
 
 	"github.com/limes-cloud/manager/internal/infra/dbs"
@@ -11,9 +14,6 @@ import (
 
 	"github.com/limes-cloud/manager/internal/domain/service"
 	"github.com/limes-cloud/manager/internal/types"
-
-	"github.com/go-kratos/kratos/v2/transport/grpc"
-	"github.com/go-kratos/kratos/v2/transport/http"
 )
 
 type RoleMenu struct {
@@ -29,6 +29,7 @@ func NewRoleMenu() *RoleMenu {
 			dbs.NewScope(),
 			dbs.NewMenu(),
 			dbs.NewRole(),
+			dbs.NewTenantAdmin(),
 		),
 	}
 }

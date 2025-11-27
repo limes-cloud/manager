@@ -6,10 +6,12 @@ import (
 
 	"github.com/go-kratos/kratos/v2/transport/grpc"
 	"github.com/go-kratos/kratos/v2/transport/http"
+
+	"github.com/limes-cloud/manager/internal/infra/dbs"
+
 	"github.com/limes-cloud/manager/api/scope"
 	"github.com/limes-cloud/manager/internal/core"
 	"github.com/limes-cloud/manager/internal/domain/service"
-	"github.com/limes-cloud/manager/internal/infra/dbs"
 )
 
 type Scope struct {
@@ -22,7 +24,8 @@ func NewScope() *Scope {
 	return &Scope{
 		srv: service.NewScope(
 			dbs.NewScope(),
-			dbs.NewUser(),
+			dbs.NewUserDept(),
+			dbs.NewTenantAdmin(),
 		),
 	}
 }
@@ -60,13 +63,4 @@ func (app *Scope) GetScope(c context.Context, req *scope.GetScopeRequest) (*scop
 		TenantId:   ent.TenantId(),
 	}
 	return reply, nil
-}
-
-// GetUserDeptId 获取指定角色信息
-func (app *Scope) GetUserDeptId(_ context.Context, req *scope.GetUserDeptIdRequest) (*scope.GetUserDeptIdReply, error) {
-	// 调用服务
-	id := app.srv.GetUserDeptId(req.UserId)
-	return &scope.GetUserDeptIdReply{
-		DeptId: id,
-	}, nil
 }

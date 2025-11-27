@@ -45,21 +45,21 @@ type EntityClient interface {
 	LoadEntity(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*LoadEntityReply, error)
 	// ImportEntity 载入全部系统的实体
 	ImportEntity(ctx context.Context, in *ImportEntityRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	// ListEntity 获取部门信息列表
+	// ListEntity 获取实体列表
 	ListEntity(ctx context.Context, in *ListEntityRequest, opts ...grpc.CallOption) (*ListEntityReply, error)
-	// CreateEntity 创建部门信息
+	// CreateEntity 创建实体
 	CreateEntity(ctx context.Context, in *CreateEntityRequest, opts ...grpc.CallOption) (*CreateEntityReply, error)
-	// UpdateEntity 更新部门信息
+	// UpdateEntity 更新实体
 	UpdateEntity(ctx context.Context, in *UpdateEntityRequest, opts ...grpc.CallOption) (*UpdateEntityReply, error)
-	// DeleteEntity 删除部门信息
+	// DeleteEntity 删除实体
 	DeleteEntity(ctx context.Context, in *DeleteEntityRequest, opts ...grpc.CallOption) (*DeleteEntityReply, error)
-	// ListEntityField 获取部门分类列表
+	// ListEntityField 获取实体字段列表
 	ListEntityField(ctx context.Context, in *ListEntityFieldRequest, opts ...grpc.CallOption) (*ListEntityFieldReply, error)
-	// CreateEntityField 创建部门分类
+	// CreateEntityField 创建实体字段
 	CreateEntityField(ctx context.Context, in *CreateEntityFieldRequest, opts ...grpc.CallOption) (*CreateEntityFieldReply, error)
-	// UpdateEntityField 更新部门分类
+	// UpdateEntityField 更新实体字段
 	UpdateEntityField(ctx context.Context, in *UpdateEntityFieldRequest, opts ...grpc.CallOption) (*UpdateEntityFieldReply, error)
-	// DeleteEntityField 删除部门分类
+	// DeleteEntityField 删除实体字段
 	DeleteEntityField(ctx context.Context, in *DeleteEntityFieldRequest, opts ...grpc.CallOption) (*DeleteEntityFieldReply, error)
 	// ListEntityRule 获取实体规则列表
 	ListEntityRule(ctx context.Context, in *ListEntityRuleRequest, opts ...grpc.CallOption) (*ListEntityRuleReply, error)
@@ -213,21 +213,21 @@ type EntityServer interface {
 	LoadEntity(context.Context, *emptypb.Empty) (*LoadEntityReply, error)
 	// ImportEntity 载入全部系统的实体
 	ImportEntity(context.Context, *ImportEntityRequest) (*emptypb.Empty, error)
-	// ListEntity 获取部门信息列表
+	// ListEntity 获取实体列表
 	ListEntity(context.Context, *ListEntityRequest) (*ListEntityReply, error)
-	// CreateEntity 创建部门信息
+	// CreateEntity 创建实体
 	CreateEntity(context.Context, *CreateEntityRequest) (*CreateEntityReply, error)
-	// UpdateEntity 更新部门信息
+	// UpdateEntity 更新实体
 	UpdateEntity(context.Context, *UpdateEntityRequest) (*UpdateEntityReply, error)
-	// DeleteEntity 删除部门信息
+	// DeleteEntity 删除实体
 	DeleteEntity(context.Context, *DeleteEntityRequest) (*DeleteEntityReply, error)
-	// ListEntityField 获取部门分类列表
+	// ListEntityField 获取实体字段列表
 	ListEntityField(context.Context, *ListEntityFieldRequest) (*ListEntityFieldReply, error)
-	// CreateEntityField 创建部门分类
+	// CreateEntityField 创建实体字段
 	CreateEntityField(context.Context, *CreateEntityFieldRequest) (*CreateEntityFieldReply, error)
-	// UpdateEntityField 更新部门分类
+	// UpdateEntityField 更新实体字段
 	UpdateEntityField(context.Context, *UpdateEntityFieldRequest) (*UpdateEntityFieldReply, error)
-	// DeleteEntityField 删除部门分类
+	// DeleteEntityField 删除实体字段
 	DeleteEntityField(context.Context, *DeleteEntityFieldRequest) (*DeleteEntityFieldReply, error)
 	// ListEntityRule 获取实体规则列表
 	ListEntityRule(context.Context, *ListEntityRuleRequest) (*ListEntityRuleReply, error)

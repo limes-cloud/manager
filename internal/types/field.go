@@ -3,10 +3,13 @@ package types
 import "github.com/limes-cloud/kratosx/model/page"
 
 type ListFieldRequest struct {
-	page.Search
-	Keyword *string `json:"keyword"`
-	Name    *string `json:"name"`
-	Status  *bool   `json:"status"`
+	*page.Search
+	Keywords []string `json:"keywords"`
+	Keyword  *string  `json:"keyword"`
+	Name     *string  `json:"name"`
+	Status   *bool    `json:"status"`
+	Required *bool    `json:"required"`
+	Unique   *bool    `json:"unique"`
 }
 
 type FieldType struct {

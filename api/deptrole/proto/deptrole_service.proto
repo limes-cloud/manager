@@ -13,41 +13,22 @@ service DeptRole {
 
 	rpc ListDeptRole (ListDeptRoleRequest) returns (ListDeptRoleReply){
 		option (google.api.http) = {
-			get: "/manager/api/v1/dept/roles"
+			get: "/manager/api/dept/roles"
 		};
 	}
 
-	rpc CreateDeptRoles (CreateDeptRolesRequest) returns (CreateDeptRolesReply){
+	rpc CreateDeptRole (CreateDeptRoleRequest) returns (CreateDeptRoleReply){
 		option (google.api.http) = {
-			post: "/manager/api/v1/dept/roles",
+			post: "/manager/api/dept/role",
 			body: "*"
 		};
 	}
 
-	rpc DeleteDeptRoles (DeleteDeptRolesRequest) returns (DeleteDeptRolesReply){
+	rpc DeleteDeptRole (DeleteDeptRoleRequest) returns (DeleteDeptRoleReply){
 		option (google.api.http) = {
-			delete: "/manager/api/v1/dept/roles",
+			delete: "/manager/api/dept/role",
 			body: "*"
 		};
 	}
 
-	rpc ListRoleDept (ListRoleDeptRequest) returns (ListRoleDeptReply){
-		option (google.api.http) = {
-			get: "/manager/api/v1/role/depts"
-		};
-	}
-
-	rpc CreateRoleDepts (CreateRoleDeptsRequest) returns (CreateRoleDeptsReply){
-		option (google.api.http) = {
-			post: "/manager/api/v1/role/depts",
-			body: "*"
-		};
-	}
-
-	rpc DeleteRoleDepts (DeleteRoleDeptsRequest) returns (DeleteRoleDeptsReply){
-		option (google.api.http) = {
-			delete: "/manager/api/v1/role/depts",
-			body: "*"
-		};
-	}
 }

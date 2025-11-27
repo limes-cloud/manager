@@ -1,0 +1,74 @@
+syntax = "proto3";
+
+package manager.api.authorize;
+ 
+option go_package = "manager/api/authorize;authorize";
+option java_multiple_files = true;
+option java_package = "manager.api.authorize";
+
+import "google/api/annotations.proto";
+import "api/authorize/proto/authorize.proto";
+
+service Authorize {
+  // ListOAuther 获取登陆渠道信息
+  rpc ListOAuther (ListOAutherRequest) returns (ListOAutherReply) {
+    option (google.api.http) = {
+      get: "/manager/api/authorize/oauthers",
+    };
+  }
+
+  // OAutherHandle 渠道授权处理
+  rpc OAutherHandle (OAutherHandleRequest) returns (OAutherHandleReply) {
+    option (google.api.http) = {
+      post: "/manager/api/authorize/oauther/handler",
+      body: "*"
+    };
+  }
+
+  // OAutherLogin 渠道授权处理
+  rpc OAutherLogin (OAutherLoginRequest) returns (OAutherLoginReply) {
+    option (google.api.http) = {
+      post: "/manager/api/authorize/oauther/login",
+      body: "*"
+    };
+  }
+
+  // OAutherBind 渠道授权绑定
+  rpc OAutherBind (OAutherBindRequest) returns (OAutherBindReply) {
+    option (google.api.http) = {
+      post: "/manager/api/authorize/oauther/bind",
+      body: "*"
+    };
+  }
+
+  // GetImageCaptcha 获取验证码
+  rpc GetImageCaptcha(GetImageCaptchaRequest) returns(GetImageCaptchaReply){
+    option (google.api.http) = {
+      get: "/manager/api/authorize/captcha/image"
+    };
+  }
+
+  // Login 密码登陆
+  rpc Login(LoginRequest) returns(LoginReply){
+    option (google.api.http) = {
+      post: "/manager/api/authorize/login",
+      body: "*"
+    };
+  }
+
+  // Register 注册
+  rpc Register(RegisterRequest) returns(RegisterReply){
+    option (google.api.http) = {
+      post: "/manager/api/authorize/register",
+      body: "*"
+    };
+  }
+
+  // CheckAuth 接口验证
+  rpc CheckAuth(CheckAuthRequest) returns(CheckAuthReply){
+    option (google.api.http) = {
+      post: "/manager/api/authorize/check",
+      body: "*"
+    };
+  }
+}

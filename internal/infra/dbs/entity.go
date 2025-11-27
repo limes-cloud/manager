@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"sync"
 
+	"github.com/limes-cloud/kratosx/model/page"
+
 	"dario.cat/mergo"
 
 	"github.com/limes-cloud/kratosx"
@@ -88,12 +90,24 @@ func (infra *Entity) ListEntityRule(ctx core.Context, req *types.ListEntityRuleR
 	var (
 		list  []*entity.EntityRule
 		total int64
-		fs    = []string{"*"}
 	)
 
-	db := ctx.DB().Model(entity.EntityRule{}).Where("entity_id = ?", req.EntityId).Select(fs)
+	db := ctx.DB().Model(entity.EntityRule{})
+	if req.EntityId != nil {
+		db = db.Where("entity_id = ?", req.EntityId)
+	}
 	if req.Name != nil {
 		db = db.Where("name LIKE ?", *req.Name+"%")
+	}
+
+	if req.Search != nil {
+		// 查询条件下数据总数
+		if err := db.Count(&total).Error; err != nil {
+			return nil, 0, err
+		}
+
+		// 分页排序
+		db = page.SearchScopes(db, req.Search)
 	}
 
 	return list, uint32(total), db.Order("id asc").Find(&list).Error

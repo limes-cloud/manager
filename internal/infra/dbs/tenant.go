@@ -3,6 +3,8 @@ package dbs
 import (
 	"sync"
 
+	"github.com/limes-cloud/kratosx/pkg/value"
+
 	"github.com/limes-cloud/kratosx/model/page"
 	"github.com/limes-cloud/manager/internal/core"
 	"github.com/limes-cloud/manager/internal/domain/entity"
@@ -46,13 +48,29 @@ func (r *Tenant) ListTenant(ctx core.Context, req *types.ListTenantRequest) ([]*
 		db = db.Where("status = ?", *req.Status)
 	}
 
-	// 查询条件下数据总数
-	if err := db.Count(&total).Error; err != nil {
-		return nil, 0, err
+	// 查询指定应用的租户
+	if req.AppId != nil {
+		db = db.Joins("LEFT JOIN tenant_app ON tenant_app.tenant_id = tenant.id and tenant_app.app_id = ?", req.AppId)
+		db = db.Where("tenant_app.app_id is not null")
 	}
 
 	// 搜索排序
-	db = page.SearchScopes(db, &req.Search)
+	if req.Search != nil {
+		// 查询条件下数据总数
+		if err := db.Count(&total).Error; err != nil {
+			return nil, 0, err
+		}
+		// 默认排序
+		if req.Order == nil {
+			req.Order = value.Pointer("desc")
+		}
+		// 排序字段
+		if req.OrderBy == nil {
+			req.Order = value.Pointer("weight")
+		}
+		// 分页查询
+		db = page.SearchScopes(db, req.Search)
+	}
 
 	return list, uint32(total), db.Find(&list).Error
 }
@@ -81,49 +99,4 @@ func (r *Tenant) UpdateTenant(ctx core.Context, et *entity.Tenant) error {
 // DeleteTenant 删除数据
 func (r *Tenant) DeleteTenant(ctx core.Context, id uint32) error {
 	return ctx.DB().Delete(&entity.Tenant{}, id).Error
-}
-
-// ExistTenant 是否存在
-func (r *Tenant) ExistTenant(ctx core.Context, keyword string) (bool, error) {
-	et := entity.Tenant{}
-	return et.Id > 0, ctx.DB().Select("id").Where("keyword = ?", keyword).First(&et).Error
-}
-
-// ListTenantApp 获取app列表
-func (r *Tenant) ListTenantApp(ctx core.Context, req *types.ListTenantAppRequest) ([]*entity.TenantApp, uint32, error) {
-	var (
-		list  []*entity.TenantApp
-		total int64
-	)
-
-	db := ctx.DB().Model(entity.TenantApp{})
-
-	if req.AppName != nil {
-		joinWhere := ctx.DB().Where("App.name LIKE ?", *req.AppName+"%")
-		db = db.Joins("App", joinWhere)
-	} else {
-		db = db.Joins("App")
-	}
-
-	// 查询条件下数据总数
-	if err := db.Count(&total).Error; err != nil {
-		return nil, 0, err
-	}
-
-	// 搜索排序
-	db = page.SearchScopes(db, &req.Search)
-
-	return list, uint32(total), db.Find(&list).Error
-}
-
-func (r *Tenant) CreateTenantApp(ctx core.Context, ent *entity.TenantApp) (uint32, error) {
-	return ent.Id, ctx.DB().Create(ent).Error
-}
-
-func (r *Tenant) UpdateTenantApp(ctx core.Context, ent *entity.TenantApp) error {
-	return ctx.DB().Updates(ent).Error
-}
-
-func (r *Tenant) DeleteTenantApp(ctx core.Context, id uint32) error {
-	return ctx.DB().Delete(&entity.TenantApp{}, id).Error
 }

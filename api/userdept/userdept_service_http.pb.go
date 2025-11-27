@@ -8,35 +8,40 @@ package userdept
 
 import (
 	context "context"
+
 	http "github.com/go-kratos/kratos/v2/transport/http"
 	binding "github.com/go-kratos/kratos/v2/transport/http/binding"
 )
 
 // This is a compile-time assertion to ensure that this generated file
 // is compatible with the kratos package it is being compiled against.
-var _ = new(context.Context)
-var _ = binding.EncodeURL
+var (
+	_ = new(context.Context)
+	_ = binding.EncodeURL
+)
 
 const _ = http.SupportPackageIsVersion1
 
-const OperationUserDeptCreateUserDept = "/manager.api.userdept.UserDept/CreateUserDept"
-const OperationUserDeptDeleteUserDept = "/manager.api.userdept.UserDept/DeleteUserDept"
-const OperationUserDeptListDeptUser = "/manager.api.userdept.UserDept/ListDeptUser"
-const OperationUserDeptListUserDept = "/manager.api.userdept.UserDept/ListUserDept"
+const (
+	OperationUserDeptCreateUserDept = "/manager.api.userdept.UserDept/CreateUserDept"
+	OperationUserDeptDeleteUserDept = "/manager.api.userdept.UserDept/DeleteUserDept"
+	OperationUserDeptListUserDept   = "/manager.api.userdept.UserDept/ListUserDept"
+	OperationUserDeptUpdateUserDept = "/manager.api.userdept.UserDept/UpdateUserDept"
+)
 
 type UserDeptHTTPServer interface {
 	CreateUserDept(context.Context, *CreateUserDeptRequest) (*CreateUserDeptReply, error)
 	DeleteUserDept(context.Context, *DeleteUserDeptRequest) (*DeleteUserDeptReply, error)
-	ListDeptUser(context.Context, *ListDeptUserRequest) (*ListDeptUserReply, error)
 	ListUserDept(context.Context, *ListUserDeptRequest) (*ListUserDeptReply, error)
+	UpdateUserDept(context.Context, *UpdateUserDeptRequest) (*UpdateUserDeptReply, error)
 }
 
 func RegisterUserDeptHTTPServer(s *http.Server, srv UserDeptHTTPServer) {
 	r := s.Route("/")
-	r.GET("/manager/api/v1/user/depts", _UserDept_ListUserDept0_HTTP_Handler(srv))
-	r.POST("/manager/api/v1/user/dept", _UserDept_CreateUserDept0_HTTP_Handler(srv))
-	r.DELETE("/manager/api/v1/user/dept", _UserDept_DeleteUserDept0_HTTP_Handler(srv))
-	r.GET("/manager/api/v1/dept/users", _UserDept_ListDeptUser0_HTTP_Handler(srv))
+	r.GET("/manager/api/userdepts", _UserDept_ListUserDept0_HTTP_Handler(srv))
+	r.POST("/manager/api/userdept", _UserDept_CreateUserDept0_HTTP_Handler(srv))
+	r.PUT("/manager/api/userdept", _UserDept_UpdateUserDept0_HTTP_Handler(srv))
+	r.DELETE("/manager/api/userdept", _UserDept_DeleteUserDept0_HTTP_Handler(srv))
 }
 
 func _UserDept_ListUserDept0_HTTP_Handler(srv UserDeptHTTPServer) func(ctx http.Context) error {
@@ -80,12 +85,31 @@ func _UserDept_CreateUserDept0_HTTP_Handler(srv UserDeptHTTPServer) func(ctx htt
 	}
 }
 
-func _UserDept_DeleteUserDept0_HTTP_Handler(srv UserDeptHTTPServer) func(ctx http.Context) error {
+func _UserDept_UpdateUserDept0_HTTP_Handler(srv UserDeptHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in DeleteUserDeptRequest
+		var in UpdateUserDeptRequest
 		if err := ctx.Bind(&in); err != nil {
 			return err
 		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationUserDeptUpdateUserDept)
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
+			return srv.UpdateUserDept(ctx, req.(*UpdateUserDeptRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*UpdateUserDeptReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _UserDept_DeleteUserDept0_HTTP_Handler(srv UserDeptHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in DeleteUserDeptRequest
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
@@ -102,30 +126,11 @@ func _UserDept_DeleteUserDept0_HTTP_Handler(srv UserDeptHTTPServer) func(ctx htt
 	}
 }
 
-func _UserDept_ListDeptUser0_HTTP_Handler(srv UserDeptHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in ListDeptUserRequest
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationUserDeptListDeptUser)
-		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
-			return srv.ListDeptUser(ctx, req.(*ListDeptUserRequest))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*ListDeptUserReply)
-		return ctx.Result(200, reply)
-	}
-}
-
 type UserDeptHTTPClient interface {
 	CreateUserDept(ctx context.Context, req *CreateUserDeptRequest, opts ...http.CallOption) (rsp *CreateUserDeptReply, err error)
 	DeleteUserDept(ctx context.Context, req *DeleteUserDeptRequest, opts ...http.CallOption) (rsp *DeleteUserDeptReply, err error)
-	ListDeptUser(ctx context.Context, req *ListDeptUserRequest, opts ...http.CallOption) (rsp *ListDeptUserReply, err error)
 	ListUserDept(ctx context.Context, req *ListUserDeptRequest, opts ...http.CallOption) (rsp *ListUserDeptReply, err error)
+	UpdateUserDept(ctx context.Context, req *UpdateUserDeptRequest, opts ...http.CallOption) (rsp *UpdateUserDeptReply, err error)
 }
 
 type UserDeptHTTPClientImpl struct {
@@ -138,7 +143,7 @@ func NewUserDeptHTTPClient(client *http.Client) UserDeptHTTPClient {
 
 func (c *UserDeptHTTPClientImpl) CreateUserDept(ctx context.Context, in *CreateUserDeptRequest, opts ...http.CallOption) (*CreateUserDeptReply, error) {
 	var out CreateUserDeptReply
-	pattern := "/manager/api/v1/user/dept"
+	pattern := "/manager/api/userdept"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationUserDeptCreateUserDept))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -151,24 +156,11 @@ func (c *UserDeptHTTPClientImpl) CreateUserDept(ctx context.Context, in *CreateU
 
 func (c *UserDeptHTTPClientImpl) DeleteUserDept(ctx context.Context, in *DeleteUserDeptRequest, opts ...http.CallOption) (*DeleteUserDeptReply, error) {
 	var out DeleteUserDeptReply
-	pattern := "/manager/api/v1/user/dept"
-	path := binding.EncodeURL(pattern, in, false)
+	pattern := "/manager/api/userdept"
+	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationUserDeptDeleteUserDept))
 	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "DELETE", path, in, &out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return &out, err
-}
-
-func (c *UserDeptHTTPClientImpl) ListDeptUser(ctx context.Context, in *ListDeptUserRequest, opts ...http.CallOption) (*ListDeptUserReply, error) {
-	var out ListDeptUserReply
-	pattern := "/manager/api/v1/dept/users"
-	path := binding.EncodeURL(pattern, in, true)
-	opts = append(opts, http.Operation(OperationUserDeptListDeptUser))
-	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	err := c.cc.Invoke(ctx, "DELETE", path, nil, &out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -177,11 +169,24 @@ func (c *UserDeptHTTPClientImpl) ListDeptUser(ctx context.Context, in *ListDeptU
 
 func (c *UserDeptHTTPClientImpl) ListUserDept(ctx context.Context, in *ListUserDeptRequest, opts ...http.CallOption) (*ListUserDeptReply, error) {
 	var out ListUserDeptReply
-	pattern := "/manager/api/v1/user/depts"
+	pattern := "/manager/api/userdepts"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationUserDeptListUserDept))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *UserDeptHTTPClientImpl) UpdateUserDept(ctx context.Context, in *UpdateUserDeptRequest, opts ...http.CallOption) (*UpdateUserDeptReply, error) {
+	var out UpdateUserDeptReply
+	pattern := "/manager/api/userdept"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationUserDeptUpdateUserDept))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "PUT", path, in, &out, opts...)
 	if err != nil {
 		return nil, err
 	}
