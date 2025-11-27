@@ -6,15 +6,16 @@ require (
 	dario.cat/mergo v1.0.0
 	github.com/forgoer/openssl v1.8.0
 	github.com/go-kratos/kratos/v2 v2.8.4
-	github.com/go-resty/resty/v2 v2.16.5
-	github.com/golang/protobuf v1.5.4
+	github.com/golang-jwt/jwt/v5 v5.2.2
 	github.com/google/uuid v1.6.0
 	github.com/json-iterator/go v1.1.12
 	github.com/limes-cloud/configure v1.0.49
-	github.com/limes-cloud/kratosx v1.2.7
+	github.com/limes-cloud/kratosx v1.2.8
 	github.com/limes-cloud/manager/api v0.0.0
 	github.com/mojocn/base64Captcha v1.3.8
+	github.com/redis/go-redis/v9 v9.3.0
 	github.com/samber/lo v1.51.0
+	github.com/spf13/cast v1.9.2
 	golang.org/x/text v0.28.0
 	google.golang.org/protobuf v1.36.8
 	gopkg.in/gomail.v2 v2.0.0-20160411212932-81ebce5c23df
@@ -39,8 +40,8 @@ require (
 	github.com/go-logr/stdr v1.2.2 // indirect
 	github.com/go-ole/go-ole v1.3.0 // indirect
 	github.com/go-playground/form/v4 v4.2.1 // indirect
+	github.com/go-resty/resty/v2 v2.16.5 // indirect
 	github.com/go-sql-driver/mysql v1.9.3 // indirect
-	github.com/golang-jwt/jwt/v5 v5.2.2 // indirect
 	github.com/golang-sql/civil v0.0.0-20220223132316-b832511892a9 // indirect
 	github.com/golang-sql/sqlexp v0.1.0 // indirect
 	github.com/golang/freetype v0.0.0-20170609003504-e2365dfdc4a0 // indirect
@@ -82,10 +83,8 @@ require (
 	github.com/prometheus/client_model v0.6.2 // indirect
 	github.com/prometheus/common v0.65.0 // indirect
 	github.com/prometheus/procfs v0.16.1 // indirect
-	github.com/redis/go-redis/v9 v9.3.0 // indirect
 	github.com/shirou/gopsutil/v3 v3.24.4 // indirect
 	github.com/shoenig/go-m1cpu v0.1.6 // indirect
-	github.com/spf13/cast v1.9.2 // indirect
 	github.com/tklauser/go-sysconf v0.3.14 // indirect
 	github.com/tklauser/numcpus v0.8.0 // indirect
 	github.com/yusufpapurcu/wmi v1.2.4 // indirect
@@ -116,7 +115,4 @@ require (
 	gorm.io/driver/sqlserver v1.6.1 // indirect
 )
 
-replace (
-	github.com/limes-cloud/kratosx v1.2.7 => ../../go-platform/framework/kratosx
-	github.com/limes-cloud/manager/api v0.0.0 => ./api
-)
+replace github.com/limes-cloud/manager/api v0.0.0 => ./api
