@@ -93,6 +93,9 @@ business:
       /manager/api/authorize/oauthers:GET: true
       /manager/api/authorize/captcha/image:GET: true
       /manager/api/authorize/login:POST: true
+      /manager/api/authorize/register:POST: true
       /manager/api/sample/app:GET: true
       /manager/api/app/tenants:GET: true
+      /manager/api/authorize/oauther/handler:POST: true
+      /manager/api/authorize/oauther/login:POST: true
 

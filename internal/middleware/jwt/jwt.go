@@ -39,21 +39,24 @@ func Token() middleware.Middleware {
 	appIns := dbs.NewApp()
 	return func(handler middleware.Handler) middleware.Handler {
 		return func(ctx context.Context, req any) (any, error) {
-			// 从header获取token
-			header, ok := transport.FromServerContext(ctx)
-			if !ok {
-				return handler(ctx, req)
-			}
-
-			token := header.RequestHeader().Get("Authorization")
-			token = strings.TrimPrefix(token, "Bearer ")
-			if token == "" {
-				return handler(ctx, req)
-			}
-
 			// 设置token到metadata
 			md, ok := metadata.FromServerContext(ctx)
 			if !ok {
+				return handler(ctx, req)
+			}
+			token := md.Get(TokenKey)
+			// md中没有，则从header获取
+			if token == "" {
+				// 从header获取token
+				header, ok := transport.FromServerContext(ctx)
+				if !ok {
+					return handler(ctx, req)
+				}
+				token = header.RequestHeader().Get("Authorization")
+			}
+
+			token = strings.TrimPrefix(token, "Bearer ")
+			if token == "" {
 				return handler(ctx, req)
 			}
 			md.Set(TokenKey, token)

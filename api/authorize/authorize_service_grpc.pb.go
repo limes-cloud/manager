@@ -28,6 +28,7 @@ const (
 	Authorize_Login_FullMethodName           = "/manager.api.authorize.Authorize/Login"
 	Authorize_Register_FullMethodName        = "/manager.api.authorize.Authorize/Register"
 	Authorize_CheckAuth_FullMethodName       = "/manager.api.authorize.Authorize/CheckAuth"
+	Authorize_ParseToken_FullMethodName      = "/manager.api.authorize.Authorize/ParseToken"
 )
 
 // AuthorizeClient is the client API for Authorize service.
@@ -50,6 +51,8 @@ type AuthorizeClient interface {
 	Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*RegisterReply, error)
 	// CheckAuth 接口验证
 	CheckAuth(ctx context.Context, in *CheckAuthRequest, opts ...grpc.CallOption) (*CheckAuthReply, error)
+	// ParseToken token解析
+	ParseToken(ctx context.Context, in *ParseTokenRequest, opts ...grpc.CallOption) (*ParseTokenReply, error)
 }
 
 type authorizeClient struct {
@@ -132,6 +135,15 @@ func (c *authorizeClient) CheckAuth(ctx context.Context, in *CheckAuthRequest, o
 	return out, nil
 }
 
+func (c *authorizeClient) ParseToken(ctx context.Context, in *ParseTokenRequest, opts ...grpc.CallOption) (*ParseTokenReply, error) {
+	out := new(ParseTokenReply)
+	err := c.cc.Invoke(ctx, Authorize_ParseToken_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // AuthorizeServer is the server API for Authorize service.
 // All implementations must embed UnimplementedAuthorizeServer
 // for forward compatibility
@@ -152,6 +164,8 @@ type AuthorizeServer interface {
 	Register(context.Context, *RegisterRequest) (*RegisterReply, error)
 	// CheckAuth 接口验证
 	CheckAuth(context.Context, *CheckAuthRequest) (*CheckAuthReply, error)
+	// ParseToken token解析
+	ParseToken(context.Context, *ParseTokenRequest) (*ParseTokenReply, error)
 	mustEmbedUnimplementedAuthorizeServer()
 }
 
@@ -188,6 +202,10 @@ func (UnimplementedAuthorizeServer) Register(context.Context, *RegisterRequest) 
 
 func (UnimplementedAuthorizeServer) CheckAuth(context.Context, *CheckAuthRequest) (*CheckAuthReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CheckAuth not implemented")
+}
+
+func (UnimplementedAuthorizeServer) ParseToken(context.Context, *ParseTokenRequest) (*ParseTokenReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ParseToken not implemented")
 }
 func (UnimplementedAuthorizeServer) mustEmbedUnimplementedAuthorizeServer() {}
 
@@ -346,6 +364,24 @@ func _Authorize_CheckAuth_Handler(srv interface{}, ctx context.Context, dec func
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Authorize_ParseToken_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ParseTokenRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthorizeServer).ParseToken(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Authorize_ParseToken_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthorizeServer).ParseToken(ctx, req.(*ParseTokenRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Authorize_ServiceDesc is the grpc.ServiceDesc for Authorize service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -384,6 +420,10 @@ var Authorize_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "CheckAuth",
 			Handler:    _Authorize_CheckAuth_Handler,
+		},
+		{
+			MethodName: "ParseToken",
+			Handler:    _Authorize_ParseToken_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

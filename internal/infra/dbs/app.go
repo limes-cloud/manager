@@ -120,7 +120,7 @@ func (r App) UpdateApp(ctx core.Context, app *entity.App) error {
 		if err := ctx.DB().Where("id = ?", app.Id).First(&na).Error; err != nil {
 			return err
 		}
-		return r.cache.OP(ctx).Put(app.Keyword, &na).Do()
+		return r.cache.OP(ctx).Put(na.Keyword, &na).Do()
 	})
 }
 

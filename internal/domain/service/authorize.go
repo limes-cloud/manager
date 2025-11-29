@@ -1039,3 +1039,13 @@ func (u *Authorize) CheckAuth(ctx core.Context, req *types.CheckAuthRequest) (*t
 		DeptId:   ctx.Auth().DeptId,
 	}, nil
 }
+
+// ParseToken token解析
+//func (u *Authorize) ParseToken(ctx core.Context, token string) (*types.AuthorizeInfo, error) {
+//	// 获取用户token信息
+//	return &types.AuthorizeInfo{
+//		UserId:   ctx.Auth().UserId,
+//		TenantId: ctx.Auth().TenantId,
+//		DeptId:   ctx.Auth().DeptId,
+//	}, nil
+//}

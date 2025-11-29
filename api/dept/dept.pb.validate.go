@@ -463,6 +463,28 @@ func (m *CreateDeptClassifyRequest) validate(all bool) error {
 
 	var errors []error
 
+	if l := utf8.RuneCountInString(m.GetKeyword()); l < 1 || l > 32 {
+		err := CreateDeptClassifyRequestValidationError{
+			field:  "Keyword",
+			reason: "value length must be between 1 and 32 runes, inclusive",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if !_CreateDeptClassifyRequest_Keyword_Pattern.MatchString(m.GetKeyword()) {
+		err := CreateDeptClassifyRequestValidationError{
+			field:  "Keyword",
+			reason: "value does not match regex pattern \"^[a-zA-Z0-9_]+$\"",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
 	if utf8.RuneCountInString(m.GetName()) < 1 {
 		err := CreateDeptClassifyRequestValidationError{
 			field:  "Name",
@@ -559,6 +581,8 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = CreateDeptClassifyRequestValidationError{}
+
+var _CreateDeptClassifyRequest_Keyword_Pattern = regexp.MustCompile("^[a-zA-Z0-9_]+$")
 
 // Validate checks the field values on CreateDeptClassifyReply with the rules
 // defined in the proto definition for this message. If any rules are
@@ -697,6 +721,32 @@ func (m *UpdateDeptClassifyRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
+	if m.Keyword != nil {
+
+		if l := utf8.RuneCountInString(m.GetKeyword()); l < 1 || l > 32 {
+			err := UpdateDeptClassifyRequestValidationError{
+				field:  "Keyword",
+				reason: "value length must be between 1 and 32 runes, inclusive",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+		if !_UpdateDeptClassifyRequest_Keyword_Pattern.MatchString(m.GetKeyword()) {
+			err := UpdateDeptClassifyRequestValidationError{
+				field:  "Keyword",
+				reason: "value does not match regex pattern \"^[a-zA-Z0-9_]+$\"",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+	}
+
 	if m.Name != nil {
 		if utf8.RuneCountInString(m.GetName()) > 128 {
 			err := UpdateDeptClassifyRequestValidationError{
@@ -797,6 +847,8 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = UpdateDeptClassifyRequestValidationError{}
+
+var _UpdateDeptClassifyRequest_Keyword_Pattern = regexp.MustCompile("^[a-zA-Z0-9_]+$")
 
 // Validate checks the field values on UpdateDeptClassifyReply with the rules
 // defined in the proto definition for this message. If any rules are
@@ -2404,6 +2456,8 @@ func (m *ListDeptClassifyReply_DeptClassify) validate(all bool) error {
 	// no validation rules for Id
 
 	// no validation rules for Name
+
+	// no validation rules for Keyword
 
 	// no validation rules for Weight
 

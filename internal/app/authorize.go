@@ -210,3 +210,13 @@ func (az *Authorize) CheckAuth(c context.Context, req *authorize.CheckAuthReques
 		DeptId:   reply.DeptId,
 	}, nil
 }
+
+func (az *Authorize) ParseToken(c context.Context, req *authorize.ParseTokenRequest) (*authorize.ParseTokenReply, error) {
+	ctx := core.MustContext(c, kratosx.WithSkipDBHook())
+
+	return &authorize.ParseTokenReply{
+		UserId:   ctx.Auth().UserId,
+		TenantId: ctx.Auth().TenantId,
+		DeptId:   ctx.Auth().DeptId,
+	}, nil
+}

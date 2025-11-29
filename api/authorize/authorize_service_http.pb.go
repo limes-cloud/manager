@@ -30,6 +30,7 @@ const (
 	OperationAuthorizeOAutherBind     = "/manager.api.authorize.Authorize/OAutherBind"
 	OperationAuthorizeOAutherHandle   = "/manager.api.authorize.Authorize/OAutherHandle"
 	OperationAuthorizeOAutherLogin    = "/manager.api.authorize.Authorize/OAutherLogin"
+	OperationAuthorizeParseToken      = "/manager.api.authorize.Authorize/ParseToken"
 	OperationAuthorizeRegister        = "/manager.api.authorize.Authorize/Register"
 )
 
@@ -48,6 +49,8 @@ type AuthorizeHTTPServer interface {
 	OAutherHandle(context.Context, *OAutherHandleRequest) (*OAutherHandleReply, error)
 	// OAutherLogin OAutherLogin 渠道授权处理
 	OAutherLogin(context.Context, *OAutherLoginRequest) (*OAutherLoginReply, error)
+	// ParseToken ParseToken token解析
+	ParseToken(context.Context, *ParseTokenRequest) (*ParseTokenReply, error)
 	// Register Register 注册
 	Register(context.Context, *RegisterRequest) (*RegisterReply, error)
 }
@@ -62,6 +65,7 @@ func RegisterAuthorizeHTTPServer(s *http.Server, srv AuthorizeHTTPServer) {
 	r.POST("/manager/api/authorize/login", _Authorize_Login0_HTTP_Handler(srv))
 	r.POST("/manager/api/authorize/register", _Authorize_Register0_HTTP_Handler(srv))
 	r.POST("/manager/api/authorize/check", _Authorize_CheckAuth0_HTTP_Handler(srv))
+	r.POST("/manager/api/v1/authorize/token/parse", _Authorize_ParseToken0_HTTP_Handler(srv))
 }
 
 func _Authorize_ListOAuther0_HTTP_Handler(srv AuthorizeHTTPServer) func(ctx http.Context) error {
@@ -234,6 +238,28 @@ func _Authorize_CheckAuth0_HTTP_Handler(srv AuthorizeHTTPServer) func(ctx http.C
 	}
 }
 
+func _Authorize_ParseToken0_HTTP_Handler(srv AuthorizeHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in ParseTokenRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationAuthorizeParseToken)
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
+			return srv.ParseToken(ctx, req.(*ParseTokenRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*ParseTokenReply)
+		return ctx.Result(200, reply)
+	}
+}
+
 type AuthorizeHTTPClient interface {
 	CheckAuth(ctx context.Context, req *CheckAuthRequest, opts ...http.CallOption) (rsp *CheckAuthReply, err error)
 	GetImageCaptcha(ctx context.Context, req *GetImageCaptchaRequest, opts ...http.CallOption) (rsp *GetImageCaptchaReply, err error)
@@ -242,6 +268,7 @@ type AuthorizeHTTPClient interface {
 	OAutherBind(ctx context.Context, req *OAutherBindRequest, opts ...http.CallOption) (rsp *OAutherBindReply, err error)
 	OAutherHandle(ctx context.Context, req *OAutherHandleRequest, opts ...http.CallOption) (rsp *OAutherHandleReply, err error)
 	OAutherLogin(ctx context.Context, req *OAutherLoginRequest, opts ...http.CallOption) (rsp *OAutherLoginReply, err error)
+	ParseToken(ctx context.Context, req *ParseTokenRequest, opts ...http.CallOption) (rsp *ParseTokenReply, err error)
 	Register(ctx context.Context, req *RegisterRequest, opts ...http.CallOption) (rsp *RegisterReply, err error)
 }
 
@@ -336,6 +363,19 @@ func (c *AuthorizeHTTPClientImpl) OAutherLogin(ctx context.Context, in *OAutherL
 	pattern := "/manager/api/authorize/oauther/login"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationAuthorizeOAutherLogin))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *AuthorizeHTTPClientImpl) ParseToken(ctx context.Context, in *ParseTokenRequest, opts ...http.CallOption) (*ParseTokenReply, error) {
+	var out ParseTokenReply
+	pattern := "/manager/api/v1/authorize/token/parse"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationAuthorizeParseToken))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
 	if err != nil {

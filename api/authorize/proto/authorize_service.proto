@@ -71,4 +71,12 @@ service Authorize {
       body: "*"
     };
   }
+
+  // ParseToken token解析
+  rpc ParseToken(ParseTokenRequest) returns(ParseTokenReply){
+    option (google.api.http) = {
+      post: "/manager/api/v1/authorize/token/parse",
+      body: "*"
+    };
+  }
 }

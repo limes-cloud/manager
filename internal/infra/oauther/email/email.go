@@ -83,28 +83,28 @@ func (e *Email) Handler(ctx core.Context, req *types.OAutherHandleRequest) (*typ
 		UUID:   cptReply.UUID,
 		Action: types.OAutherWayActionCaptcha,
 		Tip:    "验证码登陆",
-		Value:  fmt.Sprint(int64(cptReply.Expire.Seconds())),
+		Value:  fmt.Sprint(int64(cpt.GetCaptchaDuration().Seconds())),
 	}, nil
 }
 
 func (e *Email) GetToken(ctx core.Context, req *types.OAutherTokenRequest) (*types.OAutherTokenReply, error) {
 	// 获取验证器
-	//cpt, err := ctx.Captcha().Get(ctx, email)
-	//if err != nil {
-	//	return nil, err
-	//}
+	cpt, err := ctx.Captcha().Get(ctx, email)
+	if err != nil {
+		return nil, err
+	}
 
 	// 验证
-	//err = cpt.VerifyCaptcha(&captcha.VerifyCaptchaRequest{
-	//	Scene:      oauthEmailScene,
-	//	User:       req.Account,
-	//	ClientIP:   req.IP,
-	//	VerifyCode: req.Code,
-	//	UUID:       req.UUID,
-	//})
-	//if err != nil {
-	//	return nil, err
-	//}
+	err = cpt.VerifyCaptcha(&captcha.VerifyCaptchaRequest{
+		Scene:      oauthEmailScene,
+		User:       req.Account,
+		ClientIP:   req.IP,
+		VerifyCode: req.Code,
+		UUID:       req.UUID,
+	})
+	if err != nil {
+		return nil, err
+	}
 
 	return &types.OAutherTokenReply{
 		OID: req.Account,

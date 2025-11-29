@@ -6,6 +6,7 @@ import (
 )
 
 type DeptClassify struct {
+	Keyword     string  `json:"keyword" gorm:"column:keyword"`
 	Name        string  `json:"name" gorm:"column:name"`
 	Description *string `json:"description" gorm:"column:description"`
 	Weight      uint32  `json:"weight" gorm:"column:weight"`

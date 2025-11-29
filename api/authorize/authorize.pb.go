@@ -1102,6 +1102,115 @@ func (x *CheckAuthReply) GetDeptId() uint32 {
 	return 0
 }
 
+type ParseTokenRequest struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+}
+
+func (x *ParseTokenRequest) Reset() {
+	*x = ParseTokenRequest{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_api_authorize_proto_authorize_proto_msgTypes[16]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *ParseTokenRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ParseTokenRequest) ProtoMessage() {}
+
+func (x *ParseTokenRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_api_authorize_proto_authorize_proto_msgTypes[16]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ParseTokenRequest.ProtoReflect.Descriptor instead.
+func (*ParseTokenRequest) Descriptor() ([]byte, []int) {
+	return file_api_authorize_proto_authorize_proto_rawDescGZIP(), []int{16}
+}
+
+type ParseTokenReply struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	UserId   uint32 `protobuf:"varint,1,opt,name=userId,proto3" json:"userId,omitempty"`
+	DeptId   uint32 `protobuf:"varint,2,opt,name=deptId,proto3" json:"deptId,omitempty"`
+	TenantId uint32 `protobuf:"varint,3,opt,name=tenantId,proto3" json:"tenantId,omitempty"`
+	Username string `protobuf:"bytes,4,opt,name=username,proto3" json:"username,omitempty"`
+}
+
+func (x *ParseTokenReply) Reset() {
+	*x = ParseTokenReply{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_api_authorize_proto_authorize_proto_msgTypes[17]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *ParseTokenReply) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ParseTokenReply) ProtoMessage() {}
+
+func (x *ParseTokenReply) ProtoReflect() protoreflect.Message {
+	mi := &file_api_authorize_proto_authorize_proto_msgTypes[17]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ParseTokenReply.ProtoReflect.Descriptor instead.
+func (*ParseTokenReply) Descriptor() ([]byte, []int) {
+	return file_api_authorize_proto_authorize_proto_rawDescGZIP(), []int{17}
+}
+
+func (x *ParseTokenReply) GetUserId() uint32 {
+	if x != nil {
+		return x.UserId
+	}
+	return 0
+}
+
+func (x *ParseTokenReply) GetDeptId() uint32 {
+	if x != nil {
+		return x.DeptId
+	}
+	return 0
+}
+
+func (x *ParseTokenReply) GetTenantId() uint32 {
+	if x != nil {
+		return x.TenantId
+	}
+	return 0
+}
+
+func (x *ParseTokenReply) GetUsername() string {
+	if x != nil {
+		return x.Username
+	}
+	return ""
+}
+
 type ListOAutherReply_OAuther struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -1117,7 +1226,7 @@ type ListOAutherReply_OAuther struct {
 func (x *ListOAutherReply_OAuther) Reset() {
 	*x = ListOAutherReply_OAuther{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_api_authorize_proto_authorize_proto_msgTypes[16]
+		mi := &file_api_authorize_proto_authorize_proto_msgTypes[18]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -1130,7 +1239,7 @@ func (x *ListOAutherReply_OAuther) String() string {
 func (*ListOAutherReply_OAuther) ProtoMessage() {}
 
 func (x *ListOAutherReply_OAuther) ProtoReflect() protoreflect.Message {
-	mi := &file_api_authorize_proto_authorize_proto_msgTypes[16]
+	mi := &file_api_authorize_proto_authorize_proto_msgTypes[18]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1325,7 +1434,16 @@ var file_api_authorize_proto_authorize_proto_rawDesc = []byte{
 	0x49, 0x64, 0x12, 0x16, 0x0a, 0x06, 0x75, 0x73, 0x65, 0x72, 0x49, 0x64, 0x18, 0x02, 0x20, 0x01,
 	0x28, 0x0d, 0x52, 0x06, 0x75, 0x73, 0x65, 0x72, 0x49, 0x64, 0x12, 0x16, 0x0a, 0x06, 0x64, 0x65,
 	0x70, 0x74, 0x49, 0x64, 0x18, 0x03, 0x20, 0x01, 0x28, 0x0d, 0x52, 0x06, 0x64, 0x65, 0x70, 0x74,
-	0x49, 0x64, 0x42, 0x3a, 0x0a, 0x15, 0x6d, 0x61, 0x6e, 0x61, 0x67, 0x65, 0x72, 0x2e, 0x61, 0x70,
+	0x49, 0x64, 0x22, 0x13, 0x0a, 0x11, 0x50, 0x61, 0x72, 0x73, 0x65, 0x54, 0x6f, 0x6b, 0x65, 0x6e,
+	0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x22, 0x79, 0x0a, 0x0f, 0x50, 0x61, 0x72, 0x73, 0x65,
+	0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x52, 0x65, 0x70, 0x6c, 0x79, 0x12, 0x16, 0x0a, 0x06, 0x75, 0x73,
+	0x65, 0x72, 0x49, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0d, 0x52, 0x06, 0x75, 0x73, 0x65, 0x72,
+	0x49, 0x64, 0x12, 0x16, 0x0a, 0x06, 0x64, 0x65, 0x70, 0x74, 0x49, 0x64, 0x18, 0x02, 0x20, 0x01,
+	0x28, 0x0d, 0x52, 0x06, 0x64, 0x65, 0x70, 0x74, 0x49, 0x64, 0x12, 0x1a, 0x0a, 0x08, 0x74, 0x65,
+	0x6e, 0x61, 0x6e, 0x74, 0x49, 0x64, 0x18, 0x03, 0x20, 0x01, 0x28, 0x0d, 0x52, 0x08, 0x74, 0x65,
+	0x6e, 0x61, 0x6e, 0x74, 0x49, 0x64, 0x12, 0x1a, 0x0a, 0x08, 0x75, 0x73, 0x65, 0x72, 0x6e, 0x61,
+	0x6d, 0x65, 0x18, 0x04, 0x20, 0x01, 0x28, 0x09, 0x52, 0x08, 0x75, 0x73, 0x65, 0x72, 0x6e, 0x61,
+	0x6d, 0x65, 0x42, 0x3a, 0x0a, 0x15, 0x6d, 0x61, 0x6e, 0x61, 0x67, 0x65, 0x72, 0x2e, 0x61, 0x70,
 	0x69, 0x2e, 0x61, 0x75, 0x74, 0x68, 0x6f, 0x72, 0x69, 0x7a, 0x65, 0x50, 0x01, 0x5a, 0x1f, 0x6d,
 	0x61, 0x6e, 0x61, 0x67, 0x65, 0x72, 0x2f, 0x61, 0x70, 0x69, 0x2f, 0x61, 0x75, 0x74, 0x68, 0x6f,
 	0x72, 0x69, 0x7a, 0x65, 0x3b, 0x61, 0x75, 0x74, 0x68, 0x6f, 0x72, 0x69, 0x7a, 0x65, 0x62, 0x06,
@@ -1345,7 +1463,7 @@ func file_api_authorize_proto_authorize_proto_rawDescGZIP() []byte {
 }
 
 var (
-	file_api_authorize_proto_authorize_proto_msgTypes = make([]protoimpl.MessageInfo, 17)
+	file_api_authorize_proto_authorize_proto_msgTypes = make([]protoimpl.MessageInfo, 19)
 	file_api_authorize_proto_authorize_proto_goTypes  = []interface{}{
 		(*GetImageCaptchaRequest)(nil),   // 0: manager.api.authorize.GetImageCaptchaRequest
 		(*GetImageCaptchaReply)(nil),     // 1: manager.api.authorize.GetImageCaptchaReply
@@ -1363,12 +1481,14 @@ var (
 		(*RegisterReply)(nil),            // 13: manager.api.authorize.RegisterReply
 		(*CheckAuthRequest)(nil),         // 14: manager.api.authorize.CheckAuthRequest
 		(*CheckAuthReply)(nil),           // 15: manager.api.authorize.CheckAuthReply
-		(*ListOAutherReply_OAuther)(nil), // 16: manager.api.authorize.ListOAutherReply.OAuther
+		(*ParseTokenRequest)(nil),        // 16: manager.api.authorize.ParseTokenRequest
+		(*ParseTokenReply)(nil),          // 17: manager.api.authorize.ParseTokenReply
+		(*ListOAutherReply_OAuther)(nil), // 18: manager.api.authorize.ListOAutherReply.OAuther
 	}
 )
 
 var file_api_authorize_proto_authorize_proto_depIdxs = []int32{
-	16, // 0: manager.api.authorize.ListOAutherReply.list:type_name -> manager.api.authorize.ListOAutherReply.OAuther
+	18, // 0: manager.api.authorize.ListOAutherReply.list:type_name -> manager.api.authorize.ListOAutherReply.OAuther
 	1,  // [1:1] is the sub-list for method output_type
 	1,  // [1:1] is the sub-list for method input_type
 	1,  // [1:1] is the sub-list for extension type_name
@@ -1575,6 +1695,30 @@ func file_api_authorize_proto_authorize_proto_init() {
 			}
 		}
 		file_api_authorize_proto_authorize_proto_msgTypes[16].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*ParseTokenRequest); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_api_authorize_proto_authorize_proto_msgTypes[17].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*ParseTokenReply); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_api_authorize_proto_authorize_proto_msgTypes[18].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*ListOAutherReply_OAuther); i {
 			case 0:
 				return &v.state
@@ -1594,7 +1738,7 @@ func file_api_authorize_proto_authorize_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_api_authorize_proto_authorize_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   17,
+			NumMessages:   19,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

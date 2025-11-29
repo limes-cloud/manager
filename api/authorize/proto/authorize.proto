@@ -122,3 +122,13 @@ message CheckAuthReply{
   uint32  userId = 2;
   uint32  deptId = 3;
 }
+
+message ParseTokenRequest{
+}
+
+message ParseTokenReply{
+  uint32 userId = 1;
+  uint32 deptId = 2;
+  uint32 tenantId = 3;
+  string username = 4;
+}

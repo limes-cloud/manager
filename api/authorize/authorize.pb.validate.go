@@ -2058,6 +2058,216 @@ var _ interface {
 	ErrorName() string
 } = CheckAuthReplyValidationError{}
 
+// Validate checks the field values on ParseTokenRequest with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// first error encountered is returned, or nil if there are no violations.
+func (m *ParseTokenRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on ParseTokenRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// ParseTokenRequestMultiError, or nil if none found.
+func (m *ParseTokenRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *ParseTokenRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if len(errors) > 0 {
+		return ParseTokenRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// ParseTokenRequestMultiError is an error wrapping multiple validation errors
+// returned by ParseTokenRequest.ValidateAll() if the designated constraints
+// aren't met.
+type ParseTokenRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m ParseTokenRequestMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m ParseTokenRequestMultiError) AllErrors() []error { return m }
+
+// ParseTokenRequestValidationError is the validation error returned by
+// ParseTokenRequest.Validate if the designated constraints aren't met.
+type ParseTokenRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e ParseTokenRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e ParseTokenRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e ParseTokenRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e ParseTokenRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e ParseTokenRequestValidationError) ErrorName() string {
+	return "ParseTokenRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e ParseTokenRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sParseTokenRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = ParseTokenRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = ParseTokenRequestValidationError{}
+
+// Validate checks the field values on ParseTokenReply with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// first error encountered is returned, or nil if there are no violations.
+func (m *ParseTokenReply) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on ParseTokenReply with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// ParseTokenReplyMultiError, or nil if none found.
+func (m *ParseTokenReply) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *ParseTokenReply) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for UserId
+
+	// no validation rules for DeptId
+
+	// no validation rules for TenantId
+
+	// no validation rules for Username
+
+	if len(errors) > 0 {
+		return ParseTokenReplyMultiError(errors)
+	}
+
+	return nil
+}
+
+// ParseTokenReplyMultiError is an error wrapping multiple validation errors
+// returned by ParseTokenReply.ValidateAll() if the designated constraints
+// aren't met.
+type ParseTokenReplyMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m ParseTokenReplyMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m ParseTokenReplyMultiError) AllErrors() []error { return m }
+
+// ParseTokenReplyValidationError is the validation error returned by
+// ParseTokenReply.Validate if the designated constraints aren't met.
+type ParseTokenReplyValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e ParseTokenReplyValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e ParseTokenReplyValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e ParseTokenReplyValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e ParseTokenReplyValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e ParseTokenReplyValidationError) ErrorName() string { return "ParseTokenReplyValidationError" }
+
+// Error satisfies the builtin error interface
+func (e ParseTokenReplyValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sParseTokenReply.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = ParseTokenReplyValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = ParseTokenReplyValidationError{}
+
 // Validate checks the field values on ListOAutherReply_OAuther with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
