@@ -73,7 +73,7 @@ message ListUserReply {
 
 message CreateUserRequest {
   string avatar = 1;
-  string nickname = 2[(validate.rules).string = {min_len: 4,max_len: 64}];
+  string nickname = 2[(validate.rules).string = {min_len: 1,max_len: 64}];
   string username = 3[(validate.rules).string = {min_len: 6,max_len: 32}];
   map<string, string> infos = 6;
 }
@@ -85,7 +85,7 @@ message CreateUserReply {
 message UpdateUserRequest {
   uint32 id = 1[(validate.rules).uint32 = {gte: 1}];
   optional string avatar = 2;
-  optional string nickname = 3[(validate.rules).string = {min_len: 4,max_len: 64}];
+  optional string nickname = 3[(validate.rules).string = {min_len: 1,max_len: 64}];
   optional bool status = 6;
   optional string reason = 7;
   map<string, string> infos = 8;
