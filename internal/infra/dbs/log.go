@@ -3,6 +3,8 @@ package dbs
 import (
 	"sync"
 
+	"github.com/limes-cloud/kratosx/pkg/value"
+
 	"github.com/limes-cloud/kratosx/model/page"
 
 	"github.com/limes-cloud/manager/internal/core"
@@ -40,7 +42,11 @@ func (log *Log) ListLoginLog(ctx core.Context, req *types.ListLoginLogRequest) (
 	if len(req.CreatedAts) == 2 {
 		db = db.Where("created_at BETWEEN ? AND ?", req.CreatedAts[0], req.CreatedAts[1])
 	}
-
+	if err := db.Count(&total).Error; err != nil {
+		return nil, 0, err
+	}
+	req.Order = value.Pointer("desc")
+	req.OrderBy = value.Pointer("id")
 	db = page.SearchScopes(db, &req.Search)
 	return list, uint32(total), db.Find(&list).Error
 }
@@ -72,6 +78,8 @@ func (log *Log) ListAuthLog(ctx core.Context, req *types.ListAuthLogRequest) ([]
 		return nil, 0, err
 	}
 
+	req.Order = value.Pointer("desc")
+	req.OrderBy = value.Pointer("id")
 	db = page.SearchScopes(db, &req.Search)
 	return list, uint32(total), db.Find(&list).Error
 }
