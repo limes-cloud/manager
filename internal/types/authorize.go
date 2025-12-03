@@ -127,6 +127,7 @@ type OAutherBindRequest struct {
 	CaptchaId string `json:"captchaId"`
 	Captcha   string `json:"captcha"`
 	UUID      string `json:"uuid"`
+	Register  bool   `json:"register"`
 }
 
 type OAutherBindReply struct {

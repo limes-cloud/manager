@@ -86,9 +86,8 @@ message OAutherBindRequest {
   string password = 2[(validate.rules).string = {min_len:6}];
   string captchaId = 3[(validate.rules).string = {min_len:1}];
   string captcha = 4[(validate.rules).string = {min_len:1}];
-  string keyword = 5[(validate.rules).string = {min_len:1}];
-  string uuid = 6[(validate.rules).string = {min_len:1}];
-  bool register = 7;
+  string uuid = 5[(validate.rules).string = {min_len:1}];
+  bool register = 6;
 }
 
 message OAutherBindReply{

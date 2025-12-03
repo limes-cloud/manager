@@ -98,4 +98,5 @@ business:
       /manager/api/app/tenants:GET: true
       /manager/api/authorize/oauther/handler:POST: true
       /manager/api/authorize/oauther/login:POST: true
+      /manager/api/authorize/oauther/bind:POST: true
 

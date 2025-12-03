@@ -1350,17 +1350,6 @@ func (m *OAutherBindRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	if utf8.RuneCountInString(m.GetKeyword()) < 1 {
-		err := OAutherBindRequestValidationError{
-			field:  "Keyword",
-			reason: "value length must be at least 1 runes",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
 	if utf8.RuneCountInString(m.GetUuid()) < 1 {
 		err := OAutherBindRequestValidationError{
 			field:  "Uuid",

@@ -332,7 +332,7 @@ func (s *Authorize) OAutherBind(ctx core.Context, req *types.OAutherBindRequest)
 	// 获取uuid对应的缓存信息
 	cd, err := s.getCacheData(ctx, req.UUID)
 	if err != nil {
-		return nil, errors.BindError("绑定信息已过期，请重新退出绑定")
+		return nil, errors.BindExpiredError()
 	}
 	if cd.AppId == 0 || cd.TenantId == 0 {
 		return nil, errors.SystemError()
@@ -384,8 +384,27 @@ func (s *Authorize) OAutherBind(ctx core.Context, req *types.OAutherBindRequest)
 	// 获取用户信息
 	user, err := s.user.GetUserByTU(ctx, tenant.Id, req.Username)
 	if err != nil {
-		ctx.Logger().Errorw("msg", "get user info error", "err", err.Error())
-		// todo 用户不存在是否进行快速注册
+		if !gormtranserror.Is(err, gorm.ErrRecordNotFound) {
+			ctx.Logger().Errorw("msg", "get user info error", "err", err.Error())
+			return nil, errors.SystemError()
+		}
+
+		// 自动注册用户
+		if !value.Value(app.Private) && req.Register {
+			setting := tenant.GetSetting()
+			user = &entity.User{
+				BaseTenantModel: model.BaseTenantModel{TenantId: tenant.Id},
+				Username:        req.Username,
+				Password:        crypto.EncodePwd(req.Password),
+				Nickname:        setting.DefaultUserNickname,
+				Avatar:          setting.DefaultUserAvatar,
+				Status:          value.Pointer(true),
+			}
+			if _, err := s.user.CreateUser(ctx, user); err != nil {
+				return nil, err
+			}
+		}
+
 		return nil, errors.UsernameNotExistError()
 	}
 
@@ -434,12 +453,13 @@ func (s *Authorize) OAutherBind(ctx core.Context, req *types.OAutherBindRequest)
 	if err := ctx.Transaction(func(ctx core.Context) error {
 		// 写入三方绑定信息
 		if _, err := s.uo.CreateUserOAuther(ctx, &entity.UserOAuther{
-			UserId:    user.Id,
-			OAutherId: cd.OAutherId,
-			OID:       cd.OID,
-			Token:     cd.Token,
-			ExpiredAt: cd.Expire,
-			LoggedAt:  time.Now().Unix(),
+			BaseTenantModel: model.BaseTenantModel{TenantId: tenant.Id},
+			UserId:          user.Id,
+			OAutherId:       cd.OAutherId,
+			OID:             cd.OID,
+			Token:           cd.Token,
+			ExpiredAt:       cd.Expire,
+			LoggedAt:        time.Now().Unix(),
 		}); err != nil {
 			return errors.SystemError(err.Error())
 		}

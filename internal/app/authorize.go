@@ -129,6 +129,7 @@ func (az *Authorize) OAutherBind(c context.Context, req *authorize.OAutherBindRe
 		CaptchaId: req.CaptchaId,
 		Captcha:   req.Captcha,
 		UUID:      req.Uuid,
+		Register:  req.Register,
 	})
 	if err != nil {
 		return nil, err
