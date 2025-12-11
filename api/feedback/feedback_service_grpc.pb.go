@@ -20,10 +20,10 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	Feedback_ListFeedbackCategory_FullMethodName   = "/manager.api.feedback.Feedback/ListFeedbackCategory"
-	Feedback_CreateFeedbackCategory_FullMethodName = "/manager.api.feedback.Feedback/CreateFeedbackCategory"
-	Feedback_UpdateFeedbackCategory_FullMethodName = "/manager.api.feedback.Feedback/UpdateFeedbackCategory"
-	Feedback_DeleteFeedbackCategory_FullMethodName = "/manager.api.feedback.Feedback/DeleteFeedbackCategory"
+	Feedback_ListFeedbackClassify_FullMethodName   = "/manager.api.feedback.Feedback/ListFeedbackClassify"
+	Feedback_CreateFeedbackClassify_FullMethodName = "/manager.api.feedback.Feedback/CreateFeedbackClassify"
+	Feedback_UpdateFeedbackClassify_FullMethodName = "/manager.api.feedback.Feedback/UpdateFeedbackClassify"
+	Feedback_DeleteFeedbackClassify_FullMethodName = "/manager.api.feedback.Feedback/DeleteFeedbackClassify"
 	Feedback_ListFeedback_FullMethodName           = "/manager.api.feedback.Feedback/ListFeedback"
 	Feedback_CreateFeedback_FullMethodName         = "/manager.api.feedback.Feedback/CreateFeedback"
 	Feedback_DeleteFeedback_FullMethodName         = "/manager.api.feedback.Feedback/DeleteFeedback"
@@ -34,14 +34,14 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type FeedbackClient interface {
-	// ListFeedbackCategory 获取反馈建议分类列表
-	ListFeedbackCategory(ctx context.Context, in *ListFeedbackCategoryRequest, opts ...grpc.CallOption) (*ListFeedbackCategoryReply, error)
-	// CreateFeedbackCategory 创建反馈建议分类
-	CreateFeedbackCategory(ctx context.Context, in *CreateFeedbackCategoryRequest, opts ...grpc.CallOption) (*CreateFeedbackCategoryReply, error)
-	// UpdateFeedbackCategory 更新反馈建议分类
-	UpdateFeedbackCategory(ctx context.Context, in *UpdateFeedbackCategoryRequest, opts ...grpc.CallOption) (*UpdateFeedbackCategoryReply, error)
-	// DeleteFeedbackCategory 删除反馈建议分类
-	DeleteFeedbackCategory(ctx context.Context, in *DeleteFeedbackCategoryRequest, opts ...grpc.CallOption) (*DeleteFeedbackCategoryReply, error)
+	// ListFeedbackClassify 获取反馈建议分类列表
+	ListFeedbackClassify(ctx context.Context, in *ListFeedbackClassifyRequest, opts ...grpc.CallOption) (*ListFeedbackClassifyReply, error)
+	// CreateFeedbackClassify 创建反馈建议分类
+	CreateFeedbackClassify(ctx context.Context, in *CreateFeedbackClassifyRequest, opts ...grpc.CallOption) (*CreateFeedbackClassifyReply, error)
+	// UpdateFeedbackClassify 更新反馈建议分类
+	UpdateFeedbackClassify(ctx context.Context, in *UpdateFeedbackClassifyRequest, opts ...grpc.CallOption) (*UpdateFeedbackClassifyReply, error)
+	// DeleteFeedbackClassify 删除反馈建议分类
+	DeleteFeedbackClassify(ctx context.Context, in *DeleteFeedbackClassifyRequest, opts ...grpc.CallOption) (*DeleteFeedbackClassifyReply, error)
 	// ListFeedback 获取反馈建议列表
 	ListFeedback(ctx context.Context, in *ListFeedbackRequest, opts ...grpc.CallOption) (*ListFeedbackReply, error)
 	// CreateFeedback 创建反馈建议
@@ -60,36 +60,36 @@ func NewFeedbackClient(cc grpc.ClientConnInterface) FeedbackClient {
 	return &feedbackClient{cc}
 }
 
-func (c *feedbackClient) ListFeedbackCategory(ctx context.Context, in *ListFeedbackCategoryRequest, opts ...grpc.CallOption) (*ListFeedbackCategoryReply, error) {
-	out := new(ListFeedbackCategoryReply)
-	err := c.cc.Invoke(ctx, Feedback_ListFeedbackCategory_FullMethodName, in, out, opts...)
+func (c *feedbackClient) ListFeedbackClassify(ctx context.Context, in *ListFeedbackClassifyRequest, opts ...grpc.CallOption) (*ListFeedbackClassifyReply, error) {
+	out := new(ListFeedbackClassifyReply)
+	err := c.cc.Invoke(ctx, Feedback_ListFeedbackClassify_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *feedbackClient) CreateFeedbackCategory(ctx context.Context, in *CreateFeedbackCategoryRequest, opts ...grpc.CallOption) (*CreateFeedbackCategoryReply, error) {
-	out := new(CreateFeedbackCategoryReply)
-	err := c.cc.Invoke(ctx, Feedback_CreateFeedbackCategory_FullMethodName, in, out, opts...)
+func (c *feedbackClient) CreateFeedbackClassify(ctx context.Context, in *CreateFeedbackClassifyRequest, opts ...grpc.CallOption) (*CreateFeedbackClassifyReply, error) {
+	out := new(CreateFeedbackClassifyReply)
+	err := c.cc.Invoke(ctx, Feedback_CreateFeedbackClassify_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *feedbackClient) UpdateFeedbackCategory(ctx context.Context, in *UpdateFeedbackCategoryRequest, opts ...grpc.CallOption) (*UpdateFeedbackCategoryReply, error) {
-	out := new(UpdateFeedbackCategoryReply)
-	err := c.cc.Invoke(ctx, Feedback_UpdateFeedbackCategory_FullMethodName, in, out, opts...)
+func (c *feedbackClient) UpdateFeedbackClassify(ctx context.Context, in *UpdateFeedbackClassifyRequest, opts ...grpc.CallOption) (*UpdateFeedbackClassifyReply, error) {
+	out := new(UpdateFeedbackClassifyReply)
+	err := c.cc.Invoke(ctx, Feedback_UpdateFeedbackClassify_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *feedbackClient) DeleteFeedbackCategory(ctx context.Context, in *DeleteFeedbackCategoryRequest, opts ...grpc.CallOption) (*DeleteFeedbackCategoryReply, error) {
-	out := new(DeleteFeedbackCategoryReply)
-	err := c.cc.Invoke(ctx, Feedback_DeleteFeedbackCategory_FullMethodName, in, out, opts...)
+func (c *feedbackClient) DeleteFeedbackClassify(ctx context.Context, in *DeleteFeedbackClassifyRequest, opts ...grpc.CallOption) (*DeleteFeedbackClassifyReply, error) {
+	out := new(DeleteFeedbackClassifyReply)
+	err := c.cc.Invoke(ctx, Feedback_DeleteFeedbackClassify_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -136,14 +136,14 @@ func (c *feedbackClient) UpdateFeedback(ctx context.Context, in *UpdateFeedbackR
 // All implementations must embed UnimplementedFeedbackServer
 // for forward compatibility
 type FeedbackServer interface {
-	// ListFeedbackCategory 获取反馈建议分类列表
-	ListFeedbackCategory(context.Context, *ListFeedbackCategoryRequest) (*ListFeedbackCategoryReply, error)
-	// CreateFeedbackCategory 创建反馈建议分类
-	CreateFeedbackCategory(context.Context, *CreateFeedbackCategoryRequest) (*CreateFeedbackCategoryReply, error)
-	// UpdateFeedbackCategory 更新反馈建议分类
-	UpdateFeedbackCategory(context.Context, *UpdateFeedbackCategoryRequest) (*UpdateFeedbackCategoryReply, error)
-	// DeleteFeedbackCategory 删除反馈建议分类
-	DeleteFeedbackCategory(context.Context, *DeleteFeedbackCategoryRequest) (*DeleteFeedbackCategoryReply, error)
+	// ListFeedbackClassify 获取反馈建议分类列表
+	ListFeedbackClassify(context.Context, *ListFeedbackClassifyRequest) (*ListFeedbackClassifyReply, error)
+	// CreateFeedbackClassify 创建反馈建议分类
+	CreateFeedbackClassify(context.Context, *CreateFeedbackClassifyRequest) (*CreateFeedbackClassifyReply, error)
+	// UpdateFeedbackClassify 更新反馈建议分类
+	UpdateFeedbackClassify(context.Context, *UpdateFeedbackClassifyRequest) (*UpdateFeedbackClassifyReply, error)
+	// DeleteFeedbackClassify 删除反馈建议分类
+	DeleteFeedbackClassify(context.Context, *DeleteFeedbackClassifyRequest) (*DeleteFeedbackClassifyReply, error)
 	// ListFeedback 获取反馈建议列表
 	ListFeedback(context.Context, *ListFeedbackRequest) (*ListFeedbackReply, error)
 	// CreateFeedback 创建反馈建议
@@ -158,20 +158,20 @@ type FeedbackServer interface {
 // UnimplementedFeedbackServer must be embedded to have forward compatible implementations.
 type UnimplementedFeedbackServer struct{}
 
-func (UnimplementedFeedbackServer) ListFeedbackCategory(context.Context, *ListFeedbackCategoryRequest) (*ListFeedbackCategoryReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ListFeedbackCategory not implemented")
+func (UnimplementedFeedbackServer) ListFeedbackClassify(context.Context, *ListFeedbackClassifyRequest) (*ListFeedbackClassifyReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListFeedbackClassify not implemented")
 }
 
-func (UnimplementedFeedbackServer) CreateFeedbackCategory(context.Context, *CreateFeedbackCategoryRequest) (*CreateFeedbackCategoryReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method CreateFeedbackCategory not implemented")
+func (UnimplementedFeedbackServer) CreateFeedbackClassify(context.Context, *CreateFeedbackClassifyRequest) (*CreateFeedbackClassifyReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateFeedbackClassify not implemented")
 }
 
-func (UnimplementedFeedbackServer) UpdateFeedbackCategory(context.Context, *UpdateFeedbackCategoryRequest) (*UpdateFeedbackCategoryReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpdateFeedbackCategory not implemented")
+func (UnimplementedFeedbackServer) UpdateFeedbackClassify(context.Context, *UpdateFeedbackClassifyRequest) (*UpdateFeedbackClassifyReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateFeedbackClassify not implemented")
 }
 
-func (UnimplementedFeedbackServer) DeleteFeedbackCategory(context.Context, *DeleteFeedbackCategoryRequest) (*DeleteFeedbackCategoryReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method DeleteFeedbackCategory not implemented")
+func (UnimplementedFeedbackServer) DeleteFeedbackClassify(context.Context, *DeleteFeedbackClassifyRequest) (*DeleteFeedbackClassifyReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteFeedbackClassify not implemented")
 }
 
 func (UnimplementedFeedbackServer) ListFeedback(context.Context, *ListFeedbackRequest) (*ListFeedbackReply, error) {
@@ -202,74 +202,74 @@ func RegisterFeedbackServer(s grpc.ServiceRegistrar, srv FeedbackServer) {
 	s.RegisterService(&Feedback_ServiceDesc, srv)
 }
 
-func _Feedback_ListFeedbackCategory_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListFeedbackCategoryRequest)
+func _Feedback_ListFeedbackClassify_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListFeedbackClassifyRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(FeedbackServer).ListFeedbackCategory(ctx, in)
+		return srv.(FeedbackServer).ListFeedbackClassify(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Feedback_ListFeedbackCategory_FullMethodName,
+		FullMethod: Feedback_ListFeedbackClassify_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(FeedbackServer).ListFeedbackCategory(ctx, req.(*ListFeedbackCategoryRequest))
+		return srv.(FeedbackServer).ListFeedbackClassify(ctx, req.(*ListFeedbackClassifyRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Feedback_CreateFeedbackCategory_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CreateFeedbackCategoryRequest)
+func _Feedback_CreateFeedbackClassify_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateFeedbackClassifyRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(FeedbackServer).CreateFeedbackCategory(ctx, in)
+		return srv.(FeedbackServer).CreateFeedbackClassify(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Feedback_CreateFeedbackCategory_FullMethodName,
+		FullMethod: Feedback_CreateFeedbackClassify_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(FeedbackServer).CreateFeedbackCategory(ctx, req.(*CreateFeedbackCategoryRequest))
+		return srv.(FeedbackServer).CreateFeedbackClassify(ctx, req.(*CreateFeedbackClassifyRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Feedback_UpdateFeedbackCategory_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpdateFeedbackCategoryRequest)
+func _Feedback_UpdateFeedbackClassify_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateFeedbackClassifyRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(FeedbackServer).UpdateFeedbackCategory(ctx, in)
+		return srv.(FeedbackServer).UpdateFeedbackClassify(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Feedback_UpdateFeedbackCategory_FullMethodName,
+		FullMethod: Feedback_UpdateFeedbackClassify_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(FeedbackServer).UpdateFeedbackCategory(ctx, req.(*UpdateFeedbackCategoryRequest))
+		return srv.(FeedbackServer).UpdateFeedbackClassify(ctx, req.(*UpdateFeedbackClassifyRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Feedback_DeleteFeedbackCategory_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DeleteFeedbackCategoryRequest)
+func _Feedback_DeleteFeedbackClassify_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteFeedbackClassifyRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(FeedbackServer).DeleteFeedbackCategory(ctx, in)
+		return srv.(FeedbackServer).DeleteFeedbackClassify(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Feedback_DeleteFeedbackCategory_FullMethodName,
+		FullMethod: Feedback_DeleteFeedbackClassify_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(FeedbackServer).DeleteFeedbackCategory(ctx, req.(*DeleteFeedbackCategoryRequest))
+		return srv.(FeedbackServer).DeleteFeedbackClassify(ctx, req.(*DeleteFeedbackClassifyRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -354,20 +354,20 @@ var Feedback_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*FeedbackServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "ListFeedbackCategory",
-			Handler:    _Feedback_ListFeedbackCategory_Handler,
+			MethodName: "ListFeedbackClassify",
+			Handler:    _Feedback_ListFeedbackClassify_Handler,
 		},
 		{
-			MethodName: "CreateFeedbackCategory",
-			Handler:    _Feedback_CreateFeedbackCategory_Handler,
+			MethodName: "CreateFeedbackClassify",
+			Handler:    _Feedback_CreateFeedbackClassify_Handler,
 		},
 		{
-			MethodName: "UpdateFeedbackCategory",
-			Handler:    _Feedback_UpdateFeedbackCategory_Handler,
+			MethodName: "UpdateFeedbackClassify",
+			Handler:    _Feedback_UpdateFeedbackClassify_Handler,
 		},
 		{
-			MethodName: "DeleteFeedbackCategory",
-			Handler:    _Feedback_DeleteFeedbackCategory_Handler,
+			MethodName: "DeleteFeedbackClassify",
+			Handler:    _Feedback_DeleteFeedbackClassify_Handler,
 		},
 		{
 			MethodName: "ListFeedback",

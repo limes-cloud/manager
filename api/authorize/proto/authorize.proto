@@ -7,6 +7,7 @@ option java_multiple_files = true;
 option java_package = "manager.api.authorize";
 
 import "validate/validate.proto";
+import "google/protobuf/struct.proto";
 
 message GetImageCaptchaRequest{
   string scene = 2;
@@ -130,4 +131,28 @@ message ParseTokenReply{
   uint32 deptId = 2;
   uint32 tenantId = 3;
   string username = 4;
+}
+
+message GetFillInfoRequest{
+  string uuid = 1[(validate.rules).string = {min_len:1}];
+}
+
+message GetFillInfoReply{
+  message Field {
+    string keyword = 1;
+    string type = 2;
+    string name = 3;
+    google.protobuf.Value value = 4;
+  }
+  repeated Field list = 1;
+}
+
+
+message FillInfoRequest{
+  string uuid = 1[(validate.rules).string = {min_len:1}];
+  map<string, google.protobuf.Value> infos = 2[(validate.rules).map = {min_pairs:1}];
+}
+
+message FillInfoReply{
+  string token = 1;
 }

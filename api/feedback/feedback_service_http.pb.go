@@ -24,144 +24,124 @@ const _ = http.SupportPackageIsVersion1
 
 const (
 	OperationFeedbackCreateFeedback         = "/manager.api.feedback.Feedback/CreateFeedback"
-	OperationFeedbackCreateFeedbackCategory = "/manager.api.feedback.Feedback/CreateFeedbackCategory"
+	OperationFeedbackCreateFeedbackClassify = "/manager.api.feedback.Feedback/CreateFeedbackClassify"
 	OperationFeedbackDeleteFeedback         = "/manager.api.feedback.Feedback/DeleteFeedback"
-	OperationFeedbackDeleteFeedbackCategory = "/manager.api.feedback.Feedback/DeleteFeedbackCategory"
+	OperationFeedbackDeleteFeedbackClassify = "/manager.api.feedback.Feedback/DeleteFeedbackClassify"
 	OperationFeedbackListFeedback           = "/manager.api.feedback.Feedback/ListFeedback"
-	OperationFeedbackListFeedbackCategory   = "/manager.api.feedback.Feedback/ListFeedbackCategory"
+	OperationFeedbackListFeedbackClassify   = "/manager.api.feedback.Feedback/ListFeedbackClassify"
 	OperationFeedbackUpdateFeedback         = "/manager.api.feedback.Feedback/UpdateFeedback"
-	OperationFeedbackUpdateFeedbackCategory = "/manager.api.feedback.Feedback/UpdateFeedbackCategory"
+	OperationFeedbackUpdateFeedbackClassify = "/manager.api.feedback.Feedback/UpdateFeedbackClassify"
 )
 
 type FeedbackHTTPServer interface {
 	// CreateFeedback CreateFeedback 创建反馈建议
 	CreateFeedback(context.Context, *CreateFeedbackRequest) (*CreateFeedbackReply, error)
-	// CreateFeedbackCategory CreateFeedbackCategory 创建反馈建议分类
-	CreateFeedbackCategory(context.Context, *CreateFeedbackCategoryRequest) (*CreateFeedbackCategoryReply, error)
+	// CreateFeedbackClassify CreateFeedbackClassify 创建反馈建议分类
+	CreateFeedbackClassify(context.Context, *CreateFeedbackClassifyRequest) (*CreateFeedbackClassifyReply, error)
 	// DeleteFeedback DeleteFeedback 删除反馈建议
 	DeleteFeedback(context.Context, *DeleteFeedbackRequest) (*DeleteFeedbackReply, error)
-	// DeleteFeedbackCategory DeleteFeedbackCategory 删除反馈建议分类
-	DeleteFeedbackCategory(context.Context, *DeleteFeedbackCategoryRequest) (*DeleteFeedbackCategoryReply, error)
+	// DeleteFeedbackClassify DeleteFeedbackClassify 删除反馈建议分类
+	DeleteFeedbackClassify(context.Context, *DeleteFeedbackClassifyRequest) (*DeleteFeedbackClassifyReply, error)
 	// ListFeedback ListFeedback 获取反馈建议列表
 	ListFeedback(context.Context, *ListFeedbackRequest) (*ListFeedbackReply, error)
-	// ListFeedbackCategory ListFeedbackCategory 获取反馈建议分类列表
-	ListFeedbackCategory(context.Context, *ListFeedbackCategoryRequest) (*ListFeedbackCategoryReply, error)
+	// ListFeedbackClassify ListFeedbackClassify 获取反馈建议分类列表
+	ListFeedbackClassify(context.Context, *ListFeedbackClassifyRequest) (*ListFeedbackClassifyReply, error)
 	// UpdateFeedback UpdateFeedback 更新反馈建议
 	UpdateFeedback(context.Context, *UpdateFeedbackRequest) (*UpdateFeedbackReply, error)
-	// UpdateFeedbackCategory UpdateFeedbackCategory 更新反馈建议分类
-	UpdateFeedbackCategory(context.Context, *UpdateFeedbackCategoryRequest) (*UpdateFeedbackCategoryReply, error)
+	// UpdateFeedbackClassify UpdateFeedbackClassify 更新反馈建议分类
+	UpdateFeedbackClassify(context.Context, *UpdateFeedbackClassifyRequest) (*UpdateFeedbackClassifyReply, error)
 }
 
 func RegisterFeedbackHTTPServer(s *http.Server, srv FeedbackHTTPServer) {
 	r := s.Route("/")
-	r.GET("/manager/client/v1/feedback_categories", _Feedback_ListFeedbackCategory0_HTTP_Handler(srv))
-	r.GET("/manager/api/v1/feedback/categories", _Feedback_ListFeedbackCategory1_HTTP_Handler(srv))
-	r.POST("/manager/api/v1/feedback/category", _Feedback_CreateFeedbackCategory0_HTTP_Handler(srv))
-	r.PUT("/manager/api/v1/feedback/category", _Feedback_UpdateFeedbackCategory0_HTTP_Handler(srv))
-	r.DELETE("/manager/api/v1/feedback/category", _Feedback_DeleteFeedbackCategory0_HTTP_Handler(srv))
-	r.GET("/manager/api/v1/feedbacks", _Feedback_ListFeedback0_HTTP_Handler(srv))
-	r.POST("/manager/client/v1/feedback", _Feedback_CreateFeedback0_HTTP_Handler(srv))
-	r.DELETE("/manager/api/v1/feedback", _Feedback_DeleteFeedback0_HTTP_Handler(srv))
-	r.PUT("/manager/api/v1/feedback", _Feedback_UpdateFeedback0_HTTP_Handler(srv))
+	r.GET("/manager/api/feedback/classifies", _Feedback_ListFeedbackClassify0_HTTP_Handler(srv))
+	r.POST("/manager/api/feedback/classify", _Feedback_CreateFeedbackClassify0_HTTP_Handler(srv))
+	r.PUT("/manager/api/feedback/classify", _Feedback_UpdateFeedbackClassify0_HTTP_Handler(srv))
+	r.DELETE("/manager/api/feedback/classify", _Feedback_DeleteFeedbackClassify0_HTTP_Handler(srv))
+	r.GET("/manager/api/feedbacks", _Feedback_ListFeedback0_HTTP_Handler(srv))
+	r.POST("/manager/api/feedback", _Feedback_CreateFeedback0_HTTP_Handler(srv))
+	r.DELETE("/manager/api/feedback", _Feedback_DeleteFeedback0_HTTP_Handler(srv))
+	r.PUT("/manager/api/feedback", _Feedback_UpdateFeedback0_HTTP_Handler(srv))
 }
 
-func _Feedback_ListFeedbackCategory0_HTTP_Handler(srv FeedbackHTTPServer) func(ctx http.Context) error {
+func _Feedback_ListFeedbackClassify0_HTTP_Handler(srv FeedbackHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in ListFeedbackCategoryRequest
+		var in ListFeedbackClassifyRequest
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationFeedbackListFeedbackCategory)
+		http.SetOperation(ctx, OperationFeedbackListFeedbackClassify)
 		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
-			return srv.ListFeedbackCategory(ctx, req.(*ListFeedbackCategoryRequest))
+			return srv.ListFeedbackClassify(ctx, req.(*ListFeedbackClassifyRequest))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		reply := out.(*ListFeedbackCategoryReply)
+		reply := out.(*ListFeedbackClassifyReply)
 		return ctx.Result(200, reply)
 	}
 }
 
-func _Feedback_ListFeedbackCategory1_HTTP_Handler(srv FeedbackHTTPServer) func(ctx http.Context) error {
+func _Feedback_CreateFeedbackClassify0_HTTP_Handler(srv FeedbackHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in ListFeedbackCategoryRequest
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationFeedbackListFeedbackCategory)
-		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
-			return srv.ListFeedbackCategory(ctx, req.(*ListFeedbackCategoryRequest))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*ListFeedbackCategoryReply)
-		return ctx.Result(200, reply)
-	}
-}
-
-func _Feedback_CreateFeedbackCategory0_HTTP_Handler(srv FeedbackHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in CreateFeedbackCategoryRequest
+		var in CreateFeedbackClassifyRequest
 		if err := ctx.Bind(&in); err != nil {
 			return err
 		}
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationFeedbackCreateFeedbackCategory)
+		http.SetOperation(ctx, OperationFeedbackCreateFeedbackClassify)
 		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
-			return srv.CreateFeedbackCategory(ctx, req.(*CreateFeedbackCategoryRequest))
+			return srv.CreateFeedbackClassify(ctx, req.(*CreateFeedbackClassifyRequest))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		reply := out.(*CreateFeedbackCategoryReply)
+		reply := out.(*CreateFeedbackClassifyReply)
 		return ctx.Result(200, reply)
 	}
 }
 
-func _Feedback_UpdateFeedbackCategory0_HTTP_Handler(srv FeedbackHTTPServer) func(ctx http.Context) error {
+func _Feedback_UpdateFeedbackClassify0_HTTP_Handler(srv FeedbackHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in UpdateFeedbackCategoryRequest
+		var in UpdateFeedbackClassifyRequest
 		if err := ctx.Bind(&in); err != nil {
 			return err
 		}
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationFeedbackUpdateFeedbackCategory)
+		http.SetOperation(ctx, OperationFeedbackUpdateFeedbackClassify)
 		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
-			return srv.UpdateFeedbackCategory(ctx, req.(*UpdateFeedbackCategoryRequest))
+			return srv.UpdateFeedbackClassify(ctx, req.(*UpdateFeedbackClassifyRequest))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		reply := out.(*UpdateFeedbackCategoryReply)
+		reply := out.(*UpdateFeedbackClassifyReply)
 		return ctx.Result(200, reply)
 	}
 }
 
-func _Feedback_DeleteFeedbackCategory0_HTTP_Handler(srv FeedbackHTTPServer) func(ctx http.Context) error {
+func _Feedback_DeleteFeedbackClassify0_HTTP_Handler(srv FeedbackHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in DeleteFeedbackCategoryRequest
+		var in DeleteFeedbackClassifyRequest
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationFeedbackDeleteFeedbackCategory)
+		http.SetOperation(ctx, OperationFeedbackDeleteFeedbackClassify)
 		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
-			return srv.DeleteFeedbackCategory(ctx, req.(*DeleteFeedbackCategoryRequest))
+			return srv.DeleteFeedbackClassify(ctx, req.(*DeleteFeedbackClassifyRequest))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		reply := out.(*DeleteFeedbackCategoryReply)
+		reply := out.(*DeleteFeedbackClassifyReply)
 		return ctx.Result(200, reply)
 	}
 }
@@ -250,13 +230,13 @@ func _Feedback_UpdateFeedback0_HTTP_Handler(srv FeedbackHTTPServer) func(ctx htt
 
 type FeedbackHTTPClient interface {
 	CreateFeedback(ctx context.Context, req *CreateFeedbackRequest, opts ...http.CallOption) (rsp *CreateFeedbackReply, err error)
-	CreateFeedbackCategory(ctx context.Context, req *CreateFeedbackCategoryRequest, opts ...http.CallOption) (rsp *CreateFeedbackCategoryReply, err error)
+	CreateFeedbackClassify(ctx context.Context, req *CreateFeedbackClassifyRequest, opts ...http.CallOption) (rsp *CreateFeedbackClassifyReply, err error)
 	DeleteFeedback(ctx context.Context, req *DeleteFeedbackRequest, opts ...http.CallOption) (rsp *DeleteFeedbackReply, err error)
-	DeleteFeedbackCategory(ctx context.Context, req *DeleteFeedbackCategoryRequest, opts ...http.CallOption) (rsp *DeleteFeedbackCategoryReply, err error)
+	DeleteFeedbackClassify(ctx context.Context, req *DeleteFeedbackClassifyRequest, opts ...http.CallOption) (rsp *DeleteFeedbackClassifyReply, err error)
 	ListFeedback(ctx context.Context, req *ListFeedbackRequest, opts ...http.CallOption) (rsp *ListFeedbackReply, err error)
-	ListFeedbackCategory(ctx context.Context, req *ListFeedbackCategoryRequest, opts ...http.CallOption) (rsp *ListFeedbackCategoryReply, err error)
+	ListFeedbackClassify(ctx context.Context, req *ListFeedbackClassifyRequest, opts ...http.CallOption) (rsp *ListFeedbackClassifyReply, err error)
 	UpdateFeedback(ctx context.Context, req *UpdateFeedbackRequest, opts ...http.CallOption) (rsp *UpdateFeedbackReply, err error)
-	UpdateFeedbackCategory(ctx context.Context, req *UpdateFeedbackCategoryRequest, opts ...http.CallOption) (rsp *UpdateFeedbackCategoryReply, err error)
+	UpdateFeedbackClassify(ctx context.Context, req *UpdateFeedbackClassifyRequest, opts ...http.CallOption) (rsp *UpdateFeedbackClassifyReply, err error)
 }
 
 type FeedbackHTTPClientImpl struct {
@@ -269,7 +249,7 @@ func NewFeedbackHTTPClient(client *http.Client) FeedbackHTTPClient {
 
 func (c *FeedbackHTTPClientImpl) CreateFeedback(ctx context.Context, in *CreateFeedbackRequest, opts ...http.CallOption) (*CreateFeedbackReply, error) {
 	var out CreateFeedbackReply
-	pattern := "/manager/client/v1/feedback"
+	pattern := "/manager/api/feedback"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationFeedbackCreateFeedback))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -280,11 +260,11 @@ func (c *FeedbackHTTPClientImpl) CreateFeedback(ctx context.Context, in *CreateF
 	return &out, err
 }
 
-func (c *FeedbackHTTPClientImpl) CreateFeedbackCategory(ctx context.Context, in *CreateFeedbackCategoryRequest, opts ...http.CallOption) (*CreateFeedbackCategoryReply, error) {
-	var out CreateFeedbackCategoryReply
-	pattern := "/manager/api/v1/feedback/category"
+func (c *FeedbackHTTPClientImpl) CreateFeedbackClassify(ctx context.Context, in *CreateFeedbackClassifyRequest, opts ...http.CallOption) (*CreateFeedbackClassifyReply, error) {
+	var out CreateFeedbackClassifyReply
+	pattern := "/manager/api/feedback/classify"
 	path := binding.EncodeURL(pattern, in, false)
-	opts = append(opts, http.Operation(OperationFeedbackCreateFeedbackCategory))
+	opts = append(opts, http.Operation(OperationFeedbackCreateFeedbackClassify))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
 	if err != nil {
@@ -295,7 +275,7 @@ func (c *FeedbackHTTPClientImpl) CreateFeedbackCategory(ctx context.Context, in 
 
 func (c *FeedbackHTTPClientImpl) DeleteFeedback(ctx context.Context, in *DeleteFeedbackRequest, opts ...http.CallOption) (*DeleteFeedbackReply, error) {
 	var out DeleteFeedbackReply
-	pattern := "/manager/api/v1/feedback"
+	pattern := "/manager/api/feedback"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationFeedbackDeleteFeedback))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -306,11 +286,11 @@ func (c *FeedbackHTTPClientImpl) DeleteFeedback(ctx context.Context, in *DeleteF
 	return &out, err
 }
 
-func (c *FeedbackHTTPClientImpl) DeleteFeedbackCategory(ctx context.Context, in *DeleteFeedbackCategoryRequest, opts ...http.CallOption) (*DeleteFeedbackCategoryReply, error) {
-	var out DeleteFeedbackCategoryReply
-	pattern := "/manager/api/v1/feedback/category"
+func (c *FeedbackHTTPClientImpl) DeleteFeedbackClassify(ctx context.Context, in *DeleteFeedbackClassifyRequest, opts ...http.CallOption) (*DeleteFeedbackClassifyReply, error) {
+	var out DeleteFeedbackClassifyReply
+	pattern := "/manager/api/feedback/classify"
 	path := binding.EncodeURL(pattern, in, true)
-	opts = append(opts, http.Operation(OperationFeedbackDeleteFeedbackCategory))
+	opts = append(opts, http.Operation(OperationFeedbackDeleteFeedbackClassify))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "DELETE", path, nil, &out, opts...)
 	if err != nil {
@@ -321,7 +301,7 @@ func (c *FeedbackHTTPClientImpl) DeleteFeedbackCategory(ctx context.Context, in 
 
 func (c *FeedbackHTTPClientImpl) ListFeedback(ctx context.Context, in *ListFeedbackRequest, opts ...http.CallOption) (*ListFeedbackReply, error) {
 	var out ListFeedbackReply
-	pattern := "/manager/api/v1/feedbacks"
+	pattern := "/manager/api/feedbacks"
 	path := binding.EncodeURL(pattern, in, true)
 	opts = append(opts, http.Operation(OperationFeedbackListFeedback))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -332,11 +312,11 @@ func (c *FeedbackHTTPClientImpl) ListFeedback(ctx context.Context, in *ListFeedb
 	return &out, err
 }
 
-func (c *FeedbackHTTPClientImpl) ListFeedbackCategory(ctx context.Context, in *ListFeedbackCategoryRequest, opts ...http.CallOption) (*ListFeedbackCategoryReply, error) {
-	var out ListFeedbackCategoryReply
-	pattern := "/manager/api/v1/feedback/categories"
+func (c *FeedbackHTTPClientImpl) ListFeedbackClassify(ctx context.Context, in *ListFeedbackClassifyRequest, opts ...http.CallOption) (*ListFeedbackClassifyReply, error) {
+	var out ListFeedbackClassifyReply
+	pattern := "/manager/api/feedback/classifies"
 	path := binding.EncodeURL(pattern, in, true)
-	opts = append(opts, http.Operation(OperationFeedbackListFeedbackCategory))
+	opts = append(opts, http.Operation(OperationFeedbackListFeedbackClassify))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {
@@ -347,7 +327,7 @@ func (c *FeedbackHTTPClientImpl) ListFeedbackCategory(ctx context.Context, in *L
 
 func (c *FeedbackHTTPClientImpl) UpdateFeedback(ctx context.Context, in *UpdateFeedbackRequest, opts ...http.CallOption) (*UpdateFeedbackReply, error) {
 	var out UpdateFeedbackReply
-	pattern := "/manager/api/v1/feedback"
+	pattern := "/manager/api/feedback"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationFeedbackUpdateFeedback))
 	opts = append(opts, http.PathTemplate(pattern))
@@ -358,11 +338,11 @@ func (c *FeedbackHTTPClientImpl) UpdateFeedback(ctx context.Context, in *UpdateF
 	return &out, err
 }
 
-func (c *FeedbackHTTPClientImpl) UpdateFeedbackCategory(ctx context.Context, in *UpdateFeedbackCategoryRequest, opts ...http.CallOption) (*UpdateFeedbackCategoryReply, error) {
-	var out UpdateFeedbackCategoryReply
-	pattern := "/manager/api/v1/feedback/category"
+func (c *FeedbackHTTPClientImpl) UpdateFeedbackClassify(ctx context.Context, in *UpdateFeedbackClassifyRequest, opts ...http.CallOption) (*UpdateFeedbackClassifyReply, error) {
+	var out UpdateFeedbackClassifyReply
+	pattern := "/manager/api/feedback/classify"
 	path := binding.EncodeURL(pattern, in, false)
-	opts = append(opts, http.Operation(OperationFeedbackUpdateFeedbackCategory))
+	opts = append(opts, http.Operation(OperationFeedbackUpdateFeedbackClassify))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "PUT", path, in, &out, opts...)
 	if err != nil {

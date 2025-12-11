@@ -7,17 +7,17 @@ import (
 )
 
 type Feedback interface {
-	// ListFeedbackCategory 获取反馈建议分类列表
-	ListFeedbackCategory(ctx core.Context, req *types.ListFeedbackCategoryRequest) ([]*entity.FeedbackCategory, uint32, error)
+	// ListFeedbackClassify 获取反馈建议分类列表
+	ListFeedbackClassify(ctx core.Context, req *types.ListFeedbackClassifyRequest) ([]*entity.FeedbackClassify, uint32, error)
 
-	// CreateFeedbackCategory 创建反馈建议分类
-	CreateFeedbackCategory(ctx core.Context, req *entity.FeedbackCategory) (uint32, error)
+	// CreateFeedbackClassify 创建反馈建议分类
+	CreateFeedbackClassify(ctx core.Context, req *entity.FeedbackClassify) (uint32, error)
 
-	// UpdateFeedbackCategory 更新反馈建议分类
-	UpdateFeedbackCategory(ctx core.Context, req *entity.FeedbackCategory) error
+	// UpdateFeedbackClassify 更新反馈建议分类
+	UpdateFeedbackClassify(ctx core.Context, req *entity.FeedbackClassify) error
 
-	// DeleteFeedbackCategory 删除反馈建议分类
-	DeleteFeedbackCategory(ctx core.Context, id uint32) error
+	// DeleteFeedbackClassify 删除反馈建议分类
+	DeleteFeedbackClassify(ctx core.Context, id uint32) error
 
 	// IsExistFeedbackByMd5 是否存在反馈
 	IsExistFeedbackByMd5(ctx core.Context, md5 string) bool

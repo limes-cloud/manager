@@ -24,6 +24,8 @@ const _ = http.SupportPackageIsVersion1
 
 const (
 	OperationAuthorizeCheckAuth       = "/manager.api.authorize.Authorize/CheckAuth"
+	OperationAuthorizeFillInfo        = "/manager.api.authorize.Authorize/FillInfo"
+	OperationAuthorizeGetFillInfo     = "/manager.api.authorize.Authorize/GetFillInfo"
 	OperationAuthorizeGetImageCaptcha = "/manager.api.authorize.Authorize/GetImageCaptcha"
 	OperationAuthorizeListOAuther     = "/manager.api.authorize.Authorize/ListOAuther"
 	OperationAuthorizeLogin           = "/manager.api.authorize.Authorize/Login"
@@ -37,6 +39,10 @@ const (
 type AuthorizeHTTPServer interface {
 	// CheckAuth CheckAuth 接口验证
 	CheckAuth(context.Context, *CheckAuthRequest) (*CheckAuthReply, error)
+	// FillInfo FillInfo 补充info信息
+	FillInfo(context.Context, *FillInfoRequest) (*FillInfoReply, error)
+	// GetFillInfo GetFillInfo 获取待补充info信息
+	GetFillInfo(context.Context, *GetFillInfoRequest) (*GetFillInfoReply, error)
 	// GetImageCaptcha GetImageCaptcha 获取验证码
 	GetImageCaptcha(context.Context, *GetImageCaptchaRequest) (*GetImageCaptchaReply, error)
 	// ListOAuther ListOAuther 获取登陆渠道信息
@@ -66,6 +72,8 @@ func RegisterAuthorizeHTTPServer(s *http.Server, srv AuthorizeHTTPServer) {
 	r.POST("/manager/api/authorize/register", _Authorize_Register0_HTTP_Handler(srv))
 	r.POST("/manager/api/authorize/check", _Authorize_CheckAuth0_HTTP_Handler(srv))
 	r.POST("/manager/api/v1/authorize/token/parse", _Authorize_ParseToken0_HTTP_Handler(srv))
+	r.GET("/manager/api/authorize/fill/infos", _Authorize_GetFillInfo0_HTTP_Handler(srv))
+	r.POST("/manager/api/authorize/fill/infos", _Authorize_FillInfo0_HTTP_Handler(srv))
 }
 
 func _Authorize_ListOAuther0_HTTP_Handler(srv AuthorizeHTTPServer) func(ctx http.Context) error {
@@ -260,8 +268,51 @@ func _Authorize_ParseToken0_HTTP_Handler(srv AuthorizeHTTPServer) func(ctx http.
 	}
 }
 
+func _Authorize_GetFillInfo0_HTTP_Handler(srv AuthorizeHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in GetFillInfoRequest
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationAuthorizeGetFillInfo)
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
+			return srv.GetFillInfo(ctx, req.(*GetFillInfoRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*GetFillInfoReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Authorize_FillInfo0_HTTP_Handler(srv AuthorizeHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in FillInfoRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationAuthorizeFillInfo)
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
+			return srv.FillInfo(ctx, req.(*FillInfoRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*FillInfoReply)
+		return ctx.Result(200, reply)
+	}
+}
+
 type AuthorizeHTTPClient interface {
 	CheckAuth(ctx context.Context, req *CheckAuthRequest, opts ...http.CallOption) (rsp *CheckAuthReply, err error)
+	FillInfo(ctx context.Context, req *FillInfoRequest, opts ...http.CallOption) (rsp *FillInfoReply, err error)
+	GetFillInfo(ctx context.Context, req *GetFillInfoRequest, opts ...http.CallOption) (rsp *GetFillInfoReply, err error)
 	GetImageCaptcha(ctx context.Context, req *GetImageCaptchaRequest, opts ...http.CallOption) (rsp *GetImageCaptchaReply, err error)
 	ListOAuther(ctx context.Context, req *ListOAutherRequest, opts ...http.CallOption) (rsp *ListOAutherReply, err error)
 	Login(ctx context.Context, req *LoginRequest, opts ...http.CallOption) (rsp *LoginReply, err error)
@@ -287,6 +338,32 @@ func (c *AuthorizeHTTPClientImpl) CheckAuth(ctx context.Context, in *CheckAuthRe
 	opts = append(opts, http.Operation(OperationAuthorizeCheckAuth))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *AuthorizeHTTPClientImpl) FillInfo(ctx context.Context, in *FillInfoRequest, opts ...http.CallOption) (*FillInfoReply, error) {
+	var out FillInfoReply
+	pattern := "/manager/api/authorize/fill/infos"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationAuthorizeFillInfo))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *AuthorizeHTTPClientImpl) GetFillInfo(ctx context.Context, in *GetFillInfoRequest, opts ...http.CallOption) (*GetFillInfoReply, error) {
+	var out GetFillInfoReply
+	pattern := "/manager/api/authorize/fill/infos"
+	path := binding.EncodeURL(pattern, in, true)
+	opts = append(opts, http.Operation(OperationAuthorizeGetFillInfo))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {
 		return nil, err
 	}

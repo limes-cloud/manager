@@ -11,50 +11,47 @@ import "google/api/annotations.proto";
 
 service Feedback{
 
-  // ListFeedbackCategory 获取反馈建议分类列表
-  rpc ListFeedbackCategory (ListFeedbackCategoryRequest) returns (ListFeedbackCategoryReply) {
+  // ListFeedbackClassify 获取反馈建议分类列表
+  rpc ListFeedbackClassify (ListFeedbackClassifyRequest) returns (ListFeedbackClassifyReply) {
     option (google.api.http) = {
-      get: "/manager/api/v1/feedback/categories",
-      additional_bindings:{
-        get: "/manager/client/v1/feedback_categories",
-      }
+      get: "/manager/api/feedback/classifies",
     };
   }
 
-  // CreateFeedbackCategory 创建反馈建议分类
-  rpc CreateFeedbackCategory (CreateFeedbackCategoryRequest) returns (CreateFeedbackCategoryReply) {
+  // CreateFeedbackClassify 创建反馈建议分类
+  rpc CreateFeedbackClassify (CreateFeedbackClassifyRequest) returns (CreateFeedbackClassifyReply) {
     option (google.api.http) = {
-      post: "/manager/api/v1/feedback/category",
+      post: "/manager/api/feedback/classify",
       body: "*"
     };
   }
 
-  // UpdateFeedbackCategory 更新反馈建议分类
-  rpc UpdateFeedbackCategory (UpdateFeedbackCategoryRequest) returns (UpdateFeedbackCategoryReply) {
+  // UpdateFeedbackClassify 更新反馈建议分类
+  rpc UpdateFeedbackClassify (UpdateFeedbackClassifyRequest) returns (UpdateFeedbackClassifyReply) {
     option (google.api.http) = {
-      put: "/manager/api/v1/feedback/category",
+      put: "/manager/api/feedback/classify",
       body: "*"
     };
   }
 
-  // DeleteFeedbackCategory 删除反馈建议分类
-  rpc DeleteFeedbackCategory (DeleteFeedbackCategoryRequest) returns (DeleteFeedbackCategoryReply) {
+  // DeleteFeedbackClassify 删除反馈建议分类
+  rpc DeleteFeedbackClassify (DeleteFeedbackClassifyRequest) returns (DeleteFeedbackClassifyReply) {
     option (google.api.http) = {
-      delete: "/manager/api/v1/feedback/category",
+      delete: "/manager/api/feedback/classify",
     };
   }
 
   // ListFeedback 获取反馈建议列表
   rpc ListFeedback (ListFeedbackRequest) returns (ListFeedbackReply) {
     option (google.api.http) = {
-      get: "/manager/api/v1/feedbacks",
+      get: "/manager/api/feedbacks",
     };
   }
 
   // CreateFeedback 创建反馈建议
   rpc CreateFeedback (CreateFeedbackRequest) returns (CreateFeedbackReply) {
     option (google.api.http) = {
-      post: "/manager/client/v1/feedback",
+      post: "/manager/api/feedback",
       body: "*"
     };
   }
@@ -62,14 +59,14 @@ service Feedback{
   // DeleteFeedback 删除反馈建议
   rpc DeleteFeedback (DeleteFeedbackRequest) returns (DeleteFeedbackReply) {
     option (google.api.http) = {
-      delete: "/manager/api/v1/feedback",
+      delete: "/manager/api/feedback",
     };
   }
 
   // UpdateFeedback 更新反馈建议
   rpc UpdateFeedback (UpdateFeedbackRequest) returns (UpdateFeedbackReply) {
     option (google.api.http) = {
-      put: "/manager/api/v1/feedback",
+      put: "/manager/api/feedback",
       body: "*"
     };
   }

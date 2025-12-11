@@ -8,7 +8,7 @@ option java_package = "manager.api.feedback";
 
 import "validate/validate.proto";
 
-message ListFeedbackCategoryRequest {
+message ListFeedbackClassifyRequest {
   uint32 page = 1[(validate.rules).uint32 = {gte: 1}];
   uint32 pageSize = 2[(validate.rules).uint32 = {gte: 1,lte:50}];
   optional string order = 3[(validate.rules).string = {in: ["asc","desc"]}];
@@ -16,38 +16,39 @@ message ListFeedbackCategoryRequest {
   optional string name = 5;
 }
 
-message ListFeedbackCategoryReply {
-  message FeedbackCategory {
+message ListFeedbackClassifyReply {
+  message FeedbackClassify {
     uint32 id = 1;
     string name = 2;
     uint32 createdAt = 3;
+    uint32 updatedAt = 4;
   }
 
   uint32 total = 1;
-  repeated FeedbackCategory list = 2;
+  repeated FeedbackClassify list = 2;
 }
 
-message CreateFeedbackCategoryRequest {
+message CreateFeedbackClassifyRequest {
   string name = 1[(validate.rules).string = {min_len: 1}];
 }
 
-message CreateFeedbackCategoryReply {
+message CreateFeedbackClassifyReply {
   uint32 id = 1;
 }
 
-message UpdateFeedbackCategoryRequest {
+message UpdateFeedbackClassifyRequest {
   uint32 id = 1[(validate.rules).uint32 = {gte: 1}];
   string name = 2[(validate.rules).string = {min_len: 1}];
 }
 
-message UpdateFeedbackCategoryReply {
+message UpdateFeedbackClassifyReply {
 }
 
-message DeleteFeedbackCategoryRequest {
+message DeleteFeedbackClassifyRequest {
   uint32 id = 1[(validate.rules).uint32 = {gte: 1}];
 }
 
-message DeleteFeedbackCategoryReply {
+message DeleteFeedbackClassifyReply {
 }
 
 
@@ -57,7 +58,7 @@ message ListFeedbackRequest {
   optional string order = 3[(validate.rules).string = {in: ["asc","desc"]}];
   optional string orderBy = 4[(validate.rules).string = {in: ["id","created_at"]}];
   optional uint32 appId = 5;
-  optional uint32 categoryId = 6;
+  optional uint32 classifyId = 6;
   optional string status = 7;
   optional string platform = 8;
 }
@@ -70,17 +71,17 @@ message ListFeedbackReply {
     }
     message User {
       uint32 id = 1;
-      string realName = 2;
-      string nickName = 3;
+      string username = 2;
+      string nickname = 3;
     }
-    message Category {
+    message Classify {
       uint32 id = 1;
       string name = 2;
     }
     uint32 id = 1;
     uint32 appId = 2;
     uint32 userId = 3;
-    uint32 categoryId = 4;
+    uint32 classifyId = 4;
     string title = 5;
     string content = 6;
     string status = 7;
@@ -95,7 +96,7 @@ message ListFeedbackReply {
     uint32 updatedAt = 16;
     optional App app = 17;
     optional User user = 18;
-    optional Category category = 19;
+    optional Classify classify = 19;
     repeated string imageUrls  = 20;
   }
 
@@ -105,7 +106,7 @@ message ListFeedbackReply {
 
 message CreateFeedbackRequest {
   uint32 appId = 1[(validate.rules).uint32 = {gte: 1}];
-  uint32 categoryId = 2[(validate.rules).uint32 = {gte: 1}];
+  uint32 classifyId = 2[(validate.rules).uint32 = {gte: 1}];
   string title = 3[(validate.rules).string = {min_len: 1}];
   string content = 4[(validate.rules).string = {min_len: 1}];
   optional string images = 5;

@@ -43,13 +43,15 @@ message UserObject {
   string nickname = 2;
   string username = 3;
   string avatar = 4;
-  optional bool status = 5;
-  uint32 loggedAt = 6;
-  uint32 createdAt = 7;
-  uint32 updatedAt = 8;
+  string email = 5;
+  string phone = 6;
+  optional bool status = 7;
+  uint32 loggedAt = 8;
+  uint32 createdAt = 9;
+  uint32 updatedAt = 10;
   string setting = 11;
   map<string, string> infos = 12;
-  repeated UserDept userDepts = 9;
+  repeated UserDept userDepts = 13;
 }
 
 message ListUserRequest{

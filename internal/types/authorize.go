@@ -1,6 +1,9 @@
 package types
 
-import "github.com/limes-cloud/kratosx/model/page"
+import (
+	"github.com/limes-cloud/kratosx/model/page"
+	"google.golang.org/protobuf/types/known/structpb"
+)
 
 const (
 	InfoKey = "x-md-global-info"
@@ -134,4 +137,11 @@ type OAutherBindReply struct {
 	NeedRegister bool
 	NeedInfo     bool
 	Token        string
+}
+
+type FillInfo struct {
+	Type    string          `json:"type"`
+	Keyword string          `json:"keyword"`
+	Name    string          `json:"name"`
+	Value   *structpb.Value `json:"value"`
 }

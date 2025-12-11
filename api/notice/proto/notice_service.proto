@@ -1,0 +1,94 @@
+syntax = "proto3";
+
+package manager.api.notice;
+option go_package = "manager/api/notice;notice";
+option java_multiple_files = true;
+option java_package = "manager.api.notice";
+option java_outer_classname = "NoticeV1";
+
+import "google/api/annotations.proto";
+import "api/notice/proto/notice.proto";
+
+service Notice{
+  // ListNoticeClassify 获取通知分类列表
+  rpc ListNoticeClassify (ListNoticeClassifyRequest) returns (ListNoticeClassifyReply) {
+    option (google.api.http) = {
+      get: "/manager/api/notice/classifies",
+    };
+  }
+
+  // CreateNoticeClassify 创建通知分类
+  rpc CreateNoticeClassify (CreateNoticeClassifyRequest) returns (CreateNoticeClassifyReply) {
+    option (google.api.http) = {
+      post: "/manager/api/notice/classify",
+      body: "*"
+    };
+  }
+
+  // UpdateNoticeClassify 更新通知分类
+  rpc UpdateNoticeClassify (UpdateNoticeClassifyRequest) returns (UpdateNoticeClassifyReply) {
+    option (google.api.http) = {
+      put: "/manager/api/notice/classify",
+      body: "*"
+    };
+  }
+
+  // DeleteNoticeClassify 删除通知分类
+  rpc DeleteNoticeClassify (DeleteNoticeClassifyRequest) returns (DeleteNoticeClassifyReply) {
+    option (google.api.http) = {
+      delete: "/manager/api/notice/classify",
+    };
+  }
+  
+  // GetNotice 获取指定的通知信息
+  rpc GetNotice (GetNoticeRequest) returns (GetNoticeReply) {
+    option (google.api.http) = {
+      get: "/manager/api/notice",
+    };
+  }
+
+  // ListNotice 获取通知信息列表
+  rpc ListVisibleNotice (ListVisibleNoticeRequest) returns (ListNoticeReply) {
+    option (google.api.http) = {
+      get: "/manager/api/visible-notices",
+    };
+  }
+
+  // GetVisibleNotice 获取可见通知信息
+  rpc GetVisibleNotice (GetNoticeRequest) returns (GetNoticeReply) {
+    option (google.api.http) = {
+      get: "/manager/api/visible-notice",
+    };
+  }
+
+  // ListNotice 获取通知信息列表
+  rpc ListNotice (ListNoticeRequest) returns (ListNoticeReply) {
+    option (google.api.http) = {
+      get: "/manager/api/notices",
+    };
+  }
+
+  // CreateNotice 创建通知信息
+  rpc CreateNotice (CreateNoticeRequest) returns (CreateNoticeReply) {
+    option (google.api.http) = {
+      post: "/manager/api/notice",
+      body: "*"
+    };
+  }
+
+  // UpdateNotice 更新通知信息
+  rpc UpdateNotice (UpdateNoticeRequest) returns (UpdateNoticeReply) {
+    option (google.api.http) = {
+      put: "/manager/api/notice",
+      body: "*"
+    };
+  }
+
+  // DeleteNotice 删除通知信息
+  rpc DeleteNotice (DeleteNoticeRequest) returns (DeleteNoticeReply) {
+    option (google.api.http) = {
+      delete: "/manager/api/notice",
+    };
+  }
+
+}

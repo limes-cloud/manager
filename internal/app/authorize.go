@@ -221,3 +221,33 @@ func (az *Authorize) ParseToken(c context.Context, req *authorize.ParseTokenRequ
 		DeptId:   ctx.Auth().DeptId,
 	}, nil
 }
+
+func (az *Authorize) GetFillInfo(c context.Context, req *authorize.GetFillInfoRequest) (*authorize.GetFillInfoReply, error) {
+	ctx := core.MustContext(c, kratosx.WithSkipDBHook())
+	list, err := az.srv.GetFillInfo(ctx, req.Uuid)
+	if err != nil {
+		return nil, err
+	}
+
+	reply := authorize.GetFillInfoReply{}
+	for _, item := range list {
+		reply.List = append(reply.List, &authorize.GetFillInfoReply_Field{
+			Type:    item.Type,
+			Name:    item.Name,
+			Keyword: item.Keyword,
+			Value:   item.Value,
+		})
+	}
+
+	return &reply, nil
+}
+
+func (az *Authorize) FillInfo(c context.Context, req *authorize.FillInfoRequest) (*authorize.FillInfoReply, error) {
+	ctx := core.MustContext(c, kratosx.WithSkipDBHook())
+	token, err := az.srv.FillInfo(ctx, req.Uuid, req.Infos)
+	if err != nil {
+		return nil, err
+	}
+
+	return &authorize.FillInfoReply{Token: token}, nil
+}

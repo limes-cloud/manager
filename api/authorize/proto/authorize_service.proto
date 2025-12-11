@@ -6,6 +6,7 @@ option go_package = "manager/api/authorize;authorize";
 option java_multiple_files = true;
 option java_package = "manager.api.authorize";
 
+import "google/protobuf/empty.proto";
 import "google/api/annotations.proto";
 import "api/authorize/proto/authorize.proto";
 
@@ -79,4 +80,22 @@ service Authorize {
       body: "*"
     };
   }
+
+
+  // GetFillInfo 获取待补充info信息
+  rpc GetFillInfo(GetFillInfoRequest) returns(GetFillInfoReply){
+    option (google.api.http) = {
+      get: "/manager/api/authorize/fill/infos",
+    };
+  }
+
+  // FillInfo 补充info信息
+  rpc FillInfo(FillInfoRequest) returns(FillInfoReply){
+    option (google.api.http) = {
+      post: "/manager/api/authorize/fill/infos",
+      body: "*"
+    };
+  }
+
+
 }

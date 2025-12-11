@@ -3,6 +3,9 @@ package app
 import (
 	"context"
 
+	"github.com/go-kratos/kratos/v2/transport/grpc"
+	"github.com/go-kratos/kratos/v2/transport/http"
+
 	"github.com/limes-cloud/kratosx/pkg/value"
 
 	"github.com/limes-cloud/kratosx/model"
@@ -33,18 +36,18 @@ func NewFeedback() *Feedback {
 	}
 }
 
-//func init() {
-//	register(func(hs *http.Server, gs *grpc.Server) {
-//		srv := NewFeedback()
-//		feedback.RegisterFeedbackHTTPServer(hs, srv)
-//		feedback.RegisterFeedbackServer(gs, srv)
-//	})
-//}
+func init() {
+	register(func(hs *http.Server, gs *grpc.Server) {
+		srv := NewFeedback()
+		feedback.RegisterFeedbackHTTPServer(hs, srv)
+		feedback.RegisterFeedbackServer(gs, srv)
+	})
+}
 
-// ListFeedbackCategory 获取反馈建议分类列表
-func (fb *Feedback) ListFeedbackCategory(c context.Context, req *feedback.ListFeedbackCategoryRequest) (*feedback.ListFeedbackCategoryReply, error) {
-	list, total, err := fb.srv.ListFeedbackCategory(core.MustContext(c), &types.ListFeedbackCategoryRequest{
-		Search: page.Search{
+// ListFeedbackClassify 获取反馈建议分类列表
+func (fb *Feedback) ListFeedbackClassify(c context.Context, req *feedback.ListFeedbackClassifyRequest) (*feedback.ListFeedbackClassifyReply, error) {
+	list, total, err := fb.srv.ListFeedbackClassify(core.MustContext(c), &types.ListFeedbackClassifyRequest{
+		Search: &page.Search{
 			Page:     req.Page,
 			PageSize: req.PageSize,
 			Order:    req.Order,
@@ -55,58 +58,59 @@ func (fb *Feedback) ListFeedbackCategory(c context.Context, req *feedback.ListFe
 	if err != nil {
 		return nil, err
 	}
-	reply := feedback.ListFeedbackCategoryReply{Total: total}
+	reply := feedback.ListFeedbackClassifyReply{Total: total}
 	for _, item := range list {
-		reply.List = append(reply.List, &feedback.ListFeedbackCategoryReply_FeedbackCategory{
+		reply.List = append(reply.List, &feedback.ListFeedbackClassifyReply_FeedbackClassify{
 			Id:        item.Id,
 			Name:      item.Name,
 			CreatedAt: uint32(item.CreatedAt),
+			UpdatedAt: uint32(item.UpdatedAt),
 		})
 	}
 	return &reply, nil
 }
 
-// CreateFeedbackCategory 创建反馈建议分类
-func (fb *Feedback) CreateFeedbackCategory(c context.Context, req *feedback.CreateFeedbackCategoryRequest) (*feedback.CreateFeedbackCategoryReply, error) {
-	id, err := fb.srv.CreateFeedbackCategory(core.MustContext(c), &entity.FeedbackCategory{
+// CreateFeedbackClassify 创建反馈建议分类
+func (fb *Feedback) CreateFeedbackClassify(c context.Context, req *feedback.CreateFeedbackClassifyRequest) (*feedback.CreateFeedbackClassifyReply, error) {
+	id, err := fb.srv.CreateFeedbackClassify(core.MustContext(c), &entity.FeedbackClassify{
 		Name: req.Name,
 	})
 	if err != nil {
 		return nil, err
 	}
-	return &feedback.CreateFeedbackCategoryReply{Id: id}, nil
+	return &feedback.CreateFeedbackClassifyReply{Id: id}, nil
 }
 
-// UpdateFeedbackCategory 更新反馈建议分类
-func (fb *Feedback) UpdateFeedbackCategory(c context.Context, req *feedback.UpdateFeedbackCategoryRequest) (*feedback.UpdateFeedbackCategoryReply, error) {
-	if err := fb.srv.UpdateFeedbackCategory(core.MustContext(c), &entity.FeedbackCategory{
+// UpdateFeedbackClassify 更新反馈建议分类
+func (fb *Feedback) UpdateFeedbackClassify(c context.Context, req *feedback.UpdateFeedbackClassifyRequest) (*feedback.UpdateFeedbackClassifyReply, error) {
+	if err := fb.srv.UpdateFeedbackClassify(core.MustContext(c), &entity.FeedbackClassify{
 		BaseTenantModel: model.BaseTenantModel{Id: req.Id},
 		Name:            req.Name,
 	}); err != nil {
 		return nil, err
 	}
-	return &feedback.UpdateFeedbackCategoryReply{}, nil
+	return &feedback.UpdateFeedbackClassifyReply{}, nil
 }
 
-// DeleteFeedbackCategory 删除反馈建议分类
-func (fb *Feedback) DeleteFeedbackCategory(c context.Context, req *feedback.DeleteFeedbackCategoryRequest) (*feedback.DeleteFeedbackCategoryReply, error) {
-	if err := fb.srv.DeleteFeedbackCategory(core.MustContext(c), req.Id); err != nil {
+// DeleteFeedbackClassify 删除反馈建议分类
+func (fb *Feedback) DeleteFeedbackClassify(c context.Context, req *feedback.DeleteFeedbackClassifyRequest) (*feedback.DeleteFeedbackClassifyReply, error) {
+	if err := fb.srv.DeleteFeedbackClassify(core.MustContext(c), req.Id); err != nil {
 		return nil, err
 	}
-	return &feedback.DeleteFeedbackCategoryReply{}, nil
+	return &feedback.DeleteFeedbackClassifyReply{}, nil
 }
 
 // ListFeedback 获取反馈建议列表
 func (fb *Feedback) ListFeedback(c context.Context, req *feedback.ListFeedbackRequest) (*feedback.ListFeedbackReply, error) {
 	list, total, err := fb.srv.ListFeedback(core.MustContext(c), &types.ListFeedbackRequest{
-		Search: page.Search{
+		Search: &page.Search{
 			Page:     req.Page,
 			PageSize: req.PageSize,
 			Order:    req.Order,
 			OrderBy:  req.OrderBy,
 		},
 		AppId:      req.AppId,
-		CategoryId: req.CategoryId,
+		ClassifyId: req.ClassifyId,
 		Status:     req.Status,
 		Platform:   req.Platform,
 	})
@@ -122,9 +126,11 @@ func (fb *Feedback) ListFeedback(c context.Context, req *feedback.ListFeedbackRe
 
 // CreateFeedback 创建反馈建议
 func (fb *Feedback) CreateFeedback(c context.Context, req *feedback.CreateFeedbackRequest) (*feedback.CreateFeedbackReply, error) {
-	id, err := fb.srv.CreateFeedback(core.MustContext(c), &entity.Feedback{
+	ctx := core.MustContext(c)
+	id, err := fb.srv.CreateFeedback(ctx, &entity.Feedback{
+		UserId:     ctx.Auth().UserId,
 		AppId:      req.AppId,
-		CategoryId: req.CategoryId,
+		ClassifyId: req.ClassifyId,
 		Title:      req.Title,
 		Content:    req.Content,
 		Images:     req.Images,
@@ -150,9 +156,9 @@ func (fb *Feedback) DeleteFeedback(c context.Context, req *feedback.DeleteFeedba
 // UpdateFeedback 更新反馈建议
 func (fb *Feedback) UpdateFeedback(c context.Context, req *feedback.UpdateFeedbackRequest) (*feedback.UpdateFeedbackReply, error) {
 	if err := fb.srv.UpdateFeedback(core.MustContext(c), &entity.Feedback{
-		BaseTenantUserModel: model.BaseTenantUserModel{Id: req.Id},
-		Status:              req.Status,
-		ProcessedResult:     req.ProcessedResult,
+		BaseTenantModel: model.BaseTenantModel{Id: req.Id},
+		Status:          req.Status,
+		ProcessedResult: req.ProcessedResult,
 	}); err != nil {
 		return nil, err
 	}

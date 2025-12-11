@@ -29,6 +29,8 @@ const (
 	Authorize_Register_FullMethodName        = "/manager.api.authorize.Authorize/Register"
 	Authorize_CheckAuth_FullMethodName       = "/manager.api.authorize.Authorize/CheckAuth"
 	Authorize_ParseToken_FullMethodName      = "/manager.api.authorize.Authorize/ParseToken"
+	Authorize_GetFillInfo_FullMethodName     = "/manager.api.authorize.Authorize/GetFillInfo"
+	Authorize_FillInfo_FullMethodName        = "/manager.api.authorize.Authorize/FillInfo"
 )
 
 // AuthorizeClient is the client API for Authorize service.
@@ -53,6 +55,10 @@ type AuthorizeClient interface {
 	CheckAuth(ctx context.Context, in *CheckAuthRequest, opts ...grpc.CallOption) (*CheckAuthReply, error)
 	// ParseToken token解析
 	ParseToken(ctx context.Context, in *ParseTokenRequest, opts ...grpc.CallOption) (*ParseTokenReply, error)
+	// GetFillInfo 获取待补充info信息
+	GetFillInfo(ctx context.Context, in *GetFillInfoRequest, opts ...grpc.CallOption) (*GetFillInfoReply, error)
+	// FillInfo 补充info信息
+	FillInfo(ctx context.Context, in *FillInfoRequest, opts ...grpc.CallOption) (*FillInfoReply, error)
 }
 
 type authorizeClient struct {
@@ -144,6 +150,24 @@ func (c *authorizeClient) ParseToken(ctx context.Context, in *ParseTokenRequest,
 	return out, nil
 }
 
+func (c *authorizeClient) GetFillInfo(ctx context.Context, in *GetFillInfoRequest, opts ...grpc.CallOption) (*GetFillInfoReply, error) {
+	out := new(GetFillInfoReply)
+	err := c.cc.Invoke(ctx, Authorize_GetFillInfo_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *authorizeClient) FillInfo(ctx context.Context, in *FillInfoRequest, opts ...grpc.CallOption) (*FillInfoReply, error) {
+	out := new(FillInfoReply)
+	err := c.cc.Invoke(ctx, Authorize_FillInfo_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // AuthorizeServer is the server API for Authorize service.
 // All implementations must embed UnimplementedAuthorizeServer
 // for forward compatibility
@@ -166,6 +190,10 @@ type AuthorizeServer interface {
 	CheckAuth(context.Context, *CheckAuthRequest) (*CheckAuthReply, error)
 	// ParseToken token解析
 	ParseToken(context.Context, *ParseTokenRequest) (*ParseTokenReply, error)
+	// GetFillInfo 获取待补充info信息
+	GetFillInfo(context.Context, *GetFillInfoRequest) (*GetFillInfoReply, error)
+	// FillInfo 补充info信息
+	FillInfo(context.Context, *FillInfoRequest) (*FillInfoReply, error)
 	mustEmbedUnimplementedAuthorizeServer()
 }
 
@@ -206,6 +234,14 @@ func (UnimplementedAuthorizeServer) CheckAuth(context.Context, *CheckAuthRequest
 
 func (UnimplementedAuthorizeServer) ParseToken(context.Context, *ParseTokenRequest) (*ParseTokenReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ParseToken not implemented")
+}
+
+func (UnimplementedAuthorizeServer) GetFillInfo(context.Context, *GetFillInfoRequest) (*GetFillInfoReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetFillInfo not implemented")
+}
+
+func (UnimplementedAuthorizeServer) FillInfo(context.Context, *FillInfoRequest) (*FillInfoReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method FillInfo not implemented")
 }
 func (UnimplementedAuthorizeServer) mustEmbedUnimplementedAuthorizeServer() {}
 
@@ -382,6 +418,42 @@ func _Authorize_ParseToken_Handler(srv interface{}, ctx context.Context, dec fun
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Authorize_GetFillInfo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetFillInfoRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthorizeServer).GetFillInfo(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Authorize_GetFillInfo_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthorizeServer).GetFillInfo(ctx, req.(*GetFillInfoRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Authorize_FillInfo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(FillInfoRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthorizeServer).FillInfo(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Authorize_FillInfo_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthorizeServer).FillInfo(ctx, req.(*FillInfoRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Authorize_ServiceDesc is the grpc.ServiceDesc for Authorize service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -424,6 +496,14 @@ var Authorize_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ParseToken",
 			Handler:    _Authorize_ParseToken_Handler,
+		},
+		{
+			MethodName: "GetFillInfo",
+			Handler:    _Authorize_GetFillInfo_Handler,
+		},
+		{
+			MethodName: "FillInfo",
+			Handler:    _Authorize_FillInfo_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

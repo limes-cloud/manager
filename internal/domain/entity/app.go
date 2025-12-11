@@ -14,6 +14,7 @@ type App struct {
 	Favicon     string  `json:"favicon" gorm:"column:favicon"`
 	Secret      string  `json:"secret" gorm:"column:secret"`
 	Name        string  `json:"name" gorm:"column:name"`
+	ShowName    string  `json:"showName" gorm:"column:show_name"`
 	Status      *bool   `json:"status" gorm:"column:status"`
 	Reason      *string `json:"reason" gorm:"column:reason"`
 	Private     *bool   `json:"private" gorm:"column:private"`

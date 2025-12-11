@@ -8,6 +8,13 @@ option java_package = "manager.api.app";
 
 import "validate/validate.proto";
 
+message AppSettingWeb {
+  // 版权信息
+  string copyright = 1;
+  // 水印信息
+  string watermark = 2;
+}
+
 message AppSettingJWT {
   string secret = 1;
   uint32 expire = 2;
@@ -23,6 +30,7 @@ message AppSettingTenant{
 message AppSetting {
   AppSettingJWT jwt = 1;
   AppSettingTenant tenant = 2;
+  AppSettingWeb web = 3;
 }
 
 message GetAppRequest {
@@ -33,18 +41,19 @@ message GetAppReply {
   uint32 id = 1;
   string type = 2;
   string logo = 3;
-  string favicon = 15;
-  string keyword = 4;
-  string secret = 5;
-  string name = 6;
-  optional string comment = 7;
-  bool private = 8;
-  bool status = 9;
-  optional string reason = 10;
-  optional string description = 11;
-  uint32 createdAt = 12;
-  uint32 updatedAt = 13;
-  AppSetting setting = 14;
+  string favicon = 4;
+  string keyword = 5;
+  string secret = 6;
+  string name = 7;
+  string showName = 8;
+  optional string comment = 9;
+  bool private = 10;
+  bool status = 11;
+  optional string reason = 12;
+  optional string description = 13;
+  uint32 createdAt = 14;
+  uint32 updatedAt = 15;
+  AppSetting setting = 16;
 }
 
 
@@ -55,21 +64,23 @@ message GetSampleAppRequest {
 message GetSampleAppReply {
   message Setting{
       AppSettingTenant tenant = 1;
+      AppSettingWeb web = 2;
   }
   uint32 id = 1;
   string type = 2;
   string logo = 3;
-  string favicon = 15;
-  string keyword = 4;
+  string favicon = 4;
+  string keyword = 5;
   string name = 6;
-  optional string comment = 7;
-  bool private = 8;
-  bool status = 9;
-  optional string reason = 10;
-  optional string description = 11;
-  Setting setting =  12;
-  uint32 createdAt = 13;
-  uint32 updatedAt = 14;
+  string showName = 7;
+  optional string comment = 8;
+  bool private = 9;
+  bool status = 10;
+  optional string reason = 11;
+  optional string description = 12;
+  Setting setting =  13;
+  uint32 createdAt = 14;
+  uint32 updatedAt = 15;
 }
 
 
@@ -87,16 +98,17 @@ message ListAppReply {
   message Data {
     uint32 id = 1;
     string logo = 2;
-    string favicon = 12;
-    string keyword = 3;
-    string name = 4;
-    optional bool status = 5;
-    optional string reason = 6;
-    optional bool private = 7;
-    optional string description = 8;
-    optional string comment = 9;
-    uint32 createdAt = 10;
-    uint32 updatedAt = 11;
+    string favicon = 3;
+    string keyword = 4;
+    string name = 5;
+    string showName = 6;
+    optional bool status = 7;
+    optional string reason = 8;
+    optional bool private = 9;
+    optional string description = 10;
+    optional string comment = 11;
+    uint32 createdAt = 12;
+    uint32 updatedAt = 13;
   }
 
   uint32 total = 1;
@@ -107,13 +119,14 @@ message CreateAppRequest {
   string type = 1[(validate.rules).string = {min_len: 1, max_len: 128}];
   string logo = 2[(validate.rules).string = {min_len: 1, max_len: 128}];
   string name = 3[(validate.rules).string = {min_len: 1, max_len: 64}];
-  string keyword = 4[(validate.rules).string = {min_len: 1, max_len: 32}];
-  string favicon = 5;
-  string secret = 6;
-  bool private = 7;
-  optional string description = 8;
-  optional string comment = 9;
-  AppSetting setting = 10;
+  string showName = 4[(validate.rules).string = {min_len: 1, max_len: 64}];
+  string keyword = 5[(validate.rules).string = {min_len: 1, max_len: 32}];
+  string favicon = 6;
+  string secret = 7;
+  bool private = 8;
+  optional string description = 9;
+  optional string comment = 10;
+  AppSetting setting = 11;
 }
 
 message CreateAppReply {
@@ -127,12 +140,13 @@ message UpdateAppRequest {
   optional string favicon = 4[(validate.rules).string = {max_len: 128}];
   optional string secret = 5[(validate.rules).string = {max_len: 128}];
   optional string name = 6[(validate.rules).string = {max_len: 64}];
-  optional bool private = 7;
-  optional bool status = 8;
-  optional string reason = 9;
-  optional string description = 10;
-  optional string comment = 11;
-  optional AppSetting setting = 12;
+  optional string showName = 7[(validate.rules).string = {max_len: 64}];
+  optional bool private = 8;
+  optional bool status = 9;
+  optional string reason = 10;
+  optional string description = 11;
+  optional string comment = 12;
+  optional AppSetting setting = 13;
 }
 
 message UpdateAppReply {

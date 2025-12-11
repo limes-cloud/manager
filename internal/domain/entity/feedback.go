@@ -6,7 +6,8 @@ import (
 
 type Feedback struct {
 	AppId           uint32            `json:"appId" gorm:"column:app_id"`
-	CategoryId      uint32            `json:"categoryId" gorm:"column:category_id"`
+	UserId          uint32            `json:"userId" gorm:"column:user_id"`
+	ClassifyId      uint32            `json:"classifyId" gorm:"column:classify_id"`
 	Title           string            `json:"title" gorm:"column:title"`
 	Content         string            `json:"content" gorm:"column:content"`
 	Status          string            `json:"status" gorm:"column:status"`
@@ -20,12 +21,12 @@ type Feedback struct {
 	ProcessedResult *string           `json:"processedResult" gorm:"column:processed_result"`
 	App             *App              `json:"app"`
 	User            *User             `json:"user"`
-	Category        *FeedbackCategory `json:"category" gorm:"foreignKey:category_id;references:id"`
+	Classify        *FeedbackClassify `json:"classify" gorm:"foreignKey:classify_id;references:id"`
 	ImageUrls       []string          `json:"imageUrls" gorm:"-"`
-	model.BaseTenantUserModel
+	model.BaseTenantModel
 }
 
-type FeedbackCategory struct {
+type FeedbackClassify struct {
 	Name string `json:"name" gorm:"column:name"`
 	model.BaseTenantModel
 }

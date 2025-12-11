@@ -283,6 +283,10 @@ func (m *UserObject) validate(all bool) error {
 
 	// no validation rules for Avatar
 
+	// no validation rules for Email
+
+	// no validation rules for Phone
+
 	// no validation rules for LoggedAt
 
 	// no validation rules for CreatedAt

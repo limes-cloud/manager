@@ -35,22 +35,22 @@ var (
 	_ = sort.Sort
 )
 
-// Validate checks the field values on ListFeedbackCategoryRequest with the
+// Validate checks the field values on ListFeedbackClassifyRequest with the
 // rules defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
-func (m *ListFeedbackCategoryRequest) Validate() error {
+func (m *ListFeedbackClassifyRequest) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on ListFeedbackCategoryRequest with the
+// ValidateAll checks the field values on ListFeedbackClassifyRequest with the
 // rules defined in the proto definition for this message. If any rules are
 // violated, the result is a list of violation errors wrapped in
-// ListFeedbackCategoryRequestMultiError, or nil if none found.
-func (m *ListFeedbackCategoryRequest) ValidateAll() error {
+// ListFeedbackClassifyRequestMultiError, or nil if none found.
+func (m *ListFeedbackClassifyRequest) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *ListFeedbackCategoryRequest) validate(all bool) error {
+func (m *ListFeedbackClassifyRequest) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
@@ -58,7 +58,7 @@ func (m *ListFeedbackCategoryRequest) validate(all bool) error {
 	var errors []error
 
 	if m.GetPage() < 1 {
-		err := ListFeedbackCategoryRequestValidationError{
+		err := ListFeedbackClassifyRequestValidationError{
 			field:  "Page",
 			reason: "value must be greater than or equal to 1",
 		}
@@ -69,7 +69,7 @@ func (m *ListFeedbackCategoryRequest) validate(all bool) error {
 	}
 
 	if val := m.GetPageSize(); val < 1 || val > 50 {
-		err := ListFeedbackCategoryRequestValidationError{
+		err := ListFeedbackClassifyRequestValidationError{
 			field:  "PageSize",
 			reason: "value must be inside range [1, 50]",
 		}
@@ -80,8 +80,8 @@ func (m *ListFeedbackCategoryRequest) validate(all bool) error {
 	}
 
 	if m.Order != nil {
-		if _, ok := _ListFeedbackCategoryRequest_Order_InLookup[m.GetOrder()]; !ok {
-			err := ListFeedbackCategoryRequestValidationError{
+		if _, ok := _ListFeedbackClassifyRequest_Order_InLookup[m.GetOrder()]; !ok {
+			err := ListFeedbackClassifyRequestValidationError{
 				field:  "Order",
 				reason: "value must be in list [asc desc]",
 			}
@@ -93,8 +93,8 @@ func (m *ListFeedbackCategoryRequest) validate(all bool) error {
 	}
 
 	if m.OrderBy != nil {
-		if _, ok := _ListFeedbackCategoryRequest_OrderBy_InLookup[m.GetOrderBy()]; !ok {
-			err := ListFeedbackCategoryRequestValidationError{
+		if _, ok := _ListFeedbackClassifyRequest_OrderBy_InLookup[m.GetOrderBy()]; !ok {
+			err := ListFeedbackClassifyRequestValidationError{
 				field:  "OrderBy",
 				reason: "value must be in list [id]",
 			}
@@ -110,19 +110,19 @@ func (m *ListFeedbackCategoryRequest) validate(all bool) error {
 	}
 
 	if len(errors) > 0 {
-		return ListFeedbackCategoryRequestMultiError(errors)
+		return ListFeedbackClassifyRequestMultiError(errors)
 	}
 
 	return nil
 }
 
-// ListFeedbackCategoryRequestMultiError is an error wrapping multiple
-// validation errors returned by ListFeedbackCategoryRequest.ValidateAll() if
+// ListFeedbackClassifyRequestMultiError is an error wrapping multiple
+// validation errors returned by ListFeedbackClassifyRequest.ValidateAll() if
 // the designated constraints aren't met.
-type ListFeedbackCategoryRequestMultiError []error
+type ListFeedbackClassifyRequestMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m ListFeedbackCategoryRequestMultiError) Error() string {
+func (m ListFeedbackClassifyRequestMultiError) Error() string {
 	var msgs []string
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -131,12 +131,12 @@ func (m ListFeedbackCategoryRequestMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m ListFeedbackCategoryRequestMultiError) AllErrors() []error { return m }
+func (m ListFeedbackClassifyRequestMultiError) AllErrors() []error { return m }
 
-// ListFeedbackCategoryRequestValidationError is the validation error returned
-// by ListFeedbackCategoryRequest.Validate if the designated constraints
+// ListFeedbackClassifyRequestValidationError is the validation error returned
+// by ListFeedbackClassifyRequest.Validate if the designated constraints
 // aren't met.
-type ListFeedbackCategoryRequestValidationError struct {
+type ListFeedbackClassifyRequestValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -144,24 +144,24 @@ type ListFeedbackCategoryRequestValidationError struct {
 }
 
 // Field function returns field value.
-func (e ListFeedbackCategoryRequestValidationError) Field() string { return e.field }
+func (e ListFeedbackClassifyRequestValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e ListFeedbackCategoryRequestValidationError) Reason() string { return e.reason }
+func (e ListFeedbackClassifyRequestValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e ListFeedbackCategoryRequestValidationError) Cause() error { return e.cause }
+func (e ListFeedbackClassifyRequestValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e ListFeedbackCategoryRequestValidationError) Key() bool { return e.key }
+func (e ListFeedbackClassifyRequestValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e ListFeedbackCategoryRequestValidationError) ErrorName() string {
-	return "ListFeedbackCategoryRequestValidationError"
+func (e ListFeedbackClassifyRequestValidationError) ErrorName() string {
+	return "ListFeedbackClassifyRequestValidationError"
 }
 
 // Error satisfies the builtin error interface
-func (e ListFeedbackCategoryRequestValidationError) Error() string {
+func (e ListFeedbackClassifyRequestValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -173,14 +173,14 @@ func (e ListFeedbackCategoryRequestValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sListFeedbackCategoryRequest.%s: %s%s",
+		"invalid %sListFeedbackClassifyRequest.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = ListFeedbackCategoryRequestValidationError{}
+var _ error = ListFeedbackClassifyRequestValidationError{}
 
 var _ interface {
 	Field() string
@@ -188,33 +188,33 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = ListFeedbackCategoryRequestValidationError{}
+} = ListFeedbackClassifyRequestValidationError{}
 
-var _ListFeedbackCategoryRequest_Order_InLookup = map[string]struct{}{
+var _ListFeedbackClassifyRequest_Order_InLookup = map[string]struct{}{
 	"asc":  {},
 	"desc": {},
 }
 
-var _ListFeedbackCategoryRequest_OrderBy_InLookup = map[string]struct{}{
+var _ListFeedbackClassifyRequest_OrderBy_InLookup = map[string]struct{}{
 	"id": {},
 }
 
-// Validate checks the field values on ListFeedbackCategoryReply with the rules
+// Validate checks the field values on ListFeedbackClassifyReply with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
-func (m *ListFeedbackCategoryReply) Validate() error {
+func (m *ListFeedbackClassifyReply) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on ListFeedbackCategoryReply with the
+// ValidateAll checks the field values on ListFeedbackClassifyReply with the
 // rules defined in the proto definition for this message. If any rules are
 // violated, the result is a list of violation errors wrapped in
-// ListFeedbackCategoryReplyMultiError, or nil if none found.
-func (m *ListFeedbackCategoryReply) ValidateAll() error {
+// ListFeedbackClassifyReplyMultiError, or nil if none found.
+func (m *ListFeedbackClassifyReply) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *ListFeedbackCategoryReply) validate(all bool) error {
+func (m *ListFeedbackClassifyReply) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
@@ -230,7 +230,7 @@ func (m *ListFeedbackCategoryReply) validate(all bool) error {
 			switch v := interface{}(item).(type) {
 			case interface{ ValidateAll() error }:
 				if err := v.ValidateAll(); err != nil {
-					errors = append(errors, ListFeedbackCategoryReplyValidationError{
+					errors = append(errors, ListFeedbackClassifyReplyValidationError{
 						field:  fmt.Sprintf("List[%v]", idx),
 						reason: "embedded message failed validation",
 						cause:  err,
@@ -238,7 +238,7 @@ func (m *ListFeedbackCategoryReply) validate(all bool) error {
 				}
 			case interface{ Validate() error }:
 				if err := v.Validate(); err != nil {
-					errors = append(errors, ListFeedbackCategoryReplyValidationError{
+					errors = append(errors, ListFeedbackClassifyReplyValidationError{
 						field:  fmt.Sprintf("List[%v]", idx),
 						reason: "embedded message failed validation",
 						cause:  err,
@@ -247,7 +247,7 @@ func (m *ListFeedbackCategoryReply) validate(all bool) error {
 			}
 		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
 			if err := v.Validate(); err != nil {
-				return ListFeedbackCategoryReplyValidationError{
+				return ListFeedbackClassifyReplyValidationError{
 					field:  fmt.Sprintf("List[%v]", idx),
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -258,19 +258,19 @@ func (m *ListFeedbackCategoryReply) validate(all bool) error {
 	}
 
 	if len(errors) > 0 {
-		return ListFeedbackCategoryReplyMultiError(errors)
+		return ListFeedbackClassifyReplyMultiError(errors)
 	}
 
 	return nil
 }
 
-// ListFeedbackCategoryReplyMultiError is an error wrapping multiple validation
-// errors returned by ListFeedbackCategoryReply.ValidateAll() if the
+// ListFeedbackClassifyReplyMultiError is an error wrapping multiple validation
+// errors returned by ListFeedbackClassifyReply.ValidateAll() if the
 // designated constraints aren't met.
-type ListFeedbackCategoryReplyMultiError []error
+type ListFeedbackClassifyReplyMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m ListFeedbackCategoryReplyMultiError) Error() string {
+func (m ListFeedbackClassifyReplyMultiError) Error() string {
 	var msgs []string
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -279,11 +279,11 @@ func (m ListFeedbackCategoryReplyMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m ListFeedbackCategoryReplyMultiError) AllErrors() []error { return m }
+func (m ListFeedbackClassifyReplyMultiError) AllErrors() []error { return m }
 
-// ListFeedbackCategoryReplyValidationError is the validation error returned by
-// ListFeedbackCategoryReply.Validate if the designated constraints aren't met.
-type ListFeedbackCategoryReplyValidationError struct {
+// ListFeedbackClassifyReplyValidationError is the validation error returned by
+// ListFeedbackClassifyReply.Validate if the designated constraints aren't met.
+type ListFeedbackClassifyReplyValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -291,24 +291,24 @@ type ListFeedbackCategoryReplyValidationError struct {
 }
 
 // Field function returns field value.
-func (e ListFeedbackCategoryReplyValidationError) Field() string { return e.field }
+func (e ListFeedbackClassifyReplyValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e ListFeedbackCategoryReplyValidationError) Reason() string { return e.reason }
+func (e ListFeedbackClassifyReplyValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e ListFeedbackCategoryReplyValidationError) Cause() error { return e.cause }
+func (e ListFeedbackClassifyReplyValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e ListFeedbackCategoryReplyValidationError) Key() bool { return e.key }
+func (e ListFeedbackClassifyReplyValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e ListFeedbackCategoryReplyValidationError) ErrorName() string {
-	return "ListFeedbackCategoryReplyValidationError"
+func (e ListFeedbackClassifyReplyValidationError) ErrorName() string {
+	return "ListFeedbackClassifyReplyValidationError"
 }
 
 // Error satisfies the builtin error interface
-func (e ListFeedbackCategoryReplyValidationError) Error() string {
+func (e ListFeedbackClassifyReplyValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -320,14 +320,14 @@ func (e ListFeedbackCategoryReplyValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sListFeedbackCategoryReply.%s: %s%s",
+		"invalid %sListFeedbackClassifyReply.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = ListFeedbackCategoryReplyValidationError{}
+var _ error = ListFeedbackClassifyReplyValidationError{}
 
 var _ interface {
 	Field() string
@@ -335,24 +335,24 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = ListFeedbackCategoryReplyValidationError{}
+} = ListFeedbackClassifyReplyValidationError{}
 
-// Validate checks the field values on CreateFeedbackCategoryRequest with the
+// Validate checks the field values on CreateFeedbackClassifyRequest with the
 // rules defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
-func (m *CreateFeedbackCategoryRequest) Validate() error {
+func (m *CreateFeedbackClassifyRequest) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on CreateFeedbackCategoryRequest with
+// ValidateAll checks the field values on CreateFeedbackClassifyRequest with
 // the rules defined in the proto definition for this message. If any rules
 // are violated, the result is a list of violation errors wrapped in
-// CreateFeedbackCategoryRequestMultiError, or nil if none found.
-func (m *CreateFeedbackCategoryRequest) ValidateAll() error {
+// CreateFeedbackClassifyRequestMultiError, or nil if none found.
+func (m *CreateFeedbackClassifyRequest) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *CreateFeedbackCategoryRequest) validate(all bool) error {
+func (m *CreateFeedbackClassifyRequest) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
@@ -360,7 +360,7 @@ func (m *CreateFeedbackCategoryRequest) validate(all bool) error {
 	var errors []error
 
 	if utf8.RuneCountInString(m.GetName()) < 1 {
-		err := CreateFeedbackCategoryRequestValidationError{
+		err := CreateFeedbackClassifyRequestValidationError{
 			field:  "Name",
 			reason: "value length must be at least 1 runes",
 		}
@@ -371,19 +371,19 @@ func (m *CreateFeedbackCategoryRequest) validate(all bool) error {
 	}
 
 	if len(errors) > 0 {
-		return CreateFeedbackCategoryRequestMultiError(errors)
+		return CreateFeedbackClassifyRequestMultiError(errors)
 	}
 
 	return nil
 }
 
-// CreateFeedbackCategoryRequestMultiError is an error wrapping multiple
-// validation errors returned by CreateFeedbackCategoryRequest.ValidateAll()
+// CreateFeedbackClassifyRequestMultiError is an error wrapping multiple
+// validation errors returned by CreateFeedbackClassifyRequest.ValidateAll()
 // if the designated constraints aren't met.
-type CreateFeedbackCategoryRequestMultiError []error
+type CreateFeedbackClassifyRequestMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m CreateFeedbackCategoryRequestMultiError) Error() string {
+func (m CreateFeedbackClassifyRequestMultiError) Error() string {
 	var msgs []string
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -392,12 +392,12 @@ func (m CreateFeedbackCategoryRequestMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m CreateFeedbackCategoryRequestMultiError) AllErrors() []error { return m }
+func (m CreateFeedbackClassifyRequestMultiError) AllErrors() []error { return m }
 
-// CreateFeedbackCategoryRequestValidationError is the validation error
-// returned by CreateFeedbackCategoryRequest.Validate if the designated
+// CreateFeedbackClassifyRequestValidationError is the validation error
+// returned by CreateFeedbackClassifyRequest.Validate if the designated
 // constraints aren't met.
-type CreateFeedbackCategoryRequestValidationError struct {
+type CreateFeedbackClassifyRequestValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -405,24 +405,24 @@ type CreateFeedbackCategoryRequestValidationError struct {
 }
 
 // Field function returns field value.
-func (e CreateFeedbackCategoryRequestValidationError) Field() string { return e.field }
+func (e CreateFeedbackClassifyRequestValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e CreateFeedbackCategoryRequestValidationError) Reason() string { return e.reason }
+func (e CreateFeedbackClassifyRequestValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e CreateFeedbackCategoryRequestValidationError) Cause() error { return e.cause }
+func (e CreateFeedbackClassifyRequestValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e CreateFeedbackCategoryRequestValidationError) Key() bool { return e.key }
+func (e CreateFeedbackClassifyRequestValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e CreateFeedbackCategoryRequestValidationError) ErrorName() string {
-	return "CreateFeedbackCategoryRequestValidationError"
+func (e CreateFeedbackClassifyRequestValidationError) ErrorName() string {
+	return "CreateFeedbackClassifyRequestValidationError"
 }
 
 // Error satisfies the builtin error interface
-func (e CreateFeedbackCategoryRequestValidationError) Error() string {
+func (e CreateFeedbackClassifyRequestValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -434,14 +434,14 @@ func (e CreateFeedbackCategoryRequestValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sCreateFeedbackCategoryRequest.%s: %s%s",
+		"invalid %sCreateFeedbackClassifyRequest.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = CreateFeedbackCategoryRequestValidationError{}
+var _ error = CreateFeedbackClassifyRequestValidationError{}
 
 var _ interface {
 	Field() string
@@ -449,24 +449,24 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = CreateFeedbackCategoryRequestValidationError{}
+} = CreateFeedbackClassifyRequestValidationError{}
 
-// Validate checks the field values on CreateFeedbackCategoryReply with the
+// Validate checks the field values on CreateFeedbackClassifyReply with the
 // rules defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
-func (m *CreateFeedbackCategoryReply) Validate() error {
+func (m *CreateFeedbackClassifyReply) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on CreateFeedbackCategoryReply with the
+// ValidateAll checks the field values on CreateFeedbackClassifyReply with the
 // rules defined in the proto definition for this message. If any rules are
 // violated, the result is a list of violation errors wrapped in
-// CreateFeedbackCategoryReplyMultiError, or nil if none found.
-func (m *CreateFeedbackCategoryReply) ValidateAll() error {
+// CreateFeedbackClassifyReplyMultiError, or nil if none found.
+func (m *CreateFeedbackClassifyReply) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *CreateFeedbackCategoryReply) validate(all bool) error {
+func (m *CreateFeedbackClassifyReply) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
@@ -476,19 +476,19 @@ func (m *CreateFeedbackCategoryReply) validate(all bool) error {
 	// no validation rules for Id
 
 	if len(errors) > 0 {
-		return CreateFeedbackCategoryReplyMultiError(errors)
+		return CreateFeedbackClassifyReplyMultiError(errors)
 	}
 
 	return nil
 }
 
-// CreateFeedbackCategoryReplyMultiError is an error wrapping multiple
-// validation errors returned by CreateFeedbackCategoryReply.ValidateAll() if
+// CreateFeedbackClassifyReplyMultiError is an error wrapping multiple
+// validation errors returned by CreateFeedbackClassifyReply.ValidateAll() if
 // the designated constraints aren't met.
-type CreateFeedbackCategoryReplyMultiError []error
+type CreateFeedbackClassifyReplyMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m CreateFeedbackCategoryReplyMultiError) Error() string {
+func (m CreateFeedbackClassifyReplyMultiError) Error() string {
 	var msgs []string
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -497,12 +497,12 @@ func (m CreateFeedbackCategoryReplyMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m CreateFeedbackCategoryReplyMultiError) AllErrors() []error { return m }
+func (m CreateFeedbackClassifyReplyMultiError) AllErrors() []error { return m }
 
-// CreateFeedbackCategoryReplyValidationError is the validation error returned
-// by CreateFeedbackCategoryReply.Validate if the designated constraints
+// CreateFeedbackClassifyReplyValidationError is the validation error returned
+// by CreateFeedbackClassifyReply.Validate if the designated constraints
 // aren't met.
-type CreateFeedbackCategoryReplyValidationError struct {
+type CreateFeedbackClassifyReplyValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -510,24 +510,24 @@ type CreateFeedbackCategoryReplyValidationError struct {
 }
 
 // Field function returns field value.
-func (e CreateFeedbackCategoryReplyValidationError) Field() string { return e.field }
+func (e CreateFeedbackClassifyReplyValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e CreateFeedbackCategoryReplyValidationError) Reason() string { return e.reason }
+func (e CreateFeedbackClassifyReplyValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e CreateFeedbackCategoryReplyValidationError) Cause() error { return e.cause }
+func (e CreateFeedbackClassifyReplyValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e CreateFeedbackCategoryReplyValidationError) Key() bool { return e.key }
+func (e CreateFeedbackClassifyReplyValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e CreateFeedbackCategoryReplyValidationError) ErrorName() string {
-	return "CreateFeedbackCategoryReplyValidationError"
+func (e CreateFeedbackClassifyReplyValidationError) ErrorName() string {
+	return "CreateFeedbackClassifyReplyValidationError"
 }
 
 // Error satisfies the builtin error interface
-func (e CreateFeedbackCategoryReplyValidationError) Error() string {
+func (e CreateFeedbackClassifyReplyValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -539,14 +539,14 @@ func (e CreateFeedbackCategoryReplyValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sCreateFeedbackCategoryReply.%s: %s%s",
+		"invalid %sCreateFeedbackClassifyReply.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = CreateFeedbackCategoryReplyValidationError{}
+var _ error = CreateFeedbackClassifyReplyValidationError{}
 
 var _ interface {
 	Field() string
@@ -554,24 +554,24 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = CreateFeedbackCategoryReplyValidationError{}
+} = CreateFeedbackClassifyReplyValidationError{}
 
-// Validate checks the field values on UpdateFeedbackCategoryRequest with the
+// Validate checks the field values on UpdateFeedbackClassifyRequest with the
 // rules defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
-func (m *UpdateFeedbackCategoryRequest) Validate() error {
+func (m *UpdateFeedbackClassifyRequest) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on UpdateFeedbackCategoryRequest with
+// ValidateAll checks the field values on UpdateFeedbackClassifyRequest with
 // the rules defined in the proto definition for this message. If any rules
 // are violated, the result is a list of violation errors wrapped in
-// UpdateFeedbackCategoryRequestMultiError, or nil if none found.
-func (m *UpdateFeedbackCategoryRequest) ValidateAll() error {
+// UpdateFeedbackClassifyRequestMultiError, or nil if none found.
+func (m *UpdateFeedbackClassifyRequest) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *UpdateFeedbackCategoryRequest) validate(all bool) error {
+func (m *UpdateFeedbackClassifyRequest) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
@@ -579,7 +579,7 @@ func (m *UpdateFeedbackCategoryRequest) validate(all bool) error {
 	var errors []error
 
 	if m.GetId() < 1 {
-		err := UpdateFeedbackCategoryRequestValidationError{
+		err := UpdateFeedbackClassifyRequestValidationError{
 			field:  "Id",
 			reason: "value must be greater than or equal to 1",
 		}
@@ -590,7 +590,7 @@ func (m *UpdateFeedbackCategoryRequest) validate(all bool) error {
 	}
 
 	if utf8.RuneCountInString(m.GetName()) < 1 {
-		err := UpdateFeedbackCategoryRequestValidationError{
+		err := UpdateFeedbackClassifyRequestValidationError{
 			field:  "Name",
 			reason: "value length must be at least 1 runes",
 		}
@@ -601,19 +601,19 @@ func (m *UpdateFeedbackCategoryRequest) validate(all bool) error {
 	}
 
 	if len(errors) > 0 {
-		return UpdateFeedbackCategoryRequestMultiError(errors)
+		return UpdateFeedbackClassifyRequestMultiError(errors)
 	}
 
 	return nil
 }
 
-// UpdateFeedbackCategoryRequestMultiError is an error wrapping multiple
-// validation errors returned by UpdateFeedbackCategoryRequest.ValidateAll()
+// UpdateFeedbackClassifyRequestMultiError is an error wrapping multiple
+// validation errors returned by UpdateFeedbackClassifyRequest.ValidateAll()
 // if the designated constraints aren't met.
-type UpdateFeedbackCategoryRequestMultiError []error
+type UpdateFeedbackClassifyRequestMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m UpdateFeedbackCategoryRequestMultiError) Error() string {
+func (m UpdateFeedbackClassifyRequestMultiError) Error() string {
 	var msgs []string
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -622,12 +622,12 @@ func (m UpdateFeedbackCategoryRequestMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m UpdateFeedbackCategoryRequestMultiError) AllErrors() []error { return m }
+func (m UpdateFeedbackClassifyRequestMultiError) AllErrors() []error { return m }
 
-// UpdateFeedbackCategoryRequestValidationError is the validation error
-// returned by UpdateFeedbackCategoryRequest.Validate if the designated
+// UpdateFeedbackClassifyRequestValidationError is the validation error
+// returned by UpdateFeedbackClassifyRequest.Validate if the designated
 // constraints aren't met.
-type UpdateFeedbackCategoryRequestValidationError struct {
+type UpdateFeedbackClassifyRequestValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -635,24 +635,24 @@ type UpdateFeedbackCategoryRequestValidationError struct {
 }
 
 // Field function returns field value.
-func (e UpdateFeedbackCategoryRequestValidationError) Field() string { return e.field }
+func (e UpdateFeedbackClassifyRequestValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e UpdateFeedbackCategoryRequestValidationError) Reason() string { return e.reason }
+func (e UpdateFeedbackClassifyRequestValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e UpdateFeedbackCategoryRequestValidationError) Cause() error { return e.cause }
+func (e UpdateFeedbackClassifyRequestValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e UpdateFeedbackCategoryRequestValidationError) Key() bool { return e.key }
+func (e UpdateFeedbackClassifyRequestValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e UpdateFeedbackCategoryRequestValidationError) ErrorName() string {
-	return "UpdateFeedbackCategoryRequestValidationError"
+func (e UpdateFeedbackClassifyRequestValidationError) ErrorName() string {
+	return "UpdateFeedbackClassifyRequestValidationError"
 }
 
 // Error satisfies the builtin error interface
-func (e UpdateFeedbackCategoryRequestValidationError) Error() string {
+func (e UpdateFeedbackClassifyRequestValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -664,14 +664,14 @@ func (e UpdateFeedbackCategoryRequestValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sUpdateFeedbackCategoryRequest.%s: %s%s",
+		"invalid %sUpdateFeedbackClassifyRequest.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = UpdateFeedbackCategoryRequestValidationError{}
+var _ error = UpdateFeedbackClassifyRequestValidationError{}
 
 var _ interface {
 	Field() string
@@ -679,24 +679,24 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = UpdateFeedbackCategoryRequestValidationError{}
+} = UpdateFeedbackClassifyRequestValidationError{}
 
-// Validate checks the field values on UpdateFeedbackCategoryReply with the
+// Validate checks the field values on UpdateFeedbackClassifyReply with the
 // rules defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
-func (m *UpdateFeedbackCategoryReply) Validate() error {
+func (m *UpdateFeedbackClassifyReply) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on UpdateFeedbackCategoryReply with the
+// ValidateAll checks the field values on UpdateFeedbackClassifyReply with the
 // rules defined in the proto definition for this message. If any rules are
 // violated, the result is a list of violation errors wrapped in
-// UpdateFeedbackCategoryReplyMultiError, or nil if none found.
-func (m *UpdateFeedbackCategoryReply) ValidateAll() error {
+// UpdateFeedbackClassifyReplyMultiError, or nil if none found.
+func (m *UpdateFeedbackClassifyReply) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *UpdateFeedbackCategoryReply) validate(all bool) error {
+func (m *UpdateFeedbackClassifyReply) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
@@ -704,19 +704,19 @@ func (m *UpdateFeedbackCategoryReply) validate(all bool) error {
 	var errors []error
 
 	if len(errors) > 0 {
-		return UpdateFeedbackCategoryReplyMultiError(errors)
+		return UpdateFeedbackClassifyReplyMultiError(errors)
 	}
 
 	return nil
 }
 
-// UpdateFeedbackCategoryReplyMultiError is an error wrapping multiple
-// validation errors returned by UpdateFeedbackCategoryReply.ValidateAll() if
+// UpdateFeedbackClassifyReplyMultiError is an error wrapping multiple
+// validation errors returned by UpdateFeedbackClassifyReply.ValidateAll() if
 // the designated constraints aren't met.
-type UpdateFeedbackCategoryReplyMultiError []error
+type UpdateFeedbackClassifyReplyMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m UpdateFeedbackCategoryReplyMultiError) Error() string {
+func (m UpdateFeedbackClassifyReplyMultiError) Error() string {
 	var msgs []string
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -725,12 +725,12 @@ func (m UpdateFeedbackCategoryReplyMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m UpdateFeedbackCategoryReplyMultiError) AllErrors() []error { return m }
+func (m UpdateFeedbackClassifyReplyMultiError) AllErrors() []error { return m }
 
-// UpdateFeedbackCategoryReplyValidationError is the validation error returned
-// by UpdateFeedbackCategoryReply.Validate if the designated constraints
+// UpdateFeedbackClassifyReplyValidationError is the validation error returned
+// by UpdateFeedbackClassifyReply.Validate if the designated constraints
 // aren't met.
-type UpdateFeedbackCategoryReplyValidationError struct {
+type UpdateFeedbackClassifyReplyValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -738,24 +738,24 @@ type UpdateFeedbackCategoryReplyValidationError struct {
 }
 
 // Field function returns field value.
-func (e UpdateFeedbackCategoryReplyValidationError) Field() string { return e.field }
+func (e UpdateFeedbackClassifyReplyValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e UpdateFeedbackCategoryReplyValidationError) Reason() string { return e.reason }
+func (e UpdateFeedbackClassifyReplyValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e UpdateFeedbackCategoryReplyValidationError) Cause() error { return e.cause }
+func (e UpdateFeedbackClassifyReplyValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e UpdateFeedbackCategoryReplyValidationError) Key() bool { return e.key }
+func (e UpdateFeedbackClassifyReplyValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e UpdateFeedbackCategoryReplyValidationError) ErrorName() string {
-	return "UpdateFeedbackCategoryReplyValidationError"
+func (e UpdateFeedbackClassifyReplyValidationError) ErrorName() string {
+	return "UpdateFeedbackClassifyReplyValidationError"
 }
 
 // Error satisfies the builtin error interface
-func (e UpdateFeedbackCategoryReplyValidationError) Error() string {
+func (e UpdateFeedbackClassifyReplyValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -767,14 +767,14 @@ func (e UpdateFeedbackCategoryReplyValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sUpdateFeedbackCategoryReply.%s: %s%s",
+		"invalid %sUpdateFeedbackClassifyReply.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = UpdateFeedbackCategoryReplyValidationError{}
+var _ error = UpdateFeedbackClassifyReplyValidationError{}
 
 var _ interface {
 	Field() string
@@ -782,24 +782,24 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = UpdateFeedbackCategoryReplyValidationError{}
+} = UpdateFeedbackClassifyReplyValidationError{}
 
-// Validate checks the field values on DeleteFeedbackCategoryRequest with the
+// Validate checks the field values on DeleteFeedbackClassifyRequest with the
 // rules defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
-func (m *DeleteFeedbackCategoryRequest) Validate() error {
+func (m *DeleteFeedbackClassifyRequest) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on DeleteFeedbackCategoryRequest with
+// ValidateAll checks the field values on DeleteFeedbackClassifyRequest with
 // the rules defined in the proto definition for this message. If any rules
 // are violated, the result is a list of violation errors wrapped in
-// DeleteFeedbackCategoryRequestMultiError, or nil if none found.
-func (m *DeleteFeedbackCategoryRequest) ValidateAll() error {
+// DeleteFeedbackClassifyRequestMultiError, or nil if none found.
+func (m *DeleteFeedbackClassifyRequest) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *DeleteFeedbackCategoryRequest) validate(all bool) error {
+func (m *DeleteFeedbackClassifyRequest) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
@@ -807,7 +807,7 @@ func (m *DeleteFeedbackCategoryRequest) validate(all bool) error {
 	var errors []error
 
 	if m.GetId() < 1 {
-		err := DeleteFeedbackCategoryRequestValidationError{
+		err := DeleteFeedbackClassifyRequestValidationError{
 			field:  "Id",
 			reason: "value must be greater than or equal to 1",
 		}
@@ -818,19 +818,19 @@ func (m *DeleteFeedbackCategoryRequest) validate(all bool) error {
 	}
 
 	if len(errors) > 0 {
-		return DeleteFeedbackCategoryRequestMultiError(errors)
+		return DeleteFeedbackClassifyRequestMultiError(errors)
 	}
 
 	return nil
 }
 
-// DeleteFeedbackCategoryRequestMultiError is an error wrapping multiple
-// validation errors returned by DeleteFeedbackCategoryRequest.ValidateAll()
+// DeleteFeedbackClassifyRequestMultiError is an error wrapping multiple
+// validation errors returned by DeleteFeedbackClassifyRequest.ValidateAll()
 // if the designated constraints aren't met.
-type DeleteFeedbackCategoryRequestMultiError []error
+type DeleteFeedbackClassifyRequestMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m DeleteFeedbackCategoryRequestMultiError) Error() string {
+func (m DeleteFeedbackClassifyRequestMultiError) Error() string {
 	var msgs []string
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -839,12 +839,12 @@ func (m DeleteFeedbackCategoryRequestMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m DeleteFeedbackCategoryRequestMultiError) AllErrors() []error { return m }
+func (m DeleteFeedbackClassifyRequestMultiError) AllErrors() []error { return m }
 
-// DeleteFeedbackCategoryRequestValidationError is the validation error
-// returned by DeleteFeedbackCategoryRequest.Validate if the designated
+// DeleteFeedbackClassifyRequestValidationError is the validation error
+// returned by DeleteFeedbackClassifyRequest.Validate if the designated
 // constraints aren't met.
-type DeleteFeedbackCategoryRequestValidationError struct {
+type DeleteFeedbackClassifyRequestValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -852,24 +852,24 @@ type DeleteFeedbackCategoryRequestValidationError struct {
 }
 
 // Field function returns field value.
-func (e DeleteFeedbackCategoryRequestValidationError) Field() string { return e.field }
+func (e DeleteFeedbackClassifyRequestValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e DeleteFeedbackCategoryRequestValidationError) Reason() string { return e.reason }
+func (e DeleteFeedbackClassifyRequestValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e DeleteFeedbackCategoryRequestValidationError) Cause() error { return e.cause }
+func (e DeleteFeedbackClassifyRequestValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e DeleteFeedbackCategoryRequestValidationError) Key() bool { return e.key }
+func (e DeleteFeedbackClassifyRequestValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e DeleteFeedbackCategoryRequestValidationError) ErrorName() string {
-	return "DeleteFeedbackCategoryRequestValidationError"
+func (e DeleteFeedbackClassifyRequestValidationError) ErrorName() string {
+	return "DeleteFeedbackClassifyRequestValidationError"
 }
 
 // Error satisfies the builtin error interface
-func (e DeleteFeedbackCategoryRequestValidationError) Error() string {
+func (e DeleteFeedbackClassifyRequestValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -881,14 +881,14 @@ func (e DeleteFeedbackCategoryRequestValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sDeleteFeedbackCategoryRequest.%s: %s%s",
+		"invalid %sDeleteFeedbackClassifyRequest.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = DeleteFeedbackCategoryRequestValidationError{}
+var _ error = DeleteFeedbackClassifyRequestValidationError{}
 
 var _ interface {
 	Field() string
@@ -896,24 +896,24 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = DeleteFeedbackCategoryRequestValidationError{}
+} = DeleteFeedbackClassifyRequestValidationError{}
 
-// Validate checks the field values on DeleteFeedbackCategoryReply with the
+// Validate checks the field values on DeleteFeedbackClassifyReply with the
 // rules defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
-func (m *DeleteFeedbackCategoryReply) Validate() error {
+func (m *DeleteFeedbackClassifyReply) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on DeleteFeedbackCategoryReply with the
+// ValidateAll checks the field values on DeleteFeedbackClassifyReply with the
 // rules defined in the proto definition for this message. If any rules are
 // violated, the result is a list of violation errors wrapped in
-// DeleteFeedbackCategoryReplyMultiError, or nil if none found.
-func (m *DeleteFeedbackCategoryReply) ValidateAll() error {
+// DeleteFeedbackClassifyReplyMultiError, or nil if none found.
+func (m *DeleteFeedbackClassifyReply) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *DeleteFeedbackCategoryReply) validate(all bool) error {
+func (m *DeleteFeedbackClassifyReply) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
@@ -921,19 +921,19 @@ func (m *DeleteFeedbackCategoryReply) validate(all bool) error {
 	var errors []error
 
 	if len(errors) > 0 {
-		return DeleteFeedbackCategoryReplyMultiError(errors)
+		return DeleteFeedbackClassifyReplyMultiError(errors)
 	}
 
 	return nil
 }
 
-// DeleteFeedbackCategoryReplyMultiError is an error wrapping multiple
-// validation errors returned by DeleteFeedbackCategoryReply.ValidateAll() if
+// DeleteFeedbackClassifyReplyMultiError is an error wrapping multiple
+// validation errors returned by DeleteFeedbackClassifyReply.ValidateAll() if
 // the designated constraints aren't met.
-type DeleteFeedbackCategoryReplyMultiError []error
+type DeleteFeedbackClassifyReplyMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m DeleteFeedbackCategoryReplyMultiError) Error() string {
+func (m DeleteFeedbackClassifyReplyMultiError) Error() string {
 	var msgs []string
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -942,12 +942,12 @@ func (m DeleteFeedbackCategoryReplyMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m DeleteFeedbackCategoryReplyMultiError) AllErrors() []error { return m }
+func (m DeleteFeedbackClassifyReplyMultiError) AllErrors() []error { return m }
 
-// DeleteFeedbackCategoryReplyValidationError is the validation error returned
-// by DeleteFeedbackCategoryReply.Validate if the designated constraints
+// DeleteFeedbackClassifyReplyValidationError is the validation error returned
+// by DeleteFeedbackClassifyReply.Validate if the designated constraints
 // aren't met.
-type DeleteFeedbackCategoryReplyValidationError struct {
+type DeleteFeedbackClassifyReplyValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -955,24 +955,24 @@ type DeleteFeedbackCategoryReplyValidationError struct {
 }
 
 // Field function returns field value.
-func (e DeleteFeedbackCategoryReplyValidationError) Field() string { return e.field }
+func (e DeleteFeedbackClassifyReplyValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e DeleteFeedbackCategoryReplyValidationError) Reason() string { return e.reason }
+func (e DeleteFeedbackClassifyReplyValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e DeleteFeedbackCategoryReplyValidationError) Cause() error { return e.cause }
+func (e DeleteFeedbackClassifyReplyValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e DeleteFeedbackCategoryReplyValidationError) Key() bool { return e.key }
+func (e DeleteFeedbackClassifyReplyValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e DeleteFeedbackCategoryReplyValidationError) ErrorName() string {
-	return "DeleteFeedbackCategoryReplyValidationError"
+func (e DeleteFeedbackClassifyReplyValidationError) ErrorName() string {
+	return "DeleteFeedbackClassifyReplyValidationError"
 }
 
 // Error satisfies the builtin error interface
-func (e DeleteFeedbackCategoryReplyValidationError) Error() string {
+func (e DeleteFeedbackClassifyReplyValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -984,14 +984,14 @@ func (e DeleteFeedbackCategoryReplyValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sDeleteFeedbackCategoryReply.%s: %s%s",
+		"invalid %sDeleteFeedbackClassifyReply.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = DeleteFeedbackCategoryReplyValidationError{}
+var _ error = DeleteFeedbackClassifyReplyValidationError{}
 
 var _ interface {
 	Field() string
@@ -999,7 +999,7 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = DeleteFeedbackCategoryReplyValidationError{}
+} = DeleteFeedbackClassifyReplyValidationError{}
 
 // Validate checks the field values on ListFeedbackRequest with the rules
 // defined in the proto definition for this message. If any rules are
@@ -1075,8 +1075,8 @@ func (m *ListFeedbackRequest) validate(all bool) error {
 		// no validation rules for AppId
 	}
 
-	if m.CategoryId != nil {
-		// no validation rules for CategoryId
+	if m.ClassifyId != nil {
+		// no validation rules for ClassifyId
 	}
 
 	if m.Status != nil {
@@ -1348,9 +1348,9 @@ func (m *CreateFeedbackRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	if m.GetCategoryId() < 1 {
+	if m.GetClassifyId() < 1 {
 		err := CreateFeedbackRequestValidationError{
-			field:  "CategoryId",
+			field:  "ClassifyId",
 			reason: "value must be greater than or equal to 1",
 		}
 		if !all {
@@ -2052,23 +2052,23 @@ var _ interface {
 } = UpdateFeedbackReplyValidationError{}
 
 // Validate checks the field values on
-// ListFeedbackCategoryReply_FeedbackCategory with the rules defined in the
+// ListFeedbackClassifyReply_FeedbackClassify with the rules defined in the
 // proto definition for this message. If any rules are violated, the first
 // error encountered is returned, or nil if there are no violations.
-func (m *ListFeedbackCategoryReply_FeedbackCategory) Validate() error {
+func (m *ListFeedbackClassifyReply_FeedbackClassify) Validate() error {
 	return m.validate(false)
 }
 
 // ValidateAll checks the field values on
-// ListFeedbackCategoryReply_FeedbackCategory with the rules defined in the
+// ListFeedbackClassifyReply_FeedbackClassify with the rules defined in the
 // proto definition for this message. If any rules are violated, the result is
 // a list of violation errors wrapped in
-// ListFeedbackCategoryReply_FeedbackCategoryMultiError, or nil if none found.
-func (m *ListFeedbackCategoryReply_FeedbackCategory) ValidateAll() error {
+// ListFeedbackClassifyReply_FeedbackClassifyMultiError, or nil if none found.
+func (m *ListFeedbackClassifyReply_FeedbackClassify) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *ListFeedbackCategoryReply_FeedbackCategory) validate(all bool) error {
+func (m *ListFeedbackClassifyReply_FeedbackClassify) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
@@ -2081,21 +2081,23 @@ func (m *ListFeedbackCategoryReply_FeedbackCategory) validate(all bool) error {
 
 	// no validation rules for CreatedAt
 
+	// no validation rules for UpdatedAt
+
 	if len(errors) > 0 {
-		return ListFeedbackCategoryReply_FeedbackCategoryMultiError(errors)
+		return ListFeedbackClassifyReply_FeedbackClassifyMultiError(errors)
 	}
 
 	return nil
 }
 
-// ListFeedbackCategoryReply_FeedbackCategoryMultiError is an error wrapping
+// ListFeedbackClassifyReply_FeedbackClassifyMultiError is an error wrapping
 // multiple validation errors returned by
-// ListFeedbackCategoryReply_FeedbackCategory.ValidateAll() if the designated
+// ListFeedbackClassifyReply_FeedbackClassify.ValidateAll() if the designated
 // constraints aren't met.
-type ListFeedbackCategoryReply_FeedbackCategoryMultiError []error
+type ListFeedbackClassifyReply_FeedbackClassifyMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m ListFeedbackCategoryReply_FeedbackCategoryMultiError) Error() string {
+func (m ListFeedbackClassifyReply_FeedbackClassifyMultiError) Error() string {
 	var msgs []string
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -2104,12 +2106,12 @@ func (m ListFeedbackCategoryReply_FeedbackCategoryMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m ListFeedbackCategoryReply_FeedbackCategoryMultiError) AllErrors() []error { return m }
+func (m ListFeedbackClassifyReply_FeedbackClassifyMultiError) AllErrors() []error { return m }
 
-// ListFeedbackCategoryReply_FeedbackCategoryValidationError is the validation
-// error returned by ListFeedbackCategoryReply_FeedbackCategory.Validate if
+// ListFeedbackClassifyReply_FeedbackClassifyValidationError is the validation
+// error returned by ListFeedbackClassifyReply_FeedbackClassify.Validate if
 // the designated constraints aren't met.
-type ListFeedbackCategoryReply_FeedbackCategoryValidationError struct {
+type ListFeedbackClassifyReply_FeedbackClassifyValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -2117,24 +2119,24 @@ type ListFeedbackCategoryReply_FeedbackCategoryValidationError struct {
 }
 
 // Field function returns field value.
-func (e ListFeedbackCategoryReply_FeedbackCategoryValidationError) Field() string { return e.field }
+func (e ListFeedbackClassifyReply_FeedbackClassifyValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e ListFeedbackCategoryReply_FeedbackCategoryValidationError) Reason() string { return e.reason }
+func (e ListFeedbackClassifyReply_FeedbackClassifyValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e ListFeedbackCategoryReply_FeedbackCategoryValidationError) Cause() error { return e.cause }
+func (e ListFeedbackClassifyReply_FeedbackClassifyValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e ListFeedbackCategoryReply_FeedbackCategoryValidationError) Key() bool { return e.key }
+func (e ListFeedbackClassifyReply_FeedbackClassifyValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e ListFeedbackCategoryReply_FeedbackCategoryValidationError) ErrorName() string {
-	return "ListFeedbackCategoryReply_FeedbackCategoryValidationError"
+func (e ListFeedbackClassifyReply_FeedbackClassifyValidationError) ErrorName() string {
+	return "ListFeedbackClassifyReply_FeedbackClassifyValidationError"
 }
 
 // Error satisfies the builtin error interface
-func (e ListFeedbackCategoryReply_FeedbackCategoryValidationError) Error() string {
+func (e ListFeedbackClassifyReply_FeedbackClassifyValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -2146,14 +2148,14 @@ func (e ListFeedbackCategoryReply_FeedbackCategoryValidationError) Error() strin
 	}
 
 	return fmt.Sprintf(
-		"invalid %sListFeedbackCategoryReply_FeedbackCategory.%s: %s%s",
+		"invalid %sListFeedbackClassifyReply_FeedbackClassify.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = ListFeedbackCategoryReply_FeedbackCategoryValidationError{}
+var _ error = ListFeedbackClassifyReply_FeedbackClassifyValidationError{}
 
 var _ interface {
 	Field() string
@@ -2161,7 +2163,7 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = ListFeedbackCategoryReply_FeedbackCategoryValidationError{}
+} = ListFeedbackClassifyReply_FeedbackClassifyValidationError{}
 
 // Validate checks the field values on ListFeedbackReply_Feedback with the
 // rules defined in the proto definition for this message. If any rules are
@@ -2191,7 +2193,7 @@ func (m *ListFeedbackReply_Feedback) validate(all bool) error {
 
 	// no validation rules for UserId
 
-	// no validation rules for CategoryId
+	// no validation rules for ClassifyId
 
 	// no validation rules for Title
 
@@ -2287,13 +2289,13 @@ func (m *ListFeedbackReply_Feedback) validate(all bool) error {
 		}
 	}
 
-	if m.Category != nil {
+	if m.Classify != nil {
 		if all {
-			switch v := interface{}(m.GetCategory()).(type) {
+			switch v := interface{}(m.GetClassify()).(type) {
 			case interface{ ValidateAll() error }:
 				if err := v.ValidateAll(); err != nil {
 					errors = append(errors, ListFeedbackReply_FeedbackValidationError{
-						field:  "Category",
+						field:  "Classify",
 						reason: "embedded message failed validation",
 						cause:  err,
 					})
@@ -2301,16 +2303,16 @@ func (m *ListFeedbackReply_Feedback) validate(all bool) error {
 			case interface{ Validate() error }:
 				if err := v.Validate(); err != nil {
 					errors = append(errors, ListFeedbackReply_FeedbackValidationError{
-						field:  "Category",
+						field:  "Classify",
 						reason: "embedded message failed validation",
 						cause:  err,
 					})
 				}
 			}
-		} else if v, ok := interface{}(m.GetCategory()).(interface{ Validate() error }); ok {
+		} else if v, ok := interface{}(m.GetClassify()).(interface{ Validate() error }); ok {
 			if err := v.Validate(); err != nil {
 				return ListFeedbackReply_FeedbackValidationError{
-					field:  "Category",
+					field:  "Classify",
 					reason: "embedded message failed validation",
 					cause:  err,
 				}
@@ -2529,9 +2531,9 @@ func (m *ListFeedbackReply_Feedback_User) validate(all bool) error {
 
 	// no validation rules for Id
 
-	// no validation rules for RealName
+	// no validation rules for Username
 
-	// no validation rules for NickName
+	// no validation rules for Nickname
 
 	if len(errors) > 0 {
 		return ListFeedbackReply_Feedback_UserMultiError(errors)
@@ -2614,23 +2616,23 @@ var _ interface {
 	ErrorName() string
 } = ListFeedbackReply_Feedback_UserValidationError{}
 
-// Validate checks the field values on ListFeedbackReply_Feedback_Category with
+// Validate checks the field values on ListFeedbackReply_Feedback_Classify with
 // the rules defined in the proto definition for this message. If any rules
 // are violated, the first error encountered is returned, or nil if there are
 // no violations.
-func (m *ListFeedbackReply_Feedback_Category) Validate() error {
+func (m *ListFeedbackReply_Feedback_Classify) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on ListFeedbackReply_Feedback_Category
+// ValidateAll checks the field values on ListFeedbackReply_Feedback_Classify
 // with the rules defined in the proto definition for this message. If any
 // rules are violated, the result is a list of violation errors wrapped in
-// ListFeedbackReply_Feedback_CategoryMultiError, or nil if none found.
-func (m *ListFeedbackReply_Feedback_Category) ValidateAll() error {
+// ListFeedbackReply_Feedback_ClassifyMultiError, or nil if none found.
+func (m *ListFeedbackReply_Feedback_Classify) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *ListFeedbackReply_Feedback_Category) validate(all bool) error {
+func (m *ListFeedbackReply_Feedback_Classify) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
@@ -2642,20 +2644,20 @@ func (m *ListFeedbackReply_Feedback_Category) validate(all bool) error {
 	// no validation rules for Name
 
 	if len(errors) > 0 {
-		return ListFeedbackReply_Feedback_CategoryMultiError(errors)
+		return ListFeedbackReply_Feedback_ClassifyMultiError(errors)
 	}
 
 	return nil
 }
 
-// ListFeedbackReply_Feedback_CategoryMultiError is an error wrapping multiple
+// ListFeedbackReply_Feedback_ClassifyMultiError is an error wrapping multiple
 // validation errors returned by
-// ListFeedbackReply_Feedback_Category.ValidateAll() if the designated
+// ListFeedbackReply_Feedback_Classify.ValidateAll() if the designated
 // constraints aren't met.
-type ListFeedbackReply_Feedback_CategoryMultiError []error
+type ListFeedbackReply_Feedback_ClassifyMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m ListFeedbackReply_Feedback_CategoryMultiError) Error() string {
+func (m ListFeedbackReply_Feedback_ClassifyMultiError) Error() string {
 	var msgs []string
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -2664,12 +2666,12 @@ func (m ListFeedbackReply_Feedback_CategoryMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m ListFeedbackReply_Feedback_CategoryMultiError) AllErrors() []error { return m }
+func (m ListFeedbackReply_Feedback_ClassifyMultiError) AllErrors() []error { return m }
 
-// ListFeedbackReply_Feedback_CategoryValidationError is the validation error
-// returned by ListFeedbackReply_Feedback_Category.Validate if the designated
+// ListFeedbackReply_Feedback_ClassifyValidationError is the validation error
+// returned by ListFeedbackReply_Feedback_Classify.Validate if the designated
 // constraints aren't met.
-type ListFeedbackReply_Feedback_CategoryValidationError struct {
+type ListFeedbackReply_Feedback_ClassifyValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -2677,24 +2679,24 @@ type ListFeedbackReply_Feedback_CategoryValidationError struct {
 }
 
 // Field function returns field value.
-func (e ListFeedbackReply_Feedback_CategoryValidationError) Field() string { return e.field }
+func (e ListFeedbackReply_Feedback_ClassifyValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e ListFeedbackReply_Feedback_CategoryValidationError) Reason() string { return e.reason }
+func (e ListFeedbackReply_Feedback_ClassifyValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e ListFeedbackReply_Feedback_CategoryValidationError) Cause() error { return e.cause }
+func (e ListFeedbackReply_Feedback_ClassifyValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e ListFeedbackReply_Feedback_CategoryValidationError) Key() bool { return e.key }
+func (e ListFeedbackReply_Feedback_ClassifyValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e ListFeedbackReply_Feedback_CategoryValidationError) ErrorName() string {
-	return "ListFeedbackReply_Feedback_CategoryValidationError"
+func (e ListFeedbackReply_Feedback_ClassifyValidationError) ErrorName() string {
+	return "ListFeedbackReply_Feedback_ClassifyValidationError"
 }
 
 // Error satisfies the builtin error interface
-func (e ListFeedbackReply_Feedback_CategoryValidationError) Error() string {
+func (e ListFeedbackReply_Feedback_ClassifyValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -2706,14 +2708,14 @@ func (e ListFeedbackReply_Feedback_CategoryValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sListFeedbackReply_Feedback_Category.%s: %s%s",
+		"invalid %sListFeedbackReply_Feedback_Classify.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = ListFeedbackReply_Feedback_CategoryValidationError{}
+var _ error = ListFeedbackReply_Feedback_ClassifyValidationError{}
 
 var _ interface {
 	Field() string
@@ -2721,4 +2723,4 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = ListFeedbackReply_Feedback_CategoryValidationError{}
+} = ListFeedbackReply_Feedback_ClassifyValidationError{}

@@ -56,4 +56,5 @@ enum ErrorReason {
 	AppNotFoundError = 51[(errors.code)=403,(errors.message)="应用不存在"];
 	RegisterError = 52[(errors.message)="注册失败"];
 	BindExpiredError = 53[(errors.message)="绑定信息已过期"];
+	LoginExpiredError = 54[(errors.message)="登录信息已过期"];
 }

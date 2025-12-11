@@ -1,0 +1,172 @@
+syntax = "proto3";
+
+package manager.api.notice;
+option go_package = "manager/api/notice;notice";
+option java_multiple_files = true;
+option java_package = "manager.api.notice";
+option java_outer_classname = "NoticeV1";
+
+import "validate/validate.proto";
+
+
+message ListNoticeClassifyRequest {
+}
+
+message ListNoticeClassifyReply {
+  message NoticeClassify {
+    uint32 id = 1;
+    string name = 2;
+    string logo = 3;
+    uint32 weight = 4;
+    uint32 createdAt = 5;
+    uint32 updatedAt = 6;
+  }
+
+  repeated NoticeClassify list = 2;
+}
+
+message CreateNoticeClassifyRequest {
+  string name = 1[(validate.rules).string = {min_len: 1}];
+  string logo = 2[(validate.rules).string = {min_len: 1}];
+  uint32 weight = 3[(validate.rules).uint32 = {gte: 0}];
+}
+
+message CreateNoticeClassifyReply {
+  uint32 id = 1;
+}
+
+message UpdateNoticeClassifyRequest {
+  uint32 id = 1[(validate.rules).uint32 = {gt: 0}];
+  optional string name = 2[(validate.rules).string = {min_len: 1}];
+  optional string logo = 3[(validate.rules).string = {min_len: 1}];
+  optional uint32 weight = 4[(validate.rules).uint32 = {gte: 0}];
+}
+
+message UpdateNoticeClassifyReply {
+}
+
+message DeleteNoticeClassifyRequest {
+  uint32 id = 1[(validate.rules).uint32 = {gte:0}];
+}
+
+message DeleteNoticeClassifyReply {
+}
+
+
+message GetNoticeRequest {
+  uint32 id = 1[(validate.rules).uint32 = {gte: 1}];
+}
+
+message GetNoticeReply {
+  message Classify{
+    uint32 id = 1;
+    string name = 2;
+    string logo = 3;
+  }
+  message App {
+    uint32 id = 1;
+    string name = 2;
+    string logo = 3;
+  }
+  uint32 id = 1;
+  uint32 appId = 2;
+  uint32 classifyId = 3;
+  string title = 4;
+  string description = 5;
+  string unit = 6;
+  string content = 7;
+  optional bool isTop = 8;
+  optional bool status = 9;
+  uint32 createdAt = 10;
+  uint32 updatedAt = 11;
+  App app = 12;
+  Classify classify = 13;
+}
+
+message ListNoticeRequest {
+  uint32 page = 1[(validate.rules).uint32 = {gte: 1}];
+  uint32 pageSize = 2[(validate.rules).uint32 = {gte: 1,lte:50}];
+  optional uint32 appId = 3[(validate.rules).uint32 = {gte: 1}];
+  optional uint32 classifyId = 4[(validate.rules).uint32 = {gte: 1}];
+  optional string title = 5[(validate.rules).string = {min_len: 1, max_len: 40}];
+  optional bool isTop = 6;
+  optional bool status = 7;
+  optional bool notRead = 8;
+}
+
+message ListVisibleNoticeRequest {
+  uint32 page = 1[(validate.rules).uint32 = {gte: 1}];
+  uint32 pageSize = 2[(validate.rules).uint32 = {gte: 1,lte:50}];
+  optional uint32 appId = 3[(validate.rules).uint32 = {gte: 1}];
+  optional uint32 classifyId = 4[(validate.rules).uint32 = {gte: 1}];
+  optional string title = 5[(validate.rules).string = {min_len: 1, max_len: 40}];
+  optional bool notRead = 8;
+}
+
+message ListNoticeReply {
+  message Classify{
+    uint32 id = 1;
+    string name = 2;
+    string logo = 3;
+  }
+  message App {
+    uint32 id = 1;
+    string name = 2;
+    string logo = 3;
+  }
+
+  message Notice {
+    uint32 id = 1;
+    uint32 appId = 2;
+    uint32 classifyId = 3;
+    string title = 4;
+    string description = 5;
+    string unit = 6;
+    optional bool isTop = 7;
+    optional bool status = 8;
+    uint32 createdAt = 9;
+    uint32 updatedAt = 10;
+    App app = 11;
+    Classify classify = 12;
+  }
+  uint32 total = 1;
+  repeated Notice list = 2;
+}
+
+message CreateNoticeRequest {
+  uint32 appId = 1[(validate.rules).uint32 = {gte: 1}];
+  uint32 classifyId = 2[(validate.rules).uint32 = {gte: 1}];
+  string title = 3[(validate.rules).string = {min_len: 1,max_len: 40}];
+  string description = 4[(validate.rules).string = {min_len: 1}];
+  string unit = 5[(validate.rules).string = {min_len: 1}];
+  string content = 6;
+  optional bool isTop = 7;
+  optional bool status = 8;
+}
+
+message CreateNoticeReply {
+  uint32 id = 1;
+}
+
+message UpdateNoticeRequest {
+  uint32 id = 1;
+  optional uint32 appId = 2[(validate.rules).uint32 = {gte: 1}];
+  optional uint32 classifyId = 3[(validate.rules).uint32 = {gte: 1}];
+  optional string title = 4[(validate.rules).string = {min_len: 1,max_len: 40}];
+  optional string description = 5[(validate.rules).string = {min_len: 1}];
+  optional string unit = 6[(validate.rules).string = {min_len: 1}];
+  optional string content = 7;
+  optional bool isTop = 8;
+  optional bool status = 9;
+}
+
+message UpdateNoticeReply {
+}
+
+message DeleteNoticeRequest {
+  uint32 id = 1[(validate.rules).uint32 = {gte: 1}];
+}
+
+message DeleteNoticeReply {
+}
+

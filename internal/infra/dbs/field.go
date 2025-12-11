@@ -34,8 +34,11 @@ func (r Field) ListField(ctx core.Context, req *types.ListFieldRequest) ([]*enti
 
 	db := ctx.DB().Model(entity.Field{})
 
+	if req.TenantId != 0 {
+		db = db.Where("tenant_id = ?", req.TenantId)
+	}
 	if req.Keywords != nil {
-		db = db.Where("keywords in ?", req.Keywords)
+		db = db.Where("keyword in ?", req.Keywords)
 	}
 	if req.Keyword != nil {
 		db = db.Where("keyword = ?", *req.Keyword)
@@ -50,7 +53,7 @@ func (r Field) ListField(ctx core.Context, req *types.ListFieldRequest) ([]*enti
 		db = db.Where("required = ?", *req.Required)
 	}
 	if req.Unique != nil {
-		db = db.Where("unique = ?", *req.Unique)
+		db = db.Where("`unique` = ?", *req.Unique)
 	}
 
 	if req.Search != nil {

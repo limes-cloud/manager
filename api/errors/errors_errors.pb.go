@@ -911,3 +911,23 @@ func BindExpiredError(args ...any) *errors.Error {
 		return errors.New(500, ErrorReason_BindExpiredError.String(), "绑定信息已过期:"+msg)
 	}
 }
+
+func IsLoginExpiredError(err error) bool {
+	if err == nil {
+		return false
+	}
+	e := errors.FromError(err)
+	return e.Reason == ErrorReason_LoginExpiredError.String() && e.Code == 500
+}
+
+func LoginExpiredError(args ...any) *errors.Error {
+	switch len(args) {
+	case 0:
+		return errors.New(500, ErrorReason_LoginExpiredError.String(), "登录信息已过期")
+	case 1:
+		return errors.New(500, ErrorReason_LoginExpiredError.String(), "登录信息已过期:"+fmt.Sprint(args[0]))
+	default:
+		msg := fmt.Sprintf(fmt.Sprint(args[0]), args[1:]...)
+		return errors.New(500, ErrorReason_LoginExpiredError.String(), "登录信息已过期:"+msg)
+	}
+}

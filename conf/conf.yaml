@@ -99,4 +99,6 @@ business:
       /manager/api/authorize/oauther/handler:POST: true
       /manager/api/authorize/oauther/login:POST: true
       /manager/api/authorize/oauther/bind:POST: true
+      /manager/api/authorize/fill/infos:GET: true
+      /manager/api/authorize/fill/infos:POST: true
 

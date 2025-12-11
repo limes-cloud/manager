@@ -68,7 +68,7 @@ func (u *Userinfo) UpsertUserinfo(ctx core.Context, list []*entity.Userinfo) err
 		return err
 	}
 
-	var b map[string]*entity.Field
+	b := make(map[string]*entity.Field)
 	for _, item := range respList {
 		b[item.Keyword] = item
 	}

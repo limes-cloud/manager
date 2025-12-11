@@ -29,39 +29,39 @@ func NewFeedback(
 	}
 }
 
-// ListFeedbackCategory 获取反馈建议分类列表
-func (u *Feedback) ListFeedbackCategory(ctx core.Context, req *types.ListFeedbackCategoryRequest) ([]*entity.FeedbackCategory, uint32, error) {
-	list, total, err := u.repo.ListFeedbackCategory(ctx, req)
+// ListFeedbackClassify 获取反馈建议分类列表
+func (u *Feedback) ListFeedbackClassify(ctx core.Context, req *types.ListFeedbackClassifyRequest) ([]*entity.FeedbackClassify, uint32, error) {
+	list, total, err := u.repo.ListFeedbackClassify(ctx, req)
 	if err != nil {
-		ctx.Logger().Warnw("msg", "list feedback category error", "err", err.Error())
+		ctx.Logger().Warnw("msg", "list feedback classify error", "err", err.Error())
 		return nil, 0, errors.ListError(err.Error())
 	}
 	return list, total, nil
 }
 
-// CreateFeedbackCategory 创建反馈建议分类
-func (u *Feedback) CreateFeedbackCategory(ctx core.Context, req *entity.FeedbackCategory) (uint32, error) {
-	id, err := u.repo.CreateFeedbackCategory(ctx, req)
+// CreateFeedbackClassify 创建反馈建议分类
+func (u *Feedback) CreateFeedbackClassify(ctx core.Context, req *entity.FeedbackClassify) (uint32, error) {
+	id, err := u.repo.CreateFeedbackClassify(ctx, req)
 	if err != nil {
-		ctx.Logger().Warnw("msg", "create feedback category error", "err", err.Error())
+		ctx.Logger().Warnw("msg", "create feedback classify error", "err", err.Error())
 		return 0, errors.CreateError(err.Error())
 	}
 	return id, nil
 }
 
-// UpdateFeedbackCategory 更新反馈建议分类
-func (u *Feedback) UpdateFeedbackCategory(ctx core.Context, req *entity.FeedbackCategory) error {
-	if err := u.repo.UpdateFeedbackCategory(ctx, req); err != nil {
-		ctx.Logger().Warnw("msg", "update feedback category error", "err", err.Error())
+// UpdateFeedbackClassify 更新反馈建议分类
+func (u *Feedback) UpdateFeedbackClassify(ctx core.Context, req *entity.FeedbackClassify) error {
+	if err := u.repo.UpdateFeedbackClassify(ctx, req); err != nil {
+		ctx.Logger().Warnw("msg", "update feedback classify error", "err", err.Error())
 		return errors.UpdateError(err.Error())
 	}
 	return nil
 }
 
-// DeleteFeedbackCategory 删除反馈建议分类
-func (u *Feedback) DeleteFeedbackCategory(ctx core.Context, id uint32) error {
-	if err := u.repo.DeleteFeedbackCategory(ctx, id); err != nil {
-		ctx.Logger().Warnw("msg", "delete feedback category error", "err", err.Error())
+// DeleteFeedbackClassify 删除反馈建议分类
+func (u *Feedback) DeleteFeedbackClassify(ctx core.Context, id uint32) error {
+	if err := u.repo.DeleteFeedbackClassify(ctx, id); err != nil {
+		ctx.Logger().Warnw("msg", "delete feedback classify error", "err", err.Error())
 		return errors.DeleteError(err.Error())
 	}
 	return nil
@@ -114,7 +114,7 @@ func (u *Feedback) DeleteFeedback(ctx core.Context, id uint32) error {
 
 // UpdateFeedback 更新反馈建议
 func (u *Feedback) UpdateFeedback(ctx core.Context, feedback *entity.Feedback) error {
-	if feedback.Status != "" && value.InList([]string{
+	if feedback.Status != "" && !value.InList([]string{
 		StatusUntreated,
 		StatusProcessing,
 		StatusProcessed,

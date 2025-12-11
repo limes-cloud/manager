@@ -35,7 +35,7 @@ type Userinfo struct {
 	Value    string `json:"value" gorm:"column:value"`
 	ValueMd5 string `json:"valueMd5" gorm:"column:value_md5"`
 	Index    *int   `json:"index" gorm:"-"`
-	model.CreateModel
+	model.BaseModel
 }
 
 func (u *Userinfo) GetTableName() string {

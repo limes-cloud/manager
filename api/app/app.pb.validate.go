@@ -35,6 +35,110 @@ var (
 	_ = sort.Sort
 )
 
+// Validate checks the field values on AppSettingWeb with the rules defined in
+// the proto definition for this message. If any rules are violated, the first
+// error encountered is returned, or nil if there are no violations.
+func (m *AppSettingWeb) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on AppSettingWeb with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// result is a list of violation errors wrapped in AppSettingWebMultiError, or
+// nil if none found.
+func (m *AppSettingWeb) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *AppSettingWeb) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Copyright
+
+	// no validation rules for Watermark
+
+	if len(errors) > 0 {
+		return AppSettingWebMultiError(errors)
+	}
+
+	return nil
+}
+
+// AppSettingWebMultiError is an error wrapping multiple validation errors
+// returned by AppSettingWeb.ValidateAll() if the designated constraints
+// aren't met.
+type AppSettingWebMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m AppSettingWebMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m AppSettingWebMultiError) AllErrors() []error { return m }
+
+// AppSettingWebValidationError is the validation error returned by
+// AppSettingWeb.Validate if the designated constraints aren't met.
+type AppSettingWebValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e AppSettingWebValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e AppSettingWebValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e AppSettingWebValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e AppSettingWebValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e AppSettingWebValidationError) ErrorName() string { return "AppSettingWebValidationError" }
+
+// Error satisfies the builtin error interface
+func (e AppSettingWebValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sAppSettingWeb.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = AppSettingWebValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = AppSettingWebValidationError{}
+
 // Validate checks the field values on AppSettingJWT with the rules defined in
 // the proto definition for this message. If any rules are violated, the first
 // error encountered is returned, or nil if there are no violations.
@@ -327,6 +431,35 @@ func (m *AppSetting) validate(all bool) error {
 		}
 	}
 
+	if all {
+		switch v := interface{}(m.GetWeb()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, AppSettingValidationError{
+					field:  "Web",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, AppSettingValidationError{
+					field:  "Web",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetWeb()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return AppSettingValidationError{
+				field:  "Web",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
 	if len(errors) > 0 {
 		return AppSettingMultiError(errors)
 	}
@@ -550,6 +683,8 @@ func (m *GetAppReply) validate(all bool) error {
 	// no validation rules for Secret
 
 	// no validation rules for Name
+
+	// no validation rules for ShowName
 
 	// no validation rules for Private
 
@@ -823,6 +958,8 @@ func (m *GetSampleAppReply) validate(all bool) error {
 	// no validation rules for Keyword
 
 	// no validation rules for Name
+
+	// no validation rules for ShowName
 
 	// no validation rules for Private
 
@@ -1314,6 +1451,17 @@ func (m *CreateAppRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
+	if l := utf8.RuneCountInString(m.GetShowName()); l < 1 || l > 64 {
+		err := CreateAppRequestValidationError{
+			field:  "ShowName",
+			reason: "value length must be between 1 and 64 runes, inclusive",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
 	if l := utf8.RuneCountInString(m.GetKeyword()); l < 1 || l > 32 {
 		err := CreateAppRequestValidationError{
 			field:  "Keyword",
@@ -1637,6 +1785,19 @@ func (m *UpdateAppRequest) validate(all bool) error {
 		if utf8.RuneCountInString(m.GetName()) > 64 {
 			err := UpdateAppRequestValidationError{
 				field:  "Name",
+				reason: "value length must be at most 64 runes",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+	}
+
+	if m.ShowName != nil {
+		if utf8.RuneCountInString(m.GetShowName()) > 64 {
+			err := UpdateAppRequestValidationError{
+				field:  "ShowName",
 				reason: "value length must be at most 64 runes",
 			}
 			if !all {
@@ -2137,6 +2298,35 @@ func (m *GetSampleAppReply_Setting) validate(all bool) error {
 		}
 	}
 
+	if all {
+		switch v := interface{}(m.GetWeb()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, GetSampleAppReply_SettingValidationError{
+					field:  "Web",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, GetSampleAppReply_SettingValidationError{
+					field:  "Web",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetWeb()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return GetSampleAppReply_SettingValidationError{
+				field:  "Web",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
 	if len(errors) > 0 {
 		return GetSampleAppReply_SettingMultiError(errors)
 	}
@@ -2248,6 +2438,8 @@ func (m *ListAppReply_Data) validate(all bool) error {
 	// no validation rules for Keyword
 
 	// no validation rules for Name
+
+	// no validation rules for ShowName
 
 	// no validation rules for CreatedAt
 
