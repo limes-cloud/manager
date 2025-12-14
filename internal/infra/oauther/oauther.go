@@ -4,6 +4,8 @@ import (
 	"errors"
 	"sort"
 
+	"github.com/limes-cloud/manager/internal/infra/oauther/wx"
+
 	"github.com/limes-cloud/manager/internal/domain/entity"
 	"github.com/limes-cloud/manager/internal/domain/repository"
 	"github.com/limes-cloud/manager/internal/infra/oauther/email"
@@ -39,6 +41,7 @@ func register(keyword string, name string, init InitFunc) {
 func init() {
 	register("yiban", "易班", yiban.NewYiBan)
 	register("email", "邮箱", email.NewEmail)
+	register("service_account", "微信服务号网页登陆", wx.NewServiceAccount)
 }
 
 type OAuther struct{}

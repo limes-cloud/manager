@@ -24,6 +24,8 @@ func (c *OAuther) TableName() string {
 }
 
 type OAutherSetting struct {
+	Token    string `json:"token"`
+	AesKey   string `json:"aesKey"`
 	Callback string `json:"callback"`
 	Email    struct {
 		Host     string

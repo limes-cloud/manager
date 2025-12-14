@@ -26,10 +26,18 @@ service Authorize {
     };
   }
 
-  // OAutherLogin 渠道授权处理
+  // OAutherLogin 渠道授权登陆
   rpc OAutherLogin (OAutherLoginRequest) returns (OAutherLoginReply) {
     option (google.api.http) = {
       post: "/manager/api/authorize/oauther/login",
+      body: "*"
+    };
+  }
+
+  // OAutherReport 渠道授权上报
+  rpc OAutherReport (OAutherReportRequest) returns (OAutherReportReply) {
+    option (google.api.http) = {
+      post: "/manager/api/authorize/oauther/report",
       body: "*"
     };
   }

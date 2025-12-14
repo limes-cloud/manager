@@ -23,6 +23,7 @@ const (
 	Authorize_ListOAuther_FullMethodName     = "/manager.api.authorize.Authorize/ListOAuther"
 	Authorize_OAutherHandle_FullMethodName   = "/manager.api.authorize.Authorize/OAutherHandle"
 	Authorize_OAutherLogin_FullMethodName    = "/manager.api.authorize.Authorize/OAutherLogin"
+	Authorize_OAutherReport_FullMethodName   = "/manager.api.authorize.Authorize/OAutherReport"
 	Authorize_OAutherBind_FullMethodName     = "/manager.api.authorize.Authorize/OAutherBind"
 	Authorize_GetImageCaptcha_FullMethodName = "/manager.api.authorize.Authorize/GetImageCaptcha"
 	Authorize_Login_FullMethodName           = "/manager.api.authorize.Authorize/Login"
@@ -41,8 +42,10 @@ type AuthorizeClient interface {
 	ListOAuther(ctx context.Context, in *ListOAutherRequest, opts ...grpc.CallOption) (*ListOAutherReply, error)
 	// OAutherHandle 渠道授权处理
 	OAutherHandle(ctx context.Context, in *OAutherHandleRequest, opts ...grpc.CallOption) (*OAutherHandleReply, error)
-	// OAutherLogin 渠道授权处理
+	// OAutherLogin 渠道授权登陆
 	OAutherLogin(ctx context.Context, in *OAutherLoginRequest, opts ...grpc.CallOption) (*OAutherLoginReply, error)
+	// OAutherReport 渠道授权上报
+	OAutherReport(ctx context.Context, in *OAutherReportRequest, opts ...grpc.CallOption) (*OAutherReportReply, error)
 	// OAutherBind 渠道授权绑定
 	OAutherBind(ctx context.Context, in *OAutherBindRequest, opts ...grpc.CallOption) (*OAutherBindReply, error)
 	// GetImageCaptcha 获取验证码
@@ -90,6 +93,15 @@ func (c *authorizeClient) OAutherHandle(ctx context.Context, in *OAutherHandleRe
 func (c *authorizeClient) OAutherLogin(ctx context.Context, in *OAutherLoginRequest, opts ...grpc.CallOption) (*OAutherLoginReply, error) {
 	out := new(OAutherLoginReply)
 	err := c.cc.Invoke(ctx, Authorize_OAutherLogin_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *authorizeClient) OAutherReport(ctx context.Context, in *OAutherReportRequest, opts ...grpc.CallOption) (*OAutherReportReply, error) {
+	out := new(OAutherReportReply)
+	err := c.cc.Invoke(ctx, Authorize_OAutherReport_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -176,8 +188,10 @@ type AuthorizeServer interface {
 	ListOAuther(context.Context, *ListOAutherRequest) (*ListOAutherReply, error)
 	// OAutherHandle 渠道授权处理
 	OAutherHandle(context.Context, *OAutherHandleRequest) (*OAutherHandleReply, error)
-	// OAutherLogin 渠道授权处理
+	// OAutherLogin 渠道授权登陆
 	OAutherLogin(context.Context, *OAutherLoginRequest) (*OAutherLoginReply, error)
+	// OAutherReport 渠道授权上报
+	OAutherReport(context.Context, *OAutherReportRequest) (*OAutherReportReply, error)
 	// OAutherBind 渠道授权绑定
 	OAutherBind(context.Context, *OAutherBindRequest) (*OAutherBindReply, error)
 	// GetImageCaptcha 获取验证码
@@ -210,6 +224,10 @@ func (UnimplementedAuthorizeServer) OAutherHandle(context.Context, *OAutherHandl
 
 func (UnimplementedAuthorizeServer) OAutherLogin(context.Context, *OAutherLoginRequest) (*OAutherLoginReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method OAutherLogin not implemented")
+}
+
+func (UnimplementedAuthorizeServer) OAutherReport(context.Context, *OAutherReportRequest) (*OAutherReportReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method OAutherReport not implemented")
 }
 
 func (UnimplementedAuthorizeServer) OAutherBind(context.Context, *OAutherBindRequest) (*OAutherBindReply, error) {
@@ -306,6 +324,24 @@ func _Authorize_OAutherLogin_Handler(srv interface{}, ctx context.Context, dec f
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(AuthorizeServer).OAutherLogin(ctx, req.(*OAutherLoginRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Authorize_OAutherReport_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(OAutherReportRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthorizeServer).OAutherReport(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Authorize_OAutherReport_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthorizeServer).OAutherReport(ctx, req.(*OAutherReportRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -472,6 +508,10 @@ var Authorize_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "OAutherLogin",
 			Handler:    _Authorize_OAutherLogin_Handler,
+		},
+		{
+			MethodName: "OAutherReport",
+			Handler:    _Authorize_OAutherReport_Handler,
 		},
 		{
 			MethodName: "OAutherBind",

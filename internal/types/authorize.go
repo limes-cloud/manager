@@ -101,20 +101,16 @@ type OAutherHandleRequest struct {
 }
 
 type OAutherHandleReply struct {
-	UUID      string `json:"uuid"`
-	Action    string `json:"action"`
-	Value     string `json:"value"`
-	Tip       string `json:"tip"`
-	CodeField string `json:"codeField"`
+	UUID   string `json:"uuid"`
+	Action string `json:"action"`
+	Value  string `json:"value"`
+	Tip    string `json:"tip"`
 }
 
 type OAutherLoginRequest struct {
 	Account string `json:"account"`
 	Code    string `json:"code"`
-	Keyword string `json:"keyword"`
 	UUID    string `json:"uuid"`
-	Tenant  string `json:"tenant"`
-	App     string `json:"app"`
 }
 
 type OAutherLoginReply struct {
@@ -137,6 +133,11 @@ type OAutherBindReply struct {
 	NeedRegister bool
 	NeedInfo     bool
 	Token        string
+}
+
+type OAutherReportRequest struct {
+	Code string `json:"code"`
+	UUID string `json:"uuid"`
 }
 
 type FillInfo struct {

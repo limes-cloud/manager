@@ -942,8 +942,6 @@ func (m *OAutherHandleReply) validate(all bool) error {
 
 	// no validation rules for Keyword
 
-	// no validation rules for CodeField
-
 	if len(errors) > 0 {
 		return OAutherHandleReplyMultiError(errors)
 	}
@@ -1024,6 +1022,232 @@ var _ interface {
 	ErrorName() string
 } = OAutherHandleReplyValidationError{}
 
+// Validate checks the field values on OAutherReportRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *OAutherReportRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on OAutherReportRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// OAutherReportRequestMultiError, or nil if none found.
+func (m *OAutherReportRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *OAutherReportRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if utf8.RuneCountInString(m.GetUuid()) < 1 {
+		err := OAutherReportRequestValidationError{
+			field:  "Uuid",
+			reason: "value length must be at least 1 runes",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if utf8.RuneCountInString(m.GetCode()) < 1 {
+		err := OAutherReportRequestValidationError{
+			field:  "Code",
+			reason: "value length must be at least 1 runes",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if len(errors) > 0 {
+		return OAutherReportRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// OAutherReportRequestMultiError is an error wrapping multiple validation
+// errors returned by OAutherReportRequest.ValidateAll() if the designated
+// constraints aren't met.
+type OAutherReportRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m OAutherReportRequestMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m OAutherReportRequestMultiError) AllErrors() []error { return m }
+
+// OAutherReportRequestValidationError is the validation error returned by
+// OAutherReportRequest.Validate if the designated constraints aren't met.
+type OAutherReportRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e OAutherReportRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e OAutherReportRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e OAutherReportRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e OAutherReportRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e OAutherReportRequestValidationError) ErrorName() string {
+	return "OAutherReportRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e OAutherReportRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sOAutherReportRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = OAutherReportRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = OAutherReportRequestValidationError{}
+
+// Validate checks the field values on OAutherReportReply with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *OAutherReportReply) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on OAutherReportReply with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// OAutherReportReplyMultiError, or nil if none found.
+func (m *OAutherReportReply) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *OAutherReportReply) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if len(errors) > 0 {
+		return OAutherReportReplyMultiError(errors)
+	}
+
+	return nil
+}
+
+// OAutherReportReplyMultiError is an error wrapping multiple validation errors
+// returned by OAutherReportReply.ValidateAll() if the designated constraints
+// aren't met.
+type OAutherReportReplyMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m OAutherReportReplyMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m OAutherReportReplyMultiError) AllErrors() []error { return m }
+
+// OAutherReportReplyValidationError is the validation error returned by
+// OAutherReportReply.Validate if the designated constraints aren't met.
+type OAutherReportReplyValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e OAutherReportReplyValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e OAutherReportReplyValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e OAutherReportReplyValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e OAutherReportReplyValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e OAutherReportReplyValidationError) ErrorName() string {
+	return "OAutherReportReplyValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e OAutherReportReplyValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sOAutherReportReply.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = OAutherReportReplyValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = OAutherReportReplyValidationError{}
+
 // Validate checks the field values on OAutherLoginRequest with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
@@ -1045,39 +1269,6 @@ func (m *OAutherLoginRequest) validate(all bool) error {
 	}
 
 	var errors []error
-
-	if utf8.RuneCountInString(m.GetApp()) < 1 {
-		err := OAutherLoginRequestValidationError{
-			field:  "App",
-			reason: "value length must be at least 1 runes",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if utf8.RuneCountInString(m.GetTenant()) < 1 {
-		err := OAutherLoginRequestValidationError{
-			field:  "Tenant",
-			reason: "value length must be at least 1 runes",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if utf8.RuneCountInString(m.GetKeyword()) < 1 {
-		err := OAutherLoginRequestValidationError{
-			field:  "Keyword",
-			reason: "value length must be at least 1 runes",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
 
 	if utf8.RuneCountInString(m.GetUuid()) < 1 {
 		err := OAutherLoginRequestValidationError{

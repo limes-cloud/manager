@@ -931,3 +931,23 @@ func LoginExpiredError(args ...any) *errors.Error {
 		return errors.New(500, ErrorReason_LoginExpiredError.String(), "登录信息已过期:"+msg)
 	}
 }
+
+func IsLoginInfoNotFound(err error) bool {
+	if err == nil {
+		return false
+	}
+	e := errors.FromError(err)
+	return e.Reason == ErrorReason_LoginInfoNotFound.String() && e.Code == 500
+}
+
+func LoginInfoNotFound(args ...any) *errors.Error {
+	switch len(args) {
+	case 0:
+		return errors.New(500, ErrorReason_LoginInfoNotFound.String(), "登陆信息不存在")
+	case 1:
+		return errors.New(500, ErrorReason_LoginInfoNotFound.String(), "登陆信息不存在:"+fmt.Sprint(args[0]))
+	default:
+		msg := fmt.Sprintf(fmt.Sprint(args[0]), args[1:]...)
+		return errors.New(500, ErrorReason_LoginInfoNotFound.String(), "登陆信息不存在:"+msg)
+	}
+}

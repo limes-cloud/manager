@@ -92,23 +92,19 @@ func (az *Authorize) OAutherHandle(c context.Context, req *authorize.OAutherHand
 		return nil, err
 	}
 	return &authorize.OAutherHandleReply{
-		Uuid:      resp.UUID,
-		Action:    resp.Action,
-		Value:     resp.Value,
-		Tip:       resp.Tip,
-		CodeField: resp.CodeField,
-		Keyword:   req.Keyword,
+		Uuid:    resp.UUID,
+		Action:  resp.Action,
+		Value:   resp.Value,
+		Tip:     resp.Tip,
+		Keyword: req.Keyword,
 	}, nil
 }
 
 func (az *Authorize) OAutherLogin(c context.Context, req *authorize.OAutherLoginRequest) (*authorize.OAutherLoginReply, error) {
 	ctx := core.MustContext(c, kratosx.WithSkipDBHook())
 	reply, err := az.srv.OAutherLogin(ctx, &types.OAutherLoginRequest{
-		Tenant:  req.Tenant,
-		App:     req.App,
 		Account: req.Account,
 		Code:    req.Code,
-		Keyword: req.Keyword,
 		UUID:    req.Uuid,
 	})
 	if err != nil {
@@ -119,6 +115,18 @@ func (az *Authorize) OAutherLogin(c context.Context, req *authorize.OAutherLogin
 		NeedInfo: reply.NeedInfo,
 		Token:    reply.Token,
 	}, nil
+}
+
+func (az *Authorize) OAutherReport(c context.Context, req *authorize.OAutherReportRequest) (*authorize.OAutherReportReply, error) {
+	ctx := core.MustContext(c, kratosx.WithSkipDBHook())
+	err := az.srv.OAutherReport(ctx, &types.OAutherReportRequest{
+		Code: req.Code,
+		UUID: req.Uuid,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return &authorize.OAutherReportReply{}, nil
 }
 
 func (az *Authorize) OAutherBind(c context.Context, req *authorize.OAutherBindRequest) (*authorize.OAutherBindReply, error) {

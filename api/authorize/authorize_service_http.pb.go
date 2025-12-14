@@ -32,6 +32,7 @@ const (
 	OperationAuthorizeOAutherBind     = "/manager.api.authorize.Authorize/OAutherBind"
 	OperationAuthorizeOAutherHandle   = "/manager.api.authorize.Authorize/OAutherHandle"
 	OperationAuthorizeOAutherLogin    = "/manager.api.authorize.Authorize/OAutherLogin"
+	OperationAuthorizeOAutherReport   = "/manager.api.authorize.Authorize/OAutherReport"
 	OperationAuthorizeParseToken      = "/manager.api.authorize.Authorize/ParseToken"
 	OperationAuthorizeRegister        = "/manager.api.authorize.Authorize/Register"
 )
@@ -53,8 +54,10 @@ type AuthorizeHTTPServer interface {
 	OAutherBind(context.Context, *OAutherBindRequest) (*OAutherBindReply, error)
 	// OAutherHandle OAutherHandle 渠道授权处理
 	OAutherHandle(context.Context, *OAutherHandleRequest) (*OAutherHandleReply, error)
-	// OAutherLogin OAutherLogin 渠道授权处理
+	// OAutherLogin OAutherLogin 渠道授权登陆
 	OAutherLogin(context.Context, *OAutherLoginRequest) (*OAutherLoginReply, error)
+	// OAutherReport OAutherReport 渠道授权上报
+	OAutherReport(context.Context, *OAutherReportRequest) (*OAutherReportReply, error)
 	// ParseToken ParseToken token解析
 	ParseToken(context.Context, *ParseTokenRequest) (*ParseTokenReply, error)
 	// Register Register 注册
@@ -66,6 +69,7 @@ func RegisterAuthorizeHTTPServer(s *http.Server, srv AuthorizeHTTPServer) {
 	r.GET("/manager/api/authorize/oauthers", _Authorize_ListOAuther0_HTTP_Handler(srv))
 	r.POST("/manager/api/authorize/oauther/handler", _Authorize_OAutherHandle0_HTTP_Handler(srv))
 	r.POST("/manager/api/authorize/oauther/login", _Authorize_OAutherLogin0_HTTP_Handler(srv))
+	r.POST("/manager/api/authorize/oauther/report", _Authorize_OAutherReport0_HTTP_Handler(srv))
 	r.POST("/manager/api/authorize/oauther/bind", _Authorize_OAutherBind0_HTTP_Handler(srv))
 	r.GET("/manager/api/authorize/captcha/image", _Authorize_GetImageCaptcha0_HTTP_Handler(srv))
 	r.POST("/manager/api/authorize/login", _Authorize_Login0_HTTP_Handler(srv))
@@ -135,6 +139,28 @@ func _Authorize_OAutherLogin0_HTTP_Handler(srv AuthorizeHTTPServer) func(ctx htt
 			return err
 		}
 		reply := out.(*OAutherLoginReply)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Authorize_OAutherReport0_HTTP_Handler(srv AuthorizeHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in OAutherReportRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationAuthorizeOAutherReport)
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
+			return srv.OAutherReport(ctx, req.(*OAutherReportRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*OAutherReportReply)
 		return ctx.Result(200, reply)
 	}
 }
@@ -319,6 +345,7 @@ type AuthorizeHTTPClient interface {
 	OAutherBind(ctx context.Context, req *OAutherBindRequest, opts ...http.CallOption) (rsp *OAutherBindReply, err error)
 	OAutherHandle(ctx context.Context, req *OAutherHandleRequest, opts ...http.CallOption) (rsp *OAutherHandleReply, err error)
 	OAutherLogin(ctx context.Context, req *OAutherLoginRequest, opts ...http.CallOption) (rsp *OAutherLoginReply, err error)
+	OAutherReport(ctx context.Context, req *OAutherReportRequest, opts ...http.CallOption) (rsp *OAutherReportReply, err error)
 	ParseToken(ctx context.Context, req *ParseTokenRequest, opts ...http.CallOption) (rsp *ParseTokenReply, err error)
 	Register(ctx context.Context, req *RegisterRequest, opts ...http.CallOption) (rsp *RegisterReply, err error)
 }
@@ -440,6 +467,19 @@ func (c *AuthorizeHTTPClientImpl) OAutherLogin(ctx context.Context, in *OAutherL
 	pattern := "/manager/api/authorize/oauther/login"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationAuthorizeOAutherLogin))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *AuthorizeHTTPClientImpl) OAutherReport(ctx context.Context, in *OAutherReportRequest, opts ...http.CallOption) (*OAutherReportReply, error) {
+	var out OAutherReportReply
+	pattern := "/manager/api/authorize/oauther/report"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationAuthorizeOAutherReport))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
 	if err != nil {

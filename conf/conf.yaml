@@ -101,4 +101,6 @@ business:
       /manager/api/authorize/oauther/bind:POST: true
       /manager/api/authorize/fill/infos:GET: true
       /manager/api/authorize/fill/infos:POST: true
+      /manager/api/authorize/oauther/report:POST: true
+
 

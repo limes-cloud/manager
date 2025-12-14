@@ -57,4 +57,5 @@ enum ErrorReason {
 	RegisterError = 52[(errors.message)="注册失败"];
 	BindExpiredError = 53[(errors.message)="绑定信息已过期"];
 	LoginExpiredError = 54[(errors.message)="登录信息已过期"];
+	LoginInfoNotFound = 55[(errors.message)="登陆信息不存在"];
 }

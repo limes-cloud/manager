@@ -28,10 +28,9 @@ func NewYiBan(req *entity.OAuther) (repository.OAutherFunc, error) {
 func (y YiBan) Handler(_ core.Context, req *types.OAutherHandleRequest) (*types.OAutherHandleReply, error) {
 	uid := crypto.MD5([]byte(uuid.NewString()))
 	resp := types.OAutherHandleReply{
-		UUID:      uid,
-		Action:    types.OAutherWayActionJump,
-		Tip:       "点击跳转授权",
-		CodeField: "verify_request",
+		UUID:   uid,
+		Action: types.OAutherWayActionJump,
+		Tip:    "点击跳转授权",
 	}
 
 	// 不是 yiban app 打开
@@ -42,12 +41,13 @@ func (y YiBan) Handler(_ core.Context, req *types.OAutherHandleRequest) (*types.
 
 	// 设置跳转url
 	resp.Value = fmt.Sprintf(
-		"https://oauth.yiban.cn/code/html?client_id=%s&redirect_uri=%s&state=%s.%s.%s",
+		"https://oauth.yiban.cn/code/html?client_id=%s&redirect_uri=%s&state=%s.%s.%s.%s",
 		y.conf.Ak,
 		y.conf.GetSetting().Callback,
 		y.conf.Keyword,
 		resp.Action,
 		uid,
+		"verify_request",
 	)
 	return &resp, nil
 }

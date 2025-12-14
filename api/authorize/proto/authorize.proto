@@ -63,17 +63,18 @@ message OAutherHandleReply {
   string value = 3;
   string tip = 4;
   string keyword = 5;
-  string codeField = 6;
 }
 
-message OAutherLoginRequest {
-  string app = 1[(validate.rules).string = {min_len: 1}];
-  string tenant = 2[(validate.rules).string = {min_len: 1}];
-  string keyword = 3[(validate.rules).string = {min_len:1}];
-  string uuid = 4[(validate.rules).string = {min_len:1}];
-  string account = 5;
-  string code = 6;
+message OAutherReportRequest {
+  string uuid = 1[(validate.rules).string = {min_len:1}];
+  string code = 2[(validate.rules).string = {min_len:1}];
+}
+message OAutherReportReply {}
 
+message OAutherLoginRequest {
+  string uuid = 1[(validate.rules).string = {min_len:1}];
+  string account = 2;
+  string code = 3;
 }
 
 message OAutherLoginReply {

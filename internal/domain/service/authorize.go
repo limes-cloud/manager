@@ -180,12 +180,31 @@ func (s *Authorize) OAutherHandle(ctx core.Context, req *types.OAutherHandleRequ
 		return nil, err
 	}
 
+	// 存储租户和应用信息
+	if err := s.setCacheData(
+		ctx, reply.UUID,
+		&cacheData{
+			TenantId:  tenant.Id,
+			AppId:     app.Id,
+			OAutherId: oauther.Id,
+		},
+		value.Pointer(3*time.Minute),
+	); err != nil {
+		ctx.Logger().Errorw("set info error", "err", err.Error())
+		return nil, errors.SystemError()
+	}
+
 	return reply, nil
 }
 
 func (s *Authorize) OAutherLogin(ctx core.Context, req *types.OAutherLoginRequest) (*types.OAutherLoginReply, error) {
-	// 获取租户信息
-	tenant, err := s.tenant.GetTenantByKeyword(ctx, req.Tenant)
+	data, err := s.getCacheData(ctx, req.UUID)
+	if err != nil {
+		return nil, errors.LoginExpiredError()
+	}
+
+	// 获取租户信息r
+	tenant, err := s.tenant.GetTenant(ctx, data.TenantId)
 	if err != nil {
 		ctx.Logger().Errorw("msg", "get tenant info error", "err", err.Error())
 		return nil, errors.TenantNotFoundError()
@@ -195,7 +214,7 @@ func (s *Authorize) OAutherLogin(ctx core.Context, req *types.OAutherLoginReques
 	}
 
 	// 获取应用信息
-	app, err := s.app.GetAppByKeyword(req.App)
+	app, err := s.app.GetApp(ctx, data.AppId)
 	if err != nil {
 		ctx.Logger().Errorw("msg", "get app info error", "err", err.Error())
 		return nil, errors.AppNotFoundError()
@@ -205,7 +224,7 @@ func (s *Authorize) OAutherLogin(ctx core.Context, req *types.OAutherLoginReques
 	}
 
 	// 获取渠道信息
-	oauter, err := s.oa.GetOAutherByKeyword(ctx, tenant.Id, req.Keyword)
+	oauter, err := s.oa.GetOAuther(ctx, data.OAutherId)
 	if err != nil {
 		return nil, errors.SystemError()
 	}
@@ -217,24 +236,38 @@ func (s *Authorize) OAutherLogin(ctx core.Context, req *types.OAutherLoginReques
 	}
 
 	// 获取token
-	ti, err := execer.GetToken(ctx, &types.OAutherTokenRequest{
-		IP:      ctx.ClientIP(),
-		UUID:    req.UUID,
-		Code:    req.Code,
-		Account: req.Account,
-	})
-	// 获取token
-	if err != nil {
-		if err.Error() == "redis: nil" {
-			return nil, errors.NotFoundReportOAuthError()
+	var (
+		token  = data.Token
+		oid    = data.OID
+		expire = data.Expire
+	)
+	if token == "" && req.Code != "" {
+		ti, err := execer.GetToken(ctx, &types.OAutherTokenRequest{
+			IP:      ctx.ClientIP(),
+			UUID:    req.UUID,
+			Code:    req.Code,
+			Account: req.Account,
+		})
+		// 获取token
+		if err != nil {
+			if err.Error() == "redis: nil" {
+				return nil, errors.NotFoundReportOAuthError()
+			}
+			return nil, errors.OAuthLoginError(err.Error())
 		}
-		return nil, errors.OAuthLoginError(err.Error())
+		token = ti.Token
+		oid = ti.OID
+		expire = ti.Expire
+	}
+
+	if token == "" {
+		return nil, errors.LoginInfoNotFound()
 	}
 
 	// 获取用户信息
 	ui, err := execer.GetInfo(ctx, &types.OAutherInfoRequest{
-		OID:   ti.OID,
-		Token: ti.Token,
+		OID:   oid,
+		Token: token,
 	})
 	if err != nil {
 		return nil, errors.OAuthLoginError(err.Error())
@@ -247,10 +280,10 @@ func (s *Authorize) OAutherLogin(ctx core.Context, req *types.OAutherLoginReques
 			TenantId:  tenant.Id,
 			AppId:     app.Id,
 			OAutherId: oauter.Id,
-			Token:     ti.Token,
-			OID:       ti.OID,
-			Expire:    ti.Expire,
-		}); err != nil {
+			Token:     token,
+			OID:       oid,
+			Expire:    expire,
+		}, nil); err != nil {
 			ctx.Logger().Errorw("set token error", "err", err.Error())
 			return nil, errors.OAuthLoginError()
 		}
@@ -298,9 +331,9 @@ func (s *Authorize) OAutherLogin(ctx core.Context, req *types.OAutherLoginReques
 	if err := s.uo.UpdateUserOAuther(ctx, &entity.UserOAuther{
 		UserId:    user.Id,
 		OAutherId: oauter.Id,
-		OID:       ti.OID,
-		Token:     ti.Token,
-		ExpiredAt: ti.Expire,
+		OID:       oid,
+		Token:     token,
+		ExpiredAt: expire,
 		LoggedAt:  time.Now().Unix(),
 	}); err != nil {
 		return nil, errors.DatabaseError(err.Error())
@@ -316,7 +349,7 @@ func (s *Authorize) OAutherLogin(ctx core.Context, req *types.OAutherLoginReques
 			TenantId: tenant.Id,
 			AppId:    app.Id,
 			UserId:   user.Id,
-		})
+		}, nil)
 		if err != nil {
 			return nil, errors.SystemError(err.Error())
 		}
@@ -324,7 +357,7 @@ func (s *Authorize) OAutherLogin(ctx core.Context, req *types.OAutherLoginReques
 	}
 
 	// 生成token
-	token, err := s.genToken(ctx, app, az, user)
+	token, err = s.genToken(ctx, app, az, user)
 	go s.AddLoginLog(ctx.Clone(), oauter.Type, app.Id, user, err)
 	if err != nil {
 		return nil, err
@@ -458,7 +491,7 @@ func (s *Authorize) OAutherBind(ctx core.Context, req *types.OAutherBindRequest)
 			TenantId: tenant.Id,
 			AppId:    app.Id,
 			UserId:   user.Id,
-		})
+		}, nil)
 		if err != nil {
 			return nil, errors.SystemError(err.Error())
 		}
@@ -652,7 +685,7 @@ func (s *Authorize) Login(ctx core.Context, req *types.LoginRequest) (reply *typ
 			TenantId: tenant.Id,
 			AppId:    app.Id,
 			UserId:   user.Id,
-		})
+		}, nil)
 		if err != nil {
 			return nil, errors.SystemError(err.Error())
 		}
@@ -768,7 +801,7 @@ func (s *Authorize) Register(ctx core.Context, req *types.RegisterRequest) (*typ
 			TenantId: tenant.Id,
 			AppId:    app.Id,
 			UserId:   user.Id,
-		})
+		}, nil)
 		if err != nil {
 			return nil, errors.SystemError(err.Error())
 		}
@@ -837,17 +870,25 @@ func (s *Authorize) needInfo(ctx core.Context, tid, appid uint32, user *entity.U
 	return false, nil
 }
 
-func (s *Authorize) setCacheData(ctx core.Context, uuid string, data *cacheData) error {
+func (s *Authorize) setCacheData(ctx core.Context, uuid string, data *cacheData, exp *time.Duration) error {
+	if exp == nil {
+		exp = new(time.Duration)
+		*exp = 20 * time.Minute
+	}
 	b, _ := json.Marshal(data)
 	key := fmt.Sprintf("%s:%s", oautherCache, uuid)
-	return ctx.Redis().Set(ctx, key, string(b), 20*time.Minute).Err()
+	return ctx.Redis().Set(ctx, key, string(b), *exp).Err()
 }
 
 func (s *Authorize) getCacheData(ctx core.Context, uuid string) (*cacheData, error) {
 	cd := cacheData{}
 	key := fmt.Sprintf("%s:%s", oautherCache, uuid)
-	if err := json.Unmarshal([]byte(ctx.Redis().Get(ctx, key).Val()), &cd); err != nil {
-		return nil, errors.SystemError(err.Error())
+	result, err := ctx.Redis().Get(ctx, key).Result()
+	if err != nil {
+		return nil, err
+	}
+	if err := json.Unmarshal([]byte(result), &cd); err != nil {
+		return nil, err
 	}
 	return &cd, nil
 }
@@ -1074,6 +1115,42 @@ func (u *Authorize) CheckAuth(ctx core.Context, req *types.CheckAuthRequest) (*t
 		TenantId: ctx.Auth().TenantId,
 		DeptId:   ctx.Auth().DeptId,
 	}, nil
+}
+
+// OAutherReport 上报授权code
+func (u *Authorize) OAutherReport(ctx core.Context, req *types.OAutherReportRequest) error {
+	// 获取uuid对应的缓存信息
+	cd, err := u.getCacheData(ctx, req.UUID)
+	if err != nil {
+		return errors.LoginExpiredError()
+	}
+
+	// 获取渠道信息
+	oauther, err := u.oa.GetOAuther(ctx, cd.OAutherId)
+	if err != nil {
+		return errors.SystemError()
+	}
+
+	// 获取授权方式
+	author, err := u.oaexec.GetOAuther(oauther)
+	if err != nil {
+		ctx.Logger().Errorw("get author error", "err", err.Error())
+		return errors.SystemError()
+	}
+
+	// 获取token
+	tk, err := author.GetToken(ctx, &types.OAutherTokenRequest{
+		Code: req.Code,
+	})
+	if err != nil {
+		return errors.GetOAuthTokenError()
+	}
+
+	// 追加token信息
+	cd.Token = tk.Token
+	cd.Expire = tk.Expire
+	cd.OID = tk.OID
+	return u.setCacheData(ctx, req.UUID, cd, value.Pointer(3*time.Minute))
 }
 
 // GetFillInfo  获取用户的填充信息
