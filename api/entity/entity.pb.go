@@ -7,12 +7,11 @@
 package entity
 
 import (
-	reflect "reflect"
-	sync "sync"
-
 	_ "github.com/envoyproxy/protoc-gen-validate/validate"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	reflect "reflect"
+	sync "sync"
 )
 
 const (
@@ -2478,47 +2477,44 @@ func file_api_entity_proto_entity_proto_rawDescGZIP() []byte {
 	return file_api_entity_proto_entity_proto_rawDescData
 }
 
-var (
-	file_api_entity_proto_entity_proto_msgTypes = make([]protoimpl.MessageInfo, 35)
-	file_api_entity_proto_entity_proto_goTypes  = []interface{}{
-		(*ListEntityRequest)(nil),               // 0: manager.api.entity.ListEntityRequest
-		(*ListEntityReply)(nil),                 // 1: manager.api.entity.ListEntityReply
-		(*LoadEntityReply)(nil),                 // 2: manager.api.entity.LoadEntityReply
-		(*ImportEntityRequest)(nil),             // 3: manager.api.entity.ImportEntityRequest
-		(*CreateEntityRequest)(nil),             // 4: manager.api.entity.CreateEntityRequest
-		(*CreateEntityReply)(nil),               // 5: manager.api.entity.CreateEntityReply
-		(*UpdateEntityRequest)(nil),             // 6: manager.api.entity.UpdateEntityRequest
-		(*UpdateEntityReply)(nil),               // 7: manager.api.entity.UpdateEntityReply
-		(*DeleteEntityRequest)(nil),             // 8: manager.api.entity.DeleteEntityRequest
-		(*DeleteEntityReply)(nil),               // 9: manager.api.entity.DeleteEntityReply
-		(*ListEntityFieldRequest)(nil),          // 10: manager.api.entity.ListEntityFieldRequest
-		(*EntityField)(nil),                     // 11: manager.api.entity.EntityField
-		(*ListEntityFieldReply)(nil),            // 12: manager.api.entity.ListEntityFieldReply
-		(*CreateEntityFieldRequest)(nil),        // 13: manager.api.entity.CreateEntityFieldRequest
-		(*CreateEntityFieldReply)(nil),          // 14: manager.api.entity.CreateEntityFieldReply
-		(*UpdateEntityFieldRequest)(nil),        // 15: manager.api.entity.UpdateEntityFieldRequest
-		(*UpdateEntityFieldReply)(nil),          // 16: manager.api.entity.UpdateEntityFieldReply
-		(*DeleteEntityFieldRequest)(nil),        // 17: manager.api.entity.DeleteEntityFieldRequest
-		(*DeleteEntityFieldReply)(nil),          // 18: manager.api.entity.DeleteEntityFieldReply
-		(*ListEntityRuleRequest)(nil),           // 19: manager.api.entity.ListEntityRuleRequest
-		(*Condition)(nil),                       // 20: manager.api.entity.Condition
-		(*ConditionGroup)(nil),                  // 21: manager.api.entity.ConditionGroup
-		(*EntityRule)(nil),                      // 22: manager.api.entity.EntityRule
-		(*ListEntityRuleReply)(nil),             // 23: manager.api.entity.ListEntityRuleReply
-		(*CreateEntityRuleRequest)(nil),         // 24: manager.api.entity.CreateEntityRuleRequest
-		(*CreateEntityRuleReply)(nil),           // 25: manager.api.entity.CreateEntityRuleReply
-		(*UpdateEntityRuleRequest)(nil),         // 26: manager.api.entity.UpdateEntityRuleRequest
-		(*UpdateEntityRuleReply)(nil),           // 27: manager.api.entity.UpdateEntityRuleReply
-		(*DeleteEntityRuleRequest)(nil),         // 28: manager.api.entity.DeleteEntityRuleRequest
-		(*DeleteEntityRuleReply)(nil),           // 29: manager.api.entity.DeleteEntityRuleReply
-		(*ListEntityReply_Entity)(nil),          // 30: manager.api.entity.ListEntityReply.Entity
-		(*LoadEntityReply_EntityField)(nil),     // 31: manager.api.entity.LoadEntityReply.EntityField
-		(*LoadEntityReply_Entity)(nil),          // 32: manager.api.entity.LoadEntityReply.Entity
-		(*ImportEntityRequest_EntityField)(nil), // 33: manager.api.entity.ImportEntityRequest.EntityField
-		(*ImportEntityRequest_Entity)(nil),      // 34: manager.api.entity.ImportEntityRequest.Entity
-	}
-)
-
+var file_api_entity_proto_entity_proto_msgTypes = make([]protoimpl.MessageInfo, 35)
+var file_api_entity_proto_entity_proto_goTypes = []interface{}{
+	(*ListEntityRequest)(nil),               // 0: manager.api.entity.ListEntityRequest
+	(*ListEntityReply)(nil),                 // 1: manager.api.entity.ListEntityReply
+	(*LoadEntityReply)(nil),                 // 2: manager.api.entity.LoadEntityReply
+	(*ImportEntityRequest)(nil),             // 3: manager.api.entity.ImportEntityRequest
+	(*CreateEntityRequest)(nil),             // 4: manager.api.entity.CreateEntityRequest
+	(*CreateEntityReply)(nil),               // 5: manager.api.entity.CreateEntityReply
+	(*UpdateEntityRequest)(nil),             // 6: manager.api.entity.UpdateEntityRequest
+	(*UpdateEntityReply)(nil),               // 7: manager.api.entity.UpdateEntityReply
+	(*DeleteEntityRequest)(nil),             // 8: manager.api.entity.DeleteEntityRequest
+	(*DeleteEntityReply)(nil),               // 9: manager.api.entity.DeleteEntityReply
+	(*ListEntityFieldRequest)(nil),          // 10: manager.api.entity.ListEntityFieldRequest
+	(*EntityField)(nil),                     // 11: manager.api.entity.EntityField
+	(*ListEntityFieldReply)(nil),            // 12: manager.api.entity.ListEntityFieldReply
+	(*CreateEntityFieldRequest)(nil),        // 13: manager.api.entity.CreateEntityFieldRequest
+	(*CreateEntityFieldReply)(nil),          // 14: manager.api.entity.CreateEntityFieldReply
+	(*UpdateEntityFieldRequest)(nil),        // 15: manager.api.entity.UpdateEntityFieldRequest
+	(*UpdateEntityFieldReply)(nil),          // 16: manager.api.entity.UpdateEntityFieldReply
+	(*DeleteEntityFieldRequest)(nil),        // 17: manager.api.entity.DeleteEntityFieldRequest
+	(*DeleteEntityFieldReply)(nil),          // 18: manager.api.entity.DeleteEntityFieldReply
+	(*ListEntityRuleRequest)(nil),           // 19: manager.api.entity.ListEntityRuleRequest
+	(*Condition)(nil),                       // 20: manager.api.entity.Condition
+	(*ConditionGroup)(nil),                  // 21: manager.api.entity.ConditionGroup
+	(*EntityRule)(nil),                      // 22: manager.api.entity.EntityRule
+	(*ListEntityRuleReply)(nil),             // 23: manager.api.entity.ListEntityRuleReply
+	(*CreateEntityRuleRequest)(nil),         // 24: manager.api.entity.CreateEntityRuleRequest
+	(*CreateEntityRuleReply)(nil),           // 25: manager.api.entity.CreateEntityRuleReply
+	(*UpdateEntityRuleRequest)(nil),         // 26: manager.api.entity.UpdateEntityRuleRequest
+	(*UpdateEntityRuleReply)(nil),           // 27: manager.api.entity.UpdateEntityRuleReply
+	(*DeleteEntityRuleRequest)(nil),         // 28: manager.api.entity.DeleteEntityRuleRequest
+	(*DeleteEntityRuleReply)(nil),           // 29: manager.api.entity.DeleteEntityRuleReply
+	(*ListEntityReply_Entity)(nil),          // 30: manager.api.entity.ListEntityReply.Entity
+	(*LoadEntityReply_EntityField)(nil),     // 31: manager.api.entity.LoadEntityReply.EntityField
+	(*LoadEntityReply_Entity)(nil),          // 32: manager.api.entity.LoadEntityReply.Entity
+	(*ImportEntityRequest_EntityField)(nil), // 33: manager.api.entity.ImportEntityRequest.EntityField
+	(*ImportEntityRequest_Entity)(nil),      // 34: manager.api.entity.ImportEntityRequest.Entity
+}
 var file_api_entity_proto_entity_proto_depIdxs = []int32{
 	30, // 0: manager.api.entity.ListEntityReply.list:type_name -> manager.api.entity.ListEntityReply.Entity
 	32, // 1: manager.api.entity.LoadEntityReply.list:type_name -> manager.api.entity.LoadEntityReply.Entity

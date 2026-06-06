@@ -41,7 +41,8 @@ func register(keyword string, name string, init InitFunc) {
 func init() {
 	register("yiban", "易班", yiban.NewYiBan)
 	register("email", "邮箱", email.NewEmail)
-	register("service_account", "微信服务号网页登陆", wx.NewServiceAccount)
+	register("wx_service_account", "微信服务号网页登陆", wx.NewServiceAccount)
+	register("wx_miniprogram", "微信小程序登陆", wx.NewMiniProgram)
 }
 
 type OAuther struct{}

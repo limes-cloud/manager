@@ -7,12 +7,11 @@
 package deptrole
 
 import (
-	reflect "reflect"
-	sync "sync"
-
 	_ "github.com/envoyproxy/protoc-gen-validate/validate"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	reflect "reflect"
+	sync "sync"
 )
 
 const (
@@ -459,19 +458,16 @@ func file_api_deptrole_proto_deptrole_proto_rawDescGZIP() []byte {
 	return file_api_deptrole_proto_deptrole_proto_rawDescData
 }
 
-var (
-	file_api_deptrole_proto_deptrole_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
-	file_api_deptrole_proto_deptrole_proto_goTypes  = []interface{}{
-		(*CreateDeptRoleRequest)(nil),  // 0: manager.api.deptrole.CreateDeptRoleRequest
-		(*CreateDeptRoleReply)(nil),    // 1: manager.api.deptrole.CreateDeptRoleReply
-		(*ListDeptRoleRequest)(nil),    // 2: manager.api.deptrole.ListDeptRoleRequest
-		(*ListDeptRoleReply)(nil),      // 3: manager.api.deptrole.ListDeptRoleReply
-		(*DeleteDeptRoleRequest)(nil),  // 4: manager.api.deptrole.DeleteDeptRoleRequest
-		(*DeleteDeptRoleReply)(nil),    // 5: manager.api.deptrole.DeleteDeptRoleReply
-		(*ListDeptRoleReply_Role)(nil), // 6: manager.api.deptrole.ListDeptRoleReply.Role
-	}
-)
-
+var file_api_deptrole_proto_deptrole_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
+var file_api_deptrole_proto_deptrole_proto_goTypes = []interface{}{
+	(*CreateDeptRoleRequest)(nil),  // 0: manager.api.deptrole.CreateDeptRoleRequest
+	(*CreateDeptRoleReply)(nil),    // 1: manager.api.deptrole.CreateDeptRoleReply
+	(*ListDeptRoleRequest)(nil),    // 2: manager.api.deptrole.ListDeptRoleRequest
+	(*ListDeptRoleReply)(nil),      // 3: manager.api.deptrole.ListDeptRoleReply
+	(*DeleteDeptRoleRequest)(nil),  // 4: manager.api.deptrole.DeleteDeptRoleRequest
+	(*DeleteDeptRoleReply)(nil),    // 5: manager.api.deptrole.DeleteDeptRoleReply
+	(*ListDeptRoleReply_Role)(nil), // 6: manager.api.deptrole.ListDeptRoleReply.Role
+}
 var file_api_deptrole_proto_deptrole_proto_depIdxs = []int32{
 	6, // 0: manager.api.deptrole.ListDeptRoleReply.list:type_name -> manager.api.deptrole.ListDeptRoleReply.Role
 	1, // [1:1] is the sub-list for method output_type

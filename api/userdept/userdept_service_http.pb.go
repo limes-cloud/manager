@@ -8,26 +8,21 @@ package userdept
 
 import (
 	context "context"
-
 	http "github.com/go-kratos/kratos/v2/transport/http"
 	binding "github.com/go-kratos/kratos/v2/transport/http/binding"
 )
 
 // This is a compile-time assertion to ensure that this generated file
 // is compatible with the kratos package it is being compiled against.
-var (
-	_ = new(context.Context)
-	_ = binding.EncodeURL
-)
+var _ = new(context.Context)
+var _ = binding.EncodeURL
 
 const _ = http.SupportPackageIsVersion1
 
-const (
-	OperationUserDeptCreateUserDept = "/manager.api.userdept.UserDept/CreateUserDept"
-	OperationUserDeptDeleteUserDept = "/manager.api.userdept.UserDept/DeleteUserDept"
-	OperationUserDeptListUserDept   = "/manager.api.userdept.UserDept/ListUserDept"
-	OperationUserDeptUpdateUserDept = "/manager.api.userdept.UserDept/UpdateUserDept"
-)
+const OperationUserDeptCreateUserDept = "/manager.api.userdept.UserDept/CreateUserDept"
+const OperationUserDeptDeleteUserDept = "/manager.api.userdept.UserDept/DeleteUserDept"
+const OperationUserDeptListUserDept = "/manager.api.userdept.UserDept/ListUserDept"
+const OperationUserDeptUpdateUserDept = "/manager.api.userdept.UserDept/UpdateUserDept"
 
 type UserDeptHTTPServer interface {
 	CreateUserDept(context.Context, *CreateUserDeptRequest) (*CreateUserDeptReply, error)

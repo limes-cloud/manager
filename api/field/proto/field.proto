@@ -2,28 +2,40 @@ syntax = "proto3";
 
 package manager.api.field;
 
+import "validate/validate.proto";
+
 option go_package = "manager/api/field;field";
 option java_multiple_files = true;
 option java_package = "manager.api.field";
 
-import "validate/validate.proto";
+message ListFieldTypeRequest {}
 
-message ListFieldTypeRequest{
-}
-
-message ListFieldTypeReply{
-  message Type{
+message ListFieldTypeReply {
+  message Type {
     string type = 1;
     string name = 2;
   }
-  repeated Type list=1;
+  repeated Type list = 1;
 }
 
 message ListFieldRequest {
-  uint32 page = 1[(validate.rules).uint32 = {gte: 1}];
-  uint32 pageSize = 2[(validate.rules).uint32 = {gte: 1,lte:50}];
-  optional string order = 3[(validate.rules).string = {in: ["asc","desc"]}];
-  optional string orderBy = 4[(validate.rules).string = {in: ["id","created_at"]}];
+  uint32 page = 1 [(validate.rules).uint32 = {gte: 1}];
+  uint32 pageSize = 2 [(validate.rules).uint32 = {
+    gte: 1
+    lte: 50
+  }];
+  optional string order = 3 [(validate.rules).string = {
+    in: [
+      "asc",
+      "desc"
+    ]
+  }];
+  optional string orderBy = 4 [(validate.rules).string = {
+    in: [
+      "id",
+      "created_at"
+    ]
+  }];
   optional string keyword = 5;
   optional string name = 6;
   optional bool status = 7;
@@ -48,9 +60,9 @@ message ListFieldReply {
   repeated Field list = 2;
 }
 
-message ListRequiredFieldRequest{}
+message ListRequiredFieldRequest {}
 
-message ListRequiredFieldReply{
+message ListRequiredFieldReply {
   message Field {
     string keyword = 1;
     string type = 2;
@@ -60,13 +72,12 @@ message ListRequiredFieldReply{
 }
 
 message CreateFieldRequest {
-  string keyword = 1[(validate.rules).string = {min_len: 1}];
-  string type = 2[(validate.rules).string = {min_len: 1}];
-  string name = 3[(validate.rules).string = {min_len: 1}];
+  string keyword = 1 [(validate.rules).string = {min_len: 1}];
+  string type = 2 [(validate.rules).string = {min_len: 1}];
+  string name = 3 [(validate.rules).string = {min_len: 1}];
   bool required = 4;
   bool unique = 5;
   optional string description = 6;
-
 }
 
 message CreateFieldReply {
@@ -74,7 +85,7 @@ message CreateFieldReply {
 }
 
 message UpdateFieldRequest {
-  uint32 id = 1[(validate.rules).uint32 = {gte: 1}];
+  uint32 id = 1 [(validate.rules).uint32 = {gte: 1}];
   string keyword = 2;
   string type = 3;
   string name = 4;
@@ -84,13 +95,10 @@ message UpdateFieldRequest {
   optional string description = 8;
 }
 
-message UpdateFieldReply {
-}
+message UpdateFieldReply {}
 
 message DeleteFieldRequest {
-  uint32 id = 1[(validate.rules).uint32 = {gte: 1}];
+  uint32 id = 1 [(validate.rules).uint32 = {gte: 1}];
 }
 
-message DeleteFieldReply {
-}
-
+message DeleteFieldReply {}

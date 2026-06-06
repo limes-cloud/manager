@@ -8,7 +8,6 @@ package app
 
 import (
 	context "context"
-
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -128,28 +127,24 @@ type AppServer interface {
 }
 
 // UnimplementedAppServer must be embedded to have forward compatible implementations.
-type UnimplementedAppServer struct{}
+type UnimplementedAppServer struct {
+}
 
 func (UnimplementedAppServer) GetSampleApp(context.Context, *GetSampleAppRequest) (*GetSampleAppReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetSampleApp not implemented")
 }
-
 func (UnimplementedAppServer) GetApp(context.Context, *GetAppRequest) (*GetAppReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetApp not implemented")
 }
-
 func (UnimplementedAppServer) ListApp(context.Context, *ListAppRequest) (*ListAppReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListApp not implemented")
 }
-
 func (UnimplementedAppServer) CreateApp(context.Context, *CreateAppRequest) (*CreateAppReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateApp not implemented")
 }
-
 func (UnimplementedAppServer) UpdateApp(context.Context, *UpdateAppRequest) (*UpdateAppReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateApp not implemented")
 }
-
 func (UnimplementedAppServer) DeleteApp(context.Context, *DeleteAppRequest) (*DeleteAppReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteApp not implemented")
 }

@@ -8,27 +8,22 @@ package role
 
 import (
 	context "context"
-
 	http "github.com/go-kratos/kratos/v2/transport/http"
 	binding "github.com/go-kratos/kratos/v2/transport/http/binding"
 )
 
 // This is a compile-time assertion to ensure that this generated file
 // is compatible with the kratos package it is being compiled against.
-var (
-	_ = new(context.Context)
-	_ = binding.EncodeURL
-)
+var _ = new(context.Context)
+var _ = binding.EncodeURL
 
 const _ = http.SupportPackageIsVersion1
 
-const (
-	OperationRoleCreateRole      = "/manager.api.role.Role/CreateRole"
-	OperationRoleDeleteRole      = "/manager.api.role.Role/DeleteRole"
-	OperationRoleGetRole         = "/manager.api.role.Role/GetRole"
-	OperationRoleListCurrentRole = "/manager.api.role.Role/ListCurrentRole"
-	OperationRoleUpdateRole      = "/manager.api.role.Role/UpdateRole"
-)
+const OperationRoleCreateRole = "/manager.api.role.Role/CreateRole"
+const OperationRoleDeleteRole = "/manager.api.role.Role/DeleteRole"
+const OperationRoleGetRole = "/manager.api.role.Role/GetRole"
+const OperationRoleListCurrentRole = "/manager.api.role.Role/ListCurrentRole"
+const OperationRoleUpdateRole = "/manager.api.role.Role/UpdateRole"
 
 type RoleHTTPServer interface {
 	// CreateRole CreateRole 创建角色信息

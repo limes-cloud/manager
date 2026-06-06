@@ -7,11 +7,10 @@
 package dept
 
 import (
-	reflect "reflect"
-
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	reflect "reflect"
 )
 
 const (
@@ -137,7 +136,6 @@ var file_api_dept_proto_dept_service_proto_goTypes = []interface{}{
 	(*DeleteDeptReply)(nil),           // 16: manager.api.dept.DeleteDeptReply
 	(*GetDeptReply)(nil),              // 17: manager.api.dept.GetDeptReply
 }
-
 var file_api_dept_proto_dept_service_proto_depIdxs = []int32{
 	0,  // 0: manager.api.dept.Dept.ListDeptClassify:input_type -> manager.api.dept.ListDeptClassifyRequest
 	1,  // 1: manager.api.dept.Dept.CreateDeptClassify:input_type -> manager.api.dept.CreateDeptClassifyRequest

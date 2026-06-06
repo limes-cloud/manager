@@ -8,25 +8,20 @@ package appoauther
 
 import (
 	context "context"
-
 	http "github.com/go-kratos/kratos/v2/transport/http"
 	binding "github.com/go-kratos/kratos/v2/transport/http/binding"
 )
 
 // This is a compile-time assertion to ensure that this generated file
 // is compatible with the kratos package it is being compiled against.
-var (
-	_ = new(context.Context)
-	_ = binding.EncodeURL
-)
+var _ = new(context.Context)
+var _ = binding.EncodeURL
 
 const _ = http.SupportPackageIsVersion1
 
-const (
-	OperationAppOAutherCreateAppOAuther = "/manager.api.appoauther.AppOAuther/CreateAppOAuther"
-	OperationAppOAutherDeleteAppOAuther = "/manager.api.appoauther.AppOAuther/DeleteAppOAuther"
-	OperationAppOAutherListAppOAuther   = "/manager.api.appoauther.AppOAuther/ListAppOAuther"
-)
+const OperationAppOAutherCreateAppOAuther = "/manager.api.appoauther.AppOAuther/CreateAppOAuther"
+const OperationAppOAutherDeleteAppOAuther = "/manager.api.appoauther.AppOAuther/DeleteAppOAuther"
+const OperationAppOAutherListAppOAuther = "/manager.api.appoauther.AppOAuther/ListAppOAuther"
 
 type AppOAutherHTTPServer interface {
 	// CreateAppOAuther CreateApp 创建应用渠道信息

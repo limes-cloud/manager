@@ -7,12 +7,11 @@
 package oauther
 
 import (
-	reflect "reflect"
-	sync "sync"
-
 	_ "github.com/envoyproxy/protoc-gen-validate/validate"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	reflect "reflect"
+	sync "sync"
 )
 
 const (
@@ -1117,26 +1116,23 @@ func file_api_oauther_proto_oauther_proto_rawDescGZIP() []byte {
 	return file_api_oauther_proto_oauther_proto_rawDescData
 }
 
-var (
-	file_api_oauther_proto_oauther_proto_msgTypes = make([]protoimpl.MessageInfo, 14)
-	file_api_oauther_proto_oauther_proto_goTypes  = []interface{}{
-		(*ListOAutherTypeRequest)(nil),    // 0: manager.api.oauther.ListOAutherTypeRequest
-		(*ListOAutherTypeReply)(nil),      // 1: manager.api.oauther.ListOAutherTypeReply
-		(*OAutherSetting)(nil),            // 2: manager.api.oauther.OAutherSetting
-		(*ListOAutherRequest)(nil),        // 3: manager.api.oauther.ListOAutherRequest
-		(*ListOAutherReply)(nil),          // 4: manager.api.oauther.ListOAutherReply
-		(*CreateOAutherRequest)(nil),      // 5: manager.api.oauther.CreateOAutherRequest
-		(*CreateOAutherReply)(nil),        // 6: manager.api.oauther.CreateOAutherReply
-		(*UpdateOAutherRequest)(nil),      // 7: manager.api.oauther.UpdateOAutherRequest
-		(*UpdateOAutherReply)(nil),        // 8: manager.api.oauther.UpdateOAutherReply
-		(*DeleteOAutherRequest)(nil),      // 9: manager.api.oauther.DeleteOAutherRequest
-		(*DeleteOAutherReply)(nil),        // 10: manager.api.oauther.DeleteOAutherReply
-		(*ListOAutherTypeReply_Type)(nil), // 11: manager.api.oauther.ListOAutherTypeReply.Type
-		(*OAutherSetting_Email)(nil),      // 12: manager.api.oauther.OAutherSetting.Email
-		(*ListOAutherReply_OAuther)(nil),  // 13: manager.api.oauther.ListOAutherReply.OAuther
-	}
-)
-
+var file_api_oauther_proto_oauther_proto_msgTypes = make([]protoimpl.MessageInfo, 14)
+var file_api_oauther_proto_oauther_proto_goTypes = []interface{}{
+	(*ListOAutherTypeRequest)(nil),    // 0: manager.api.oauther.ListOAutherTypeRequest
+	(*ListOAutherTypeReply)(nil),      // 1: manager.api.oauther.ListOAutherTypeReply
+	(*OAutherSetting)(nil),            // 2: manager.api.oauther.OAutherSetting
+	(*ListOAutherRequest)(nil),        // 3: manager.api.oauther.ListOAutherRequest
+	(*ListOAutherReply)(nil),          // 4: manager.api.oauther.ListOAutherReply
+	(*CreateOAutherRequest)(nil),      // 5: manager.api.oauther.CreateOAutherRequest
+	(*CreateOAutherReply)(nil),        // 6: manager.api.oauther.CreateOAutherReply
+	(*UpdateOAutherRequest)(nil),      // 7: manager.api.oauther.UpdateOAutherRequest
+	(*UpdateOAutherReply)(nil),        // 8: manager.api.oauther.UpdateOAutherReply
+	(*DeleteOAutherRequest)(nil),      // 9: manager.api.oauther.DeleteOAutherRequest
+	(*DeleteOAutherReply)(nil),        // 10: manager.api.oauther.DeleteOAutherReply
+	(*ListOAutherTypeReply_Type)(nil), // 11: manager.api.oauther.ListOAutherTypeReply.Type
+	(*OAutherSetting_Email)(nil),      // 12: manager.api.oauther.OAutherSetting.Email
+	(*ListOAutherReply_OAuther)(nil),  // 13: manager.api.oauther.ListOAutherReply.OAuther
+}
 var file_api_oauther_proto_oauther_proto_depIdxs = []int32{
 	11, // 0: manager.api.oauther.ListOAutherTypeReply.list:type_name -> manager.api.oauther.ListOAutherTypeReply.Type
 	12, // 1: manager.api.oauther.OAutherSetting.email:type_name -> manager.api.oauther.OAutherSetting.Email

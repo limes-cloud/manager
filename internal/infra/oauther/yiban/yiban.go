@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"strconv"
-	"strings"
 
 	"github.com/forgoer/openssl"
 	"github.com/google/uuid"
@@ -24,6 +23,13 @@ func NewYiBan(req *entity.OAuther) (repository.OAutherFunc, error) {
 	return &YiBan{conf: req}, nil
 }
 
+func (y YiBan) Visible(ctx core.Context, req *types.OAutherVisibleRequest) (*types.OAutherVisibleReply, error) {
+	return &types.OAutherVisibleReply{
+		Visible:   true,
+		Recommend: req.Platform == types.PlatformWebYiBan,
+	}, nil
+}
+
 // Handler 获取鉴权方式
 func (y YiBan) Handler(_ core.Context, req *types.OAutherHandleRequest) (*types.OAutherHandleReply, error) {
 	uid := crypto.MD5([]byte(uuid.NewString()))
@@ -34,7 +40,7 @@ func (y YiBan) Handler(_ core.Context, req *types.OAutherHandleRequest) (*types.
 	}
 
 	// 不是 yiban app 打开
-	if !strings.Contains(req.UserAgent, "yiban") {
+	if req.Platform == types.PlatformWebYiBan {
 		resp.Action = types.OAutherWayActionScan
 		resp.Tip = "打开易APP扫码登陆"
 	}

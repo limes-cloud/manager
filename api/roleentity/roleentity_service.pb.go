@@ -7,11 +7,10 @@
 package roleentity
 
 import (
-	reflect "reflect"
-
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	reflect "reflect"
 )
 
 const (
@@ -88,7 +87,6 @@ var file_api_roleentity_proto_roleentity_service_proto_goTypes = []interface{}{
 	(*UpdateRoleEntityReply)(nil),   // 6: manager.api.roleentity.UpdateRoleEntityReply
 	(*DeleteRoleEntityReply)(nil),   // 7: manager.api.roleentity.DeleteRoleEntityReply
 }
-
 var file_api_roleentity_proto_roleentity_service_proto_depIdxs = []int32{
 	0, // 0: manager.api.roleentity.RoleEntity.ListRoleEntity:input_type -> manager.api.roleentity.ListRoleEntityRequest
 	1, // 1: manager.api.roleentity.RoleEntity.CreateRoleEntity:input_type -> manager.api.roleentity.CreateRoleEntityRequest

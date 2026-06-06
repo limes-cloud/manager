@@ -8,10 +8,10 @@ package authorize
 
 import (
 	context "context"
-
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
+	emptypb "google.golang.org/protobuf/types/known/emptypb"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -20,18 +20,20 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	Authorize_ListOAuther_FullMethodName     = "/manager.api.authorize.Authorize/ListOAuther"
-	Authorize_OAutherHandle_FullMethodName   = "/manager.api.authorize.Authorize/OAutherHandle"
-	Authorize_OAutherLogin_FullMethodName    = "/manager.api.authorize.Authorize/OAutherLogin"
-	Authorize_OAutherReport_FullMethodName   = "/manager.api.authorize.Authorize/OAutherReport"
-	Authorize_OAutherBind_FullMethodName     = "/manager.api.authorize.Authorize/OAutherBind"
-	Authorize_GetImageCaptcha_FullMethodName = "/manager.api.authorize.Authorize/GetImageCaptcha"
-	Authorize_Login_FullMethodName           = "/manager.api.authorize.Authorize/Login"
-	Authorize_Register_FullMethodName        = "/manager.api.authorize.Authorize/Register"
-	Authorize_CheckAuth_FullMethodName       = "/manager.api.authorize.Authorize/CheckAuth"
-	Authorize_ParseToken_FullMethodName      = "/manager.api.authorize.Authorize/ParseToken"
-	Authorize_GetFillInfo_FullMethodName     = "/manager.api.authorize.Authorize/GetFillInfo"
-	Authorize_FillInfo_FullMethodName        = "/manager.api.authorize.Authorize/FillInfo"
+	Authorize_ListVisibleOAuther_FullMethodName = "/manager.api.authorize.Authorize/ListVisibleOAuther"
+	Authorize_OAutherHandle_FullMethodName      = "/manager.api.authorize.Authorize/OAutherHandle"
+	Authorize_OAutherLogin_FullMethodName       = "/manager.api.authorize.Authorize/OAutherLogin"
+	Authorize_OAutherReport_FullMethodName      = "/manager.api.authorize.Authorize/OAutherReport"
+	Authorize_OAutherBind_FullMethodName        = "/manager.api.authorize.Authorize/OAutherBind"
+	Authorize_GetImageCaptcha_FullMethodName    = "/manager.api.authorize.Authorize/GetImageCaptcha"
+	Authorize_Login_FullMethodName              = "/manager.api.authorize.Authorize/Login"
+	Authorize_Logout_FullMethodName             = "/manager.api.authorize.Authorize/Logout"
+	Authorize_RefreshToken_FullMethodName       = "/manager.api.authorize.Authorize/RefreshToken"
+	Authorize_Register_FullMethodName           = "/manager.api.authorize.Authorize/Register"
+	Authorize_CheckAuth_FullMethodName          = "/manager.api.authorize.Authorize/CheckAuth"
+	Authorize_ParseToken_FullMethodName         = "/manager.api.authorize.Authorize/ParseToken"
+	Authorize_GetFillInfo_FullMethodName        = "/manager.api.authorize.Authorize/GetFillInfo"
+	Authorize_FillInfo_FullMethodName           = "/manager.api.authorize.Authorize/FillInfo"
 )
 
 // AuthorizeClient is the client API for Authorize service.
@@ -39,7 +41,7 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type AuthorizeClient interface {
 	// ListOAuther 获取登陆渠道信息
-	ListOAuther(ctx context.Context, in *ListOAutherRequest, opts ...grpc.CallOption) (*ListOAutherReply, error)
+	ListVisibleOAuther(ctx context.Context, in *ListVisibleOAutherRequest, opts ...grpc.CallOption) (*ListVisibleOAutherReply, error)
 	// OAutherHandle 渠道授权处理
 	OAutherHandle(ctx context.Context, in *OAutherHandleRequest, opts ...grpc.CallOption) (*OAutherHandleReply, error)
 	// OAutherLogin 渠道授权登陆
@@ -52,6 +54,10 @@ type AuthorizeClient interface {
 	GetImageCaptcha(ctx context.Context, in *GetImageCaptchaRequest, opts ...grpc.CallOption) (*GetImageCaptchaReply, error)
 	// Login 密码登陆
 	Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginReply, error)
+	// Logout 退出登陆
+	Logout(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	// RefreshToken 刷新token
+	RefreshToken(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*RefreshTokenReply, error)
 	// Register 注册
 	Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*RegisterReply, error)
 	// CheckAuth 接口验证
@@ -72,9 +78,9 @@ func NewAuthorizeClient(cc grpc.ClientConnInterface) AuthorizeClient {
 	return &authorizeClient{cc}
 }
 
-func (c *authorizeClient) ListOAuther(ctx context.Context, in *ListOAutherRequest, opts ...grpc.CallOption) (*ListOAutherReply, error) {
-	out := new(ListOAutherReply)
-	err := c.cc.Invoke(ctx, Authorize_ListOAuther_FullMethodName, in, out, opts...)
+func (c *authorizeClient) ListVisibleOAuther(ctx context.Context, in *ListVisibleOAutherRequest, opts ...grpc.CallOption) (*ListVisibleOAutherReply, error) {
+	out := new(ListVisibleOAutherReply)
+	err := c.cc.Invoke(ctx, Authorize_ListVisibleOAuther_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -135,6 +141,24 @@ func (c *authorizeClient) Login(ctx context.Context, in *LoginRequest, opts ...g
 	return out, nil
 }
 
+func (c *authorizeClient) Logout(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, Authorize_Logout_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *authorizeClient) RefreshToken(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*RefreshTokenReply, error) {
+	out := new(RefreshTokenReply)
+	err := c.cc.Invoke(ctx, Authorize_RefreshToken_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *authorizeClient) Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*RegisterReply, error) {
 	out := new(RegisterReply)
 	err := c.cc.Invoke(ctx, Authorize_Register_FullMethodName, in, out, opts...)
@@ -185,7 +209,7 @@ func (c *authorizeClient) FillInfo(ctx context.Context, in *FillInfoRequest, opt
 // for forward compatibility
 type AuthorizeServer interface {
 	// ListOAuther 获取登陆渠道信息
-	ListOAuther(context.Context, *ListOAutherRequest) (*ListOAutherReply, error)
+	ListVisibleOAuther(context.Context, *ListVisibleOAutherRequest) (*ListVisibleOAutherReply, error)
 	// OAutherHandle 渠道授权处理
 	OAutherHandle(context.Context, *OAutherHandleRequest) (*OAutherHandleReply, error)
 	// OAutherLogin 渠道授权登陆
@@ -198,6 +222,10 @@ type AuthorizeServer interface {
 	GetImageCaptcha(context.Context, *GetImageCaptchaRequest) (*GetImageCaptchaReply, error)
 	// Login 密码登陆
 	Login(context.Context, *LoginRequest) (*LoginReply, error)
+	// Logout 退出登陆
+	Logout(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
+	// RefreshToken 刷新token
+	RefreshToken(context.Context, *emptypb.Empty) (*RefreshTokenReply, error)
 	// Register 注册
 	Register(context.Context, *RegisterRequest) (*RegisterReply, error)
 	// CheckAuth 接口验证
@@ -212,52 +240,48 @@ type AuthorizeServer interface {
 }
 
 // UnimplementedAuthorizeServer must be embedded to have forward compatible implementations.
-type UnimplementedAuthorizeServer struct{}
-
-func (UnimplementedAuthorizeServer) ListOAuther(context.Context, *ListOAutherRequest) (*ListOAutherReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ListOAuther not implemented")
+type UnimplementedAuthorizeServer struct {
 }
 
+func (UnimplementedAuthorizeServer) ListVisibleOAuther(context.Context, *ListVisibleOAutherRequest) (*ListVisibleOAutherReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListVisibleOAuther not implemented")
+}
 func (UnimplementedAuthorizeServer) OAutherHandle(context.Context, *OAutherHandleRequest) (*OAutherHandleReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method OAutherHandle not implemented")
 }
-
 func (UnimplementedAuthorizeServer) OAutherLogin(context.Context, *OAutherLoginRequest) (*OAutherLoginReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method OAutherLogin not implemented")
 }
-
 func (UnimplementedAuthorizeServer) OAutherReport(context.Context, *OAutherReportRequest) (*OAutherReportReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method OAutherReport not implemented")
 }
-
 func (UnimplementedAuthorizeServer) OAutherBind(context.Context, *OAutherBindRequest) (*OAutherBindReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method OAutherBind not implemented")
 }
-
 func (UnimplementedAuthorizeServer) GetImageCaptcha(context.Context, *GetImageCaptchaRequest) (*GetImageCaptchaReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetImageCaptcha not implemented")
 }
-
 func (UnimplementedAuthorizeServer) Login(context.Context, *LoginRequest) (*LoginReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Login not implemented")
 }
-
+func (UnimplementedAuthorizeServer) Logout(context.Context, *emptypb.Empty) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Logout not implemented")
+}
+func (UnimplementedAuthorizeServer) RefreshToken(context.Context, *emptypb.Empty) (*RefreshTokenReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RefreshToken not implemented")
+}
 func (UnimplementedAuthorizeServer) Register(context.Context, *RegisterRequest) (*RegisterReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Register not implemented")
 }
-
 func (UnimplementedAuthorizeServer) CheckAuth(context.Context, *CheckAuthRequest) (*CheckAuthReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CheckAuth not implemented")
 }
-
 func (UnimplementedAuthorizeServer) ParseToken(context.Context, *ParseTokenRequest) (*ParseTokenReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ParseToken not implemented")
 }
-
 func (UnimplementedAuthorizeServer) GetFillInfo(context.Context, *GetFillInfoRequest) (*GetFillInfoReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetFillInfo not implemented")
 }
-
 func (UnimplementedAuthorizeServer) FillInfo(context.Context, *FillInfoRequest) (*FillInfoReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method FillInfo not implemented")
 }
@@ -274,20 +298,20 @@ func RegisterAuthorizeServer(s grpc.ServiceRegistrar, srv AuthorizeServer) {
 	s.RegisterService(&Authorize_ServiceDesc, srv)
 }
 
-func _Authorize_ListOAuther_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListOAutherRequest)
+func _Authorize_ListVisibleOAuther_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListVisibleOAutherRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AuthorizeServer).ListOAuther(ctx, in)
+		return srv.(AuthorizeServer).ListVisibleOAuther(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Authorize_ListOAuther_FullMethodName,
+		FullMethod: Authorize_ListVisibleOAuther_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuthorizeServer).ListOAuther(ctx, req.(*ListOAutherRequest))
+		return srv.(AuthorizeServer).ListVisibleOAuther(ctx, req.(*ListVisibleOAutherRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -400,6 +424,42 @@ func _Authorize_Login_Handler(srv interface{}, ctx context.Context, dec func(int
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Authorize_Logout_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthorizeServer).Logout(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Authorize_Logout_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthorizeServer).Logout(ctx, req.(*emptypb.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Authorize_RefreshToken_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthorizeServer).RefreshToken(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Authorize_RefreshToken_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthorizeServer).RefreshToken(ctx, req.(*emptypb.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Authorize_Register_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(RegisterRequest)
 	if err := dec(in); err != nil {
@@ -498,8 +558,8 @@ var Authorize_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*AuthorizeServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "ListOAuther",
-			Handler:    _Authorize_ListOAuther_Handler,
+			MethodName: "ListVisibleOAuther",
+			Handler:    _Authorize_ListVisibleOAuther_Handler,
 		},
 		{
 			MethodName: "OAutherHandle",
@@ -524,6 +584,14 @@ var Authorize_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Login",
 			Handler:    _Authorize_Login_Handler,
+		},
+		{
+			MethodName: "Logout",
+			Handler:    _Authorize_Logout_Handler,
+		},
+		{
+			MethodName: "RefreshToken",
+			Handler:    _Authorize_RefreshToken_Handler,
 		},
 		{
 			MethodName: "Register",

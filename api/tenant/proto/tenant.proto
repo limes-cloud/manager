@@ -2,23 +2,41 @@ syntax = "proto3";
 
 package manager.api.tenant;
 
+import "validate/validate.proto";
+
 option go_package = "manager/api/tenant;tenant";
 option java_multiple_files = true;
 option java_package = "manager.api.tenant.proto";
 
-import "validate/validate.proto";
-
 message TenantSetting {
-  string defaultUserPassword = 1[(validate.rules).string = {min_len: 1,max_len:128}];
-  string defaultUserAvatar = 2[(validate.rules).string = {min_len: 1,max_len:128}];
-  string defaultUserNickname = 3[(validate.rules).string = {min_len: 1,max_len:32}];
+  string defaultUserPassword = 1 [(validate.rules).string = {
+    min_len: 1
+    max_len: 128
+  }];
+  string defaultUserAvatar = 2 [(validate.rules).string = {
+    min_len: 1
+    max_len: 128
+  }];
+  string defaultUserNickname = 3 [(validate.rules).string = {
+    min_len: 1
+    max_len: 32
+  }];
 }
 
 message CreateTenantRequest {
-  string logo = 1[(validate.rules).string = {min_len: 1,max_len:128}];
-  string keyword = 2[(validate.rules).string = {min_len: 1,max_len:32}];
-  string name = 3[(validate.rules).string = {min_len: 1,max_len:64}];
-  string description = 4[(validate.rules).string = {max_len:256}];
+  string logo = 1 [(validate.rules).string = {
+    min_len: 1
+    max_len: 128
+  }];
+  string keyword = 2 [(validate.rules).string = {
+    min_len: 1
+    max_len: 32
+  }];
+  string name = 3 [(validate.rules).string = {
+    min_len: 1
+    max_len: 64
+  }];
+  string description = 4 [(validate.rules).string = {max_len: 256}];
   uint32 weight = 5;
   TenantSetting setting = 6;
 }
@@ -28,27 +46,29 @@ message CreateTenantReply {
 }
 
 message UpdateTenantRequest {
-  uint32 id = 1[(validate.rules).uint32 = {gte: 1}];
-  optional string logo = 2[(validate.rules).string = {min_len: 1,max_len:128}];
-  optional string name = 3[(validate.rules).string = {max_len:64}];
+  uint32 id = 1 [(validate.rules).uint32 = {gte: 1}];
+  optional string logo = 2 [(validate.rules).string = {
+    min_len: 1
+    max_len: 128
+  }];
+  optional string name = 3 [(validate.rules).string = {max_len: 64}];
   optional bool status = 4;
-  optional string description = 5[(validate.rules).string = {max_len:256}];
+  optional string description = 5 [(validate.rules).string = {max_len: 256}];
   optional uint32 weight = 6;
   optional TenantSetting setting = 7;
 }
 
-message UpdateTenantReply {
-}
+message UpdateTenantReply {}
 
 message DeleteTenantRequest {
-  uint32 id = 1[(validate.rules).uint32 = {gte: 1}];
+  uint32 id = 1 [(validate.rules).uint32 = {gte: 1}];
 }
 message DeleteTenantReply {}
 
 message GetTenantRequest {
-  oneof param{
-    uint32 id = 1[(validate.rules).uint32 = {gte: 1}];
-    string keyword = 2[(validate.rules).string = {min_len: 1}];
+  oneof param {
+    uint32 id = 1 [(validate.rules).uint32 = {gte: 1}];
+    string keyword = 2 [(validate.rules).string = {min_len: 1}];
   }
 }
 
@@ -66,9 +86,17 @@ message GetTenantReply {
 }
 
 message ListTenantRequest {
-  uint32 page = 1[(validate.rules).uint32 = {gte: 1}];
-  uint32 pageSize = 2[(validate.rules).uint32 = {gte: 1,lte:50}];
-  optional string order = 3[(validate.rules).string = {in: ["asc","desc"]}];
+  uint32 page = 1 [(validate.rules).uint32 = {gte: 1}];
+  uint32 pageSize = 2 [(validate.rules).uint32 = {
+    gte: 1
+    lte: 50
+  }];
+  optional string order = 3 [(validate.rules).string = {
+    in: [
+      "asc",
+      "desc"
+    ]
+  }];
   optional string orderBy = 4;
   optional string name = 5;
   optional string keyword = 6;
@@ -77,7 +105,7 @@ message ListTenantRequest {
 }
 
 message ListTenantReply {
-  message Data{
+  message Data {
     uint32 id = 1;
     string keyword = 2;
     string logo = 3;
@@ -92,12 +120,12 @@ message ListTenantReply {
   uint32 total = 2;
 }
 
-message ListAppTenantRequest{
-  string app = 1[(validate.rules).string = {min_len: 1}];
+message ListAppTenantRequest {
+  string app = 1 [(validate.rules).string = {min_len: 1}];
 }
 
-message ListAppTenantReply{
-  message Data{
+message ListAppTenantReply {
+  message Data {
     uint32 id = 1;
     string keyword = 2;
     string logo = 3;

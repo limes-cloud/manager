@@ -7,11 +7,10 @@
 package appoauther
 
 import (
-	reflect "reflect"
-
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	reflect "reflect"
 )
 
 const (
@@ -77,7 +76,6 @@ var file_api_appoauther_proto_appoauther_service_proto_goTypes = []interface{}{
 	(*CreateAppOAutherReply)(nil),   // 4: manager.api.appoauther.CreateAppOAutherReply
 	(*DeleteAppOAutherReply)(nil),   // 5: manager.api.appoauther.DeleteAppOAutherReply
 }
-
 var file_api_appoauther_proto_appoauther_service_proto_depIdxs = []int32{
 	0, // 0: manager.api.appoauther.AppOAuther.ListAppOAuther:input_type -> manager.api.appoauther.ListAppOAutherRequest
 	1, // 1: manager.api.appoauther.AppOAuther.CreateAppOAuther:input_type -> manager.api.appoauther.CreateAppOAutherRequest

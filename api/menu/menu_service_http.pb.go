@@ -8,27 +8,22 @@ package menu
 
 import (
 	context "context"
-
 	http "github.com/go-kratos/kratos/v2/transport/http"
 	binding "github.com/go-kratos/kratos/v2/transport/http/binding"
 )
 
 // This is a compile-time assertion to ensure that this generated file
 // is compatible with the kratos package it is being compiled against.
-var (
-	_ = new(context.Context)
-	_ = binding.EncodeURL
-)
+var _ = new(context.Context)
+var _ = binding.EncodeURL
 
 const _ = http.SupportPackageIsVersion1
 
-const (
-	OperationMenuCreateMenu      = "/manager.api.menu.Menu/CreateMenu"
-	OperationMenuDeleteMenu      = "/manager.api.menu.Menu/DeleteMenu"
-	OperationMenuListCurrentMenu = "/manager.api.menu.Menu/ListCurrentMenu"
-	OperationMenuListMenu        = "/manager.api.menu.Menu/ListMenu"
-	OperationMenuUpdateMenu      = "/manager.api.menu.Menu/UpdateMenu"
-)
+const OperationMenuCreateMenu = "/manager.api.menu.Menu/CreateMenu"
+const OperationMenuDeleteMenu = "/manager.api.menu.Menu/DeleteMenu"
+const OperationMenuListCurrentMenu = "/manager.api.menu.Menu/ListCurrentMenu"
+const OperationMenuListMenu = "/manager.api.menu.Menu/ListMenu"
+const OperationMenuUpdateMenu = "/manager.api.menu.Menu/UpdateMenu"
 
 type MenuHTTPServer interface {
 	// CreateMenu CreateMenu 创建菜单信息

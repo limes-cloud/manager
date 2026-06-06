@@ -8,7 +8,6 @@ package user
 
 import (
 	context "context"
-
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -213,52 +212,42 @@ type UserServer interface {
 }
 
 // UnimplementedUserServer must be embedded to have forward compatible implementations.
-type UnimplementedUserServer struct{}
+type UnimplementedUserServer struct {
+}
 
 func (UnimplementedUserServer) GetCurrentUser(context.Context, *GetCurrentUserRequest) (*UserObject, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetCurrentUser not implemented")
 }
-
 func (UnimplementedUserServer) UpdateCurrentUserPassword(context.Context, *UpdateCurrentUserPasswordRequest) (*UpdateCurrentUserPasswordReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateCurrentUserPassword not implemented")
 }
-
 func (UnimplementedUserServer) UpdateCurrentUserSetting(context.Context, *UpdateCurrentUserSettingRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateCurrentUserSetting not implemented")
 }
-
 func (UnimplementedUserServer) UpdateCurrentUser(context.Context, *UpdateCurrentUserRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateCurrentUser not implemented")
 }
-
 func (UnimplementedUserServer) GetUser(context.Context, *GetUserRequest) (*UserObject, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetUser not implemented")
 }
-
 func (UnimplementedUserServer) ListUser(context.Context, *ListUserRequest) (*ListUserReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListUser not implemented")
 }
-
 func (UnimplementedUserServer) CreateUser(context.Context, *CreateUserRequest) (*CreateUserReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateUser not implemented")
 }
-
 func (UnimplementedUserServer) ResetPassword(context.Context, *ResetPasswordRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ResetPassword not implemented")
 }
-
 func (UnimplementedUserServer) UpdateUser(context.Context, *UpdateUserRequest) (*UpdateUserReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateUser not implemented")
 }
-
 func (UnimplementedUserServer) DeleteUser(context.Context, *DeleteUserRequest) (*DeleteUserReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteUser not implemented")
 }
-
 func (UnimplementedUserServer) UpdateUserinfo(context.Context, *UpdateUserinfoRequest) (*UpdateUserinfoReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateUserinfo not implemented")
 }
-
 func (UnimplementedUserServer) OfflineUser(context.Context, *OfflineUserRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method OfflineUser not implemented")
 }

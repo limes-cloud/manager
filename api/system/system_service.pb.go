@@ -7,11 +7,10 @@
 package system
 
 import (
-	reflect "reflect"
-
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	reflect "reflect"
 )
 
 const (
@@ -51,7 +50,6 @@ var file_api_system_proto_system_service_proto_goTypes = []interface{}{
 	(*GetSystemSettingRequest)(nil), // 0: manager.api.system.GetSystemSettingRequest
 	(*GetSystemSettingReply)(nil),   // 1: manager.api.system.GetSystemSettingReply
 }
-
 var file_api_system_proto_system_service_proto_depIdxs = []int32{
 	0, // 0: manager.api.system.System.GetSystemSetting:input_type -> manager.api.system.GetSystemSettingRequest
 	1, // 1: manager.api.system.System.GetSystemSetting:output_type -> manager.api.system.GetSystemSettingReply

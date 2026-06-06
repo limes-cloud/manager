@@ -2,16 +2,16 @@ syntax = "proto3";
 
 package manager.api.scope;
 
+import "validate/validate.proto";
+
 option go_package = "manager/api/scope;scope";
 option java_multiple_files = true;
 option java_package = "manager.api.scope.proto";
 
-import "validate/validate.proto";
-
 message GetScopeRequest {
-  string database =1;
-  string model =2;
-  string method =3;
+  string database = 1;
+  string model = 2;
+  string method = 3;
 }
 
 message GetScopeReply {
@@ -24,11 +24,9 @@ message GetScopeReply {
   uint32 tenantId = 7;
 }
 
-
 message GetUserDeptIdRequest {
   uint32 userId = 1;
 }
 message GetUserDeptIdReply {
   uint32 deptId = 1;
 }
-

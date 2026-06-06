@@ -7,12 +7,11 @@
 package role
 
 import (
-	reflect "reflect"
-	sync "sync"
-
 	_ "github.com/envoyproxy/protoc-gen-validate/validate"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	reflect "reflect"
+	sync "sync"
 )
 
 const (
@@ -835,23 +834,20 @@ func file_api_role_proto_role_proto_rawDescGZIP() []byte {
 	return file_api_role_proto_role_proto_rawDescData
 }
 
-var (
-	file_api_role_proto_role_proto_msgTypes = make([]protoimpl.MessageInfo, 11)
-	file_api_role_proto_role_proto_goTypes  = []interface{}{
-		(*GetRoleRequest)(nil),     // 0: manager.api.role.GetRoleRequest
-		(*GetRoleReply)(nil),       // 1: manager.api.role.GetRoleReply
-		(*ListRoleRequest)(nil),    // 2: manager.api.role.ListRoleRequest
-		(*ListRoleReply)(nil),      // 3: manager.api.role.ListRoleReply
-		(*CreateRoleRequest)(nil),  // 4: manager.api.role.CreateRoleRequest
-		(*CreateRoleReply)(nil),    // 5: manager.api.role.CreateRoleReply
-		(*UpdateRoleRequest)(nil),  // 6: manager.api.role.UpdateRoleRequest
-		(*UpdateRoleReply)(nil),    // 7: manager.api.role.UpdateRoleReply
-		(*DeleteRoleRequest)(nil),  // 8: manager.api.role.DeleteRoleRequest
-		(*DeleteRoleReply)(nil),    // 9: manager.api.role.DeleteRoleReply
-		(*ListRoleReply_Role)(nil), // 10: manager.api.role.ListRoleReply.Role
-	}
-)
-
+var file_api_role_proto_role_proto_msgTypes = make([]protoimpl.MessageInfo, 11)
+var file_api_role_proto_role_proto_goTypes = []interface{}{
+	(*GetRoleRequest)(nil),     // 0: manager.api.role.GetRoleRequest
+	(*GetRoleReply)(nil),       // 1: manager.api.role.GetRoleReply
+	(*ListRoleRequest)(nil),    // 2: manager.api.role.ListRoleRequest
+	(*ListRoleReply)(nil),      // 3: manager.api.role.ListRoleReply
+	(*CreateRoleRequest)(nil),  // 4: manager.api.role.CreateRoleRequest
+	(*CreateRoleReply)(nil),    // 5: manager.api.role.CreateRoleReply
+	(*UpdateRoleRequest)(nil),  // 6: manager.api.role.UpdateRoleRequest
+	(*UpdateRoleReply)(nil),    // 7: manager.api.role.UpdateRoleReply
+	(*DeleteRoleRequest)(nil),  // 8: manager.api.role.DeleteRoleRequest
+	(*DeleteRoleReply)(nil),    // 9: manager.api.role.DeleteRoleReply
+	(*ListRoleReply_Role)(nil), // 10: manager.api.role.ListRoleReply.Role
+}
 var file_api_role_proto_role_proto_depIdxs = []int32{
 	10, // 0: manager.api.role.ListRoleReply.list:type_name -> manager.api.role.ListRoleReply.Role
 	10, // 1: manager.api.role.ListRoleReply.Role.children:type_name -> manager.api.role.ListRoleReply.Role

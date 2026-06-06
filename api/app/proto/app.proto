@@ -2,11 +2,11 @@ syntax = "proto3";
 
 package manager.api.app;
 
+import "validate/validate.proto";
+
 option go_package = "manager/api/app;app";
 option java_multiple_files = true;
 option java_package = "manager.api.app";
-
-import "validate/validate.proto";
 
 message AppSettingWeb {
   // 版权信息
@@ -23,7 +23,7 @@ message AppSettingJWT {
   bool uniquePlatform = 5;
 }
 
-message AppSettingTenant{
+message AppSettingTenant {
   string mode = 1;
 }
 
@@ -34,7 +34,7 @@ message AppSetting {
 }
 
 message GetAppRequest {
-  uint32 id = 1[(validate.rules).uint32 = {gte: 1}];
+  uint32 id = 1 [(validate.rules).uint32 = {gte: 1}];
 }
 
 message GetAppReply {
@@ -56,15 +56,14 @@ message GetAppReply {
   AppSetting setting = 16;
 }
 
-
 message GetSampleAppRequest {
-  string keyword = 1[(validate.rules).string = {min_len: 1}];
+  string keyword = 1 [(validate.rules).string = {min_len: 1}];
 }
 
 message GetSampleAppReply {
-  message Setting{
-      AppSettingTenant tenant = 1;
-      AppSettingWeb web = 2;
+  message Setting {
+    AppSettingTenant tenant = 1;
+    AppSettingWeb web = 2;
   }
   uint32 id = 1;
   string type = 2;
@@ -78,17 +77,30 @@ message GetSampleAppReply {
   bool status = 10;
   optional string reason = 11;
   optional string description = 12;
-  Setting setting =  13;
+  Setting setting = 13;
   uint32 createdAt = 14;
   uint32 updatedAt = 15;
 }
 
-
 message ListAppRequest {
-  uint32 page = 1[(validate.rules).uint32 = {gt: 0}];
-  uint32 pageSize = 2[(validate.rules).uint32 = {gt: 0,lte:50}];
-  optional string order = 3[(validate.rules).string = {in: ["asc","desc"]}];
-  optional string orderBy = 4[(validate.rules).string = {in: ["id","created_at","updated_at"]}];
+  uint32 page = 1 [(validate.rules).uint32 = {gt: 0}];
+  uint32 pageSize = 2 [(validate.rules).uint32 = {
+    gt: 0
+    lte: 50
+  }];
+  optional string order = 3 [(validate.rules).string = {
+    in: [
+      "asc",
+      "desc"
+    ]
+  }];
+  optional string orderBy = 4 [(validate.rules).string = {
+    in: [
+      "id",
+      "created_at",
+      "updated_at"
+    ]
+  }];
   optional string keyword = 5;
   optional string name = 6;
   optional bool status = 7;
@@ -116,11 +128,26 @@ message ListAppReply {
 }
 
 message CreateAppRequest {
-  string type = 1[(validate.rules).string = {min_len: 1, max_len: 128}];
-  string logo = 2[(validate.rules).string = {min_len: 1, max_len: 128}];
-  string name = 3[(validate.rules).string = {min_len: 1, max_len: 64}];
-  string showName = 4[(validate.rules).string = {min_len: 1, max_len: 64}];
-  string keyword = 5[(validate.rules).string = {min_len: 1, max_len: 32}];
+  string type = 1 [(validate.rules).string = {
+    min_len: 1
+    max_len: 128
+  }];
+  string logo = 2 [(validate.rules).string = {
+    min_len: 1
+    max_len: 128
+  }];
+  string name = 3 [(validate.rules).string = {
+    min_len: 1
+    max_len: 64
+  }];
+  string showName = 4 [(validate.rules).string = {
+    min_len: 1
+    max_len: 64
+  }];
+  string keyword = 5 [(validate.rules).string = {
+    min_len: 1
+    max_len: 32
+  }];
   string favicon = 6;
   string secret = 7;
   bool private = 8;
@@ -134,13 +161,13 @@ message CreateAppReply {
 }
 
 message UpdateAppRequest {
-  uint32 id = 1[(validate.rules).uint32 = {gte: 1}];
-  optional string type = 2[(validate.rules).string = {max_len: 128}];
-  optional string logo = 3[(validate.rules).string = {max_len: 128}];
-  optional string favicon = 4[(validate.rules).string = {max_len: 128}];
-  optional string secret = 5[(validate.rules).string = {max_len: 128}];
-  optional string name = 6[(validate.rules).string = {max_len: 64}];
-  optional string showName = 7[(validate.rules).string = {max_len: 64}];
+  uint32 id = 1 [(validate.rules).uint32 = {gte: 1}];
+  optional string type = 2 [(validate.rules).string = {max_len: 128}];
+  optional string logo = 3 [(validate.rules).string = {max_len: 128}];
+  optional string favicon = 4 [(validate.rules).string = {max_len: 128}];
+  optional string secret = 5 [(validate.rules).string = {max_len: 128}];
+  optional string name = 6 [(validate.rules).string = {max_len: 64}];
+  optional string showName = 7 [(validate.rules).string = {max_len: 64}];
   optional bool private = 8;
   optional bool status = 9;
   optional string reason = 10;
@@ -149,14 +176,10 @@ message UpdateAppRequest {
   optional AppSetting setting = 13;
 }
 
-message UpdateAppReply {
-}
-
+message UpdateAppReply {}
 
 message DeleteAppRequest {
-  uint32 id = 1[(validate.rules).uint32 = {gt: 0}];
+  uint32 id = 1 [(validate.rules).uint32 = {gt: 0}];
 }
 
-message DeleteAppReply {
-}
-
+message DeleteAppReply {}

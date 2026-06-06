@@ -8,31 +8,26 @@ package dictionary
 
 import (
 	context "context"
-
 	http "github.com/go-kratos/kratos/v2/transport/http"
 	binding "github.com/go-kratos/kratos/v2/transport/http/binding"
 )
 
 // This is a compile-time assertion to ensure that this generated file
 // is compatible with the kratos package it is being compiled against.
-var (
-	_ = new(context.Context)
-	_ = binding.EncodeURL
-)
+var _ = new(context.Context)
+var _ = binding.EncodeURL
 
 const _ = http.SupportPackageIsVersion1
 
-const (
-	OperationDictionaryCreateDictionary      = "/manager.api.dictionary.Dictionary/CreateDictionary"
-	OperationDictionaryCreateDictionaryValue = "/manager.api.dictionary.Dictionary/CreateDictionaryValue"
-	OperationDictionaryDeleteDictionary      = "/manager.api.dictionary.Dictionary/DeleteDictionary"
-	OperationDictionaryDeleteDictionaryValue = "/manager.api.dictionary.Dictionary/DeleteDictionaryValue"
-	OperationDictionaryGetDictionary         = "/manager.api.dictionary.Dictionary/GetDictionary"
-	OperationDictionaryListDictionary        = "/manager.api.dictionary.Dictionary/ListDictionary"
-	OperationDictionaryListDictionaryValue   = "/manager.api.dictionary.Dictionary/ListDictionaryValue"
-	OperationDictionaryUpdateDictionary      = "/manager.api.dictionary.Dictionary/UpdateDictionary"
-	OperationDictionaryUpdateDictionaryValue = "/manager.api.dictionary.Dictionary/UpdateDictionaryValue"
-)
+const OperationDictionaryCreateDictionary = "/manager.api.dictionary.Dictionary/CreateDictionary"
+const OperationDictionaryCreateDictionaryValue = "/manager.api.dictionary.Dictionary/CreateDictionaryValue"
+const OperationDictionaryDeleteDictionary = "/manager.api.dictionary.Dictionary/DeleteDictionary"
+const OperationDictionaryDeleteDictionaryValue = "/manager.api.dictionary.Dictionary/DeleteDictionaryValue"
+const OperationDictionaryGetDictionary = "/manager.api.dictionary.Dictionary/GetDictionary"
+const OperationDictionaryListDictionary = "/manager.api.dictionary.Dictionary/ListDictionary"
+const OperationDictionaryListDictionaryValue = "/manager.api.dictionary.Dictionary/ListDictionaryValue"
+const OperationDictionaryUpdateDictionary = "/manager.api.dictionary.Dictionary/UpdateDictionary"
+const OperationDictionaryUpdateDictionaryValue = "/manager.api.dictionary.Dictionary/UpdateDictionaryValue"
 
 type DictionaryHTTPServer interface {
 	// CreateDictionary CreateDictionary 创建字典目录

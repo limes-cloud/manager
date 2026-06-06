@@ -7,12 +7,11 @@
 package user
 
 import (
-	reflect "reflect"
-
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	emptypb "google.golang.org/protobuf/types/known/emptypb"
+	reflect "reflect"
 )
 
 const (
@@ -156,7 +155,6 @@ var file_api_user_proto_user_service_proto_goTypes = []interface{}{
 	(*DeleteUserReply)(nil),                  // 18: manager.api.user.DeleteUserReply
 	(*UpdateUserinfoReply)(nil),              // 19: manager.api.user.UpdateUserinfoReply
 }
-
 var file_api_user_proto_user_service_proto_depIdxs = []int32{
 	0,  // 0: manager.api.user.User.GetCurrentUser:input_type -> manager.api.user.GetCurrentUserRequest
 	1,  // 1: manager.api.user.User.UpdateCurrentUserPassword:input_type -> manager.api.user.UpdateCurrentUserPasswordRequest

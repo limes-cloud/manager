@@ -60,6 +60,7 @@ func (m *ListCurrentMenuRequest) validate(all bool) error {
 	// no validation rules for OnlyMenu
 
 	if m.AppId != nil {
+
 		if m.GetAppId() < 1 {
 			err := ListCurrentMenuRequestValidationError{
 				field:  "AppId",
@@ -70,6 +71,7 @@ func (m *ListCurrentMenuRequest) validate(all bool) error {
 			}
 			errors = append(errors, err)
 		}
+
 	}
 
 	if len(errors) > 0 {
@@ -730,6 +732,7 @@ func (m *UpdateMenuRequest) validate(all bool) error {
 	}
 
 	if m.Title != nil {
+
 		if utf8.RuneCountInString(m.GetTitle()) < 1 {
 			err := UpdateMenuRequestValidationError{
 				field:  "Title",
@@ -740,9 +743,11 @@ func (m *UpdateMenuRequest) validate(all bool) error {
 			}
 			errors = append(errors, err)
 		}
+
 	}
 
 	if m.Type != nil {
+
 		if utf8.RuneCountInString(m.GetType()) < 1 {
 			err := UpdateMenuRequestValidationError{
 				field:  "Type",
@@ -753,6 +758,7 @@ func (m *UpdateMenuRequest) validate(all bool) error {
 			}
 			errors = append(errors, err)
 		}
+
 	}
 
 	if m.Keyword != nil {

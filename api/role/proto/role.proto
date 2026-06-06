@@ -2,15 +2,15 @@ syntax = "proto3";
 
 package manager.api.role;
 
+import "validate/validate.proto";
+
 option go_package = "manager/api/role;role";
 option java_multiple_files = true;
 option java_package = "manager.api.role";
 
-import "validate/validate.proto";
-
 message GetRoleRequest {
-  optional uint32 id = 1[(validate.rules).uint32 = {gte: 1}];
-  optional string keyword = 2[(validate.rules).string = {min_len: 1}];
+  optional uint32 id = 1 [(validate.rules).uint32 = {gte: 1}];
+  optional string keyword = 2 [(validate.rules).string = {min_len: 1}];
 }
 
 message GetRoleReply {
@@ -24,7 +24,7 @@ message GetRoleReply {
   uint32 updatedAt = 8;
 }
 
-message ListRoleRequest{
+message ListRoleRequest {
   optional string keyword = 1;
   optional uint32 name = 2;
   optional bool status = 3;
@@ -47,10 +47,19 @@ message ListRoleReply {
 }
 
 message CreateRoleRequest {
-  uint32 parentId = 1[(validate.rules).uint32 = {gte: 0}];
-  string keyword = 2[(validate.rules).string = {min_len: 1, max_len: 32}];
-  string name = 3[(validate.rules).string = {min_len: 1, max_len: 128}];
-  string description = 5[(validate.rules).string = {min_len: 1, max_len: 256}];
+  uint32 parentId = 1 [(validate.rules).uint32 = {gte: 0}];
+  string keyword = 2 [(validate.rules).string = {
+    min_len: 1
+    max_len: 32
+  }];
+  string name = 3 [(validate.rules).string = {
+    min_len: 1
+    max_len: 128
+  }];
+  string description = 5 [(validate.rules).string = {
+    min_len: 1
+    max_len: 256
+  }];
 }
 
 message CreateRoleReply {
@@ -58,22 +67,20 @@ message CreateRoleReply {
 }
 
 message UpdateRoleRequest {
-  uint32 id = 1[(validate.rules).uint32 = {gte: 1}];
+  uint32 id = 1 [(validate.rules).uint32 = {gte: 1}];
   optional uint32 parentId = 2;
-  optional string name = 3[(validate.rules).string = {min_len: 1, max_len: 128}];
+  optional string name = 3 [(validate.rules).string = {
+    min_len: 1
+    max_len: 128
+  }];
   optional bool status = 4;
   optional string description = 5;
 }
 
-message UpdateRoleReply {
-}
+message UpdateRoleReply {}
 
 message DeleteRoleRequest {
-  uint32 id = 1[(validate.rules).uint32 = {gte: 1}];
+  uint32 id = 1 [(validate.rules).uint32 = {gte: 1}];
 }
 
-message DeleteRoleReply {
-}
-
-
-
+message DeleteRoleReply {}

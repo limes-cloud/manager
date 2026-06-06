@@ -8,28 +8,23 @@ package app
 
 import (
 	context "context"
-
 	http "github.com/go-kratos/kratos/v2/transport/http"
 	binding "github.com/go-kratos/kratos/v2/transport/http/binding"
 )
 
 // This is a compile-time assertion to ensure that this generated file
 // is compatible with the kratos package it is being compiled against.
-var (
-	_ = new(context.Context)
-	_ = binding.EncodeURL
-)
+var _ = new(context.Context)
+var _ = binding.EncodeURL
 
 const _ = http.SupportPackageIsVersion1
 
-const (
-	OperationAppCreateApp    = "/manager.api.app.App/CreateApp"
-	OperationAppDeleteApp    = "/manager.api.app.App/DeleteApp"
-	OperationAppGetApp       = "/manager.api.app.App/GetApp"
-	OperationAppGetSampleApp = "/manager.api.app.App/GetSampleApp"
-	OperationAppListApp      = "/manager.api.app.App/ListApp"
-	OperationAppUpdateApp    = "/manager.api.app.App/UpdateApp"
-)
+const OperationAppCreateApp = "/manager.api.app.App/CreateApp"
+const OperationAppDeleteApp = "/manager.api.app.App/DeleteApp"
+const OperationAppGetApp = "/manager.api.app.App/GetApp"
+const OperationAppGetSampleApp = "/manager.api.app.App/GetSampleApp"
+const OperationAppListApp = "/manager.api.app.App/ListApp"
+const OperationAppUpdateApp = "/manager.api.app.App/UpdateApp"
 
 type AppHTTPServer interface {
 	// CreateApp CreateApp 创建应用信息

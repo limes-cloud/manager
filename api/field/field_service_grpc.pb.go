@@ -8,7 +8,6 @@ package field
 
 import (
 	context "context"
-
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -128,28 +127,24 @@ type FieldServer interface {
 }
 
 // UnimplementedFieldServer must be embedded to have forward compatible implementations.
-type UnimplementedFieldServer struct{}
+type UnimplementedFieldServer struct {
+}
 
 func (UnimplementedFieldServer) ListFieldType(context.Context, *ListFieldTypeRequest) (*ListFieldTypeReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListFieldType not implemented")
 }
-
 func (UnimplementedFieldServer) ListField(context.Context, *ListFieldRequest) (*ListFieldReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListField not implemented")
 }
-
 func (UnimplementedFieldServer) ListRequiredField(context.Context, *ListRequiredFieldRequest) (*ListRequiredFieldReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListRequiredField not implemented")
 }
-
 func (UnimplementedFieldServer) CreateField(context.Context, *CreateFieldRequest) (*CreateFieldReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateField not implemented")
 }
-
 func (UnimplementedFieldServer) UpdateField(context.Context, *UpdateFieldRequest) (*UpdateFieldReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateField not implemented")
 }
-
 func (UnimplementedFieldServer) DeleteField(context.Context, *DeleteFieldRequest) (*DeleteFieldReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteField not implemented")
 }

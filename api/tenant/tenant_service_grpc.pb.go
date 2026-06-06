@@ -8,7 +8,6 @@ package tenant
 
 import (
 	context "context"
-
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -116,28 +115,24 @@ type TenantServer interface {
 }
 
 // UnimplementedTenantServer must be embedded to have forward compatible implementations.
-type UnimplementedTenantServer struct{}
+type UnimplementedTenantServer struct {
+}
 
 func (UnimplementedTenantServer) GetTenant(context.Context, *GetTenantRequest) (*GetTenantReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetTenant not implemented")
 }
-
 func (UnimplementedTenantServer) ListTenant(context.Context, *ListTenantRequest) (*ListTenantReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListTenant not implemented")
 }
-
 func (UnimplementedTenantServer) ListAppTenant(context.Context, *ListAppTenantRequest) (*ListAppTenantReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListAppTenant not implemented")
 }
-
 func (UnimplementedTenantServer) CreateTenant(context.Context, *CreateTenantRequest) (*CreateTenantReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateTenant not implemented")
 }
-
 func (UnimplementedTenantServer) UpdateTenant(context.Context, *UpdateTenantRequest) (*UpdateTenantReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateTenant not implemented")
 }
-
 func (UnimplementedTenantServer) DeleteTenant(context.Context, *DeleteTenantRequest) (*DeleteTenantReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteTenant not implemented")
 }

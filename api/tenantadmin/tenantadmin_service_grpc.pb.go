@@ -8,7 +8,6 @@ package tenantadmin
 
 import (
 	context "context"
-
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -80,16 +79,15 @@ type TenantAdminServer interface {
 }
 
 // UnimplementedTenantAdminServer must be embedded to have forward compatible implementations.
-type UnimplementedTenantAdminServer struct{}
+type UnimplementedTenantAdminServer struct {
+}
 
 func (UnimplementedTenantAdminServer) ListTenantAdmin(context.Context, *ListTenantAdminRequest) (*ListTenantAdminReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListTenantAdmin not implemented")
 }
-
 func (UnimplementedTenantAdminServer) CreateTenantAdmin(context.Context, *CreateTenantAdminRequest) (*CreateTenantAdminReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateTenantAdmin not implemented")
 }
-
 func (UnimplementedTenantAdminServer) DeleteTenantAdmin(context.Context, *DeleteTenantAdminRequest) (*DeleteTenantAdminReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteTenantAdmin not implemented")
 }

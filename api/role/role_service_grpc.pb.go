@@ -8,7 +8,6 @@ package role
 
 import (
 	context "context"
-
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -114,24 +113,21 @@ type RoleServer interface {
 }
 
 // UnimplementedRoleServer must be embedded to have forward compatible implementations.
-type UnimplementedRoleServer struct{}
+type UnimplementedRoleServer struct {
+}
 
 func (UnimplementedRoleServer) GetRole(context.Context, *GetRoleRequest) (*GetRoleReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetRole not implemented")
 }
-
 func (UnimplementedRoleServer) ListCurrentRole(context.Context, *ListRoleRequest) (*ListRoleReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListCurrentRole not implemented")
 }
-
 func (UnimplementedRoleServer) CreateRole(context.Context, *CreateRoleRequest) (*CreateRoleReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateRole not implemented")
 }
-
 func (UnimplementedRoleServer) UpdateRole(context.Context, *UpdateRoleRequest) (*UpdateRoleReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateRole not implemented")
 }
-
 func (UnimplementedRoleServer) DeleteRole(context.Context, *DeleteRoleRequest) (*DeleteRoleReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteRole not implemented")
 }

@@ -12,10 +12,35 @@ const (
 const (
 	OAutherWayBrowserWX = "wx"
 
-	OAutherWayActionScan    = "scan"
-	OAutherWayActionJump    = "jump"
-	OAutherWayActionCaptcha = "captcha"
+	OAutherWayActionUniLogin = "unilogin"
+	OAutherWayActionScan     = "scan"
+	OAutherWayActionJump     = "jump"
+	OAutherWayActionCaptcha  = "captcha"
+
+	PlatformApp        = "app"              // App
+	PlatformWeb        = "web"              // Web
+	PlatformWebYiBan   = "web-yiban"        // 易班 app-web
+	PlatformWebWeiXin  = "web-weixin"       // 微信 app-web
+	PlatformWebAliPay  = "web-alipay"       // 支付宝 app-web
+	PlatformWebDouYin  = "web-douyin"       // 抖音 app-web
+	PlatformMPWeiXin   = "mp-weixin"        // 微信小程序
+	PlatformMPAlipay   = "mp-alipay"        // 支付宝小程序
+	PlatformMPBaidu    = "mp-baidu"         // 百度小程序
+	PlatformMPTouTiao  = "mp-toutiao"       // 抖音小程序
+	PlatformMPLark     = "mp-lark"          // 飞书小程序
+	PlatformMPQQ       = "mp-qq"            // QQ小程序
+	PlatformMPKuaiShou = "mp-kuaishou"      // 快手小程序
+	PlatformMPJD       = "mp-jd"            // 京东小程序
+	PlatformMP360      = "mp-360"           // 360小程序
+	PlatformMPHarmony  = "mp-harmony"       // 鸿蒙元服务
+	PlatformMPQuickApp = "quickapp-webview" // 快应用通用(包含联盟、华为)
 )
+
+type ListVisibleOAutherRequest struct {
+	Tenant   string `json:"tenant"`
+	App      string `json:"app"`
+	Platform string `json:"platform"`
+}
 
 type CheckAuthRequest struct {
 	Path   string `json:"path"`
@@ -85,6 +110,17 @@ type ListAuthorizeRequest struct {
 	AppIds []uint32 `json:"appIds"`
 }
 
+type OAutherVisibleRequest struct {
+	UserAgent string `json:"userAgent"`
+	Platform  string `json:"platform"`
+}
+
+type OAutherVisibleReply struct {
+	Visible       bool   `json:"visible"`
+	Recommend     bool   `json:"recommend"`
+	RecommendText string `json:"recommendText"`
+}
+
 type GetAuthorizeRequest struct {
 	TenantId uint32 `json:"tenantId"`
 	AppId    uint32 `json:"appId"`
@@ -98,6 +134,7 @@ type OAutherHandleRequest struct {
 	UserAgent string `json:"userAgent"`
 	Account   string `json:"account"`
 	IP        string `json:"ip"`
+	Platform  string `json:"platform"`
 }
 
 type OAutherHandleReply struct {

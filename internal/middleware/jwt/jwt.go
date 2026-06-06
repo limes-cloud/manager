@@ -6,6 +6,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/limes-cloud/manager/internal/core"
+
 	"github.com/go-kratos/kratos/v2/transport/http"
 
 	"github.com/limes-cloud/manager/api/authorize"
@@ -28,12 +30,6 @@ import (
 	pkgtjwt "github.com/limes-cloud/manager/internal/pkg/jwt"
 )
 
-const (
-	TokenKey = "x-md-global-token"
-)
-
-type jwterKey struct{}
-
 // Token 获取并设置token
 func Token() middleware.Middleware {
 	appIns := dbs.NewApp()
@@ -44,7 +40,7 @@ func Token() middleware.Middleware {
 			if !ok {
 				return handler(ctx, req)
 			}
-			token := md.Get(TokenKey)
+			token := md.Get(core.TokenKey)
 			// md中没有，则从header获取
 			if token == "" {
 				// 从header获取token
@@ -59,7 +55,7 @@ func Token() middleware.Middleware {
 			if token == "" {
 				return handler(ctx, req)
 			}
-			md.Set(TokenKey, token)
+			md.Set(core.TokenKey, token)
 
 			// 判断token格式
 			if strings.Count(token, ".") != 3 {
@@ -80,7 +76,7 @@ func Token() middleware.Middleware {
 			}
 			jc := data.GetSetting().JWT
 
-			// 初始化app jtw
+			// 初始化app jwt
 			jwter := pkgtjwt.New(kratosx.MustContext(ctx), &pkgtjwt.Config{
 				Secret:         jc.Secret,
 				Expire:         time.Duration(jc.Expire) * time.Second,
@@ -91,11 +87,27 @@ func Token() middleware.Middleware {
 			})
 
 			// 设置jwter到ctx
-			ctx = context.WithValue(ctx, jwterKey{}, jwter)
+			ctx = context.WithValue(ctx, core.JwterKey, jwter)
 
 			return handler(ctx, req)
 		}
 	}
+}
+
+func getPathInfo(ctx context.Context) (string, string) {
+	// 设置路径信息
+	path, method := "", ""
+	if tr, ok := transport.FromServerContext(ctx); ok {
+		path = tr.Operation()
+	}
+	h, is := http.RequestFromServerContext(ctx)
+	if is {
+		path = h.URL.Path
+		method = h.Method
+	} else {
+		method = "GRPC"
+	}
+	return path, method
 }
 
 // TokenValidate jwt校验
@@ -108,12 +120,20 @@ func TokenValidate() middleware.Middleware {
 				return handler(ctx, req)
 			}
 
-			token := md.Get(TokenKey)
-			if token == "" {
+			token := md.Get(core.TokenKey)
+
+			// 判断是否在白名单内
+			path, method := getPathInfo(ctx)
+			pm := path + ":" + method
+			cctx := core.MustContext(ctx)
+			if cctx.Config().JWT.Whitelist[pm] {
 				return handler(ctx, req)
 			}
 
-			jwter := ctx.Value(jwterKey{}).(pkgtjwt.JWT)
+			if token == "" {
+				return nil, errors.NotLoginError()
+			}
+			jwter := ctx.Value(core.JwterKey).(pkgtjwt.JWT)
 
 			// 设置token信息到ctx
 			info := &types.AuthorizeInfo{}
@@ -161,18 +181,10 @@ func ApiValidate() middleware.Middleware {
 	author := app.NewAuthorize()
 	return func(handler middleware.Handler) middleware.Handler {
 		return func(ctx context.Context, req any) (any, error) {
-			path, method := "", ""
-			if tr, ok := transport.FromServerContext(ctx); ok {
-				path = tr.Operation()
+			path, method := getPathInfo(ctx)
+			if method == "GRPC" {
+				return handler(ctx, req)
 			}
-			h, is := http.RequestFromServerContext(ctx)
-			if is {
-				path = h.URL.Path
-				method = h.Method
-			} else {
-				method = "GRPC"
-			}
-
 			_, err := author.CheckAuth(ctx, &authorize.CheckAuthRequest{
 				Path:   path,
 				Method: method,

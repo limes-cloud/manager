@@ -2,16 +2,18 @@ syntax = "proto3";
 
 package manager.api.dictionary;
 
+import "validate/validate.proto";
+
 option go_package = "manager/api/dictionary;dictionary";
 option java_multiple_files = true;
 option java_package = "manager.api.dictionary";
 
-import "validate/validate.proto";
-
-
 message ListDictionaryRequest {
-  uint32 page = 1[(validate.rules).uint32 = {gte: 1}];
-  uint32 pageSize = 2[(validate.rules).uint32 = {gte: 1,lte:50}];
+  uint32 page = 1 [(validate.rules).uint32 = {gte: 1}];
+  uint32 pageSize = 2 [(validate.rules).uint32 = {
+    gte: 1
+    lte: 50
+  }];
   optional string keyword = 3;
   optional string name = 4;
 }
@@ -32,9 +34,9 @@ message ListDictionaryReply {
 }
 
 message CreateDictionaryRequest {
-  string keyword = 1[(validate.rules).string = {min_len: 1}];
-  string name = 2[(validate.rules).string = {min_len: 1}];
-  string type = 3[(validate.rules).string = {min_len: 1}];
+  string keyword = 1 [(validate.rules).string = {min_len: 1}];
+  string name = 2 [(validate.rules).string = {min_len: 1}];
+  string type = 3 [(validate.rules).string = {min_len: 1}];
   optional string description = 4;
 }
 
@@ -43,26 +45,24 @@ message CreateDictionaryReply {
 }
 
 message UpdateDictionaryRequest {
-  uint32 id = 1[(validate.rules).uint32 = {gte: 1}];
+  uint32 id = 1 [(validate.rules).uint32 = {gte: 1}];
   string keyword = 2;
   string name = 3;
   string type = 4;
   optional string description = 5;
 }
 
-message UpdateDictionaryReply {
-}
+message UpdateDictionaryReply {}
 
 message DeleteDictionaryRequest {
-  uint32 id = 1[(validate.rules).uint32 = {gte: 1}];
+  uint32 id = 1 [(validate.rules).uint32 = {gte: 1}];
 }
 
-message DeleteDictionaryReply {
-}
+message DeleteDictionaryReply {}
 
 message GetDictionaryRequest {
-  optional uint32 id = 1[(validate.rules).uint32 = {gte: 1}];
-  optional string keyword = 2[(validate.rules).string = {min_len: 1}];
+  optional uint32 id = 1 [(validate.rules).uint32 = {gte: 1}];
+  optional string keyword = 2 [(validate.rules).string = {min_len: 1}];
 }
 
 message GetDictionaryReply {
@@ -75,9 +75,11 @@ message GetDictionaryReply {
   uint32 updatedAt = 7;
 }
 
-
-message GetDictionaryValuesRequest{
-  repeated string keywords = 1[(validate.rules).repeated = {min_items: 1,unique:true}];
+message GetDictionaryValuesRequest {
+  repeated string keywords = 1 [(validate.rules).repeated = {
+    min_items: 1
+    unique: true
+  }];
 }
 
 message GetDictionaryValuesReply {
@@ -92,12 +94,15 @@ message GetDictionaryValuesReply {
     }
     repeated Item list = 1;
   }
-  map<string,Value> dict = 1;
+  map<string, Value> dict = 1;
 }
 
 message ListDictionaryValueRequest {
-  uint32 page = 1[(validate.rules).uint32 = {gte: 1}];
-  uint32 pageSize = 2[(validate.rules).uint32 = {gte: 1,lte:50}];
+  uint32 page = 1 [(validate.rules).uint32 = {gte: 1}];
+  uint32 pageSize = 2 [(validate.rules).uint32 = {
+    gte: 1
+    lte: 50
+  }];
   uint32 dictionaryId = 3;
   optional string label = 4;
   optional string value = 5;
@@ -126,9 +131,9 @@ message ListDictionaryValueReply {
 }
 
 message CreateDictionaryValueRequest {
-  uint32 dictionaryId = 1[(validate.rules).uint32 = {gte: 1}];
-  string label = 2[(validate.rules).string = {min_len: 1}];
-  string value = 3[(validate.rules).string = {min_len: 1}];
+  uint32 dictionaryId = 1 [(validate.rules).uint32 = {gte: 1}];
+  string label = 2 [(validate.rules).string = {min_len: 1}];
+  string value = 3 [(validate.rules).string = {min_len: 1}];
   uint32 parentId = 4;
   optional bool status = 5;
   optional int32 weight = 6;
@@ -142,10 +147,10 @@ message CreateDictionaryValueReply {
 }
 
 message UpdateDictionaryValueRequest {
-  uint32 id = 1[(validate.rules).uint32 = {gte: 1}];
-  uint32 dictionaryId = 2[(validate.rules).uint32 = {gte: 1}];
-  string label = 3[(validate.rules).string = {min_len: 1}];
-  string value = 4[(validate.rules).string = {min_len: 1}];
+  uint32 id = 1 [(validate.rules).uint32 = {gte: 1}];
+  uint32 dictionaryId = 2 [(validate.rules).uint32 = {gte: 1}];
+  string label = 3 [(validate.rules).string = {min_len: 1}];
+  string value = 4 [(validate.rules).string = {min_len: 1}];
   uint32 parentId = 5;
   optional int32 weight = 6;
   optional string type = 7;
@@ -154,20 +159,17 @@ message UpdateDictionaryValueRequest {
   optional bool status = 10;
 }
 
-message UpdateDictionaryValueReply {
-}
+message UpdateDictionaryValueReply {}
 
 message UpdateDictionaryValueStatusRequest {
-  uint32 id = 1[(validate.rules).uint32 = {gte: 1}];
+  uint32 id = 1 [(validate.rules).uint32 = {gte: 1}];
   bool status = 2;
 }
 
-message UpdateDictionaryValueStatusReply {
-}
+message UpdateDictionaryValueStatusReply {}
 
 message DeleteDictionaryValueRequest {
-  uint32 id = 1[(validate.rules).uint32 = {gte: 1}];
+  uint32 id = 1 [(validate.rules).uint32 = {gte: 1}];
 }
 
-message DeleteDictionaryValueReply {
-}
+message DeleteDictionaryValueReply {}

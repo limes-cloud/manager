@@ -199,6 +199,7 @@ func (m *ListAppOAutherRequest) validate(all bool) error {
 	}
 
 	if m.Order != nil {
+
 		if _, ok := _ListAppOAutherRequest_Order_InLookup[m.GetOrder()]; !ok {
 			err := ListAppOAutherRequestValidationError{
 				field:  "Order",
@@ -209,9 +210,11 @@ func (m *ListAppOAutherRequest) validate(all bool) error {
 			}
 			errors = append(errors, err)
 		}
+
 	}
 
 	if m.OrderBy != nil {
+
 		if _, ok := _ListAppOAutherRequest_OrderBy_InLookup[m.GetOrderBy()]; !ok {
 			err := ListAppOAutherRequestValidationError{
 				field:  "OrderBy",
@@ -222,6 +225,7 @@ func (m *ListAppOAutherRequest) validate(all bool) error {
 			}
 			errors = append(errors, err)
 		}
+
 	}
 
 	if m.Keyword != nil {

@@ -8,34 +8,32 @@ package authorize
 
 import (
 	context "context"
-
 	http "github.com/go-kratos/kratos/v2/transport/http"
 	binding "github.com/go-kratos/kratos/v2/transport/http/binding"
+	emptypb "google.golang.org/protobuf/types/known/emptypb"
 )
 
 // This is a compile-time assertion to ensure that this generated file
 // is compatible with the kratos package it is being compiled against.
-var (
-	_ = new(context.Context)
-	_ = binding.EncodeURL
-)
+var _ = new(context.Context)
+var _ = binding.EncodeURL
 
 const _ = http.SupportPackageIsVersion1
 
-const (
-	OperationAuthorizeCheckAuth       = "/manager.api.authorize.Authorize/CheckAuth"
-	OperationAuthorizeFillInfo        = "/manager.api.authorize.Authorize/FillInfo"
-	OperationAuthorizeGetFillInfo     = "/manager.api.authorize.Authorize/GetFillInfo"
-	OperationAuthorizeGetImageCaptcha = "/manager.api.authorize.Authorize/GetImageCaptcha"
-	OperationAuthorizeListOAuther     = "/manager.api.authorize.Authorize/ListOAuther"
-	OperationAuthorizeLogin           = "/manager.api.authorize.Authorize/Login"
-	OperationAuthorizeOAutherBind     = "/manager.api.authorize.Authorize/OAutherBind"
-	OperationAuthorizeOAutherHandle   = "/manager.api.authorize.Authorize/OAutherHandle"
-	OperationAuthorizeOAutherLogin    = "/manager.api.authorize.Authorize/OAutherLogin"
-	OperationAuthorizeOAutherReport   = "/manager.api.authorize.Authorize/OAutherReport"
-	OperationAuthorizeParseToken      = "/manager.api.authorize.Authorize/ParseToken"
-	OperationAuthorizeRegister        = "/manager.api.authorize.Authorize/Register"
-)
+const OperationAuthorizeCheckAuth = "/manager.api.authorize.Authorize/CheckAuth"
+const OperationAuthorizeFillInfo = "/manager.api.authorize.Authorize/FillInfo"
+const OperationAuthorizeGetFillInfo = "/manager.api.authorize.Authorize/GetFillInfo"
+const OperationAuthorizeGetImageCaptcha = "/manager.api.authorize.Authorize/GetImageCaptcha"
+const OperationAuthorizeListVisibleOAuther = "/manager.api.authorize.Authorize/ListVisibleOAuther"
+const OperationAuthorizeLogin = "/manager.api.authorize.Authorize/Login"
+const OperationAuthorizeLogout = "/manager.api.authorize.Authorize/Logout"
+const OperationAuthorizeOAutherBind = "/manager.api.authorize.Authorize/OAutherBind"
+const OperationAuthorizeOAutherHandle = "/manager.api.authorize.Authorize/OAutherHandle"
+const OperationAuthorizeOAutherLogin = "/manager.api.authorize.Authorize/OAutherLogin"
+const OperationAuthorizeOAutherReport = "/manager.api.authorize.Authorize/OAutherReport"
+const OperationAuthorizeParseToken = "/manager.api.authorize.Authorize/ParseToken"
+const OperationAuthorizeRefreshToken = "/manager.api.authorize.Authorize/RefreshToken"
+const OperationAuthorizeRegister = "/manager.api.authorize.Authorize/Register"
 
 type AuthorizeHTTPServer interface {
 	// CheckAuth CheckAuth 接口验证
@@ -46,10 +44,12 @@ type AuthorizeHTTPServer interface {
 	GetFillInfo(context.Context, *GetFillInfoRequest) (*GetFillInfoReply, error)
 	// GetImageCaptcha GetImageCaptcha 获取验证码
 	GetImageCaptcha(context.Context, *GetImageCaptchaRequest) (*GetImageCaptchaReply, error)
-	// ListOAuther ListOAuther 获取登陆渠道信息
-	ListOAuther(context.Context, *ListOAutherRequest) (*ListOAutherReply, error)
+	// ListVisibleOAuther ListOAuther 获取登陆渠道信息
+	ListVisibleOAuther(context.Context, *ListVisibleOAutherRequest) (*ListVisibleOAutherReply, error)
 	// Login Login 密码登陆
 	Login(context.Context, *LoginRequest) (*LoginReply, error)
+	// Logout Logout 退出登陆
+	Logout(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
 	// OAutherBind OAutherBind 渠道授权绑定
 	OAutherBind(context.Context, *OAutherBindRequest) (*OAutherBindReply, error)
 	// OAutherHandle OAutherHandle 渠道授权处理
@@ -60,19 +60,23 @@ type AuthorizeHTTPServer interface {
 	OAutherReport(context.Context, *OAutherReportRequest) (*OAutherReportReply, error)
 	// ParseToken ParseToken token解析
 	ParseToken(context.Context, *ParseTokenRequest) (*ParseTokenReply, error)
+	// RefreshToken RefreshToken 刷新token
+	RefreshToken(context.Context, *emptypb.Empty) (*RefreshTokenReply, error)
 	// Register Register 注册
 	Register(context.Context, *RegisterRequest) (*RegisterReply, error)
 }
 
 func RegisterAuthorizeHTTPServer(s *http.Server, srv AuthorizeHTTPServer) {
 	r := s.Route("/")
-	r.GET("/manager/api/authorize/oauthers", _Authorize_ListOAuther0_HTTP_Handler(srv))
+	r.GET("/manager/api/authorize/oauthers", _Authorize_ListVisibleOAuther0_HTTP_Handler(srv))
 	r.POST("/manager/api/authorize/oauther/handler", _Authorize_OAutherHandle0_HTTP_Handler(srv))
 	r.POST("/manager/api/authorize/oauther/login", _Authorize_OAutherLogin0_HTTP_Handler(srv))
 	r.POST("/manager/api/authorize/oauther/report", _Authorize_OAutherReport0_HTTP_Handler(srv))
 	r.POST("/manager/api/authorize/oauther/bind", _Authorize_OAutherBind0_HTTP_Handler(srv))
 	r.GET("/manager/api/authorize/captcha/image", _Authorize_GetImageCaptcha0_HTTP_Handler(srv))
 	r.POST("/manager/api/authorize/login", _Authorize_Login0_HTTP_Handler(srv))
+	r.POST("/manager/api/authorize/logout", _Authorize_Logout0_HTTP_Handler(srv))
+	r.POST("/manager/api/authorize/token/refresh", _Authorize_RefreshToken0_HTTP_Handler(srv))
 	r.POST("/manager/api/authorize/register", _Authorize_Register0_HTTP_Handler(srv))
 	r.POST("/manager/api/authorize/check", _Authorize_CheckAuth0_HTTP_Handler(srv))
 	r.POST("/manager/api/v1/authorize/token/parse", _Authorize_ParseToken0_HTTP_Handler(srv))
@@ -80,21 +84,21 @@ func RegisterAuthorizeHTTPServer(s *http.Server, srv AuthorizeHTTPServer) {
 	r.POST("/manager/api/authorize/fill/infos", _Authorize_FillInfo0_HTTP_Handler(srv))
 }
 
-func _Authorize_ListOAuther0_HTTP_Handler(srv AuthorizeHTTPServer) func(ctx http.Context) error {
+func _Authorize_ListVisibleOAuther0_HTTP_Handler(srv AuthorizeHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in ListOAutherRequest
+		var in ListVisibleOAutherRequest
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationAuthorizeListOAuther)
+		http.SetOperation(ctx, OperationAuthorizeListVisibleOAuther)
 		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
-			return srv.ListOAuther(ctx, req.(*ListOAutherRequest))
+			return srv.ListVisibleOAuther(ctx, req.(*ListVisibleOAutherRequest))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		reply := out.(*ListOAutherReply)
+		reply := out.(*ListVisibleOAutherReply)
 		return ctx.Result(200, reply)
 	}
 }
@@ -228,6 +232,50 @@ func _Authorize_Login0_HTTP_Handler(srv AuthorizeHTTPServer) func(ctx http.Conte
 	}
 }
 
+func _Authorize_Logout0_HTTP_Handler(srv AuthorizeHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in emptypb.Empty
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationAuthorizeLogout)
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
+			return srv.Logout(ctx, req.(*emptypb.Empty))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*emptypb.Empty)
+		return ctx.Result(200, reply)
+	}
+}
+
+func _Authorize_RefreshToken0_HTTP_Handler(srv AuthorizeHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in emptypb.Empty
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationAuthorizeRefreshToken)
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
+			return srv.RefreshToken(ctx, req.(*emptypb.Empty))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*RefreshTokenReply)
+		return ctx.Result(200, reply)
+	}
+}
+
 func _Authorize_Register0_HTTP_Handler(srv AuthorizeHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
 		var in RegisterRequest
@@ -340,13 +388,15 @@ type AuthorizeHTTPClient interface {
 	FillInfo(ctx context.Context, req *FillInfoRequest, opts ...http.CallOption) (rsp *FillInfoReply, err error)
 	GetFillInfo(ctx context.Context, req *GetFillInfoRequest, opts ...http.CallOption) (rsp *GetFillInfoReply, err error)
 	GetImageCaptcha(ctx context.Context, req *GetImageCaptchaRequest, opts ...http.CallOption) (rsp *GetImageCaptchaReply, err error)
-	ListOAuther(ctx context.Context, req *ListOAutherRequest, opts ...http.CallOption) (rsp *ListOAutherReply, err error)
+	ListVisibleOAuther(ctx context.Context, req *ListVisibleOAutherRequest, opts ...http.CallOption) (rsp *ListVisibleOAutherReply, err error)
 	Login(ctx context.Context, req *LoginRequest, opts ...http.CallOption) (rsp *LoginReply, err error)
+	Logout(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	OAutherBind(ctx context.Context, req *OAutherBindRequest, opts ...http.CallOption) (rsp *OAutherBindReply, err error)
 	OAutherHandle(ctx context.Context, req *OAutherHandleRequest, opts ...http.CallOption) (rsp *OAutherHandleReply, err error)
 	OAutherLogin(ctx context.Context, req *OAutherLoginRequest, opts ...http.CallOption) (rsp *OAutherLoginReply, err error)
 	OAutherReport(ctx context.Context, req *OAutherReportRequest, opts ...http.CallOption) (rsp *OAutherReportReply, err error)
 	ParseToken(ctx context.Context, req *ParseTokenRequest, opts ...http.CallOption) (rsp *ParseTokenReply, err error)
+	RefreshToken(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *RefreshTokenReply, err error)
 	Register(ctx context.Context, req *RegisterRequest, opts ...http.CallOption) (rsp *RegisterReply, err error)
 }
 
@@ -410,11 +460,11 @@ func (c *AuthorizeHTTPClientImpl) GetImageCaptcha(ctx context.Context, in *GetIm
 	return &out, err
 }
 
-func (c *AuthorizeHTTPClientImpl) ListOAuther(ctx context.Context, in *ListOAutherRequest, opts ...http.CallOption) (*ListOAutherReply, error) {
-	var out ListOAutherReply
+func (c *AuthorizeHTTPClientImpl) ListVisibleOAuther(ctx context.Context, in *ListVisibleOAutherRequest, opts ...http.CallOption) (*ListVisibleOAutherReply, error) {
+	var out ListVisibleOAutherReply
 	pattern := "/manager/api/authorize/oauthers"
 	path := binding.EncodeURL(pattern, in, true)
-	opts = append(opts, http.Operation(OperationAuthorizeListOAuther))
+	opts = append(opts, http.Operation(OperationAuthorizeListVisibleOAuther))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {
@@ -428,6 +478,19 @@ func (c *AuthorizeHTTPClientImpl) Login(ctx context.Context, in *LoginRequest, o
 	pattern := "/manager/api/authorize/login"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationAuthorizeLogin))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *AuthorizeHTTPClientImpl) Logout(ctx context.Context, in *emptypb.Empty, opts ...http.CallOption) (*emptypb.Empty, error) {
+	var out emptypb.Empty
+	pattern := "/manager/api/authorize/logout"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationAuthorizeLogout))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
 	if err != nil {
@@ -493,6 +556,19 @@ func (c *AuthorizeHTTPClientImpl) ParseToken(ctx context.Context, in *ParseToken
 	pattern := "/manager/api/v1/authorize/token/parse"
 	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation(OperationAuthorizeParseToken))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *AuthorizeHTTPClientImpl) RefreshToken(ctx context.Context, in *emptypb.Empty, opts ...http.CallOption) (*RefreshTokenReply, error) {
+	var out RefreshTokenReply
+	pattern := "/manager/api/authorize/token/refresh"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationAuthorizeRefreshToken))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
 	if err != nil {

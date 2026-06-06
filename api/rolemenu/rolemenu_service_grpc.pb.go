@@ -8,7 +8,6 @@ package rolemenu
 
 import (
 	context "context"
-
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -128,28 +127,24 @@ type RoleMenuServer interface {
 }
 
 // UnimplementedRoleMenuServer must be embedded to have forward compatible implementations.
-type UnimplementedRoleMenuServer struct{}
+type UnimplementedRoleMenuServer struct {
+}
 
 func (UnimplementedRoleMenuServer) GetRoleMenuIds(context.Context, *GetRoleMenuIdsRequest) (*GetRoleMenuIdsReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetRoleMenuIds not implemented")
 }
-
 func (UnimplementedRoleMenuServer) GetMenuRoleIds(context.Context, *GetMenuRoleIdsRequest) (*GetMenuRoleIdsReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetMenuRoleIds not implemented")
 }
-
 func (UnimplementedRoleMenuServer) CreateRoleMenus(context.Context, *CreateRoleMenusRequest) (*CreateRoleMenusReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateRoleMenus not implemented")
 }
-
 func (UnimplementedRoleMenuServer) CreateMenuRoles(context.Context, *CreateMenuRolesRequest) (*CreateMenuRolesReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateMenuRoles not implemented")
 }
-
 func (UnimplementedRoleMenuServer) DeleteMenuRoles(context.Context, *DeleteMenuRolesRequest) (*DeleteMenuRolesReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteMenuRoles not implemented")
 }
-
 func (UnimplementedRoleMenuServer) DeleteRoleMenus(context.Context, *DeleteRoleMenusRequest) (*DeleteRoleMenusReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteRoleMenus not implemented")
 }

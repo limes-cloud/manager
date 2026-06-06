@@ -8,7 +8,6 @@ package roleentity
 
 import (
 	context "context"
-
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -100,20 +99,18 @@ type RoleEntityServer interface {
 }
 
 // UnimplementedRoleEntityServer must be embedded to have forward compatible implementations.
-type UnimplementedRoleEntityServer struct{}
+type UnimplementedRoleEntityServer struct {
+}
 
 func (UnimplementedRoleEntityServer) ListRoleEntity(context.Context, *ListRoleEntityRequest) (*ListRoleEntityReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListRoleEntity not implemented")
 }
-
 func (UnimplementedRoleEntityServer) CreateRoleEntity(context.Context, *CreateRoleEntityRequest) (*CreateRoleEntityReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateRoleEntity not implemented")
 }
-
 func (UnimplementedRoleEntityServer) UpdateRoleEntity(context.Context, *UpdateRoleEntityRequest) (*UpdateRoleEntityReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateRoleEntity not implemented")
 }
-
 func (UnimplementedRoleEntityServer) DeleteRoleEntity(context.Context, *DeleteRoleEntityRequest) (*DeleteRoleEntityReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteRoleEntity not implemented")
 }

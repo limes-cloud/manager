@@ -8,28 +8,23 @@ package field
 
 import (
 	context "context"
-
 	http "github.com/go-kratos/kratos/v2/transport/http"
 	binding "github.com/go-kratos/kratos/v2/transport/http/binding"
 )
 
 // This is a compile-time assertion to ensure that this generated file
 // is compatible with the kratos package it is being compiled against.
-var (
-	_ = new(context.Context)
-	_ = binding.EncodeURL
-)
+var _ = new(context.Context)
+var _ = binding.EncodeURL
 
 const _ = http.SupportPackageIsVersion1
 
-const (
-	OperationFieldCreateField       = "/manager.api.field.Field/CreateField"
-	OperationFieldDeleteField       = "/manager.api.field.Field/DeleteField"
-	OperationFieldListField         = "/manager.api.field.Field/ListField"
-	OperationFieldListFieldType     = "/manager.api.field.Field/ListFieldType"
-	OperationFieldListRequiredField = "/manager.api.field.Field/ListRequiredField"
-	OperationFieldUpdateField       = "/manager.api.field.Field/UpdateField"
-)
+const OperationFieldCreateField = "/manager.api.field.Field/CreateField"
+const OperationFieldDeleteField = "/manager.api.field.Field/DeleteField"
+const OperationFieldListField = "/manager.api.field.Field/ListField"
+const OperationFieldListFieldType = "/manager.api.field.Field/ListFieldType"
+const OperationFieldListRequiredField = "/manager.api.field.Field/ListRequiredField"
+const OperationFieldUpdateField = "/manager.api.field.Field/UpdateField"
 
 type FieldHTTPServer interface {
 	// CreateField CreateField 创建用户字段

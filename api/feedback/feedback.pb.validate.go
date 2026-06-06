@@ -80,6 +80,7 @@ func (m *ListFeedbackClassifyRequest) validate(all bool) error {
 	}
 
 	if m.Order != nil {
+
 		if _, ok := _ListFeedbackClassifyRequest_Order_InLookup[m.GetOrder()]; !ok {
 			err := ListFeedbackClassifyRequestValidationError{
 				field:  "Order",
@@ -90,9 +91,11 @@ func (m *ListFeedbackClassifyRequest) validate(all bool) error {
 			}
 			errors = append(errors, err)
 		}
+
 	}
 
 	if m.OrderBy != nil {
+
 		if _, ok := _ListFeedbackClassifyRequest_OrderBy_InLookup[m.GetOrderBy()]; !ok {
 			err := ListFeedbackClassifyRequestValidationError{
 				field:  "OrderBy",
@@ -103,6 +106,7 @@ func (m *ListFeedbackClassifyRequest) validate(all bool) error {
 			}
 			errors = append(errors, err)
 		}
+
 	}
 
 	if m.Name != nil {
@@ -1046,6 +1050,7 @@ func (m *ListFeedbackRequest) validate(all bool) error {
 	}
 
 	if m.Order != nil {
+
 		if _, ok := _ListFeedbackRequest_Order_InLookup[m.GetOrder()]; !ok {
 			err := ListFeedbackRequestValidationError{
 				field:  "Order",
@@ -1056,9 +1061,11 @@ func (m *ListFeedbackRequest) validate(all bool) error {
 			}
 			errors = append(errors, err)
 		}
+
 	}
 
 	if m.OrderBy != nil {
+
 		if _, ok := _ListFeedbackRequest_OrderBy_InLookup[m.GetOrderBy()]; !ok {
 			err := ListFeedbackRequestValidationError{
 				field:  "OrderBy",
@@ -1069,6 +1076,7 @@ func (m *ListFeedbackRequest) validate(all bool) error {
 			}
 			errors = append(errors, err)
 		}
+
 	}
 
 	if m.AppId != nil {
@@ -2228,6 +2236,7 @@ func (m *ListFeedbackReply_Feedback) validate(all bool) error {
 	}
 
 	if m.App != nil {
+
 		if all {
 			switch v := interface{}(m.GetApp()).(type) {
 			case interface{ ValidateAll() error }:
@@ -2256,9 +2265,11 @@ func (m *ListFeedbackReply_Feedback) validate(all bool) error {
 				}
 			}
 		}
+
 	}
 
 	if m.User != nil {
+
 		if all {
 			switch v := interface{}(m.GetUser()).(type) {
 			case interface{ ValidateAll() error }:
@@ -2287,9 +2298,11 @@ func (m *ListFeedbackReply_Feedback) validate(all bool) error {
 				}
 			}
 		}
+
 	}
 
 	if m.Classify != nil {
+
 		if all {
 			switch v := interface{}(m.GetClassify()).(type) {
 			case interface{ ValidateAll() error }:
@@ -2318,6 +2331,7 @@ func (m *ListFeedbackReply_Feedback) validate(all bool) error {
 				}
 			}
 		}
+
 	}
 
 	if len(errors) > 0 {

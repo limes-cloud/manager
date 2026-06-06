@@ -73,8 +73,9 @@ func (u *User) UpdateCurrentUser(ctx core.Context, req *types.UpdateCurrentUserR
 		BaseTenantModel: model.BaseTenantModel{
 			Id: ctx.Auth().UserId,
 		},
-		Avatar:   req.Avatar,
-		Nickname: req.Nickname,
+		Avatar:    req.Avatar,
+		Nickname:  req.Nickname,
+		Signature: req.Signature,
 	}); err != nil {
 		ctx.Logger().Warnw("msg", "update user error", "err", err.Error())
 		return errors.UpdateError()

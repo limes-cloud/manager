@@ -7,11 +7,10 @@
 package app
 
 import (
-	reflect "reflect"
-
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	reflect "reflect"
 )
 
 const (
@@ -91,7 +90,6 @@ var file_api_app_proto_app_service_proto_goTypes = []interface{}{
 	(*UpdateAppReply)(nil),      // 10: manager.api.app.UpdateAppReply
 	(*DeleteAppReply)(nil),      // 11: manager.api.app.DeleteAppReply
 }
-
 var file_api_app_proto_app_service_proto_depIdxs = []int32{
 	0,  // 0: manager.api.app.App.GetSampleApp:input_type -> manager.api.app.GetSampleAppRequest
 	1,  // 1: manager.api.app.App.GetApp:input_type -> manager.api.app.GetAppRequest

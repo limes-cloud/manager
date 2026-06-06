@@ -7,12 +7,11 @@
 package jobrole
 
 import (
-	reflect "reflect"
-	sync "sync"
-
 	_ "github.com/envoyproxy/protoc-gen-validate/validate"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	reflect "reflect"
+	sync "sync"
 )
 
 const (
@@ -458,19 +457,16 @@ func file_api_jobrole_proto_jobrole_proto_rawDescGZIP() []byte {
 	return file_api_jobrole_proto_jobrole_proto_rawDescData
 }
 
-var (
-	file_api_jobrole_proto_jobrole_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
-	file_api_jobrole_proto_jobrole_proto_goTypes  = []interface{}{
-		(*CreateJobRoleRequest)(nil),  // 0: manager.api.jobrole.CreateJobRoleRequest
-		(*CreateJobRoleReply)(nil),    // 1: manager.api.jobrole.CreateJobRoleReply
-		(*ListJobRoleRequest)(nil),    // 2: manager.api.jobrole.ListJobRoleRequest
-		(*ListJobRoleReply)(nil),      // 3: manager.api.jobrole.ListJobRoleReply
-		(*DeleteJobRoleRequest)(nil),  // 4: manager.api.jobrole.DeleteJobRoleRequest
-		(*DeleteJobRoleReply)(nil),    // 5: manager.api.jobrole.DeleteJobRoleReply
-		(*ListJobRoleReply_Role)(nil), // 6: manager.api.jobrole.ListJobRoleReply.Role
-	}
-)
-
+var file_api_jobrole_proto_jobrole_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
+var file_api_jobrole_proto_jobrole_proto_goTypes = []interface{}{
+	(*CreateJobRoleRequest)(nil),  // 0: manager.api.jobrole.CreateJobRoleRequest
+	(*CreateJobRoleReply)(nil),    // 1: manager.api.jobrole.CreateJobRoleReply
+	(*ListJobRoleRequest)(nil),    // 2: manager.api.jobrole.ListJobRoleRequest
+	(*ListJobRoleReply)(nil),      // 3: manager.api.jobrole.ListJobRoleReply
+	(*DeleteJobRoleRequest)(nil),  // 4: manager.api.jobrole.DeleteJobRoleRequest
+	(*DeleteJobRoleReply)(nil),    // 5: manager.api.jobrole.DeleteJobRoleReply
+	(*ListJobRoleReply_Role)(nil), // 6: manager.api.jobrole.ListJobRoleReply.Role
+}
 var file_api_jobrole_proto_jobrole_proto_depIdxs = []int32{
 	6, // 0: manager.api.jobrole.ListJobRoleReply.list:type_name -> manager.api.jobrole.ListJobRoleReply.Role
 	1, // [1:1] is the sub-list for method output_type

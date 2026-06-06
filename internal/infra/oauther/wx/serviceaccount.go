@@ -2,7 +2,6 @@ package wx
 
 import (
 	"fmt"
-	"strings"
 	"time"
 
 	"github.com/go-resty/resty/v2"
@@ -23,6 +22,13 @@ func NewServiceAccount(req *entity.OAuther) (repository.OAutherFunc, error) {
 	return &ServiceAccount{conf: req}, nil
 }
 
+func (woa ServiceAccount) Visible(_ core.Context, req *types.OAutherVisibleRequest) (*types.OAutherVisibleReply, error) {
+	return &types.OAutherVisibleReply{
+		Visible:   true,
+		Recommend: req.Platform == types.PlatformWebWeiXin,
+	}, nil
+}
+
 func (woa ServiceAccount) Handler(_ core.Context, req *types.OAutherHandleRequest) (*types.OAutherHandleReply, error) {
 	uid := crypto.MD5([]byte(uuid.NewString()))
 	resp := types.OAutherHandleReply{
@@ -32,7 +38,7 @@ func (woa ServiceAccount) Handler(_ core.Context, req *types.OAutherHandleReques
 	}
 
 	// 不是微信打开
-	if !strings.Contains(req.UserAgent, "MicroMessenger") {
+	if req.Platform != types.PlatformWebWeiXin {
 		resp.Action = types.OAutherWayActionScan
 		resp.Tip = "打开微信扫码登陆"
 	}

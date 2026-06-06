@@ -8,25 +8,20 @@ package deptrole
 
 import (
 	context "context"
-
 	http "github.com/go-kratos/kratos/v2/transport/http"
 	binding "github.com/go-kratos/kratos/v2/transport/http/binding"
 )
 
 // This is a compile-time assertion to ensure that this generated file
 // is compatible with the kratos package it is being compiled against.
-var (
-	_ = new(context.Context)
-	_ = binding.EncodeURL
-)
+var _ = new(context.Context)
+var _ = binding.EncodeURL
 
 const _ = http.SupportPackageIsVersion1
 
-const (
-	OperationDeptRoleCreateDeptRole = "/manager.api.deptrole.DeptRole/CreateDeptRole"
-	OperationDeptRoleDeleteDeptRole = "/manager.api.deptrole.DeptRole/DeleteDeptRole"
-	OperationDeptRoleListDeptRole   = "/manager.api.deptrole.DeptRole/ListDeptRole"
-)
+const OperationDeptRoleCreateDeptRole = "/manager.api.deptrole.DeptRole/CreateDeptRole"
+const OperationDeptRoleDeleteDeptRole = "/manager.api.deptrole.DeptRole/DeleteDeptRole"
+const OperationDeptRoleListDeptRole = "/manager.api.deptrole.DeptRole/ListDeptRole"
 
 type DeptRoleHTTPServer interface {
 	CreateDeptRole(context.Context, *CreateDeptRoleRequest) (*CreateDeptRoleReply, error)

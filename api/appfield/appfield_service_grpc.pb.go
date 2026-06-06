@@ -8,7 +8,6 @@ package appfield
 
 import (
 	context "context"
-
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -100,20 +99,18 @@ type AppFieldServer interface {
 }
 
 // UnimplementedAppFieldServer must be embedded to have forward compatible implementations.
-type UnimplementedAppFieldServer struct{}
+type UnimplementedAppFieldServer struct {
+}
 
 func (UnimplementedAppFieldServer) ListAppField(context.Context, *ListAppFieldRequest) (*ListAppFieldReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListAppField not implemented")
 }
-
 func (UnimplementedAppFieldServer) CreateAppField(context.Context, *CreateAppFieldRequest) (*CreateAppFieldReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateAppField not implemented")
 }
-
 func (UnimplementedAppFieldServer) UpdateAppField(context.Context, *UpdateAppFieldRequest) (*UpdateAppFieldReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateAppField not implemented")
 }
-
 func (UnimplementedAppFieldServer) DeleteAppField(context.Context, *DeleteAppFieldRequest) (*DeleteAppFieldReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteAppField not implemented")
 }

@@ -80,6 +80,7 @@ func (m *ListJobRequest) validate(all bool) error {
 	}
 
 	if m.Order != nil {
+
 		if _, ok := _ListJobRequest_Order_InLookup[m.GetOrder()]; !ok {
 			err := ListJobRequestValidationError{
 				field:  "Order",
@@ -90,9 +91,11 @@ func (m *ListJobRequest) validate(all bool) error {
 			}
 			errors = append(errors, err)
 		}
+
 	}
 
 	if m.OrderBy != nil {
+
 		if _, ok := _ListJobRequest_OrderBy_InLookup[m.GetOrderBy()]; !ok {
 			err := ListJobRequestValidationError{
 				field:  "OrderBy",
@@ -103,6 +106,7 @@ func (m *ListJobRequest) validate(all bool) error {
 			}
 			errors = append(errors, err)
 		}
+
 	}
 
 	if m.Name != nil {
@@ -605,6 +609,7 @@ func (m *UpdateJobRequest) validate(all bool) error {
 	}
 
 	if m.Name != nil {
+
 		if utf8.RuneCountInString(m.GetName()) > 128 {
 			err := UpdateJobRequestValidationError{
 				field:  "Name",
@@ -615,6 +620,7 @@ func (m *UpdateJobRequest) validate(all bool) error {
 			}
 			errors = append(errors, err)
 		}
+
 	}
 
 	if m.Description != nil {

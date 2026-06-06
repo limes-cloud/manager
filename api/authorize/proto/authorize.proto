@@ -2,30 +2,30 @@ syntax = "proto3";
 
 package manager.api.authorize;
 
+import "google/protobuf/struct.proto";
+import "validate/validate.proto";
+
 option go_package = "manager/api/authorize;authorize";
 option java_multiple_files = true;
 option java_package = "manager.api.authorize";
 
-import "validate/validate.proto";
-import "google/protobuf/struct.proto";
-
-message GetImageCaptchaRequest{
+message GetImageCaptchaRequest {
   string scene = 2;
 }
 
-message GetImageCaptchaReply{
+message GetImageCaptchaReply {
   string uuid = 1;
   string captcha = 2;
   uint32 expire = 3;
 }
 
 message LoginRequest {
-  string username = 1[(validate.rules).string = {min_len:4}];
-  string password = 2[(validate.rules).string = {min_len:4}];
-  string captchaId = 3[(validate.rules).string = {min_len:1}];
-  string captcha = 4[(validate.rules).string = {min_len:1}];
-  string tenant = 5[(validate.rules).string = {min_len:1}];
-  string app = 6[(validate.rules).string = {min_len:1}];
+  string username = 1 [(validate.rules).string = {min_len: 4}];
+  string password = 2 [(validate.rules).string = {min_len: 4}];
+  string captchaId = 3 [(validate.rules).string = {min_len: 1}];
+  string captcha = 4 [(validate.rules).string = {min_len: 1}];
+  string tenant = 5 [(validate.rules).string = {min_len: 1}];
+  string app = 6 [(validate.rules).string = {min_len: 1}];
 }
 
 message LoginReply {
@@ -33,28 +33,36 @@ message LoginReply {
   string token = 2;
 }
 
-message ListOAutherRequest {
-  string app = 1[(validate.rules).string = {min_len: 1}];
-  string tenant = 2[(validate.rules).string = {min_len: 1}];
+message RefreshTokenReply {
+  bool needInfo = 1;
+  string token = 2;
 }
 
-message ListOAutherReply {
+message ListVisibleOAutherRequest {
+  string app = 1 [(validate.rules).string = {min_len: 1}];
+  string tenant = 2 [(validate.rules).string = {min_len: 1}];
+  string platform = 3 [(validate.rules).string = {min_len: 1}];
+}
+
+message ListVisibleOAutherReply {
   message OAuther {
     uint32 id = 1;
     string logo = 2;
     string name = 3;
     string keyword = 4;
     string type = 5;
+    bool recommend = 6;
+    string recommendText = 7;
   }
   repeated OAuther list = 2;
 }
 
-
 message OAutherHandleRequest {
-  string app = 1[(validate.rules).string = {min_len: 1}];
-  string tenant = 2[(validate.rules).string = {min_len: 1}];
-  string keyword = 3[(validate.rules).string = {min_len: 1}];
-  string account = 4;
+  string app = 1 [(validate.rules).string = {min_len: 1}];
+  string tenant = 2 [(validate.rules).string = {min_len: 1}];
+  string keyword = 3 [(validate.rules).string = {min_len: 1}];
+  string platform = 4 [(validate.rules).string = {min_len: 1}];
+  string account = 5;
 }
 
 message OAutherHandleReply {
@@ -66,13 +74,13 @@ message OAutherHandleReply {
 }
 
 message OAutherReportRequest {
-  string uuid = 1[(validate.rules).string = {min_len:1}];
-  string code = 2[(validate.rules).string = {min_len:1}];
+  string uuid = 1 [(validate.rules).string = {min_len: 1}];
+  string code = 2 [(validate.rules).string = {min_len: 1}];
 }
 message OAutherReportReply {}
 
 message OAutherLoginRequest {
-  string uuid = 1[(validate.rules).string = {min_len:1}];
+  string uuid = 1 [(validate.rules).string = {min_len: 1}];
   string account = 2;
   string code = 3;
 }
@@ -84,61 +92,59 @@ message OAutherLoginReply {
 }
 
 message OAutherBindRequest {
-  string username = 1[(validate.rules).string = {min_len:3}];
-  string password = 2[(validate.rules).string = {min_len:6}];
-  string captchaId = 3[(validate.rules).string = {min_len:1}];
-  string captcha = 4[(validate.rules).string = {min_len:1}];
-  string uuid = 5[(validate.rules).string = {min_len:1}];
+  string username = 1 [(validate.rules).string = {min_len: 3}];
+  string password = 2 [(validate.rules).string = {min_len: 6}];
+  string captchaId = 3 [(validate.rules).string = {min_len: 1}];
+  string captcha = 4 [(validate.rules).string = {min_len: 1}];
+  string uuid = 5 [(validate.rules).string = {min_len: 1}];
   bool register = 6;
 }
 
-message OAutherBindReply{
+message OAutherBindReply {
   bool needRegister = 1;
   bool needInfo = 2;
   string token = 3;
 }
 
-
 message RegisterRequest {
-  string username = 1[(validate.rules).string = {min_len:4}];
-  string password = 2[(validate.rules).string = {min_len:4}];
-  string captchaId = 3[(validate.rules).string = {min_len:1}];
-  string captcha = 4[(validate.rules).string = {min_len:1}];
-  string tenant = 5[(validate.rules).string = {min_len:1}];
-  string app = 6[(validate.rules).string = {min_len:1}];
+  string username = 1 [(validate.rules).string = {min_len: 4}];
+  string password = 2 [(validate.rules).string = {min_len: 4}];
+  string captchaId = 3 [(validate.rules).string = {min_len: 1}];
+  string captcha = 4 [(validate.rules).string = {min_len: 1}];
+  string tenant = 5 [(validate.rules).string = {min_len: 1}];
+  string app = 6 [(validate.rules).string = {min_len: 1}];
 }
 
-message RegisterReply{
+message RegisterReply {
   bool needInfo = 1;
   string token = 2;
 }
 
-message CheckAuthRequest{
-  string path = 1[(validate.rules).string = {min_len:1}];
-  string method = 2[(validate.rules).string = {min_len:1}];
+message CheckAuthRequest {
+  string path = 1 [(validate.rules).string = {min_len: 1}];
+  string method = 2 [(validate.rules).string = {min_len: 1}];
 }
 
-message CheckAuthReply{
-  uint32  tenantId = 1;
-  uint32  userId = 2;
-  uint32  deptId = 3;
+message CheckAuthReply {
+  uint32 tenantId = 1;
+  uint32 userId = 2;
+  uint32 deptId = 3;
 }
 
-message ParseTokenRequest{
-}
+message ParseTokenRequest {}
 
-message ParseTokenReply{
+message ParseTokenReply {
   uint32 userId = 1;
   uint32 deptId = 2;
   uint32 tenantId = 3;
   string username = 4;
 }
 
-message GetFillInfoRequest{
-  string uuid = 1[(validate.rules).string = {min_len:1}];
+message GetFillInfoRequest {
+  string uuid = 1 [(validate.rules).string = {min_len: 1}];
 }
 
-message GetFillInfoReply{
+message GetFillInfoReply {
   message Field {
     string keyword = 1;
     string type = 2;
@@ -148,12 +154,11 @@ message GetFillInfoReply{
   repeated Field list = 1;
 }
 
-
-message FillInfoRequest{
-  string uuid = 1[(validate.rules).string = {min_len:1}];
-  map<string, google.protobuf.Value> infos = 2[(validate.rules).map = {min_pairs:1}];
+message FillInfoRequest {
+  string uuid = 1 [(validate.rules).string = {min_len: 1}];
+  map<string, google.protobuf.Value> infos = 2 [(validate.rules).map = {min_pairs: 1}];
 }
 
-message FillInfoReply{
+message FillInfoReply {
   string token = 1;
 }

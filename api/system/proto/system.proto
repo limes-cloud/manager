@@ -2,15 +2,13 @@ syntax = "proto3";
 
 package manager.api.system;
 
+import "google/protobuf/any.proto";
+
 option go_package = "manager/api/system;system";
 option java_multiple_files = true;
 option java_package = "manager.api.system";
 
-import "google/protobuf/any.proto";
-
-message GetSystemSettingRequest {
-}
-
+message GetSystemSettingRequest {}
 
 message DictionaryValue {
   string label = 1;
@@ -20,7 +18,7 @@ message DictionaryValue {
 }
 
 message GetSystemSettingReply {
-  message DictionaryValueList{
+  message DictionaryValueList {
     repeated DictionaryValue list = 8;
   }
   string title = 1;
@@ -29,5 +27,5 @@ message GetSystemSettingReply {
   string logo = 4;
   string changePasswordType = 5;
   string watermark = 6;
-  map<string,DictionaryValueList> dictionaries = 7;
+  map<string, DictionaryValueList> dictionaries = 7;
 }

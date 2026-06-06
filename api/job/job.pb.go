@@ -7,12 +7,11 @@
 package job
 
 import (
-	reflect "reflect"
-	sync "sync"
-
 	_ "github.com/envoyproxy/protoc-gen-validate/validate"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	reflect "reflect"
+	sync "sync"
 )
 
 const (
@@ -694,21 +693,18 @@ func file_api_job_proto_job_proto_rawDescGZIP() []byte {
 	return file_api_job_proto_job_proto_rawDescData
 }
 
-var (
-	file_api_job_proto_job_proto_msgTypes = make([]protoimpl.MessageInfo, 9)
-	file_api_job_proto_job_proto_goTypes  = []interface{}{
-		(*ListJobRequest)(nil),   // 0: manager.api.job.ListJobRequest
-		(*ListJobReply)(nil),     // 1: manager.api.job.ListJobReply
-		(*CreateJobRequest)(nil), // 2: manager.api.job.CreateJobRequest
-		(*CreateJobReply)(nil),   // 3: manager.api.job.CreateJobReply
-		(*UpdateJobRequest)(nil), // 4: manager.api.job.UpdateJobRequest
-		(*UpdateJobReply)(nil),   // 5: manager.api.job.UpdateJobReply
-		(*DeleteJobRequest)(nil), // 6: manager.api.job.DeleteJobRequest
-		(*DeleteJobReply)(nil),   // 7: manager.api.job.DeleteJobReply
-		(*ListJobReply_Job)(nil), // 8: manager.api.job.ListJobReply.Job
-	}
-)
-
+var file_api_job_proto_job_proto_msgTypes = make([]protoimpl.MessageInfo, 9)
+var file_api_job_proto_job_proto_goTypes = []interface{}{
+	(*ListJobRequest)(nil),   // 0: manager.api.job.ListJobRequest
+	(*ListJobReply)(nil),     // 1: manager.api.job.ListJobReply
+	(*CreateJobRequest)(nil), // 2: manager.api.job.CreateJobRequest
+	(*CreateJobReply)(nil),   // 3: manager.api.job.CreateJobReply
+	(*UpdateJobRequest)(nil), // 4: manager.api.job.UpdateJobRequest
+	(*UpdateJobReply)(nil),   // 5: manager.api.job.UpdateJobReply
+	(*DeleteJobRequest)(nil), // 6: manager.api.job.DeleteJobRequest
+	(*DeleteJobReply)(nil),   // 7: manager.api.job.DeleteJobReply
+	(*ListJobReply_Job)(nil), // 8: manager.api.job.ListJobReply.Job
+}
 var file_api_job_proto_job_proto_depIdxs = []int32{
 	8, // 0: manager.api.job.ListJobReply.list:type_name -> manager.api.job.ListJobReply.Job
 	1, // [1:1] is the sub-list for method output_type

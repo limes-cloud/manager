@@ -8,7 +8,6 @@ package notice
 
 import (
 	context "context"
-
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -198,48 +197,39 @@ type NoticeServer interface {
 }
 
 // UnimplementedNoticeServer must be embedded to have forward compatible implementations.
-type UnimplementedNoticeServer struct{}
+type UnimplementedNoticeServer struct {
+}
 
 func (UnimplementedNoticeServer) ListNoticeClassify(context.Context, *ListNoticeClassifyRequest) (*ListNoticeClassifyReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListNoticeClassify not implemented")
 }
-
 func (UnimplementedNoticeServer) CreateNoticeClassify(context.Context, *CreateNoticeClassifyRequest) (*CreateNoticeClassifyReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateNoticeClassify not implemented")
 }
-
 func (UnimplementedNoticeServer) UpdateNoticeClassify(context.Context, *UpdateNoticeClassifyRequest) (*UpdateNoticeClassifyReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateNoticeClassify not implemented")
 }
-
 func (UnimplementedNoticeServer) DeleteNoticeClassify(context.Context, *DeleteNoticeClassifyRequest) (*DeleteNoticeClassifyReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteNoticeClassify not implemented")
 }
-
 func (UnimplementedNoticeServer) GetNotice(context.Context, *GetNoticeRequest) (*GetNoticeReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetNotice not implemented")
 }
-
 func (UnimplementedNoticeServer) ListVisibleNotice(context.Context, *ListVisibleNoticeRequest) (*ListNoticeReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListVisibleNotice not implemented")
 }
-
 func (UnimplementedNoticeServer) GetVisibleNotice(context.Context, *GetNoticeRequest) (*GetNoticeReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetVisibleNotice not implemented")
 }
-
 func (UnimplementedNoticeServer) ListNotice(context.Context, *ListNoticeRequest) (*ListNoticeReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListNotice not implemented")
 }
-
 func (UnimplementedNoticeServer) CreateNotice(context.Context, *CreateNoticeRequest) (*CreateNoticeReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateNotice not implemented")
 }
-
 func (UnimplementedNoticeServer) UpdateNotice(context.Context, *UpdateNoticeRequest) (*UpdateNoticeReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateNotice not implemented")
 }
-
 func (UnimplementedNoticeServer) DeleteNotice(context.Context, *DeleteNoticeRequest) (*DeleteNoticeReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteNotice not implemented")
 }

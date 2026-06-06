@@ -7,12 +7,11 @@
 package appoauther
 
 import (
-	reflect "reflect"
-	sync "sync"
-
 	_ "github.com/envoyproxy/protoc-gen-validate/validate"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	reflect "reflect"
+	sync "sync"
 )
 
 const (
@@ -613,20 +612,17 @@ func file_api_appoauther_proto_appoauther_proto_rawDescGZIP() []byte {
 	return file_api_appoauther_proto_appoauther_proto_rawDescData
 }
 
-var (
-	file_api_appoauther_proto_appoauther_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
-	file_api_appoauther_proto_appoauther_proto_goTypes  = []interface{}{
-		(*OAuther)(nil),                  // 0: manager.api.appoauther.OAuther
-		(*ListAppOAutherRequest)(nil),    // 1: manager.api.appoauther.ListAppOAutherRequest
-		(*ListAppOAutherReply)(nil),      // 2: manager.api.appoauther.ListAppOAutherReply
-		(*CreateAppOAutherRequest)(nil),  // 3: manager.api.appoauther.CreateAppOAutherRequest
-		(*CreateAppOAutherReply)(nil),    // 4: manager.api.appoauther.CreateAppOAutherReply
-		(*DeleteAppOAutherRequest)(nil),  // 5: manager.api.appoauther.DeleteAppOAutherRequest
-		(*DeleteAppOAutherReply)(nil),    // 6: manager.api.appoauther.DeleteAppOAutherReply
-		(*ListAppOAutherReply_Data)(nil), // 7: manager.api.appoauther.ListAppOAutherReply.Data
-	}
-)
-
+var file_api_appoauther_proto_appoauther_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
+var file_api_appoauther_proto_appoauther_proto_goTypes = []interface{}{
+	(*OAuther)(nil),                  // 0: manager.api.appoauther.OAuther
+	(*ListAppOAutherRequest)(nil),    // 1: manager.api.appoauther.ListAppOAutherRequest
+	(*ListAppOAutherReply)(nil),      // 2: manager.api.appoauther.ListAppOAutherReply
+	(*CreateAppOAutherRequest)(nil),  // 3: manager.api.appoauther.CreateAppOAutherRequest
+	(*CreateAppOAutherReply)(nil),    // 4: manager.api.appoauther.CreateAppOAutherReply
+	(*DeleteAppOAutherRequest)(nil),  // 5: manager.api.appoauther.DeleteAppOAutherRequest
+	(*DeleteAppOAutherReply)(nil),    // 6: manager.api.appoauther.DeleteAppOAutherReply
+	(*ListAppOAutherReply_Data)(nil), // 7: manager.api.appoauther.ListAppOAutherReply.Data
+}
 var file_api_appoauther_proto_appoauther_proto_depIdxs = []int32{
 	7, // 0: manager.api.appoauther.ListAppOAutherReply.list:type_name -> manager.api.appoauther.ListAppOAutherReply.Data
 	0, // 1: manager.api.appoauther.ListAppOAutherReply.Data.oauther:type_name -> manager.api.appoauther.OAuther

@@ -45,6 +45,12 @@ func NewEmail(req *entity.OAuther) (repository.OAutherFunc, error) {
 	}, nil
 }
 
+func (e *Email) Visible(_ core.Context, _ *types.OAutherVisibleRequest) (*types.OAutherVisibleReply, error) {
+	return &types.OAutherVisibleReply{
+		Visible: true,
+	}, nil
+}
+
 // Handler 前置处理
 func (e *Email) Handler(ctx core.Context, req *types.OAutherHandleRequest) (*types.OAutherHandleReply, error) {
 	// 判断是否为邮箱账号

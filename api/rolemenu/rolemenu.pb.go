@@ -7,12 +7,11 @@
 package rolemenu
 
 import (
-	reflect "reflect"
-	sync "sync"
-
 	_ "github.com/envoyproxy/protoc-gen-validate/validate"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	reflect "reflect"
+	sync "sync"
 )
 
 const (
@@ -673,24 +672,21 @@ func file_api_rolemenu_proto_rolemenu_proto_rawDescGZIP() []byte {
 	return file_api_rolemenu_proto_rolemenu_proto_rawDescData
 }
 
-var (
-	file_api_rolemenu_proto_rolemenu_proto_msgTypes = make([]protoimpl.MessageInfo, 12)
-	file_api_rolemenu_proto_rolemenu_proto_goTypes  = []interface{}{
-		(*GetRoleMenuIdsRequest)(nil),  // 0: manager.api.rolemenu.GetRoleMenuIdsRequest
-		(*GetRoleMenuIdsReply)(nil),    // 1: manager.api.rolemenu.GetRoleMenuIdsReply
-		(*GetMenuRoleIdsRequest)(nil),  // 2: manager.api.rolemenu.GetMenuRoleIdsRequest
-		(*GetMenuRoleIdsReply)(nil),    // 3: manager.api.rolemenu.GetMenuRoleIdsReply
-		(*CreateMenuRolesRequest)(nil), // 4: manager.api.rolemenu.CreateMenuRolesRequest
-		(*CreateMenuRolesReply)(nil),   // 5: manager.api.rolemenu.CreateMenuRolesReply
-		(*DeleteMenuRolesRequest)(nil), // 6: manager.api.rolemenu.DeleteMenuRolesRequest
-		(*DeleteMenuRolesReply)(nil),   // 7: manager.api.rolemenu.DeleteMenuRolesReply
-		(*CreateRoleMenusRequest)(nil), // 8: manager.api.rolemenu.CreateRoleMenusRequest
-		(*CreateRoleMenusReply)(nil),   // 9: manager.api.rolemenu.CreateRoleMenusReply
-		(*DeleteRoleMenusRequest)(nil), // 10: manager.api.rolemenu.DeleteRoleMenusRequest
-		(*DeleteRoleMenusReply)(nil),   // 11: manager.api.rolemenu.DeleteRoleMenusReply
-	}
-)
-
+var file_api_rolemenu_proto_rolemenu_proto_msgTypes = make([]protoimpl.MessageInfo, 12)
+var file_api_rolemenu_proto_rolemenu_proto_goTypes = []interface{}{
+	(*GetRoleMenuIdsRequest)(nil),  // 0: manager.api.rolemenu.GetRoleMenuIdsRequest
+	(*GetRoleMenuIdsReply)(nil),    // 1: manager.api.rolemenu.GetRoleMenuIdsReply
+	(*GetMenuRoleIdsRequest)(nil),  // 2: manager.api.rolemenu.GetMenuRoleIdsRequest
+	(*GetMenuRoleIdsReply)(nil),    // 3: manager.api.rolemenu.GetMenuRoleIdsReply
+	(*CreateMenuRolesRequest)(nil), // 4: manager.api.rolemenu.CreateMenuRolesRequest
+	(*CreateMenuRolesReply)(nil),   // 5: manager.api.rolemenu.CreateMenuRolesReply
+	(*DeleteMenuRolesRequest)(nil), // 6: manager.api.rolemenu.DeleteMenuRolesRequest
+	(*DeleteMenuRolesReply)(nil),   // 7: manager.api.rolemenu.DeleteMenuRolesReply
+	(*CreateRoleMenusRequest)(nil), // 8: manager.api.rolemenu.CreateRoleMenusRequest
+	(*CreateRoleMenusReply)(nil),   // 9: manager.api.rolemenu.CreateRoleMenusReply
+	(*DeleteRoleMenusRequest)(nil), // 10: manager.api.rolemenu.DeleteRoleMenusRequest
+	(*DeleteRoleMenusReply)(nil),   // 11: manager.api.rolemenu.DeleteRoleMenusReply
+}
 var file_api_rolemenu_proto_rolemenu_proto_depIdxs = []int32{
 	0, // [0:0] is the sub-list for method output_type
 	0, // [0:0] is the sub-list for method input_type

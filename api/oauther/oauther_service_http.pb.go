@@ -8,27 +8,22 @@ package oauther
 
 import (
 	context "context"
-
 	http "github.com/go-kratos/kratos/v2/transport/http"
 	binding "github.com/go-kratos/kratos/v2/transport/http/binding"
 )
 
 // This is a compile-time assertion to ensure that this generated file
 // is compatible with the kratos package it is being compiled against.
-var (
-	_ = new(context.Context)
-	_ = binding.EncodeURL
-)
+var _ = new(context.Context)
+var _ = binding.EncodeURL
 
 const _ = http.SupportPackageIsVersion1
 
-const (
-	OperationOAutherCreateOAuther   = "/manager.api.oauther.OAuther/CreateOAuther"
-	OperationOAutherDeleteOAuther   = "/manager.api.oauther.OAuther/DeleteOAuther"
-	OperationOAutherListOAuther     = "/manager.api.oauther.OAuther/ListOAuther"
-	OperationOAutherListOAutherType = "/manager.api.oauther.OAuther/ListOAutherType"
-	OperationOAutherUpdateOAuther   = "/manager.api.oauther.OAuther/UpdateOAuther"
-)
+const OperationOAutherCreateOAuther = "/manager.api.oauther.OAuther/CreateOAuther"
+const OperationOAutherDeleteOAuther = "/manager.api.oauther.OAuther/DeleteOAuther"
+const OperationOAutherListOAuther = "/manager.api.oauther.OAuther/ListOAuther"
+const OperationOAutherListOAutherType = "/manager.api.oauther.OAuther/ListOAutherType"
+const OperationOAutherUpdateOAuther = "/manager.api.oauther.OAuther/UpdateOAuther"
 
 type OAutherHTTPServer interface {
 	// CreateOAuther CreateOAuther 创建登陆渠道

@@ -449,6 +449,7 @@ func (m *ListOAutherRequest) validate(all bool) error {
 	}
 
 	if m.Order != nil {
+
 		if _, ok := _ListOAutherRequest_Order_InLookup[m.GetOrder()]; !ok {
 			err := ListOAutherRequestValidationError{
 				field:  "Order",
@@ -459,9 +460,11 @@ func (m *ListOAutherRequest) validate(all bool) error {
 			}
 			errors = append(errors, err)
 		}
+
 	}
 
 	if m.OrderBy != nil {
+
 		if _, ok := _ListOAutherRequest_OrderBy_InLookup[m.GetOrderBy()]; !ok {
 			err := ListOAutherRequestValidationError{
 				field:  "OrderBy",
@@ -472,6 +475,7 @@ func (m *ListOAutherRequest) validate(all bool) error {
 			}
 			errors = append(errors, err)
 		}
+
 	}
 
 	if m.Keyword != nil {
@@ -1082,6 +1086,7 @@ func (m *UpdateOAutherRequest) validate(all bool) error {
 	}
 
 	if m.Setting != nil {
+
 		if all {
 			switch v := interface{}(m.GetSetting()).(type) {
 			case interface{ ValidateAll() error }:
@@ -1110,6 +1115,7 @@ func (m *UpdateOAutherRequest) validate(all bool) error {
 				}
 			}
 		}
+
 	}
 
 	if m.Description != nil {

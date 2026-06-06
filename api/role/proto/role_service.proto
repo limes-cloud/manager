@@ -2,56 +2,49 @@ syntax = "proto3";
 
 package manager.api.role;
 
+import "api/role/proto/role.proto";
+import "google/api/annotations.proto";
+
 option go_package = "manager/api/role;role";
 option java_multiple_files = true;
 option java_package = "manager.api.role";
 
-import "api/role/proto/role.proto";
-import "google/api/annotations.proto";
-
-service Role{
+service Role {
   // GetRole 获取角色信息
-  rpc GetRole (GetRoleRequest) returns (GetRoleReply) {
-    option (google.api.http) = {
-      get: "/manager/api/role",
-    };
+  rpc GetRole(GetRoleRequest) returns (GetRoleReply) {
+    option (google.api.http) = {get: "/manager/api/role"};
   }
 
   // ListRole 获取角色信息列表
-  rpc ListCurrentRole (ListRoleRequest) returns (ListRoleReply) {
-    option (google.api.http) = {
-      get: "/manager/api/current/roles",
-    };
+  rpc ListCurrentRole(ListRoleRequest) returns (ListRoleReply) {
+    option (google.api.http) = {get: "/manager/api/current/roles"};
   }
 
   // ListRole 获取角色信息列表
-//  rpc ListRole (ListRoleRequest) returns (ListRoleReply) {
-//    option (google.api.http) = {
-//      get: "/manager/api/roles",
-//    };
-//  }
+  //  rpc ListRole (ListRoleRequest) returns (ListRoleReply) {
+  //    option (google.api.http) = {
+  //      get: "/manager/api/roles",
+  //    };
+  //  }
 
   // CreateRole 创建角色信息
-  rpc CreateRole (CreateRoleRequest) returns (CreateRoleReply) {
+  rpc CreateRole(CreateRoleRequest) returns (CreateRoleReply) {
     option (google.api.http) = {
-      post: "/manager/api/role",
+      post: "/manager/api/role"
       body: "*"
     };
   }
 
   // UpdateRole 更新角色信息
-  rpc UpdateRole (UpdateRoleRequest) returns (UpdateRoleReply) {
+  rpc UpdateRole(UpdateRoleRequest) returns (UpdateRoleReply) {
     option (google.api.http) = {
-      put: "/manager/api/role",
+      put: "/manager/api/role"
       body: "*"
     };
   }
 
   // DeleteRole 删除角色信息
-  rpc DeleteRole (DeleteRoleRequest) returns (DeleteRoleReply) {
-    option (google.api.http) = {
-      delete: "/manager/api/role",
-    };
+  rpc DeleteRole(DeleteRoleRequest) returns (DeleteRoleReply) {
+    option (google.api.http) = {delete: "/manager/api/role"};
   }
-
 }

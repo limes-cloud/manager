@@ -1011,6 +1011,7 @@ func (m *GetDictionaryRequest) validate(all bool) error {
 	var errors []error
 
 	if m.Id != nil {
+
 		if m.GetId() < 1 {
 			err := GetDictionaryRequestValidationError{
 				field:  "Id",
@@ -1021,9 +1022,11 @@ func (m *GetDictionaryRequest) validate(all bool) error {
 			}
 			errors = append(errors, err)
 		}
+
 	}
 
 	if m.Keyword != nil {
+
 		if utf8.RuneCountInString(m.GetKeyword()) < 1 {
 			err := GetDictionaryRequestValidationError{
 				field:  "Keyword",
@@ -1034,6 +1037,7 @@ func (m *GetDictionaryRequest) validate(all bool) error {
 			}
 			errors = append(errors, err)
 		}
+
 	}
 
 	if len(errors) > 0 {

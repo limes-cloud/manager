@@ -7,12 +7,11 @@
 package entity
 
 import (
-	reflect "reflect"
-
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	emptypb "google.golang.org/protobuf/types/known/emptypb"
+	reflect "reflect"
 )
 
 const (
@@ -188,7 +187,6 @@ var file_api_entity_proto_entity_service_proto_goTypes = []interface{}{
 	(*UpdateEntityRuleReply)(nil),    // 25: manager.api.entity.UpdateEntityRuleReply
 	(*DeleteEntityRuleReply)(nil),    // 26: manager.api.entity.DeleteEntityRuleReply
 }
-
 var file_api_entity_proto_entity_service_proto_depIdxs = []int32{
 	0,  // 0: manager.api.entity.Entity.LoadEntity:input_type -> google.protobuf.Empty
 	1,  // 1: manager.api.entity.Entity.ImportEntity:input_type -> manager.api.entity.ImportEntityRequest

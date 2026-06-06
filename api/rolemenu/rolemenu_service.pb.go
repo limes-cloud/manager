@@ -7,11 +7,10 @@
 package rolemenu
 
 import (
-	reflect "reflect"
-
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	reflect "reflect"
 )
 
 const (
@@ -107,7 +106,6 @@ var file_api_rolemenu_proto_rolemenu_service_proto_goTypes = []interface{}{
 	(*DeleteMenuRolesReply)(nil),   // 10: manager.api.rolemenu.DeleteMenuRolesReply
 	(*DeleteRoleMenusReply)(nil),   // 11: manager.api.rolemenu.DeleteRoleMenusReply
 }
-
 var file_api_rolemenu_proto_rolemenu_service_proto_depIdxs = []int32{
 	0,  // 0: manager.api.rolemenu.RoleMenu.GetRoleMenuIds:input_type -> manager.api.rolemenu.GetRoleMenuIdsRequest
 	1,  // 1: manager.api.rolemenu.RoleMenu.GetMenuRoleIds:input_type -> manager.api.rolemenu.GetMenuRoleIdsRequest

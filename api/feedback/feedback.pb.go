@@ -7,12 +7,11 @@
 package feedback
 
 import (
-	reflect "reflect"
-	sync "sync"
-
 	_ "github.com/envoyproxy/protoc-gen-validate/validate"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	reflect "reflect"
+	sync "sync"
 )
 
 const (
@@ -1584,33 +1583,30 @@ func file_api_feedback_proto_feedback_proto_rawDescGZIP() []byte {
 	return file_api_feedback_proto_feedback_proto_rawDescData
 }
 
-var (
-	file_api_feedback_proto_feedback_proto_msgTypes = make([]protoimpl.MessageInfo, 21)
-	file_api_feedback_proto_feedback_proto_goTypes  = []interface{}{
-		(*ListFeedbackClassifyRequest)(nil),                // 0: manager.api.feedback.ListFeedbackClassifyRequest
-		(*ListFeedbackClassifyReply)(nil),                  // 1: manager.api.feedback.ListFeedbackClassifyReply
-		(*CreateFeedbackClassifyRequest)(nil),              // 2: manager.api.feedback.CreateFeedbackClassifyRequest
-		(*CreateFeedbackClassifyReply)(nil),                // 3: manager.api.feedback.CreateFeedbackClassifyReply
-		(*UpdateFeedbackClassifyRequest)(nil),              // 4: manager.api.feedback.UpdateFeedbackClassifyRequest
-		(*UpdateFeedbackClassifyReply)(nil),                // 5: manager.api.feedback.UpdateFeedbackClassifyReply
-		(*DeleteFeedbackClassifyRequest)(nil),              // 6: manager.api.feedback.DeleteFeedbackClassifyRequest
-		(*DeleteFeedbackClassifyReply)(nil),                // 7: manager.api.feedback.DeleteFeedbackClassifyReply
-		(*ListFeedbackRequest)(nil),                        // 8: manager.api.feedback.ListFeedbackRequest
-		(*ListFeedbackReply)(nil),                          // 9: manager.api.feedback.ListFeedbackReply
-		(*CreateFeedbackRequest)(nil),                      // 10: manager.api.feedback.CreateFeedbackRequest
-		(*CreateFeedbackReply)(nil),                        // 11: manager.api.feedback.CreateFeedbackReply
-		(*DeleteFeedbackRequest)(nil),                      // 12: manager.api.feedback.DeleteFeedbackRequest
-		(*DeleteFeedbackReply)(nil),                        // 13: manager.api.feedback.DeleteFeedbackReply
-		(*UpdateFeedbackRequest)(nil),                      // 14: manager.api.feedback.UpdateFeedbackRequest
-		(*UpdateFeedbackReply)(nil),                        // 15: manager.api.feedback.UpdateFeedbackReply
-		(*ListFeedbackClassifyReply_FeedbackClassify)(nil), // 16: manager.api.feedback.ListFeedbackClassifyReply.FeedbackClassify
-		(*ListFeedbackReply_Feedback)(nil),                 // 17: manager.api.feedback.ListFeedbackReply.Feedback
-		(*ListFeedbackReply_Feedback_App)(nil),             // 18: manager.api.feedback.ListFeedbackReply.Feedback.App
-		(*ListFeedbackReply_Feedback_User)(nil),            // 19: manager.api.feedback.ListFeedbackReply.Feedback.User
-		(*ListFeedbackReply_Feedback_Classify)(nil),        // 20: manager.api.feedback.ListFeedbackReply.Feedback.Classify
-	}
-)
-
+var file_api_feedback_proto_feedback_proto_msgTypes = make([]protoimpl.MessageInfo, 21)
+var file_api_feedback_proto_feedback_proto_goTypes = []interface{}{
+	(*ListFeedbackClassifyRequest)(nil),                // 0: manager.api.feedback.ListFeedbackClassifyRequest
+	(*ListFeedbackClassifyReply)(nil),                  // 1: manager.api.feedback.ListFeedbackClassifyReply
+	(*CreateFeedbackClassifyRequest)(nil),              // 2: manager.api.feedback.CreateFeedbackClassifyRequest
+	(*CreateFeedbackClassifyReply)(nil),                // 3: manager.api.feedback.CreateFeedbackClassifyReply
+	(*UpdateFeedbackClassifyRequest)(nil),              // 4: manager.api.feedback.UpdateFeedbackClassifyRequest
+	(*UpdateFeedbackClassifyReply)(nil),                // 5: manager.api.feedback.UpdateFeedbackClassifyReply
+	(*DeleteFeedbackClassifyRequest)(nil),              // 6: manager.api.feedback.DeleteFeedbackClassifyRequest
+	(*DeleteFeedbackClassifyReply)(nil),                // 7: manager.api.feedback.DeleteFeedbackClassifyReply
+	(*ListFeedbackRequest)(nil),                        // 8: manager.api.feedback.ListFeedbackRequest
+	(*ListFeedbackReply)(nil),                          // 9: manager.api.feedback.ListFeedbackReply
+	(*CreateFeedbackRequest)(nil),                      // 10: manager.api.feedback.CreateFeedbackRequest
+	(*CreateFeedbackReply)(nil),                        // 11: manager.api.feedback.CreateFeedbackReply
+	(*DeleteFeedbackRequest)(nil),                      // 12: manager.api.feedback.DeleteFeedbackRequest
+	(*DeleteFeedbackReply)(nil),                        // 13: manager.api.feedback.DeleteFeedbackReply
+	(*UpdateFeedbackRequest)(nil),                      // 14: manager.api.feedback.UpdateFeedbackRequest
+	(*UpdateFeedbackReply)(nil),                        // 15: manager.api.feedback.UpdateFeedbackReply
+	(*ListFeedbackClassifyReply_FeedbackClassify)(nil), // 16: manager.api.feedback.ListFeedbackClassifyReply.FeedbackClassify
+	(*ListFeedbackReply_Feedback)(nil),                 // 17: manager.api.feedback.ListFeedbackReply.Feedback
+	(*ListFeedbackReply_Feedback_App)(nil),             // 18: manager.api.feedback.ListFeedbackReply.Feedback.App
+	(*ListFeedbackReply_Feedback_User)(nil),            // 19: manager.api.feedback.ListFeedbackReply.Feedback.User
+	(*ListFeedbackReply_Feedback_Classify)(nil),        // 20: manager.api.feedback.ListFeedbackReply.Feedback.Classify
+}
 var file_api_feedback_proto_feedback_proto_depIdxs = []int32{
 	16, // 0: manager.api.feedback.ListFeedbackClassifyReply.list:type_name -> manager.api.feedback.ListFeedbackClassifyReply.FeedbackClassify
 	17, // 1: manager.api.feedback.ListFeedbackReply.list:type_name -> manager.api.feedback.ListFeedbackReply.Feedback

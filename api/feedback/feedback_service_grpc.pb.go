@@ -8,7 +8,6 @@ package feedback
 
 import (
 	context "context"
-
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -156,36 +155,30 @@ type FeedbackServer interface {
 }
 
 // UnimplementedFeedbackServer must be embedded to have forward compatible implementations.
-type UnimplementedFeedbackServer struct{}
+type UnimplementedFeedbackServer struct {
+}
 
 func (UnimplementedFeedbackServer) ListFeedbackClassify(context.Context, *ListFeedbackClassifyRequest) (*ListFeedbackClassifyReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListFeedbackClassify not implemented")
 }
-
 func (UnimplementedFeedbackServer) CreateFeedbackClassify(context.Context, *CreateFeedbackClassifyRequest) (*CreateFeedbackClassifyReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateFeedbackClassify not implemented")
 }
-
 func (UnimplementedFeedbackServer) UpdateFeedbackClassify(context.Context, *UpdateFeedbackClassifyRequest) (*UpdateFeedbackClassifyReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateFeedbackClassify not implemented")
 }
-
 func (UnimplementedFeedbackServer) DeleteFeedbackClassify(context.Context, *DeleteFeedbackClassifyRequest) (*DeleteFeedbackClassifyReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteFeedbackClassify not implemented")
 }
-
 func (UnimplementedFeedbackServer) ListFeedback(context.Context, *ListFeedbackRequest) (*ListFeedbackReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListFeedback not implemented")
 }
-
 func (UnimplementedFeedbackServer) CreateFeedback(context.Context, *CreateFeedbackRequest) (*CreateFeedbackReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateFeedback not implemented")
 }
-
 func (UnimplementedFeedbackServer) DeleteFeedback(context.Context, *DeleteFeedbackRequest) (*DeleteFeedbackReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteFeedback not implemented")
 }
-
 func (UnimplementedFeedbackServer) UpdateFeedback(context.Context, *UpdateFeedbackRequest) (*UpdateFeedbackReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateFeedback not implemented")
 }

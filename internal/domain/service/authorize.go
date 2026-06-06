@@ -107,19 +107,20 @@ type cacheData struct {
 	Expire    int64  `json:"expire"`
 }
 
-func (s *Authorize) ListOAuther(ctx core.Context, tn string, an string) ([]*entity.AppOAuther, error) {
+func (s *Authorize) ListVisibleOAuther(ctx core.Context, req *types.ListVisibleOAutherRequest) ([]*entity.OAuther, error) {
 	// 获取应用
-	app, err := s.app.GetAppByKeyword(an)
+	app, err := s.app.GetAppByKeyword(req.App)
 	if err != nil {
 		return nil, errors.GetError("获取应用失败")
 	}
 
 	// 获取租户
-	tenant, err := s.tenant.GetTenantByKeyword(ctx, tn)
+	tenant, err := s.tenant.GetTenantByKeyword(ctx, req.Tenant)
 	if err != nil {
 		return nil, errors.GetError("获取租户失败")
 	}
 
+	// 获取授权列表
 	list, _, err := s.ao.ListAppOAuther(ctx, &types.ListAppOAutherRequest{
 		AppId:    app.Id,
 		TenantId: value.Pointer(tenant.Id),
@@ -127,7 +128,33 @@ func (s *Authorize) ListOAuther(ctx core.Context, tn string, an string) ([]*enti
 	if err != nil {
 		return nil, errors.GetError(err.Error())
 	}
-	return list, err
+
+	// 获取可见
+	var visibleList []*entity.OAuther
+	for _, item := range list {
+		oaf, err := s.oaexec.GetOAuther(item.OAuther)
+		if err != nil {
+			ctx.Logger().Errorw("msg", "get oauther error", "err", err.Error())
+			continue
+		}
+
+		vr, err := oaf.Visible(ctx, &types.OAutherVisibleRequest{
+			UserAgent: ctx.UserAgent().String,
+			Platform:  req.Platform,
+		})
+		if err != nil {
+			ctx.Logger().Errorw("msg", "get visible error", "err", err.Error())
+			continue
+		}
+		if !vr.Visible {
+			continue
+		}
+		oa := item.OAuther
+		oa.Recommend = vr.Recommend
+		oa.RecommendText = vr.RecommendText
+		visibleList = append(visibleList, oa)
+	}
+	return visibleList, err
 }
 
 // OAutherHandle 授权处理
@@ -260,7 +287,7 @@ func (s *Authorize) OAutherLogin(ctx core.Context, req *types.OAutherLoginReques
 		expire = ti.Expire
 	}
 
-	if token == "" {
+	if token == "" && oid == "" {
 		return nil, errors.LoginInfoNotFound()
 	}
 
@@ -1101,7 +1128,15 @@ func (u *Authorize) CheckAuth(ctx core.Context, req *types.CheckAuthRequest) (*t
 
 	key := fmt.Sprintf("%s:%s", req.Path, req.Method)
 	if ctx.Config().JWT.Whitelist[key] {
-		return nil, nil
+		auth := ctx.TryAuth()
+		if auth == nil {
+			return nil, nil
+		}
+		return &types.AuthorizeInfo{
+			UserId:   ctx.Auth().UserId,
+			TenantId: ctx.Auth().TenantId,
+			DeptId:   ctx.Auth().DeptId,
+		}, nil
 	}
 
 	// 验证接口
@@ -1338,4 +1373,26 @@ func (u *Authorize) FillInfo(ctx core.Context, uuid string, infos map[string]*st
 	}
 
 	return reply.Token, nil
+}
+
+// RefreshToken 用户刷新token
+func (u *Authorize) RefreshToken(ctx core.Context) (string, error) {
+	token, err := ctx.JWT().Renewal(ctx.Token())
+	if err != nil {
+		return "", errors.RefreshTokenError(err.Error())
+	}
+	return token, nil
+}
+
+// Logout 用户token注销
+func (u *Authorize) Logout(ctx core.Context) error {
+	token := ctx.Token()
+	if token == "" {
+		return nil
+	}
+
+	tm := crypto.MD5([]byte(token))
+	ctx.JWT().AddBlacklist(tm)
+
+	return nil
 }

@@ -8,24 +8,19 @@ package log
 
 import (
 	context "context"
-
 	http "github.com/go-kratos/kratos/v2/transport/http"
 	binding "github.com/go-kratos/kratos/v2/transport/http/binding"
 )
 
 // This is a compile-time assertion to ensure that this generated file
 // is compatible with the kratos package it is being compiled against.
-var (
-	_ = new(context.Context)
-	_ = binding.EncodeURL
-)
+var _ = new(context.Context)
+var _ = binding.EncodeURL
 
 const _ = http.SupportPackageIsVersion1
 
-const (
-	OperationLogListAuthLog  = "/manager.api.log.Log/ListAuthLog"
-	OperationLogListLoginLog = "/manager.api.log.Log/ListLoginLog"
-)
+const OperationLogListAuthLog = "/manager.api.log.Log/ListAuthLog"
+const OperationLogListLoginLog = "/manager.api.log.Log/ListLoginLog"
 
 type LogHTTPServer interface {
 	// ListAuthLog ListAuthLog 获取用户登陆信息列表

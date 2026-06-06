@@ -17,6 +17,10 @@ type OAuther struct {
 	Setting     string `json:"extra" gorm:"column:setting"`           // 渠道设置
 	Description string `json:"description" gorm:"column:description"` // 描述信息
 	model.BaseTenantModel
+
+	// 首页登录使用
+	Recommend     bool   `json:"recommend" gorm:"-"`     // 是否推荐
+	RecommendText string `json:"recommendText" gorm:"-"` // 推荐文案
 }
 
 func (c *OAuther) TableName() string {

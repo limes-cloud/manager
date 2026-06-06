@@ -8,25 +8,20 @@ package jobrole
 
 import (
 	context "context"
-
 	http "github.com/go-kratos/kratos/v2/transport/http"
 	binding "github.com/go-kratos/kratos/v2/transport/http/binding"
 )
 
 // This is a compile-time assertion to ensure that this generated file
 // is compatible with the kratos package it is being compiled against.
-var (
-	_ = new(context.Context)
-	_ = binding.EncodeURL
-)
+var _ = new(context.Context)
+var _ = binding.EncodeURL
 
 const _ = http.SupportPackageIsVersion1
 
-const (
-	OperationJobRoleCreateJobRole = "/manager.api.jobrole.JobRole/CreateJobRole"
-	OperationJobRoleDeleteJobRole = "/manager.api.jobrole.JobRole/DeleteJobRole"
-	OperationJobRoleListJobRole   = "/manager.api.jobrole.JobRole/ListJobRole"
-)
+const OperationJobRoleCreateJobRole = "/manager.api.jobrole.JobRole/CreateJobRole"
+const OperationJobRoleDeleteJobRole = "/manager.api.jobrole.JobRole/DeleteJobRole"
+const OperationJobRoleListJobRole = "/manager.api.jobrole.JobRole/ListJobRole"
 
 type JobRoleHTTPServer interface {
 	CreateJobRole(context.Context, *CreateJobRoleRequest) (*CreateJobRoleReply, error)

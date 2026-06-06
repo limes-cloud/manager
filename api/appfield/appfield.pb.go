@@ -7,12 +7,11 @@
 package appfield
 
 import (
-	reflect "reflect"
-	sync "sync"
-
 	_ "github.com/envoyproxy/protoc-gen-validate/validate"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	reflect "reflect"
+	sync "sync"
 )
 
 const (
@@ -721,22 +720,19 @@ func file_api_appfield_proto_appfield_proto_rawDescGZIP() []byte {
 	return file_api_appfield_proto_appfield_proto_rawDescData
 }
 
-var (
-	file_api_appfield_proto_appfield_proto_msgTypes = make([]protoimpl.MessageInfo, 10)
-	file_api_appfield_proto_appfield_proto_goTypes  = []interface{}{
-		(*ListAppFieldRequest)(nil),     // 0: manager.api.appfield.ListAppFieldRequest
-		(*ListAppFieldReply)(nil),       // 1: manager.api.appfield.ListAppFieldReply
-		(*CreateAppFieldRequest)(nil),   // 2: manager.api.appfield.CreateAppFieldRequest
-		(*CreateAppFieldReply)(nil),     // 3: manager.api.appfield.CreateAppFieldReply
-		(*UpdateAppFieldRequest)(nil),   // 4: manager.api.appfield.UpdateAppFieldRequest
-		(*UpdateAppFieldReply)(nil),     // 5: manager.api.appfield.UpdateAppFieldReply
-		(*DeleteAppFieldRequest)(nil),   // 6: manager.api.appfield.DeleteAppFieldRequest
-		(*DeleteAppFieldReply)(nil),     // 7: manager.api.appfield.DeleteAppFieldReply
-		(*ListAppFieldReply_Field)(nil), // 8: manager.api.appfield.ListAppFieldReply.Field
-		(*ListAppFieldReply_Data)(nil),  // 9: manager.api.appfield.ListAppFieldReply.Data
-	}
-)
-
+var file_api_appfield_proto_appfield_proto_msgTypes = make([]protoimpl.MessageInfo, 10)
+var file_api_appfield_proto_appfield_proto_goTypes = []interface{}{
+	(*ListAppFieldRequest)(nil),     // 0: manager.api.appfield.ListAppFieldRequest
+	(*ListAppFieldReply)(nil),       // 1: manager.api.appfield.ListAppFieldReply
+	(*CreateAppFieldRequest)(nil),   // 2: manager.api.appfield.CreateAppFieldRequest
+	(*CreateAppFieldReply)(nil),     // 3: manager.api.appfield.CreateAppFieldReply
+	(*UpdateAppFieldRequest)(nil),   // 4: manager.api.appfield.UpdateAppFieldRequest
+	(*UpdateAppFieldReply)(nil),     // 5: manager.api.appfield.UpdateAppFieldReply
+	(*DeleteAppFieldRequest)(nil),   // 6: manager.api.appfield.DeleteAppFieldRequest
+	(*DeleteAppFieldReply)(nil),     // 7: manager.api.appfield.DeleteAppFieldReply
+	(*ListAppFieldReply_Field)(nil), // 8: manager.api.appfield.ListAppFieldReply.Field
+	(*ListAppFieldReply_Data)(nil),  // 9: manager.api.appfield.ListAppFieldReply.Data
+}
 var file_api_appfield_proto_appfield_proto_depIdxs = []int32{
 	9, // 0: manager.api.appfield.ListAppFieldReply.list:type_name -> manager.api.appfield.ListAppFieldReply.Data
 	8, // 1: manager.api.appfield.ListAppFieldReply.Data.field:type_name -> manager.api.appfield.ListAppFieldReply.Field

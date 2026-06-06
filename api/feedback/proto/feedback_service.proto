@@ -2,73 +2,63 @@ syntax = "proto3";
 
 package manager.api.feedback;
 
+import "api/feedback/proto/feedback.proto";
+import "google/api/annotations.proto";
+
 option go_package = "manager/api/feedback;feedback";
 option java_multiple_files = true;
 option java_package = "manager.api.feedback";
 
-import "api/feedback/proto/feedback.proto";
-import "google/api/annotations.proto";
-
-service Feedback{
-
+service Feedback {
   // ListFeedbackClassify 获取反馈建议分类列表
-  rpc ListFeedbackClassify (ListFeedbackClassifyRequest) returns (ListFeedbackClassifyReply) {
-    option (google.api.http) = {
-      get: "/manager/api/feedback/classifies",
-    };
+  rpc ListFeedbackClassify(ListFeedbackClassifyRequest) returns (ListFeedbackClassifyReply) {
+    option (google.api.http) = {get: "/manager/api/feedback/classifies"};
   }
 
   // CreateFeedbackClassify 创建反馈建议分类
-  rpc CreateFeedbackClassify (CreateFeedbackClassifyRequest) returns (CreateFeedbackClassifyReply) {
+  rpc CreateFeedbackClassify(CreateFeedbackClassifyRequest) returns (CreateFeedbackClassifyReply) {
     option (google.api.http) = {
-      post: "/manager/api/feedback/classify",
+      post: "/manager/api/feedback/classify"
       body: "*"
     };
   }
 
   // UpdateFeedbackClassify 更新反馈建议分类
-  rpc UpdateFeedbackClassify (UpdateFeedbackClassifyRequest) returns (UpdateFeedbackClassifyReply) {
+  rpc UpdateFeedbackClassify(UpdateFeedbackClassifyRequest) returns (UpdateFeedbackClassifyReply) {
     option (google.api.http) = {
-      put: "/manager/api/feedback/classify",
+      put: "/manager/api/feedback/classify"
       body: "*"
     };
   }
 
   // DeleteFeedbackClassify 删除反馈建议分类
-  rpc DeleteFeedbackClassify (DeleteFeedbackClassifyRequest) returns (DeleteFeedbackClassifyReply) {
-    option (google.api.http) = {
-      delete: "/manager/api/feedback/classify",
-    };
+  rpc DeleteFeedbackClassify(DeleteFeedbackClassifyRequest) returns (DeleteFeedbackClassifyReply) {
+    option (google.api.http) = {delete: "/manager/api/feedback/classify"};
   }
 
   // ListFeedback 获取反馈建议列表
-  rpc ListFeedback (ListFeedbackRequest) returns (ListFeedbackReply) {
-    option (google.api.http) = {
-      get: "/manager/api/feedbacks",
-    };
+  rpc ListFeedback(ListFeedbackRequest) returns (ListFeedbackReply) {
+    option (google.api.http) = {get: "/manager/api/feedbacks"};
   }
 
   // CreateFeedback 创建反馈建议
-  rpc CreateFeedback (CreateFeedbackRequest) returns (CreateFeedbackReply) {
+  rpc CreateFeedback(CreateFeedbackRequest) returns (CreateFeedbackReply) {
     option (google.api.http) = {
-      post: "/manager/api/feedback",
+      post: "/manager/api/feedback"
       body: "*"
     };
   }
 
   // DeleteFeedback 删除反馈建议
-  rpc DeleteFeedback (DeleteFeedbackRequest) returns (DeleteFeedbackReply) {
-    option (google.api.http) = {
-      delete: "/manager/api/feedback",
-    };
+  rpc DeleteFeedback(DeleteFeedbackRequest) returns (DeleteFeedbackReply) {
+    option (google.api.http) = {delete: "/manager/api/feedback"};
   }
 
   // UpdateFeedback 更新反馈建议
-  rpc UpdateFeedback (UpdateFeedbackRequest) returns (UpdateFeedbackReply) {
+  rpc UpdateFeedback(UpdateFeedbackRequest) returns (UpdateFeedbackReply) {
     option (google.api.http) = {
-      put: "/manager/api/feedback",
+      put: "/manager/api/feedback"
       body: "*"
     };
   }
-
 }

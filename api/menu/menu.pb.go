@@ -7,12 +7,11 @@
 package menu
 
 import (
-	reflect "reflect"
-	sync "sync"
-
 	_ "github.com/envoyproxy/protoc-gen-validate/validate"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	reflect "reflect"
+	sync "sync"
 )
 
 const (
@@ -1122,22 +1121,19 @@ func file_api_menu_proto_menu_proto_rawDescGZIP() []byte {
 	return file_api_menu_proto_menu_proto_rawDescData
 }
 
-var (
-	file_api_menu_proto_menu_proto_msgTypes = make([]protoimpl.MessageInfo, 10)
-	file_api_menu_proto_menu_proto_goTypes  = []interface{}{
-		(*ListCurrentMenuRequest)(nil), // 0: manager.api.menu.ListCurrentMenuRequest
-		(*ListMenuRequest)(nil),        // 1: manager.api.menu.ListMenuRequest
-		(*ListMenuReply)(nil),          // 2: manager.api.menu.ListMenuReply
-		(*CreateMenuRequest)(nil),      // 3: manager.api.menu.CreateMenuRequest
-		(*CreateMenuReply)(nil),        // 4: manager.api.menu.CreateMenuReply
-		(*UpdateMenuRequest)(nil),      // 5: manager.api.menu.UpdateMenuRequest
-		(*UpdateMenuReply)(nil),        // 6: manager.api.menu.UpdateMenuReply
-		(*DeleteMenuRequest)(nil),      // 7: manager.api.menu.DeleteMenuRequest
-		(*DeleteMenuReply)(nil),        // 8: manager.api.menu.DeleteMenuReply
-		(*ListMenuReply_Data)(nil),     // 9: manager.api.menu.ListMenuReply.Data
-	}
-)
-
+var file_api_menu_proto_menu_proto_msgTypes = make([]protoimpl.MessageInfo, 10)
+var file_api_menu_proto_menu_proto_goTypes = []interface{}{
+	(*ListCurrentMenuRequest)(nil), // 0: manager.api.menu.ListCurrentMenuRequest
+	(*ListMenuRequest)(nil),        // 1: manager.api.menu.ListMenuRequest
+	(*ListMenuReply)(nil),          // 2: manager.api.menu.ListMenuReply
+	(*CreateMenuRequest)(nil),      // 3: manager.api.menu.CreateMenuRequest
+	(*CreateMenuReply)(nil),        // 4: manager.api.menu.CreateMenuReply
+	(*UpdateMenuRequest)(nil),      // 5: manager.api.menu.UpdateMenuRequest
+	(*UpdateMenuReply)(nil),        // 6: manager.api.menu.UpdateMenuReply
+	(*DeleteMenuRequest)(nil),      // 7: manager.api.menu.DeleteMenuRequest
+	(*DeleteMenuReply)(nil),        // 8: manager.api.menu.DeleteMenuReply
+	(*ListMenuReply_Data)(nil),     // 9: manager.api.menu.ListMenuReply.Data
+}
 var file_api_menu_proto_menu_proto_depIdxs = []int32{
 	9, // 0: manager.api.menu.ListMenuReply.list:type_name -> manager.api.menu.ListMenuReply.Data
 	9, // 1: manager.api.menu.ListMenuReply.Data.children:type_name -> manager.api.menu.ListMenuReply.Data

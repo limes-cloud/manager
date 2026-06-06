@@ -7,12 +7,11 @@
 package scope
 
 import (
-	reflect "reflect"
-	sync "sync"
-
 	_ "github.com/envoyproxy/protoc-gen-validate/validate"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	reflect "reflect"
+	sync "sync"
 )
 
 const (
@@ -324,16 +323,13 @@ func file_api_scope_proto_scope_proto_rawDescGZIP() []byte {
 	return file_api_scope_proto_scope_proto_rawDescData
 }
 
-var (
-	file_api_scope_proto_scope_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
-	file_api_scope_proto_scope_proto_goTypes  = []interface{}{
-		(*GetScopeRequest)(nil),      // 0: manager.api.scope.GetScopeRequest
-		(*GetScopeReply)(nil),        // 1: manager.api.scope.GetScopeReply
-		(*GetUserDeptIdRequest)(nil), // 2: manager.api.scope.GetUserDeptIdRequest
-		(*GetUserDeptIdReply)(nil),   // 3: manager.api.scope.GetUserDeptIdReply
-	}
-)
-
+var file_api_scope_proto_scope_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
+var file_api_scope_proto_scope_proto_goTypes = []interface{}{
+	(*GetScopeRequest)(nil),      // 0: manager.api.scope.GetScopeRequest
+	(*GetScopeReply)(nil),        // 1: manager.api.scope.GetScopeReply
+	(*GetUserDeptIdRequest)(nil), // 2: manager.api.scope.GetUserDeptIdRequest
+	(*GetUserDeptIdReply)(nil),   // 3: manager.api.scope.GetUserDeptIdReply
+}
 var file_api_scope_proto_scope_proto_depIdxs = []int32{
 	0, // [0:0] is the sub-list for method output_type
 	0, // [0:0] is the sub-list for method input_type

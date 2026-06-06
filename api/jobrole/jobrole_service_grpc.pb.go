@@ -8,7 +8,6 @@ package jobrole
 
 import (
 	context "context"
-
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -80,16 +79,15 @@ type JobRoleServer interface {
 }
 
 // UnimplementedJobRoleServer must be embedded to have forward compatible implementations.
-type UnimplementedJobRoleServer struct{}
+type UnimplementedJobRoleServer struct {
+}
 
 func (UnimplementedJobRoleServer) ListJobRole(context.Context, *ListJobRoleRequest) (*ListJobRoleReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListJobRole not implemented")
 }
-
 func (UnimplementedJobRoleServer) CreateJobRole(context.Context, *CreateJobRoleRequest) (*CreateJobRoleReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateJobRole not implemented")
 }
-
 func (UnimplementedJobRoleServer) DeleteJobRole(context.Context, *DeleteJobRoleRequest) (*DeleteJobRoleReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteJobRole not implemented")
 }

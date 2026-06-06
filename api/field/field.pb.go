@@ -7,12 +7,11 @@
 package field
 
 import (
-	reflect "reflect"
-	sync "sync"
-
 	_ "github.com/envoyproxy/protoc-gen-validate/validate"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	reflect "reflect"
+	sync "sync"
 )
 
 const (
@@ -1085,27 +1084,24 @@ func file_api_field_proto_field_proto_rawDescGZIP() []byte {
 	return file_api_field_proto_field_proto_rawDescData
 }
 
-var (
-	file_api_field_proto_field_proto_msgTypes = make([]protoimpl.MessageInfo, 15)
-	file_api_field_proto_field_proto_goTypes  = []interface{}{
-		(*ListFieldTypeRequest)(nil),         // 0: manager.api.field.ListFieldTypeRequest
-		(*ListFieldTypeReply)(nil),           // 1: manager.api.field.ListFieldTypeReply
-		(*ListFieldRequest)(nil),             // 2: manager.api.field.ListFieldRequest
-		(*ListFieldReply)(nil),               // 3: manager.api.field.ListFieldReply
-		(*ListRequiredFieldRequest)(nil),     // 4: manager.api.field.ListRequiredFieldRequest
-		(*ListRequiredFieldReply)(nil),       // 5: manager.api.field.ListRequiredFieldReply
-		(*CreateFieldRequest)(nil),           // 6: manager.api.field.CreateFieldRequest
-		(*CreateFieldReply)(nil),             // 7: manager.api.field.CreateFieldReply
-		(*UpdateFieldRequest)(nil),           // 8: manager.api.field.UpdateFieldRequest
-		(*UpdateFieldReply)(nil),             // 9: manager.api.field.UpdateFieldReply
-		(*DeleteFieldRequest)(nil),           // 10: manager.api.field.DeleteFieldRequest
-		(*DeleteFieldReply)(nil),             // 11: manager.api.field.DeleteFieldReply
-		(*ListFieldTypeReply_Type)(nil),      // 12: manager.api.field.ListFieldTypeReply.Type
-		(*ListFieldReply_Field)(nil),         // 13: manager.api.field.ListFieldReply.Field
-		(*ListRequiredFieldReply_Field)(nil), // 14: manager.api.field.ListRequiredFieldReply.Field
-	}
-)
-
+var file_api_field_proto_field_proto_msgTypes = make([]protoimpl.MessageInfo, 15)
+var file_api_field_proto_field_proto_goTypes = []interface{}{
+	(*ListFieldTypeRequest)(nil),         // 0: manager.api.field.ListFieldTypeRequest
+	(*ListFieldTypeReply)(nil),           // 1: manager.api.field.ListFieldTypeReply
+	(*ListFieldRequest)(nil),             // 2: manager.api.field.ListFieldRequest
+	(*ListFieldReply)(nil),               // 3: manager.api.field.ListFieldReply
+	(*ListRequiredFieldRequest)(nil),     // 4: manager.api.field.ListRequiredFieldRequest
+	(*ListRequiredFieldReply)(nil),       // 5: manager.api.field.ListRequiredFieldReply
+	(*CreateFieldRequest)(nil),           // 6: manager.api.field.CreateFieldRequest
+	(*CreateFieldReply)(nil),             // 7: manager.api.field.CreateFieldReply
+	(*UpdateFieldRequest)(nil),           // 8: manager.api.field.UpdateFieldRequest
+	(*UpdateFieldReply)(nil),             // 9: manager.api.field.UpdateFieldReply
+	(*DeleteFieldRequest)(nil),           // 10: manager.api.field.DeleteFieldRequest
+	(*DeleteFieldReply)(nil),             // 11: manager.api.field.DeleteFieldReply
+	(*ListFieldTypeReply_Type)(nil),      // 12: manager.api.field.ListFieldTypeReply.Type
+	(*ListFieldReply_Field)(nil),         // 13: manager.api.field.ListFieldReply.Field
+	(*ListRequiredFieldReply_Field)(nil), // 14: manager.api.field.ListRequiredFieldReply.Field
+}
 var file_api_field_proto_field_proto_depIdxs = []int32{
 	12, // 0: manager.api.field.ListFieldTypeReply.list:type_name -> manager.api.field.ListFieldTypeReply.Type
 	13, // 1: manager.api.field.ListFieldReply.list:type_name -> manager.api.field.ListFieldReply.Field

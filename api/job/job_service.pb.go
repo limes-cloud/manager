@@ -7,11 +7,10 @@
 package job
 
 import (
-	reflect "reflect"
-
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	reflect "reflect"
 )
 
 const (
@@ -73,7 +72,6 @@ var file_api_job_proto_job_service_proto_goTypes = []interface{}{
 	(*UpdateJobReply)(nil),   // 6: manager.api.job.UpdateJobReply
 	(*DeleteJobReply)(nil),   // 7: manager.api.job.DeleteJobReply
 }
-
 var file_api_job_proto_job_service_proto_depIdxs = []int32{
 	0, // 0: manager.api.job.Job.ListJob:input_type -> manager.api.job.ListJobRequest
 	1, // 1: manager.api.job.Job.CreateJob:input_type -> manager.api.job.CreateJobRequest

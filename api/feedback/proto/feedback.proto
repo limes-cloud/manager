@@ -2,17 +2,27 @@ syntax = "proto3";
 
 package manager.api.feedback;
 
+import "validate/validate.proto";
+
 option go_package = "manager/api/feedback;feedback";
 option java_multiple_files = true;
 option java_package = "manager.api.feedback";
 
-import "validate/validate.proto";
-
 message ListFeedbackClassifyRequest {
-  uint32 page = 1[(validate.rules).uint32 = {gte: 1}];
-  uint32 pageSize = 2[(validate.rules).uint32 = {gte: 1,lte:50}];
-  optional string order = 3[(validate.rules).string = {in: ["asc","desc"]}];
-  optional string orderBy = 4[(validate.rules).string = {in: ["id"]}];
+  uint32 page = 1 [(validate.rules).uint32 = {gte: 1}];
+  uint32 pageSize = 2 [(validate.rules).uint32 = {
+    gte: 1
+    lte: 50
+  }];
+  optional string order = 3 [(validate.rules).string = {
+    in: [
+      "asc",
+      "desc"
+    ]
+  }];
+  optional string orderBy = 4 [(validate.rules).string = {
+    in: ["id"]
+  }];
   optional string name = 5;
 }
 
@@ -29,7 +39,7 @@ message ListFeedbackClassifyReply {
 }
 
 message CreateFeedbackClassifyRequest {
-  string name = 1[(validate.rules).string = {min_len: 1}];
+  string name = 1 [(validate.rules).string = {min_len: 1}];
 }
 
 message CreateFeedbackClassifyReply {
@@ -37,26 +47,36 @@ message CreateFeedbackClassifyReply {
 }
 
 message UpdateFeedbackClassifyRequest {
-  uint32 id = 1[(validate.rules).uint32 = {gte: 1}];
-  string name = 2[(validate.rules).string = {min_len: 1}];
+  uint32 id = 1 [(validate.rules).uint32 = {gte: 1}];
+  string name = 2 [(validate.rules).string = {min_len: 1}];
 }
 
-message UpdateFeedbackClassifyReply {
-}
+message UpdateFeedbackClassifyReply {}
 
 message DeleteFeedbackClassifyRequest {
-  uint32 id = 1[(validate.rules).uint32 = {gte: 1}];
+  uint32 id = 1 [(validate.rules).uint32 = {gte: 1}];
 }
 
-message DeleteFeedbackClassifyReply {
-}
-
+message DeleteFeedbackClassifyReply {}
 
 message ListFeedbackRequest {
-  uint32 page = 1[(validate.rules).uint32 = {gte: 1}];
-  uint32 pageSize = 2[(validate.rules).uint32 = {gte: 1,lte:50}];
-  optional string order = 3[(validate.rules).string = {in: ["asc","desc"]}];
-  optional string orderBy = 4[(validate.rules).string = {in: ["id","created_at"]}];
+  uint32 page = 1 [(validate.rules).uint32 = {gte: 1}];
+  uint32 pageSize = 2 [(validate.rules).uint32 = {
+    gte: 1
+    lte: 50
+  }];
+  optional string order = 3 [(validate.rules).string = {
+    in: [
+      "asc",
+      "desc"
+    ]
+  }];
+  optional string orderBy = 4 [(validate.rules).string = {
+    in: [
+      "id",
+      "created_at"
+    ]
+  }];
   optional uint32 appId = 5;
   optional uint32 classifyId = 6;
   optional string status = 7;
@@ -97,7 +117,7 @@ message ListFeedbackReply {
     optional App app = 17;
     optional User user = 18;
     optional Classify classify = 19;
-    repeated string imageUrls  = 20;
+    repeated string imageUrls = 20;
   }
 
   uint32 total = 1;
@@ -105,15 +125,15 @@ message ListFeedbackReply {
 }
 
 message CreateFeedbackRequest {
-  uint32 appId = 1[(validate.rules).uint32 = {gte: 1}];
-  uint32 classifyId = 2[(validate.rules).uint32 = {gte: 1}];
-  string title = 3[(validate.rules).string = {min_len: 1}];
-  string content = 4[(validate.rules).string = {min_len: 1}];
+  uint32 appId = 1 [(validate.rules).uint32 = {gte: 1}];
+  uint32 classifyId = 2 [(validate.rules).uint32 = {gte: 1}];
+  string title = 3 [(validate.rules).string = {min_len: 1}];
+  string content = 4 [(validate.rules).string = {min_len: 1}];
   optional string images = 5;
   optional string contact = 6;
-  string device = 7[(validate.rules).string = {min_len: 1}];
-  string platform = 8[(validate.rules).string = {min_len: 1}];
-  string version = 9[(validate.rules).string = {min_len: 1}];
+  string device = 7 [(validate.rules).string = {min_len: 1}];
+  string platform = 8 [(validate.rules).string = {min_len: 1}];
+  string version = 9 [(validate.rules).string = {min_len: 1}];
 }
 
 message CreateFeedbackReply {
@@ -121,18 +141,15 @@ message CreateFeedbackReply {
 }
 
 message DeleteFeedbackRequest {
-  uint32 id = 1[(validate.rules).uint32 = {gte: 1}];
+  uint32 id = 1 [(validate.rules).uint32 = {gte: 1}];
 }
 
-message DeleteFeedbackReply {
-}
+message DeleteFeedbackReply {}
 
 message UpdateFeedbackRequest {
-  uint32 id = 1[(validate.rules).uint32 = {gte: 1}];
-  string status = 2[(validate.rules).string = {min_len: 1}];
+  uint32 id = 1 [(validate.rules).uint32 = {gte: 1}];
+  string status = 2 [(validate.rules).string = {min_len: 1}];
   optional string processedResult = 3;
 }
 
-message UpdateFeedbackReply {
-}
-
+message UpdateFeedbackReply {}

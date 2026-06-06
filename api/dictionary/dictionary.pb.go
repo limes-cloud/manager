@@ -7,12 +7,11 @@
 package dictionary
 
 import (
-	reflect "reflect"
-	sync "sync"
-
 	_ "github.com/envoyproxy/protoc-gen-validate/validate"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	reflect "reflect"
+	sync "sync"
 )
 
 const (
@@ -1992,39 +1991,36 @@ func file_api_dictionary_proto_dictionary_proto_rawDescGZIP() []byte {
 	return file_api_dictionary_proto_dictionary_proto_rawDescData
 }
 
-var (
-	file_api_dictionary_proto_dictionary_proto_msgTypes = make([]protoimpl.MessageInfo, 27)
-	file_api_dictionary_proto_dictionary_proto_goTypes  = []interface{}{
-		(*ListDictionaryRequest)(nil),                    // 0: manager.api.dictionary.ListDictionaryRequest
-		(*ListDictionaryReply)(nil),                      // 1: manager.api.dictionary.ListDictionaryReply
-		(*CreateDictionaryRequest)(nil),                  // 2: manager.api.dictionary.CreateDictionaryRequest
-		(*CreateDictionaryReply)(nil),                    // 3: manager.api.dictionary.CreateDictionaryReply
-		(*UpdateDictionaryRequest)(nil),                  // 4: manager.api.dictionary.UpdateDictionaryRequest
-		(*UpdateDictionaryReply)(nil),                    // 5: manager.api.dictionary.UpdateDictionaryReply
-		(*DeleteDictionaryRequest)(nil),                  // 6: manager.api.dictionary.DeleteDictionaryRequest
-		(*DeleteDictionaryReply)(nil),                    // 7: manager.api.dictionary.DeleteDictionaryReply
-		(*GetDictionaryRequest)(nil),                     // 8: manager.api.dictionary.GetDictionaryRequest
-		(*GetDictionaryReply)(nil),                       // 9: manager.api.dictionary.GetDictionaryReply
-		(*GetDictionaryValuesRequest)(nil),               // 10: manager.api.dictionary.GetDictionaryValuesRequest
-		(*GetDictionaryValuesReply)(nil),                 // 11: manager.api.dictionary.GetDictionaryValuesReply
-		(*ListDictionaryValueRequest)(nil),               // 12: manager.api.dictionary.ListDictionaryValueRequest
-		(*ListDictionaryValueReply)(nil),                 // 13: manager.api.dictionary.ListDictionaryValueReply
-		(*CreateDictionaryValueRequest)(nil),             // 14: manager.api.dictionary.CreateDictionaryValueRequest
-		(*CreateDictionaryValueReply)(nil),               // 15: manager.api.dictionary.CreateDictionaryValueReply
-		(*UpdateDictionaryValueRequest)(nil),             // 16: manager.api.dictionary.UpdateDictionaryValueRequest
-		(*UpdateDictionaryValueReply)(nil),               // 17: manager.api.dictionary.UpdateDictionaryValueReply
-		(*UpdateDictionaryValueStatusRequest)(nil),       // 18: manager.api.dictionary.UpdateDictionaryValueStatusRequest
-		(*UpdateDictionaryValueStatusReply)(nil),         // 19: manager.api.dictionary.UpdateDictionaryValueStatusReply
-		(*DeleteDictionaryValueRequest)(nil),             // 20: manager.api.dictionary.DeleteDictionaryValueRequest
-		(*DeleteDictionaryValueReply)(nil),               // 21: manager.api.dictionary.DeleteDictionaryValueReply
-		(*ListDictionaryReply_Dictionary)(nil),           // 22: manager.api.dictionary.ListDictionaryReply.Dictionary
-		(*GetDictionaryValuesReply_Value)(nil),           // 23: manager.api.dictionary.GetDictionaryValuesReply.Value
-		nil,                                              // 24: manager.api.dictionary.GetDictionaryValuesReply.DictEntry
-		(*GetDictionaryValuesReply_Value_Item)(nil),      // 25: manager.api.dictionary.GetDictionaryValuesReply.Value.Item
-		(*ListDictionaryValueReply_DictionaryValue)(nil), // 26: manager.api.dictionary.ListDictionaryValueReply.DictionaryValue
-	}
-)
-
+var file_api_dictionary_proto_dictionary_proto_msgTypes = make([]protoimpl.MessageInfo, 27)
+var file_api_dictionary_proto_dictionary_proto_goTypes = []interface{}{
+	(*ListDictionaryRequest)(nil),                    // 0: manager.api.dictionary.ListDictionaryRequest
+	(*ListDictionaryReply)(nil),                      // 1: manager.api.dictionary.ListDictionaryReply
+	(*CreateDictionaryRequest)(nil),                  // 2: manager.api.dictionary.CreateDictionaryRequest
+	(*CreateDictionaryReply)(nil),                    // 3: manager.api.dictionary.CreateDictionaryReply
+	(*UpdateDictionaryRequest)(nil),                  // 4: manager.api.dictionary.UpdateDictionaryRequest
+	(*UpdateDictionaryReply)(nil),                    // 5: manager.api.dictionary.UpdateDictionaryReply
+	(*DeleteDictionaryRequest)(nil),                  // 6: manager.api.dictionary.DeleteDictionaryRequest
+	(*DeleteDictionaryReply)(nil),                    // 7: manager.api.dictionary.DeleteDictionaryReply
+	(*GetDictionaryRequest)(nil),                     // 8: manager.api.dictionary.GetDictionaryRequest
+	(*GetDictionaryReply)(nil),                       // 9: manager.api.dictionary.GetDictionaryReply
+	(*GetDictionaryValuesRequest)(nil),               // 10: manager.api.dictionary.GetDictionaryValuesRequest
+	(*GetDictionaryValuesReply)(nil),                 // 11: manager.api.dictionary.GetDictionaryValuesReply
+	(*ListDictionaryValueRequest)(nil),               // 12: manager.api.dictionary.ListDictionaryValueRequest
+	(*ListDictionaryValueReply)(nil),                 // 13: manager.api.dictionary.ListDictionaryValueReply
+	(*CreateDictionaryValueRequest)(nil),             // 14: manager.api.dictionary.CreateDictionaryValueRequest
+	(*CreateDictionaryValueReply)(nil),               // 15: manager.api.dictionary.CreateDictionaryValueReply
+	(*UpdateDictionaryValueRequest)(nil),             // 16: manager.api.dictionary.UpdateDictionaryValueRequest
+	(*UpdateDictionaryValueReply)(nil),               // 17: manager.api.dictionary.UpdateDictionaryValueReply
+	(*UpdateDictionaryValueStatusRequest)(nil),       // 18: manager.api.dictionary.UpdateDictionaryValueStatusRequest
+	(*UpdateDictionaryValueStatusReply)(nil),         // 19: manager.api.dictionary.UpdateDictionaryValueStatusReply
+	(*DeleteDictionaryValueRequest)(nil),             // 20: manager.api.dictionary.DeleteDictionaryValueRequest
+	(*DeleteDictionaryValueReply)(nil),               // 21: manager.api.dictionary.DeleteDictionaryValueReply
+	(*ListDictionaryReply_Dictionary)(nil),           // 22: manager.api.dictionary.ListDictionaryReply.Dictionary
+	(*GetDictionaryValuesReply_Value)(nil),           // 23: manager.api.dictionary.GetDictionaryValuesReply.Value
+	nil,                                              // 24: manager.api.dictionary.GetDictionaryValuesReply.DictEntry
+	(*GetDictionaryValuesReply_Value_Item)(nil),      // 25: manager.api.dictionary.GetDictionaryValuesReply.Value.Item
+	(*ListDictionaryValueReply_DictionaryValue)(nil), // 26: manager.api.dictionary.ListDictionaryValueReply.DictionaryValue
+}
 var file_api_dictionary_proto_dictionary_proto_depIdxs = []int32{
 	22, // 0: manager.api.dictionary.ListDictionaryReply.list:type_name -> manager.api.dictionary.ListDictionaryReply.Dictionary
 	24, // 1: manager.api.dictionary.GetDictionaryValuesReply.dict:type_name -> manager.api.dictionary.GetDictionaryValuesReply.DictEntry

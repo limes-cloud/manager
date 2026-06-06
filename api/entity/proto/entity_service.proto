@@ -2,118 +2,103 @@ syntax = "proto3";
 
 package manager.api.entity;
 
-option go_package = "manager/api/entity;entity";
-option java_multiple_files = true;
-option java_package = "manager.api.entity";
-
 import "api/entity/proto/entity.proto";
 import "google/api/annotations.proto";
 import "google/protobuf/empty.proto";
 
+option go_package = "manager/api/entity;entity";
+option java_multiple_files = true;
+option java_package = "manager.api.entity";
 
-service Entity{
+service Entity {
   // LoadEntity 载入全部系统的实体
-  rpc LoadEntity (google.protobuf.Empty) returns (LoadEntityReply) {
-    option (google.api.http) = {
-      get: "/manager/api/entity/load"
-    };
+  rpc LoadEntity(google.protobuf.Empty) returns (LoadEntityReply) {
+    option (google.api.http) = {get: "/manager/api/entity/load"};
   }
 
   // ImportEntity 载入全部系统的实体
-  rpc ImportEntity (ImportEntityRequest) returns (google.protobuf.Empty) {
+  rpc ImportEntity(ImportEntityRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
-      post: "/manager/api/entity/import",
+      post: "/manager/api/entity/import"
       body: "*"
     };
   }
-  
+
   // ListEntity 获取实体列表
-  rpc ListEntity (ListEntityRequest) returns (ListEntityReply) {
-    option (google.api.http) = {
-      get: "/manager/api/entities",
-    };
+  rpc ListEntity(ListEntityRequest) returns (ListEntityReply) {
+    option (google.api.http) = {get: "/manager/api/entities"};
   }
 
   // CreateEntity 创建实体
-  rpc CreateEntity (CreateEntityRequest) returns (CreateEntityReply) {
+  rpc CreateEntity(CreateEntityRequest) returns (CreateEntityReply) {
     option (google.api.http) = {
-      post: "/manager/api/entity",
+      post: "/manager/api/entity"
       body: "*"
     };
   }
 
   // UpdateEntity 更新实体
-  rpc UpdateEntity (UpdateEntityRequest) returns (UpdateEntityReply) {
+  rpc UpdateEntity(UpdateEntityRequest) returns (UpdateEntityReply) {
     option (google.api.http) = {
-      put: "/manager/api/entity",
+      put: "/manager/api/entity"
       body: "*"
     };
   }
 
   // DeleteEntity 删除实体
-  rpc DeleteEntity (DeleteEntityRequest) returns (DeleteEntityReply) {
-    option (google.api.http) = {
-      delete: "/manager/api/entity",
-    };
+  rpc DeleteEntity(DeleteEntityRequest) returns (DeleteEntityReply) {
+    option (google.api.http) = {delete: "/manager/api/entity"};
   }
 
   // ListEntityField 获取实体字段列表
-  rpc ListEntityField (ListEntityFieldRequest) returns (ListEntityFieldReply) {
-    option (google.api.http) = {
-      get: "/manager/api/entity/fields",
-    };
+  rpc ListEntityField(ListEntityFieldRequest) returns (ListEntityFieldReply) {
+    option (google.api.http) = {get: "/manager/api/entity/fields"};
   }
 
   // CreateEntityField 创建实体字段
-  rpc CreateEntityField (CreateEntityFieldRequest) returns (CreateEntityFieldReply) {
+  rpc CreateEntityField(CreateEntityFieldRequest) returns (CreateEntityFieldReply) {
     option (google.api.http) = {
-      post: "/manager/api/entity/field",
+      post: "/manager/api/entity/field"
       body: "*"
     };
   }
 
   // UpdateEntityField 更新实体字段
-  rpc UpdateEntityField (UpdateEntityFieldRequest) returns (UpdateEntityFieldReply) {
+  rpc UpdateEntityField(UpdateEntityFieldRequest) returns (UpdateEntityFieldReply) {
     option (google.api.http) = {
-      put: "/manager/api/entity/field",
+      put: "/manager/api/entity/field"
       body: "*"
     };
   }
 
   // DeleteEntityField 删除实体字段
-  rpc DeleteEntityField (DeleteEntityFieldRequest) returns (DeleteEntityFieldReply) {
-    option (google.api.http) = {
-      delete: "/manager/api/entity/field",
-    };
+  rpc DeleteEntityField(DeleteEntityFieldRequest) returns (DeleteEntityFieldReply) {
+    option (google.api.http) = {delete: "/manager/api/entity/field"};
   }
 
   // ListEntityRule 获取实体规则列表
-  rpc ListEntityRule (ListEntityRuleRequest) returns (ListEntityRuleReply) {
-    option (google.api.http) = {
-      get: "/manager/api/entity/rules",
-    };
+  rpc ListEntityRule(ListEntityRuleRequest) returns (ListEntityRuleReply) {
+    option (google.api.http) = {get: "/manager/api/entity/rules"};
   }
 
   // CreateEntityRule 创建实体规则
-  rpc CreateEntityRule (CreateEntityRuleRequest) returns (CreateEntityRuleReply) {
+  rpc CreateEntityRule(CreateEntityRuleRequest) returns (CreateEntityRuleReply) {
     option (google.api.http) = {
-      post: "/manager/api/entity/rule",
+      post: "/manager/api/entity/rule"
       body: "*"
     };
   }
 
   // UpdateEntityRule 更新实体规则
-  rpc UpdateEntityRule (UpdateEntityRuleRequest) returns (UpdateEntityRuleReply) {
+  rpc UpdateEntityRule(UpdateEntityRuleRequest) returns (UpdateEntityRuleReply) {
     option (google.api.http) = {
-      put: "/manager/api/entity/rule",
+      put: "/manager/api/entity/rule"
       body: "*"
     };
   }
 
   // DeleteEntityRule 删除实体规则
-  rpc DeleteEntityRule (DeleteEntityRuleRequest) returns (DeleteEntityRuleReply) {
-    option (google.api.http) = {
-      delete: "/manager/api/entity/rule",
-    };
+  rpc DeleteEntityRule(DeleteEntityRuleRequest) returns (DeleteEntityRuleReply) {
+    option (google.api.http) = {delete: "/manager/api/entity/rule"};
   }
 }

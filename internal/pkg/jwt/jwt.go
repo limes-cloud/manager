@@ -24,16 +24,6 @@ import (
 )
 
 type JWT interface {
-	//Parse(ctx context.Context, dst any) error
-	//
-	//ParseMapClaims(ctx context.Context) (map[string]any, error)
-	//
-	//GetToken(ctx context.Context) string
-	//SetToken(ctx context.Context, token string) context.Context
-
-	// SetInfo(req *http.Request, data string)
-	// GetInfo(ctx context.Context, dst any) error
-
 	ParseByToken(token string, dst any) error
 
 	NewToken(m map[string]any) (string, error)
@@ -42,7 +32,7 @@ type JWT interface {
 
 	AddBlacklist(token string)
 
-	Renewal(ctx context.Context) (string, error)
+	Renewal(token string) (string, error)
 
 	SetUnique(key, token string) error
 
@@ -193,11 +183,11 @@ func (j *jwt) SetToken(ctx context.Context, token string) context.Context {
 }
 
 // Renewal token续期
-func (j *jwt) Renewal(ctx context.Context) (string, error) {
-	token := j.GetToken(ctx)
+func (j *jwt) Renewal(token string) (string, error) {
 	if token == "" {
-		return "", errors.New("token is miss")
+		return "", errors.New("token is empty")
 	}
+	token = token[:strings.LastIndex(token, ".")]
 
 	tokenInfo, _ := jwtv5.Parse(token, func(token *jwtv5.Token) (any, error) {
 		return []byte(j.conf.Secret), nil

@@ -8,33 +8,28 @@ package notice
 
 import (
 	context "context"
-
 	http "github.com/go-kratos/kratos/v2/transport/http"
 	binding "github.com/go-kratos/kratos/v2/transport/http/binding"
 )
 
 // This is a compile-time assertion to ensure that this generated file
 // is compatible with the kratos package it is being compiled against.
-var (
-	_ = new(context.Context)
-	_ = binding.EncodeURL
-)
+var _ = new(context.Context)
+var _ = binding.EncodeURL
 
 const _ = http.SupportPackageIsVersion1
 
-const (
-	OperationNoticeCreateNotice         = "/manager.api.notice.Notice/CreateNotice"
-	OperationNoticeCreateNoticeClassify = "/manager.api.notice.Notice/CreateNoticeClassify"
-	OperationNoticeDeleteNotice         = "/manager.api.notice.Notice/DeleteNotice"
-	OperationNoticeDeleteNoticeClassify = "/manager.api.notice.Notice/DeleteNoticeClassify"
-	OperationNoticeGetNotice            = "/manager.api.notice.Notice/GetNotice"
-	OperationNoticeGetVisibleNotice     = "/manager.api.notice.Notice/GetVisibleNotice"
-	OperationNoticeListNotice           = "/manager.api.notice.Notice/ListNotice"
-	OperationNoticeListNoticeClassify   = "/manager.api.notice.Notice/ListNoticeClassify"
-	OperationNoticeListVisibleNotice    = "/manager.api.notice.Notice/ListVisibleNotice"
-	OperationNoticeUpdateNotice         = "/manager.api.notice.Notice/UpdateNotice"
-	OperationNoticeUpdateNoticeClassify = "/manager.api.notice.Notice/UpdateNoticeClassify"
-)
+const OperationNoticeCreateNotice = "/manager.api.notice.Notice/CreateNotice"
+const OperationNoticeCreateNoticeClassify = "/manager.api.notice.Notice/CreateNoticeClassify"
+const OperationNoticeDeleteNotice = "/manager.api.notice.Notice/DeleteNotice"
+const OperationNoticeDeleteNoticeClassify = "/manager.api.notice.Notice/DeleteNoticeClassify"
+const OperationNoticeGetNotice = "/manager.api.notice.Notice/GetNotice"
+const OperationNoticeGetVisibleNotice = "/manager.api.notice.Notice/GetVisibleNotice"
+const OperationNoticeListNotice = "/manager.api.notice.Notice/ListNotice"
+const OperationNoticeListNoticeClassify = "/manager.api.notice.Notice/ListNoticeClassify"
+const OperationNoticeListVisibleNotice = "/manager.api.notice.Notice/ListVisibleNotice"
+const OperationNoticeUpdateNotice = "/manager.api.notice.Notice/UpdateNotice"
+const OperationNoticeUpdateNoticeClassify = "/manager.api.notice.Notice/UpdateNoticeClassify"
 
 type NoticeHTTPServer interface {
 	// CreateNotice CreateNotice 创建通知信息

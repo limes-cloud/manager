@@ -1,0 +1,30 @@
+{
+  "[proto]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "bufbuild.vscode-buf"
+  },
+  "[go]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "golang.go",
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": "always"
+    }
+  },
+  "gopls": {
+    "formatting.gofumpt": false,
+    "ui.semanticTokens": true,
+    "formatting.local": "github.com/limes-cloud/manager"
+  },
+  "go.formatTool": "goimports",
+  "go.lintTool": "golangci-lint",
+  "go.useLanguageServer": true,
+  "emeraldwalk.runonsave": {
+    "commands": [
+      {
+        "match": "\\.proto$",
+        "isAsync": true,
+        "cmd": "cd ${workspaceRoot} && kratosx proto client $(echo ${file} | sed 's|^${workspaceRoot}/||')"
+      }
+    ]
+  }
+}

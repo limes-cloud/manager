@@ -8,24 +8,19 @@ package scope
 
 import (
 	context "context"
-
 	http "github.com/go-kratos/kratos/v2/transport/http"
 	binding "github.com/go-kratos/kratos/v2/transport/http/binding"
 )
 
 // This is a compile-time assertion to ensure that this generated file
 // is compatible with the kratos package it is being compiled against.
-var (
-	_ = new(context.Context)
-	_ = binding.EncodeURL
-)
+var _ = new(context.Context)
+var _ = binding.EncodeURL
 
 const _ = http.SupportPackageIsVersion1
 
-const (
-	OperationScopeGetScope      = "/manager.api.scope.Scope/GetScope"
-	OperationScopeGetUserDeptId = "/manager.api.scope.Scope/GetUserDeptId"
-)
+const OperationScopeGetScope = "/manager.api.scope.Scope/GetScope"
+const OperationScopeGetUserDeptId = "/manager.api.scope.Scope/GetUserDeptId"
 
 type ScopeHTTPServer interface {
 	GetScope(context.Context, *GetScopeRequest) (*GetScopeReply, error)

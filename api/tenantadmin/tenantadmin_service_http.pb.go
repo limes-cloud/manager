@@ -8,25 +8,20 @@ package tenantadmin
 
 import (
 	context "context"
-
 	http "github.com/go-kratos/kratos/v2/transport/http"
 	binding "github.com/go-kratos/kratos/v2/transport/http/binding"
 )
 
 // This is a compile-time assertion to ensure that this generated file
 // is compatible with the kratos package it is being compiled against.
-var (
-	_ = new(context.Context)
-	_ = binding.EncodeURL
-)
+var _ = new(context.Context)
+var _ = binding.EncodeURL
 
 const _ = http.SupportPackageIsVersion1
 
-const (
-	OperationTenantAdminCreateTenantAdmin = "/manager.api.tenantadmin.TenantAdmin/CreateTenantAdmin"
-	OperationTenantAdminDeleteTenantAdmin = "/manager.api.tenantadmin.TenantAdmin/DeleteTenantAdmin"
-	OperationTenantAdminListTenantAdmin   = "/manager.api.tenantadmin.TenantAdmin/ListTenantAdmin"
-)
+const OperationTenantAdminCreateTenantAdmin = "/manager.api.tenantadmin.TenantAdmin/CreateTenantAdmin"
+const OperationTenantAdminDeleteTenantAdmin = "/manager.api.tenantadmin.TenantAdmin/DeleteTenantAdmin"
+const OperationTenantAdminListTenantAdmin = "/manager.api.tenantadmin.TenantAdmin/ListTenantAdmin"
 
 type TenantAdminHTTPServer interface {
 	CreateTenantAdmin(context.Context, *CreateTenantAdminRequest) (*CreateTenantAdminReply, error)

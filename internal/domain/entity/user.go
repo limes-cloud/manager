@@ -9,6 +9,7 @@ import (
 type User struct {
 	Avatar    string      `json:"avatar" gorm:"column:avatar"`                       // 用户头像
 	Nickname  string      `json:"nickname" gorm:"column:nickname"`                   // 用户昵称
+	Signature *string     `json:"signature" gorm:"column:signature"`                 // 用户签名
 	Username  string      `json:"username" gorm:"column:username"`                   // 用户账户
 	Password  string      `json:"password" gorm:"column:password"`                   // 用户密码
 	Status    *bool       `json:"status" gorm:"column:status"`                       // 用户状态

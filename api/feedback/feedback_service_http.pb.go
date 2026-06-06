@@ -8,30 +8,25 @@ package feedback
 
 import (
 	context "context"
-
 	http "github.com/go-kratos/kratos/v2/transport/http"
 	binding "github.com/go-kratos/kratos/v2/transport/http/binding"
 )
 
 // This is a compile-time assertion to ensure that this generated file
 // is compatible with the kratos package it is being compiled against.
-var (
-	_ = new(context.Context)
-	_ = binding.EncodeURL
-)
+var _ = new(context.Context)
+var _ = binding.EncodeURL
 
 const _ = http.SupportPackageIsVersion1
 
-const (
-	OperationFeedbackCreateFeedback         = "/manager.api.feedback.Feedback/CreateFeedback"
-	OperationFeedbackCreateFeedbackClassify = "/manager.api.feedback.Feedback/CreateFeedbackClassify"
-	OperationFeedbackDeleteFeedback         = "/manager.api.feedback.Feedback/DeleteFeedback"
-	OperationFeedbackDeleteFeedbackClassify = "/manager.api.feedback.Feedback/DeleteFeedbackClassify"
-	OperationFeedbackListFeedback           = "/manager.api.feedback.Feedback/ListFeedback"
-	OperationFeedbackListFeedbackClassify   = "/manager.api.feedback.Feedback/ListFeedbackClassify"
-	OperationFeedbackUpdateFeedback         = "/manager.api.feedback.Feedback/UpdateFeedback"
-	OperationFeedbackUpdateFeedbackClassify = "/manager.api.feedback.Feedback/UpdateFeedbackClassify"
-)
+const OperationFeedbackCreateFeedback = "/manager.api.feedback.Feedback/CreateFeedback"
+const OperationFeedbackCreateFeedbackClassify = "/manager.api.feedback.Feedback/CreateFeedbackClassify"
+const OperationFeedbackDeleteFeedback = "/manager.api.feedback.Feedback/DeleteFeedback"
+const OperationFeedbackDeleteFeedbackClassify = "/manager.api.feedback.Feedback/DeleteFeedbackClassify"
+const OperationFeedbackListFeedback = "/manager.api.feedback.Feedback/ListFeedback"
+const OperationFeedbackListFeedbackClassify = "/manager.api.feedback.Feedback/ListFeedbackClassify"
+const OperationFeedbackUpdateFeedback = "/manager.api.feedback.Feedback/UpdateFeedback"
+const OperationFeedbackUpdateFeedbackClassify = "/manager.api.feedback.Feedback/UpdateFeedbackClassify"
 
 type FeedbackHTTPServer interface {
 	// CreateFeedback CreateFeedback 创建反馈建议

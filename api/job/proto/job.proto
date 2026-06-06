@@ -2,18 +2,32 @@ syntax = "proto3";
 
 package manager.api.job;
 
-option go_package = "manager/api/job;job";
-option java_multiple_files = true;
-option java_package = "manager.api.job";
-option java_outer_classname = "DeptV1";
-
 import "validate/validate.proto";
 
+option go_package = "manager/api/job;job";
+option java_multiple_files = true;
+option java_outer_classname = "DeptV1";
+option java_package = "manager.api.job";
+
 message ListJobRequest {
-  uint32 page = 1[(validate.rules).uint32 = {gt: 0}];
-  uint32 pageSize = 2[(validate.rules).uint32 = {gt: 0,lte:50}];
-  optional string order = 3[(validate.rules).string = {in: ["asc","desc"]}];
-  optional string orderBy = 4[(validate.rules).string = {in: ["id","created_at","updated_at"]}];
+  uint32 page = 1 [(validate.rules).uint32 = {gt: 0}];
+  uint32 pageSize = 2 [(validate.rules).uint32 = {
+    gt: 0
+    lte: 50
+  }];
+  optional string order = 3 [(validate.rules).string = {
+    in: [
+      "asc",
+      "desc"
+    ]
+  }];
+  optional string orderBy = 4 [(validate.rules).string = {
+    in: [
+      "id",
+      "created_at",
+      "updated_at"
+    ]
+  }];
   optional string name = 5;
   optional string keyword = 6;
   optional bool status = 7;
@@ -36,8 +50,8 @@ message ListJobReply {
 }
 
 message CreateJobRequest {
-  string name = 1[(validate.rules).string = {min_len: 1}];
-  string keyword = 2[(validate.rules).string = {min_len: 1}];
+  string name = 1 [(validate.rules).string = {min_len: 1}];
+  string keyword = 2 [(validate.rules).string = {min_len: 1}];
   optional string description = 3;
   uint32 weight = 4;
 }
@@ -47,19 +61,17 @@ message CreateJobReply {
 }
 
 message UpdateJobRequest {
-  uint32 id = 1[(validate.rules).uint32 = {gt: 0}];
-  optional string name = 2[(validate.rules).string = {max_len: 128}];
+  uint32 id = 1 [(validate.rules).uint32 = {gt: 0}];
+  optional string name = 2 [(validate.rules).string = {max_len: 128}];
   optional string description = 3;
   optional bool status = 4;
   optional uint32 weight = 5;
 }
 
-message UpdateJobReply {
-}
+message UpdateJobReply {}
 
 message DeleteJobRequest {
-  uint32 id = 1[(validate.rules).uint32 = {gte:0}];
+  uint32 id = 1 [(validate.rules).uint32 = {gte: 0}];
 }
 
-message DeleteJobReply {
-}
+message DeleteJobReply {}

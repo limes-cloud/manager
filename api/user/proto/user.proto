@@ -2,21 +2,20 @@ syntax = "proto3";
 
 package manager.api.user;
 
+import "validate/validate.proto";
+
 option go_package = "manager/api/user;user";
 option java_multiple_files = true;
 option java_package = "manager.api.user";
 
-import "validate/validate.proto";
-
-
-message GetCurrentUserRequest{
+message GetCurrentUserRequest {
   optional string app = 1;
 }
 
-message GetUserRequest{
- optional uint32 id = 1;
- optional string username = 2;
- optional string app = 3;
+message GetUserRequest {
+  optional uint32 id = 1;
+  optional string username = 2;
+  optional string app = 3;
 }
 
 message UserObject {
@@ -32,7 +31,7 @@ message UserObject {
     string name = 2;
   }
 
-  message UserDept{
+  message UserDept {
     uint32 deptId = 1;
     uint32 jobId = 2;
     Dept dept = 3;
@@ -41,22 +40,26 @@ message UserObject {
 
   uint32 id = 1;
   string nickname = 2;
-  string username = 3;
-  string avatar = 4;
-  string email = 5;
-  string phone = 6;
-  optional bool status = 7;
-  uint32 loggedAt = 8;
-  uint32 createdAt = 9;
-  uint32 updatedAt = 10;
-  string setting = 11;
-  map<string, string> infos = 12;
-  repeated UserDept userDepts = 13;
+  optional string signature = 3;
+  string username = 4;
+  string avatar = 5;
+  string email = 6;
+  string phone = 7;
+  optional bool status = 8;
+  uint32 loggedAt = 9;
+  uint32 createdAt = 10;
+  uint32 updatedAt = 11;
+  string setting = 12;
+  map<string, string> infos = 13;
+  repeated UserDept userDepts = 14;
 }
 
-message ListUserRequest{
-  uint32 page = 1[(validate.rules).uint32 = {gte: 1}];
-  uint32 pageSize = 2[(validate.rules).uint32 = {gte: 1,lte:50}];
+message ListUserRequest {
+  uint32 page = 1 [(validate.rules).uint32 = {gte: 1}];
+  uint32 pageSize = 2 [(validate.rules).uint32 = {
+    gte: 1
+    lte: 50
+  }];
   optional uint32 appId = 3;
   optional uint32 deptId = 4;
   optional uint32 jobId = 5;
@@ -75,8 +78,15 @@ message ListUserReply {
 
 message CreateUserRequest {
   string avatar = 1;
-  string nickname = 2[(validate.rules).string = {min_len: 1,max_len: 64}];
-  string username = 3[(validate.rules).string = {min_len: 6,max_len: 32}];
+  string nickname = 2 [(validate.rules).string = {
+    min_len: 1
+    max_len: 64
+  }];
+  string username = 3 [(validate.rules).string = {
+    min_len: 6
+    max_len: 32
+  }];
+  optional string signature = 4;
   map<string, string> infos = 6;
 }
 
@@ -85,67 +95,87 @@ message CreateUserReply {
 }
 
 message UpdateUserRequest {
-  uint32 id = 1[(validate.rules).uint32 = {gte: 1}];
+  uint32 id = 1 [(validate.rules).uint32 = {gte: 1}];
   optional string avatar = 2;
-  optional string nickname = 3[(validate.rules).string = {min_len: 1,max_len: 64}];
-  optional bool status = 6;
-  optional string reason = 7;
-  map<string, string> infos = 8;
+  optional string nickname = 3 [(validate.rules).string = {
+    min_len: 1
+    max_len: 64
+  }];
+  optional string signature = 4;
+  optional bool status = 5;
+  optional string reason = 6;
+  map<string, string> infos = 7;
 }
 
-message UpdateUserReply {
-}
+message UpdateUserReply {}
 
 message DeleteUserRequest {
-  uint32 id = 1[(validate.rules).uint32 = {gte: 1}];
+  uint32 id = 1 [(validate.rules).uint32 = {gte: 1}];
 }
 
-message DeleteUserReply {
-}
+message DeleteUserReply {}
 
 message ResetPasswordRequest {
   uint32 id = 1;
 }
 
-message UpdateCurrentUserSettingRequest{
-  string app = 1[(validate.rules).string = {min_len: 1,max_len: 64}];
-  string setting = 2[(validate.rules).string = {min_len: 4}];
+message UpdateCurrentUserSettingRequest {
+  string app = 1 [(validate.rules).string = {
+    min_len: 1
+    max_len: 64
+  }];
+  string setting = 2 [(validate.rules).string = {min_len: 4}];
 }
 
 message UpdateCurrentUserRequest {
-  optional string nickname = 1[(validate.rules).string = {min_len: 1,max_len: 64}];
-  optional string avatar= 2[(validate.rules).string = {min_len: 1,max_len: 64}];
-  map<string, string> infos = 3;
+  optional string nickname = 1 [(validate.rules).string = {
+    min_len: 1
+    max_len: 64
+  }];
+  optional string avatar = 2 [(validate.rules).string = {
+    min_len: 1
+    max_len: 64
+  }];
+  optional string signature = 3;
+  map<string, string> infos = 4;
 }
 
-message UpdateCurrentUserReply {
-}
-
+message UpdateCurrentUserReply {}
 
 message UpdateCurrentUserPasswordRequest {
-   string oldPassword = 1[(validate.rules).string = {min_len: 1,max_len: 64}];
-   string password= 2[(validate.rules).string = {min_len: 1,max_len: 64}];
+  string oldPassword = 1 [(validate.rules).string = {
+    min_len: 1
+    max_len: 64
+  }];
+  string password = 2 [(validate.rules).string = {
+    min_len: 1
+    max_len: 64
+  }];
 }
 
-message UpdateCurrentUserPasswordReply {
-}
+message UpdateCurrentUserPasswordReply {}
 
 message UpdateUserinfoRequest {
   message Info {
-    string field = 1[(validate.rules).string = {min_len: 1,max_len: 64}];
-    string value = 2[(validate.rules).string = {min_len: 1,max_len: 500}];
+    string field = 1 [(validate.rules).string = {
+      min_len: 1
+      max_len: 64
+    }];
+    string value = 2 [(validate.rules).string = {
+      min_len: 1
+      max_len: 500
+    }];
   }
-  uint32 id = 1[(validate.rules).uint32 = {gte: 1}];
+  uint32 id = 1 [(validate.rules).uint32 = {gte: 1}];
 }
 
 message UpdateUserinfoReply {}
 
-
-message ResetUserPasswordRequest{
-    uint32 id = 1[(validate.rules).uint32 = {gte: 1}];
+message ResetUserPasswordRequest {
+  uint32 id = 1 [(validate.rules).uint32 = {gte: 1}];
 }
 
-message OfflineUserRequest{
-  uint32 userId = 1[(validate.rules).uint32 = {gte: 1}];
+message OfflineUserRequest {
+  uint32 userId = 1 [(validate.rules).uint32 = {gte: 1}];
   repeated uint32 appIds = 2;
 }

@@ -8,7 +8,6 @@ package user
 
 import (
 	context "context"
-
 	http "github.com/go-kratos/kratos/v2/transport/http"
 	binding "github.com/go-kratos/kratos/v2/transport/http/binding"
 	emptypb "google.golang.org/protobuf/types/known/emptypb"
@@ -16,27 +15,23 @@ import (
 
 // This is a compile-time assertion to ensure that this generated file
 // is compatible with the kratos package it is being compiled against.
-var (
-	_ = new(context.Context)
-	_ = binding.EncodeURL
-)
+var _ = new(context.Context)
+var _ = binding.EncodeURL
 
 const _ = http.SupportPackageIsVersion1
 
-const (
-	OperationUserCreateUser                = "/manager.api.user.User/CreateUser"
-	OperationUserDeleteUser                = "/manager.api.user.User/DeleteUser"
-	OperationUserGetCurrentUser            = "/manager.api.user.User/GetCurrentUser"
-	OperationUserGetUser                   = "/manager.api.user.User/GetUser"
-	OperationUserListUser                  = "/manager.api.user.User/ListUser"
-	OperationUserOfflineUser               = "/manager.api.user.User/OfflineUser"
-	OperationUserResetPassword             = "/manager.api.user.User/ResetPassword"
-	OperationUserUpdateCurrentUser         = "/manager.api.user.User/UpdateCurrentUser"
-	OperationUserUpdateCurrentUserPassword = "/manager.api.user.User/UpdateCurrentUserPassword"
-	OperationUserUpdateCurrentUserSetting  = "/manager.api.user.User/UpdateCurrentUserSetting"
-	OperationUserUpdateUser                = "/manager.api.user.User/UpdateUser"
-	OperationUserUpdateUserinfo            = "/manager.api.user.User/UpdateUserinfo"
-)
+const OperationUserCreateUser = "/manager.api.user.User/CreateUser"
+const OperationUserDeleteUser = "/manager.api.user.User/DeleteUser"
+const OperationUserGetCurrentUser = "/manager.api.user.User/GetCurrentUser"
+const OperationUserGetUser = "/manager.api.user.User/GetUser"
+const OperationUserListUser = "/manager.api.user.User/ListUser"
+const OperationUserOfflineUser = "/manager.api.user.User/OfflineUser"
+const OperationUserResetPassword = "/manager.api.user.User/ResetPassword"
+const OperationUserUpdateCurrentUser = "/manager.api.user.User/UpdateCurrentUser"
+const OperationUserUpdateCurrentUserPassword = "/manager.api.user.User/UpdateCurrentUserPassword"
+const OperationUserUpdateCurrentUserSetting = "/manager.api.user.User/UpdateCurrentUserSetting"
+const OperationUserUpdateUser = "/manager.api.user.User/UpdateUser"
+const OperationUserUpdateUserinfo = "/manager.api.user.User/UpdateUserinfo"
 
 type UserHTTPServer interface {
 	// CreateUser CreateUser 创建用户信息

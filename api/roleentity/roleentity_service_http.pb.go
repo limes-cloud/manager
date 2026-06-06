@@ -8,26 +8,21 @@ package roleentity
 
 import (
 	context "context"
-
 	http "github.com/go-kratos/kratos/v2/transport/http"
 	binding "github.com/go-kratos/kratos/v2/transport/http/binding"
 )
 
 // This is a compile-time assertion to ensure that this generated file
 // is compatible with the kratos package it is being compiled against.
-var (
-	_ = new(context.Context)
-	_ = binding.EncodeURL
-)
+var _ = new(context.Context)
+var _ = binding.EncodeURL
 
 const _ = http.SupportPackageIsVersion1
 
-const (
-	OperationRoleEntityCreateRoleEntity = "/manager.api.roleentity.RoleEntity/CreateRoleEntity"
-	OperationRoleEntityDeleteRoleEntity = "/manager.api.roleentity.RoleEntity/DeleteRoleEntity"
-	OperationRoleEntityListRoleEntity   = "/manager.api.roleentity.RoleEntity/ListRoleEntity"
-	OperationRoleEntityUpdateRoleEntity = "/manager.api.roleentity.RoleEntity/UpdateRoleEntity"
-)
+const OperationRoleEntityCreateRoleEntity = "/manager.api.roleentity.RoleEntity/CreateRoleEntity"
+const OperationRoleEntityDeleteRoleEntity = "/manager.api.roleentity.RoleEntity/DeleteRoleEntity"
+const OperationRoleEntityListRoleEntity = "/manager.api.roleentity.RoleEntity/ListRoleEntity"
+const OperationRoleEntityUpdateRoleEntity = "/manager.api.roleentity.RoleEntity/UpdateRoleEntity"
 
 type RoleEntityHTTPServer interface {
 	// CreateRoleEntity CreateRoleEntity 创建角色数据信息

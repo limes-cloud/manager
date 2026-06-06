@@ -8,32 +8,27 @@ package dept
 
 import (
 	context "context"
-
 	http "github.com/go-kratos/kratos/v2/transport/http"
 	binding "github.com/go-kratos/kratos/v2/transport/http/binding"
 )
 
 // This is a compile-time assertion to ensure that this generated file
 // is compatible with the kratos package it is being compiled against.
-var (
-	_ = new(context.Context)
-	_ = binding.EncodeURL
-)
+var _ = new(context.Context)
+var _ = binding.EncodeURL
 
 const _ = http.SupportPackageIsVersion1
 
-const (
-	OperationDeptCreateDept         = "/manager.api.dept.Dept/CreateDept"
-	OperationDeptCreateDeptClassify = "/manager.api.dept.Dept/CreateDeptClassify"
-	OperationDeptDeleteDept         = "/manager.api.dept.Dept/DeleteDept"
-	OperationDeptDeleteDeptClassify = "/manager.api.dept.Dept/DeleteDeptClassify"
-	OperationDeptGetDept            = "/manager.api.dept.Dept/GetDept"
-	OperationDeptListCurrentDept    = "/manager.api.dept.Dept/ListCurrentDept"
-	OperationDeptListDept           = "/manager.api.dept.Dept/ListDept"
-	OperationDeptListDeptClassify   = "/manager.api.dept.Dept/ListDeptClassify"
-	OperationDeptUpdateDept         = "/manager.api.dept.Dept/UpdateDept"
-	OperationDeptUpdateDeptClassify = "/manager.api.dept.Dept/UpdateDeptClassify"
-)
+const OperationDeptCreateDept = "/manager.api.dept.Dept/CreateDept"
+const OperationDeptCreateDeptClassify = "/manager.api.dept.Dept/CreateDeptClassify"
+const OperationDeptDeleteDept = "/manager.api.dept.Dept/DeleteDept"
+const OperationDeptDeleteDeptClassify = "/manager.api.dept.Dept/DeleteDeptClassify"
+const OperationDeptGetDept = "/manager.api.dept.Dept/GetDept"
+const OperationDeptListCurrentDept = "/manager.api.dept.Dept/ListCurrentDept"
+const OperationDeptListDept = "/manager.api.dept.Dept/ListDept"
+const OperationDeptListDeptClassify = "/manager.api.dept.Dept/ListDeptClassify"
+const OperationDeptUpdateDept = "/manager.api.dept.Dept/UpdateDept"
+const OperationDeptUpdateDeptClassify = "/manager.api.dept.Dept/UpdateDeptClassify"
 
 type DeptHTTPServer interface {
 	// CreateDept CreateDept 创建部门信息

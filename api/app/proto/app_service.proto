@@ -2,56 +2,47 @@ syntax = "proto3";
 
 package manager.api.app;
 
+import "api/app/proto/app.proto";
+import "google/api/annotations.proto";
+
 option go_package = "manager/api/app;app";
 option java_multiple_files = true;
 option java_package = "manager.api.app";
 
-import "api/app/proto/app.proto";
-import "google/api/annotations.proto";
-
-service App{
+service App {
   // GetSampleApp 获取应用基础信息
-  rpc GetSampleApp (GetSampleAppRequest) returns (GetSampleAppReply) {
-    option (google.api.http) = {
-      get: "/manager/api/sample/app"
-    };
+  rpc GetSampleApp(GetSampleAppRequest) returns (GetSampleAppReply) {
+    option (google.api.http) = {get: "/manager/api/sample/app"};
   }
 
   // GetApp 获取指定的应用信息
-  rpc GetApp (GetAppRequest) returns (GetAppReply) {
-    option (google.api.http) = {
-      get: "/manager/api/app"
-    };
+  rpc GetApp(GetAppRequest) returns (GetAppReply) {
+    option (google.api.http) = {get: "/manager/api/app"};
   }
 
   // ListApp 获取应用信息列表
-  rpc ListApp (ListAppRequest) returns (ListAppReply) {
-    option (google.api.http) = {
-      get: "/manager/api/apps",
-    };
+  rpc ListApp(ListAppRequest) returns (ListAppReply) {
+    option (google.api.http) = {get: "/manager/api/apps"};
   }
 
   // CreateApp 创建应用信息
-  rpc CreateApp (CreateAppRequest) returns (CreateAppReply) {
+  rpc CreateApp(CreateAppRequest) returns (CreateAppReply) {
     option (google.api.http) = {
-      post: "/manager/api/app",
+      post: "/manager/api/app"
       body: "*"
     };
   }
 
   // UpdateApp 更新应用信息
-  rpc UpdateApp (UpdateAppRequest) returns (UpdateAppReply) {
+  rpc UpdateApp(UpdateAppRequest) returns (UpdateAppReply) {
     option (google.api.http) = {
-      put: "/manager/api/app",
+      put: "/manager/api/app"
       body: "*"
     };
   }
 
   // DeleteApp 删除应用信息
-  rpc DeleteApp (DeleteAppRequest) returns (DeleteAppReply) {
-    option (google.api.http) = {
-      delete: "/manager/api/app",
-    };
+  rpc DeleteApp(DeleteAppRequest) returns (DeleteAppReply) {
+    option (google.api.http) = {delete: "/manager/api/app"};
   }
-
 }

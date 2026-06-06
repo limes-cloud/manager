@@ -62,6 +62,7 @@ func (m *TenantAppSetting) validate(all bool) error {
 	}
 
 	if m.NoticeEmail != nil {
+
 		if err := m._validateEmail(m.GetNoticeEmail()); err != nil {
 			err = TenantAppSettingValidationError{
 				field:  "NoticeEmail",
@@ -73,6 +74,7 @@ func (m *TenantAppSetting) validate(all bool) error {
 			}
 			errors = append(errors, err)
 		}
+
 	}
 
 	if len(errors) > 0 {
@@ -549,6 +551,7 @@ func (m *UpdateTenantAppRequest) validate(all bool) error {
 	}
 
 	if m.Setting != nil {
+
 		if all {
 			switch v := interface{}(m.GetSetting()).(type) {
 			case interface{ ValidateAll() error }:
@@ -577,6 +580,7 @@ func (m *UpdateTenantAppRequest) validate(all bool) error {
 				}
 			}
 		}
+
 	}
 
 	if len(errors) > 0 {

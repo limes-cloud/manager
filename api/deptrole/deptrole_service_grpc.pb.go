@@ -8,7 +8,6 @@ package deptrole
 
 import (
 	context "context"
-
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -80,16 +79,15 @@ type DeptRoleServer interface {
 }
 
 // UnimplementedDeptRoleServer must be embedded to have forward compatible implementations.
-type UnimplementedDeptRoleServer struct{}
+type UnimplementedDeptRoleServer struct {
+}
 
 func (UnimplementedDeptRoleServer) ListDeptRole(context.Context, *ListDeptRoleRequest) (*ListDeptRoleReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListDeptRole not implemented")
 }
-
 func (UnimplementedDeptRoleServer) CreateDeptRole(context.Context, *CreateDeptRoleRequest) (*CreateDeptRoleReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateDeptRole not implemented")
 }
-
 func (UnimplementedDeptRoleServer) DeleteDeptRole(context.Context, *DeleteDeptRoleRequest) (*DeleteDeptRoleReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteDeptRole not implemented")
 }

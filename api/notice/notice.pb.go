@@ -7,12 +7,11 @@
 package notice
 
 import (
-	reflect "reflect"
-	sync "sync"
-
 	_ "github.com/envoyproxy/protoc-gen-validate/validate"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	reflect "reflect"
+	sync "sync"
 )
 
 const (
@@ -1954,37 +1953,34 @@ func file_api_notice_proto_notice_proto_rawDescGZIP() []byte {
 	return file_api_notice_proto_notice_proto_rawDescData
 }
 
-var (
-	file_api_notice_proto_notice_proto_msgTypes = make([]protoimpl.MessageInfo, 25)
-	file_api_notice_proto_notice_proto_goTypes  = []interface{}{
-		(*ListNoticeClassifyRequest)(nil),              // 0: manager.api.notice.ListNoticeClassifyRequest
-		(*ListNoticeClassifyReply)(nil),                // 1: manager.api.notice.ListNoticeClassifyReply
-		(*CreateNoticeClassifyRequest)(nil),            // 2: manager.api.notice.CreateNoticeClassifyRequest
-		(*CreateNoticeClassifyReply)(nil),              // 3: manager.api.notice.CreateNoticeClassifyReply
-		(*UpdateNoticeClassifyRequest)(nil),            // 4: manager.api.notice.UpdateNoticeClassifyRequest
-		(*UpdateNoticeClassifyReply)(nil),              // 5: manager.api.notice.UpdateNoticeClassifyReply
-		(*DeleteNoticeClassifyRequest)(nil),            // 6: manager.api.notice.DeleteNoticeClassifyRequest
-		(*DeleteNoticeClassifyReply)(nil),              // 7: manager.api.notice.DeleteNoticeClassifyReply
-		(*GetNoticeRequest)(nil),                       // 8: manager.api.notice.GetNoticeRequest
-		(*GetNoticeReply)(nil),                         // 9: manager.api.notice.GetNoticeReply
-		(*ListNoticeRequest)(nil),                      // 10: manager.api.notice.ListNoticeRequest
-		(*ListVisibleNoticeRequest)(nil),               // 11: manager.api.notice.ListVisibleNoticeRequest
-		(*ListNoticeReply)(nil),                        // 12: manager.api.notice.ListNoticeReply
-		(*CreateNoticeRequest)(nil),                    // 13: manager.api.notice.CreateNoticeRequest
-		(*CreateNoticeReply)(nil),                      // 14: manager.api.notice.CreateNoticeReply
-		(*UpdateNoticeRequest)(nil),                    // 15: manager.api.notice.UpdateNoticeRequest
-		(*UpdateNoticeReply)(nil),                      // 16: manager.api.notice.UpdateNoticeReply
-		(*DeleteNoticeRequest)(nil),                    // 17: manager.api.notice.DeleteNoticeRequest
-		(*DeleteNoticeReply)(nil),                      // 18: manager.api.notice.DeleteNoticeReply
-		(*ListNoticeClassifyReply_NoticeClassify)(nil), // 19: manager.api.notice.ListNoticeClassifyReply.NoticeClassify
-		(*GetNoticeReply_Classify)(nil),                // 20: manager.api.notice.GetNoticeReply.Classify
-		(*GetNoticeReply_App)(nil),                     // 21: manager.api.notice.GetNoticeReply.App
-		(*ListNoticeReply_Classify)(nil),               // 22: manager.api.notice.ListNoticeReply.Classify
-		(*ListNoticeReply_App)(nil),                    // 23: manager.api.notice.ListNoticeReply.App
-		(*ListNoticeReply_Notice)(nil),                 // 24: manager.api.notice.ListNoticeReply.Notice
-	}
-)
-
+var file_api_notice_proto_notice_proto_msgTypes = make([]protoimpl.MessageInfo, 25)
+var file_api_notice_proto_notice_proto_goTypes = []interface{}{
+	(*ListNoticeClassifyRequest)(nil),              // 0: manager.api.notice.ListNoticeClassifyRequest
+	(*ListNoticeClassifyReply)(nil),                // 1: manager.api.notice.ListNoticeClassifyReply
+	(*CreateNoticeClassifyRequest)(nil),            // 2: manager.api.notice.CreateNoticeClassifyRequest
+	(*CreateNoticeClassifyReply)(nil),              // 3: manager.api.notice.CreateNoticeClassifyReply
+	(*UpdateNoticeClassifyRequest)(nil),            // 4: manager.api.notice.UpdateNoticeClassifyRequest
+	(*UpdateNoticeClassifyReply)(nil),              // 5: manager.api.notice.UpdateNoticeClassifyReply
+	(*DeleteNoticeClassifyRequest)(nil),            // 6: manager.api.notice.DeleteNoticeClassifyRequest
+	(*DeleteNoticeClassifyReply)(nil),              // 7: manager.api.notice.DeleteNoticeClassifyReply
+	(*GetNoticeRequest)(nil),                       // 8: manager.api.notice.GetNoticeRequest
+	(*GetNoticeReply)(nil),                         // 9: manager.api.notice.GetNoticeReply
+	(*ListNoticeRequest)(nil),                      // 10: manager.api.notice.ListNoticeRequest
+	(*ListVisibleNoticeRequest)(nil),               // 11: manager.api.notice.ListVisibleNoticeRequest
+	(*ListNoticeReply)(nil),                        // 12: manager.api.notice.ListNoticeReply
+	(*CreateNoticeRequest)(nil),                    // 13: manager.api.notice.CreateNoticeRequest
+	(*CreateNoticeReply)(nil),                      // 14: manager.api.notice.CreateNoticeReply
+	(*UpdateNoticeRequest)(nil),                    // 15: manager.api.notice.UpdateNoticeRequest
+	(*UpdateNoticeReply)(nil),                      // 16: manager.api.notice.UpdateNoticeReply
+	(*DeleteNoticeRequest)(nil),                    // 17: manager.api.notice.DeleteNoticeRequest
+	(*DeleteNoticeReply)(nil),                      // 18: manager.api.notice.DeleteNoticeReply
+	(*ListNoticeClassifyReply_NoticeClassify)(nil), // 19: manager.api.notice.ListNoticeClassifyReply.NoticeClassify
+	(*GetNoticeReply_Classify)(nil),                // 20: manager.api.notice.GetNoticeReply.Classify
+	(*GetNoticeReply_App)(nil),                     // 21: manager.api.notice.GetNoticeReply.App
+	(*ListNoticeReply_Classify)(nil),               // 22: manager.api.notice.ListNoticeReply.Classify
+	(*ListNoticeReply_App)(nil),                    // 23: manager.api.notice.ListNoticeReply.App
+	(*ListNoticeReply_Notice)(nil),                 // 24: manager.api.notice.ListNoticeReply.Notice
+}
 var file_api_notice_proto_notice_proto_depIdxs = []int32{
 	19, // 0: manager.api.notice.ListNoticeClassifyReply.list:type_name -> manager.api.notice.ListNoticeClassifyReply.NoticeClassify
 	21, // 1: manager.api.notice.GetNoticeReply.app:type_name -> manager.api.notice.GetNoticeReply.App

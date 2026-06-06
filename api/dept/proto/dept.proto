@@ -2,23 +2,37 @@ syntax = "proto3";
 
 package manager.api.dept;
 
-option go_package = "manager/api/dept;dept";
-option java_multiple_files = true;
-option java_package = "manager.api.dept";
-option java_outer_classname = "DeptV1";
-
 import "validate/validate.proto";
 
-message DeptClassify{
+option go_package = "manager/api/dept;dept";
+option java_multiple_files = true;
+option java_outer_classname = "DeptV1";
+option java_package = "manager.api.dept";
+
+message DeptClassify {
   uint32 id = 1;
   string name = 2;
 }
 
 message ListDeptClassifyRequest {
-  uint32 page = 1[(validate.rules).uint32 = {gt: 0}];
-  uint32 pageSize = 2[(validate.rules).uint32 = {gt: 0,lte:50}];
-  optional string order = 3[(validate.rules).string = {in: ["asc","desc"]}];
-  optional string orderBy = 4[(validate.rules).string = {in: ["id","created_at","updated_at"]}];
+  uint32 page = 1 [(validate.rules).uint32 = {gt: 0}];
+  uint32 pageSize = 2 [(validate.rules).uint32 = {
+    gt: 0
+    lte: 50
+  }];
+  optional string order = 3 [(validate.rules).string = {
+    in: [
+      "asc",
+      "desc"
+    ]
+  }];
+  optional string orderBy = 4 [(validate.rules).string = {
+    in: [
+      "id",
+      "created_at",
+      "updated_at"
+    ]
+  }];
   optional string name = 5;
 }
 
@@ -39,8 +53,12 @@ message ListDeptClassifyReply {
 }
 
 message CreateDeptClassifyRequest {
-  string keyword = 1[(validate.rules).string = {min_len: 1,max_len: 32, pattern: "^[a-zA-Z0-9_]+$"}];
-  string name = 2[(validate.rules).string = {min_len: 1}];
+  string keyword = 1 [(validate.rules).string = {
+    min_len: 1
+    max_len: 32
+    pattern: "^[a-zA-Z0-9_]+$"
+  }];
+  string name = 2 [(validate.rules).string = {min_len: 1}];
   optional string description = 3;
   uint32 weight = 4;
 }
@@ -50,28 +68,28 @@ message CreateDeptClassifyReply {
 }
 
 message UpdateDeptClassifyRequest {
-  uint32 id = 1[(validate.rules).uint32 = {gt: 0}];
-  optional string keyword = 2[(validate.rules).string = {min_len: 1,max_len: 32, pattern: "^[a-zA-Z0-9_]+$"}];
-  optional string name = 3[(validate.rules).string = {max_len: 128}];
+  uint32 id = 1 [(validate.rules).uint32 = {gt: 0}];
+  optional string keyword = 2 [(validate.rules).string = {
+    min_len: 1
+    max_len: 32
+    pattern: "^[a-zA-Z0-9_]+$"
+  }];
+  optional string name = 3 [(validate.rules).string = {max_len: 128}];
   optional string description = 4;
   optional uint32 weight = 5;
 }
 
-message UpdateDeptClassifyReply {
-}
+message UpdateDeptClassifyReply {}
 
 message DeleteDeptClassifyRequest {
-  uint32 id = 1[(validate.rules).uint32 = {gte:0}];
+  uint32 id = 1 [(validate.rules).uint32 = {gte: 0}];
 }
 
-message DeleteDeptClassifyReply {
-}
+message DeleteDeptClassifyReply {}
 
 message GetDeptRequest {
-   uint32 id = 1[(validate.rules).uint32 = {gte: 1}];
+  uint32 id = 1 [(validate.rules).uint32 = {gte: 1}];
 }
-
-
 
 message GetDeptReply {
   uint32 id = 1;
@@ -113,12 +131,18 @@ message ListDeptReply {
 }
 
 message CreateDeptRequest {
-  uint32 parentId = 1[(validate.rules).uint32 = {gte: 0}];
-  uint32 classifyId = 2[(validate.rules).uint32 = {gte: 1}];
-  string keyword = 3[(validate.rules).string = {min_len: 1, max_len: 128}];
-  string name = 4[(validate.rules).string = {min_len: 1, max_len: 128}];
-  string logo = 5[(validate.rules).string = {max_len: 256}];
-  string description = 6[(validate.rules).string = {max_len: 256}];
+  uint32 parentId = 1 [(validate.rules).uint32 = {gte: 0}];
+  uint32 classifyId = 2 [(validate.rules).uint32 = {gte: 1}];
+  string keyword = 3 [(validate.rules).string = {
+    min_len: 1
+    max_len: 128
+  }];
+  string name = 4 [(validate.rules).string = {
+    min_len: 1
+    max_len: 128
+  }];
+  string logo = 5 [(validate.rules).string = {max_len: 256}];
+  string description = 6 [(validate.rules).string = {max_len: 256}];
 }
 
 message CreateDeptReply {
@@ -126,22 +150,24 @@ message CreateDeptReply {
 }
 
 message UpdateDeptRequest {
-  uint32 id = 1[(validate.rules).uint32 = {gte: 1}];
-  optional uint32 parentId = 2[(validate.rules).uint32 = {gte: 0}];
-  optional uint32 classifyId = 3[(validate.rules).uint32 = {gte: 1}];
-  optional string name = 4[(validate.rules).string = {min_len: 1,max_len: 128}];
-  optional string description = 5[(validate.rules).string = {min_len: 1,max_len: 256}];
+  uint32 id = 1 [(validate.rules).uint32 = {gte: 1}];
+  optional uint32 parentId = 2 [(validate.rules).uint32 = {gte: 0}];
+  optional uint32 classifyId = 3 [(validate.rules).uint32 = {gte: 1}];
+  optional string name = 4 [(validate.rules).string = {
+    min_len: 1
+    max_len: 128
+  }];
+  optional string description = 5 [(validate.rules).string = {
+    min_len: 1
+    max_len: 256
+  }];
   optional bool status = 6;
 }
 
-message UpdateDeptReply {
-}
+message UpdateDeptReply {}
 
 message DeleteDeptRequest {
-  uint32 id = 1[(validate.rules).uint32 = {gte:1}];
+  uint32 id = 1 [(validate.rules).uint32 = {gte: 1}];
 }
 
-message DeleteDeptReply {
-}
-
-
+message DeleteDeptReply {}

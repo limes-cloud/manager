@@ -7,12 +7,11 @@
 package dept
 
 import (
-	reflect "reflect"
-	sync "sync"
-
 	_ "github.com/envoyproxy/protoc-gen-validate/validate"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	reflect "reflect"
+	sync "sync"
 )
 
 const (
@@ -1616,33 +1615,30 @@ func file_api_dept_proto_dept_proto_rawDescGZIP() []byte {
 	return file_api_dept_proto_dept_proto_rawDescData
 }
 
-var (
-	file_api_dept_proto_dept_proto_msgTypes = make([]protoimpl.MessageInfo, 21)
-	file_api_dept_proto_dept_proto_goTypes  = []interface{}{
-		(*DeptClassify)(nil),                       // 0: manager.api.dept.DeptClassify
-		(*ListDeptClassifyRequest)(nil),            // 1: manager.api.dept.ListDeptClassifyRequest
-		(*ListDeptClassifyReply)(nil),              // 2: manager.api.dept.ListDeptClassifyReply
-		(*CreateDeptClassifyRequest)(nil),          // 3: manager.api.dept.CreateDeptClassifyRequest
-		(*CreateDeptClassifyReply)(nil),            // 4: manager.api.dept.CreateDeptClassifyReply
-		(*UpdateDeptClassifyRequest)(nil),          // 5: manager.api.dept.UpdateDeptClassifyRequest
-		(*UpdateDeptClassifyReply)(nil),            // 6: manager.api.dept.UpdateDeptClassifyReply
-		(*DeleteDeptClassifyRequest)(nil),          // 7: manager.api.dept.DeleteDeptClassifyRequest
-		(*DeleteDeptClassifyReply)(nil),            // 8: manager.api.dept.DeleteDeptClassifyReply
-		(*GetDeptRequest)(nil),                     // 9: manager.api.dept.GetDeptRequest
-		(*GetDeptReply)(nil),                       // 10: manager.api.dept.GetDeptReply
-		(*ListDeptRequest)(nil),                    // 11: manager.api.dept.ListDeptRequest
-		(*ListDeptReply)(nil),                      // 12: manager.api.dept.ListDeptReply
-		(*CreateDeptRequest)(nil),                  // 13: manager.api.dept.CreateDeptRequest
-		(*CreateDeptReply)(nil),                    // 14: manager.api.dept.CreateDeptReply
-		(*UpdateDeptRequest)(nil),                  // 15: manager.api.dept.UpdateDeptRequest
-		(*UpdateDeptReply)(nil),                    // 16: manager.api.dept.UpdateDeptReply
-		(*DeleteDeptRequest)(nil),                  // 17: manager.api.dept.DeleteDeptRequest
-		(*DeleteDeptReply)(nil),                    // 18: manager.api.dept.DeleteDeptReply
-		(*ListDeptClassifyReply_DeptClassify)(nil), // 19: manager.api.dept.ListDeptClassifyReply.DeptClassify
-		(*ListDeptReply_Dept)(nil),                 // 20: manager.api.dept.ListDeptReply.Dept
-	}
-)
-
+var file_api_dept_proto_dept_proto_msgTypes = make([]protoimpl.MessageInfo, 21)
+var file_api_dept_proto_dept_proto_goTypes = []interface{}{
+	(*DeptClassify)(nil),                       // 0: manager.api.dept.DeptClassify
+	(*ListDeptClassifyRequest)(nil),            // 1: manager.api.dept.ListDeptClassifyRequest
+	(*ListDeptClassifyReply)(nil),              // 2: manager.api.dept.ListDeptClassifyReply
+	(*CreateDeptClassifyRequest)(nil),          // 3: manager.api.dept.CreateDeptClassifyRequest
+	(*CreateDeptClassifyReply)(nil),            // 4: manager.api.dept.CreateDeptClassifyReply
+	(*UpdateDeptClassifyRequest)(nil),          // 5: manager.api.dept.UpdateDeptClassifyRequest
+	(*UpdateDeptClassifyReply)(nil),            // 6: manager.api.dept.UpdateDeptClassifyReply
+	(*DeleteDeptClassifyRequest)(nil),          // 7: manager.api.dept.DeleteDeptClassifyRequest
+	(*DeleteDeptClassifyReply)(nil),            // 8: manager.api.dept.DeleteDeptClassifyReply
+	(*GetDeptRequest)(nil),                     // 9: manager.api.dept.GetDeptRequest
+	(*GetDeptReply)(nil),                       // 10: manager.api.dept.GetDeptReply
+	(*ListDeptRequest)(nil),                    // 11: manager.api.dept.ListDeptRequest
+	(*ListDeptReply)(nil),                      // 12: manager.api.dept.ListDeptReply
+	(*CreateDeptRequest)(nil),                  // 13: manager.api.dept.CreateDeptRequest
+	(*CreateDeptReply)(nil),                    // 14: manager.api.dept.CreateDeptReply
+	(*UpdateDeptRequest)(nil),                  // 15: manager.api.dept.UpdateDeptRequest
+	(*UpdateDeptReply)(nil),                    // 16: manager.api.dept.UpdateDeptReply
+	(*DeleteDeptRequest)(nil),                  // 17: manager.api.dept.DeleteDeptRequest
+	(*DeleteDeptReply)(nil),                    // 18: manager.api.dept.DeleteDeptReply
+	(*ListDeptClassifyReply_DeptClassify)(nil), // 19: manager.api.dept.ListDeptClassifyReply.DeptClassify
+	(*ListDeptReply_Dept)(nil),                 // 20: manager.api.dept.ListDeptReply.Dept
+}
 var file_api_dept_proto_dept_proto_depIdxs = []int32{
 	19, // 0: manager.api.dept.ListDeptClassifyReply.list:type_name -> manager.api.dept.ListDeptClassifyReply.DeptClassify
 	0,  // 1: manager.api.dept.GetDeptReply.classify:type_name -> manager.api.dept.DeptClassify

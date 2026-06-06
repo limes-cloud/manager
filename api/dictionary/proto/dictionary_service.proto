@@ -2,89 +2,76 @@ syntax = "proto3";
 
 package manager.api.dictionary;
 
+import "api/dictionary/proto/dictionary.proto";
+import "google/api/annotations.proto";
+
 option go_package = "manager/api/dictionary;dictionary";
 option java_multiple_files = true;
 option java_package = "manager.api.dictionary";
 
-import "google/api/annotations.proto";
-import "api/dictionary/proto/dictionary.proto";
-
-service Dictionary{
+service Dictionary {
   // GetDictionary 获取指定的字典目录
-  rpc GetDictionary (GetDictionaryRequest) returns (GetDictionaryReply) {
-    option (google.api.http) = {
-      get: "/manager/api/dictionary",
-    };
+  rpc GetDictionary(GetDictionaryRequest) returns (GetDictionaryReply) {
+    option (google.api.http) = {get: "/manager/api/dictionary"};
   }
 
   // ListDictionary 获取字典目录列表
-  rpc ListDictionary (ListDictionaryRequest) returns (ListDictionaryReply) {
-    option (google.api.http) = {
-      get: "/manager/api/dictionaries",
-    };
+  rpc ListDictionary(ListDictionaryRequest) returns (ListDictionaryReply) {
+    option (google.api.http) = {get: "/manager/api/dictionaries"};
   }
 
   // CreateDictionary 创建字典目录
-  rpc CreateDictionary (CreateDictionaryRequest) returns (CreateDictionaryReply) {
+  rpc CreateDictionary(CreateDictionaryRequest) returns (CreateDictionaryReply) {
     option (google.api.http) = {
-      post: "/manager/api/dictionary",
+      post: "/manager/api/dictionary"
       body: "*"
     };
   }
 
   // UpdateDictionary 更新字典目录
-  rpc UpdateDictionary (UpdateDictionaryRequest) returns (UpdateDictionaryReply) {
+  rpc UpdateDictionary(UpdateDictionaryRequest) returns (UpdateDictionaryReply) {
     option (google.api.http) = {
-      put: "/manager/api/dictionary",
+      put: "/manager/api/dictionary"
       body: "*"
     };
   }
 
   // DeleteDictionary 删除字典目录
-  rpc DeleteDictionary (DeleteDictionaryRequest) returns (DeleteDictionaryReply) {
-    option (google.api.http) = {
-      delete: "/manager/api/dictionary",
-    };
+  rpc DeleteDictionary(DeleteDictionaryRequest) returns (DeleteDictionaryReply) {
+    option (google.api.http) = {delete: "/manager/api/dictionary"};
   }
 
   // GetDictionaryValues 获取指定keys的所有值
-//  rpc GetDictionaryValues (GetDictionaryValuesRequest) returns (GetDictionaryValuesReply) {
-//    option (google.api.http) = {
-//      post: "/manager/api/dictionary/values",
-//      body: "*"
-//    };
-//  }
+  //  rpc GetDictionaryValues (GetDictionaryValuesRequest) returns (GetDictionaryValuesReply) {
+  //    option (google.api.http) = {
+  //      post: "/manager/api/dictionary/values",
+  //      body: "*"
+  //    };
+  //  }
 
   // ListDictionaryValue 获取字典值目录列表
-  rpc ListDictionaryValue (ListDictionaryValueRequest) returns (ListDictionaryValueReply) {
-    option (google.api.http) = {
-      get: "/manager/api/dictionary/values",
-    };
+  rpc ListDictionaryValue(ListDictionaryValueRequest) returns (ListDictionaryValueReply) {
+    option (google.api.http) = {get: "/manager/api/dictionary/values"};
   }
 
   // CreateDictionaryValue 创建字典值目录
-  rpc CreateDictionaryValue (CreateDictionaryValueRequest) returns (CreateDictionaryValueReply) {
+  rpc CreateDictionaryValue(CreateDictionaryValueRequest) returns (CreateDictionaryValueReply) {
     option (google.api.http) = {
-      post: "/manager/api/dictionary/value",
+      post: "/manager/api/dictionary/value"
       body: "*"
     };
   }
 
   // UpdateDictionaryValue 更新字典值目录
-  rpc UpdateDictionaryValue (UpdateDictionaryValueRequest) returns (UpdateDictionaryValueReply) {
+  rpc UpdateDictionaryValue(UpdateDictionaryValueRequest) returns (UpdateDictionaryValueReply) {
     option (google.api.http) = {
-      put: "/manager/api/dictionary/value",
+      put: "/manager/api/dictionary/value"
       body: "*"
     };
   }
 
   // DeleteDictionaryValue 删除字典值目录
-  rpc DeleteDictionaryValue (DeleteDictionaryValueRequest) returns (DeleteDictionaryValueReply) {
-    option (google.api.http) = {
-      delete: "/manager/api/dictionary/value",
-    };
+  rpc DeleteDictionaryValue(DeleteDictionaryValueRequest) returns (DeleteDictionaryValueReply) {
+    option (google.api.http) = {delete: "/manager/api/dictionary/value"};
   }
-
-
-
 }

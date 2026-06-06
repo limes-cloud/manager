@@ -2,20 +2,19 @@ syntax = "proto3";
 
 package manager.api.menu;
 
+import "validate/validate.proto";
+
 option go_package = "manager/api/menu;menu";
 option java_multiple_files = true;
 option java_package = "manager.api.menu";
 
-import "validate/validate.proto";
-
 message ListCurrentMenuRequest {
-  optional uint32 appId = 1[(validate.rules).uint32 = {gte: 1}];
+  optional uint32 appId = 1 [(validate.rules).uint32 = {gte: 1}];
   bool onlyMenu = 2;
 }
 
-
 message ListMenuRequest {
-  uint32 appId = 1[(validate.rules).uint32 = {gte: 1}];
+  uint32 appId = 1 [(validate.rules).uint32 = {gte: 1}];
 }
 
 message ListMenuReply {
@@ -47,12 +46,11 @@ message ListMenuReply {
   repeated Data list = 1;
 }
 
-
 message CreateMenuRequest {
-  uint32 appId = 1[(validate.rules).uint32 = {gte: 1}];
+  uint32 appId = 1 [(validate.rules).uint32 = {gte: 1}];
   uint32 parentId = 2;
-  string title = 3[(validate.rules).string = {min_len: 1}];
-  string type = 4[(validate.rules).string = {min_len: 1}];
+  string title = 3 [(validate.rules).string = {min_len: 1}];
+  string type = 4 [(validate.rules).string = {min_len: 1}];
   optional string keyword = 5;
   optional string icon = 6;
   optional string api = 7;
@@ -74,10 +72,10 @@ message CreateMenuReply {
 }
 
 message UpdateMenuRequest {
-  uint32 id = 1[(validate.rules).uint32 = {gte: 1}];
+  uint32 id = 1 [(validate.rules).uint32 = {gte: 1}];
   optional uint32 parentId = 2;
-  optional string title = 3[(validate.rules).string = {min_len: 1}];
-  optional string type = 4[(validate.rules).string = {min_len: 1}];
+  optional string title = 3 [(validate.rules).string = {min_len: 1}];
+  optional string type = 4 [(validate.rules).string = {min_len: 1}];
   optional string keyword = 5;
   optional string icon = 6;
   optional string api = 7;
@@ -94,13 +92,10 @@ message UpdateMenuRequest {
   optional bool isAffix = 18;
 }
 
-message UpdateMenuReply {
-}
+message UpdateMenuReply {}
 
 message DeleteMenuRequest {
-  uint32 id = 1[(validate.rules).uint32 = {gte: 1}];
+  uint32 id = 1 [(validate.rules).uint32 = {gte: 1}];
 }
 
-message DeleteMenuReply {
-}
-
+message DeleteMenuReply {}

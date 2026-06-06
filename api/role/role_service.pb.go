@@ -7,11 +7,10 @@
 package role
 
 import (
-	reflect "reflect"
-
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	reflect "reflect"
 )
 
 const (
@@ -85,7 +84,6 @@ var file_api_role_proto_role_service_proto_goTypes = []interface{}{
 	(*UpdateRoleReply)(nil),   // 8: manager.api.role.UpdateRoleReply
 	(*DeleteRoleReply)(nil),   // 9: manager.api.role.DeleteRoleReply
 }
-
 var file_api_role_proto_role_service_proto_depIdxs = []int32{
 	0, // 0: manager.api.role.Role.GetRole:input_type -> manager.api.role.GetRoleRequest
 	1, // 1: manager.api.role.Role.ListCurrentRole:input_type -> manager.api.role.ListRoleRequest

@@ -331,6 +331,10 @@ func (m *UserObject) validate(all bool) error {
 
 	}
 
+	if m.Signature != nil {
+		// no validation rules for Signature
+	}
+
 	if m.Status != nil {
 		// no validation rules for Status
 	}
@@ -738,6 +742,10 @@ func (m *CreateUserRequest) validate(all bool) error {
 
 	// no validation rules for Infos
 
+	if m.Signature != nil {
+		// no validation rules for Signature
+	}
+
 	if len(errors) > 0 {
 		return CreateUserRequestMultiError(errors)
 	}
@@ -960,6 +968,7 @@ func (m *UpdateUserRequest) validate(all bool) error {
 	}
 
 	if m.Nickname != nil {
+
 		if l := utf8.RuneCountInString(m.GetNickname()); l < 1 || l > 64 {
 			err := UpdateUserRequestValidationError{
 				field:  "Nickname",
@@ -970,6 +979,11 @@ func (m *UpdateUserRequest) validate(all bool) error {
 			}
 			errors = append(errors, err)
 		}
+
+	}
+
+	if m.Signature != nil {
+		// no validation rules for Signature
 	}
 
 	if m.Status != nil {
@@ -1627,6 +1641,7 @@ func (m *UpdateCurrentUserRequest) validate(all bool) error {
 	// no validation rules for Infos
 
 	if m.Nickname != nil {
+
 		if l := utf8.RuneCountInString(m.GetNickname()); l < 1 || l > 64 {
 			err := UpdateCurrentUserRequestValidationError{
 				field:  "Nickname",
@@ -1637,9 +1652,11 @@ func (m *UpdateCurrentUserRequest) validate(all bool) error {
 			}
 			errors = append(errors, err)
 		}
+
 	}
 
 	if m.Avatar != nil {
+
 		if l := utf8.RuneCountInString(m.GetAvatar()); l < 1 || l > 64 {
 			err := UpdateCurrentUserRequestValidationError{
 				field:  "Avatar",
@@ -1650,6 +1667,11 @@ func (m *UpdateCurrentUserRequest) validate(all bool) error {
 			}
 			errors = append(errors, err)
 		}
+
+	}
+
+	if m.Signature != nil {
+		// no validation rules for Signature
 	}
 
 	if len(errors) > 0 {

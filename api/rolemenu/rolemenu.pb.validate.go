@@ -69,6 +69,7 @@ func (m *GetRoleMenuIdsRequest) validate(all bool) error {
 	}
 
 	if m.AppId != nil {
+
 		if m.GetAppId() < 1 {
 			err := GetRoleMenuIdsRequestValidationError{
 				field:  "AppId",
@@ -79,6 +80,7 @@ func (m *GetRoleMenuIdsRequest) validate(all bool) error {
 			}
 			errors = append(errors, err)
 		}
+
 	}
 
 	if len(errors) > 0 {

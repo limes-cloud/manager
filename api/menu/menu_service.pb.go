@@ -7,11 +7,10 @@
 package menu
 
 import (
-	reflect "reflect"
-
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	reflect "reflect"
 )
 
 const (
@@ -85,7 +84,6 @@ var file_api_menu_proto_menu_service_proto_goTypes = []interface{}{
 	(*UpdateMenuReply)(nil),        // 7: manager.api.menu.UpdateMenuReply
 	(*DeleteMenuReply)(nil),        // 8: manager.api.menu.DeleteMenuReply
 }
-
 var file_api_menu_proto_menu_service_proto_depIdxs = []int32{
 	0, // 0: manager.api.menu.Menu.ListCurrentMenu:input_type -> manager.api.menu.ListCurrentMenuRequest
 	1, // 1: manager.api.menu.Menu.ListMenu:input_type -> manager.api.menu.ListMenuRequest

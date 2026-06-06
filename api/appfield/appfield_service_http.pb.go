@@ -8,26 +8,21 @@ package appfield
 
 import (
 	context "context"
-
 	http "github.com/go-kratos/kratos/v2/transport/http"
 	binding "github.com/go-kratos/kratos/v2/transport/http/binding"
 )
 
 // This is a compile-time assertion to ensure that this generated file
 // is compatible with the kratos package it is being compiled against.
-var (
-	_ = new(context.Context)
-	_ = binding.EncodeURL
-)
+var _ = new(context.Context)
+var _ = binding.EncodeURL
 
 const _ = http.SupportPackageIsVersion1
 
-const (
-	OperationAppFieldCreateAppField = "/manager.api.appfield.AppField/CreateAppField"
-	OperationAppFieldDeleteAppField = "/manager.api.appfield.AppField/DeleteAppField"
-	OperationAppFieldListAppField   = "/manager.api.appfield.AppField/ListAppField"
-	OperationAppFieldUpdateAppField = "/manager.api.appfield.AppField/UpdateAppField"
-)
+const OperationAppFieldCreateAppField = "/manager.api.appfield.AppField/CreateAppField"
+const OperationAppFieldDeleteAppField = "/manager.api.appfield.AppField/DeleteAppField"
+const OperationAppFieldListAppField = "/manager.api.appfield.AppField/ListAppField"
+const OperationAppFieldUpdateAppField = "/manager.api.appfield.AppField/UpdateAppField"
 
 type AppFieldHTTPServer interface {
 	// CreateAppField CreateApp 创建应用字段信息

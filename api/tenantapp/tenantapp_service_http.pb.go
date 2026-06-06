@@ -8,27 +8,22 @@ package tenantapp
 
 import (
 	context "context"
-
 	http "github.com/go-kratos/kratos/v2/transport/http"
 	binding "github.com/go-kratos/kratos/v2/transport/http/binding"
 )
 
 // This is a compile-time assertion to ensure that this generated file
 // is compatible with the kratos package it is being compiled against.
-var (
-	_ = new(context.Context)
-	_ = binding.EncodeURL
-)
+var _ = new(context.Context)
+var _ = binding.EncodeURL
 
 const _ = http.SupportPackageIsVersion1
 
-const (
-	OperationTenantCreateTenantApp = "/manager.api.tenantapp.Tenant/CreateTenantApp"
-	OperationTenantDeleteTenantApp = "/manager.api.tenantapp.Tenant/DeleteTenantApp"
-	OperationTenantGetTenantApp    = "/manager.api.tenantapp.Tenant/GetTenantApp"
-	OperationTenantListTenantApp   = "/manager.api.tenantapp.Tenant/ListTenantApp"
-	OperationTenantUpdateTenantApp = "/manager.api.tenantapp.Tenant/UpdateTenantApp"
-)
+const OperationTenantCreateTenantApp = "/manager.api.tenantapp.Tenant/CreateTenantApp"
+const OperationTenantDeleteTenantApp = "/manager.api.tenantapp.Tenant/DeleteTenantApp"
+const OperationTenantGetTenantApp = "/manager.api.tenantapp.Tenant/GetTenantApp"
+const OperationTenantListTenantApp = "/manager.api.tenantapp.Tenant/ListTenantApp"
+const OperationTenantUpdateTenantApp = "/manager.api.tenantapp.Tenant/UpdateTenantApp"
 
 type TenantHTTPServer interface {
 	CreateTenantApp(context.Context, *CreateTenantAppRequest) (*CreateTenantAppReply, error)

@@ -4,6 +4,10 @@ server:
   http:
     host: 127.0.0.1
     port: 7010
+    pprof:
+      enable: true
+      query: secret
+      secret: 123
     timeout: 10s
     marshal:
       emitUnpopulated: true
@@ -96,11 +100,13 @@ business:
       /manager/api/authorize/register:POST: true
       /manager/api/sample/app:GET: true
       /manager/api/app/tenants:GET: true
+      /manager/api/authorize/token/refresh:POST: true
       /manager/api/authorize/oauther/handler:POST: true
       /manager/api/authorize/oauther/login:POST: true
       /manager/api/authorize/oauther/bind:POST: true
       /manager/api/authorize/fill/infos:GET: true
       /manager/api/authorize/fill/infos:POST: true
       /manager/api/authorize/oauther/report:POST: true
-
+      /manager/api/authorize/token/refresh:POST: true
+      /manager/api/authorize/logout:POST: true
 

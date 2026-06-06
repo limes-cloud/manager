@@ -2,23 +2,19 @@ syntax = "proto3";
 
 package manager.api.scope;
 
+import "api/scope/proto/scope.proto";
+import "google/api/annotations.proto";
+
 option go_package = "manager/api/scope;scope";
 option java_multiple_files = true;
 option java_package = "manager.api.scope.proto";
 
-import "google/api/annotations.proto";
-import "api/scope/proto/scope.proto";
-
 service Scope {
-	rpc GetScope (GetScopeRequest) returns (GetScopeReply){
-		option (google.api.http) = {
-			get: "/manager/api/v1/scope"
-		};
-	}
+  rpc GetScope(GetScopeRequest) returns (GetScopeReply) {
+    option (google.api.http) = {get: "/manager/api/v1/scope"};
+  }
 
-	rpc GetUserDeptId (GetUserDeptIdRequest) returns (GetUserDeptIdReply){
-		option (google.api.http) = {
-			get: "/manager/api/v1/scope/userdeptid"
-		};
-	}
+  rpc GetUserDeptId(GetUserDeptIdRequest) returns (GetUserDeptIdReply) {
+    option (google.api.http) = {get: "/manager/api/v1/scope/userdeptid"};
+  }
 }

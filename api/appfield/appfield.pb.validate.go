@@ -91,6 +91,7 @@ func (m *ListAppFieldRequest) validate(all bool) error {
 	}
 
 	if m.Order != nil {
+
 		if _, ok := _ListAppFieldRequest_Order_InLookup[m.GetOrder()]; !ok {
 			err := ListAppFieldRequestValidationError{
 				field:  "Order",
@@ -101,9 +102,11 @@ func (m *ListAppFieldRequest) validate(all bool) error {
 			}
 			errors = append(errors, err)
 		}
+
 	}
 
 	if m.OrderBy != nil {
+
 		if _, ok := _ListAppFieldRequest_OrderBy_InLookup[m.GetOrderBy()]; !ok {
 			err := ListAppFieldRequestValidationError{
 				field:  "OrderBy",
@@ -114,6 +117,7 @@ func (m *ListAppFieldRequest) validate(all bool) error {
 			}
 			errors = append(errors, err)
 		}
+
 	}
 
 	if m.Keyword != nil {

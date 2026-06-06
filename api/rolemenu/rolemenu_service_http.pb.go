@@ -8,28 +8,23 @@ package rolemenu
 
 import (
 	context "context"
-
 	http "github.com/go-kratos/kratos/v2/transport/http"
 	binding "github.com/go-kratos/kratos/v2/transport/http/binding"
 )
 
 // This is a compile-time assertion to ensure that this generated file
 // is compatible with the kratos package it is being compiled against.
-var (
-	_ = new(context.Context)
-	_ = binding.EncodeURL
-)
+var _ = new(context.Context)
+var _ = binding.EncodeURL
 
 const _ = http.SupportPackageIsVersion1
 
-const (
-	OperationRoleMenuCreateMenuRoles = "/manager.api.rolemenu.RoleMenu/CreateMenuRoles"
-	OperationRoleMenuCreateRoleMenus = "/manager.api.rolemenu.RoleMenu/CreateRoleMenus"
-	OperationRoleMenuDeleteMenuRoles = "/manager.api.rolemenu.RoleMenu/DeleteMenuRoles"
-	OperationRoleMenuDeleteRoleMenus = "/manager.api.rolemenu.RoleMenu/DeleteRoleMenus"
-	OperationRoleMenuGetMenuRoleIds  = "/manager.api.rolemenu.RoleMenu/GetMenuRoleIds"
-	OperationRoleMenuGetRoleMenuIds  = "/manager.api.rolemenu.RoleMenu/GetRoleMenuIds"
-)
+const OperationRoleMenuCreateMenuRoles = "/manager.api.rolemenu.RoleMenu/CreateMenuRoles"
+const OperationRoleMenuCreateRoleMenus = "/manager.api.rolemenu.RoleMenu/CreateRoleMenus"
+const OperationRoleMenuDeleteMenuRoles = "/manager.api.rolemenu.RoleMenu/DeleteMenuRoles"
+const OperationRoleMenuDeleteRoleMenus = "/manager.api.rolemenu.RoleMenu/DeleteRoleMenus"
+const OperationRoleMenuGetMenuRoleIds = "/manager.api.rolemenu.RoleMenu/GetMenuRoleIds"
+const OperationRoleMenuGetRoleMenuIds = "/manager.api.rolemenu.RoleMenu/GetRoleMenuIds"
 
 type RoleMenuHTTPServer interface {
 	// CreateMenuRoles CreateMenuRoles 创建菜单的菜单信息

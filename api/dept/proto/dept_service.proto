@@ -2,86 +2,73 @@ syntax = "proto3";
 
 package manager.api.dept;
 
+import "api/dept/proto/dept.proto";
+import "google/api/annotations.proto";
+
 option go_package = "manager/api/dept;dept";
 option java_multiple_files = true;
 option java_package = "manager.api.dept";
 
-import "api/dept/proto/dept.proto";
-import "google/api/annotations.proto";
-
-service Dept{
+service Dept {
   // ListDeptClassify 获取部门分类列表
-  rpc ListDeptClassify (ListDeptClassifyRequest) returns (ListDeptClassifyReply) {
-    option (google.api.http) = {
-      get: "/manager/api/dept/classifies",
-    };
+  rpc ListDeptClassify(ListDeptClassifyRequest) returns (ListDeptClassifyReply) {
+    option (google.api.http) = {get: "/manager/api/dept/classifies"};
   }
 
   // CreateDeptClassify 创建部门分类
-  rpc CreateDeptClassify (CreateDeptClassifyRequest) returns (CreateDeptClassifyReply) {
+  rpc CreateDeptClassify(CreateDeptClassifyRequest) returns (CreateDeptClassifyReply) {
     option (google.api.http) = {
-      post: "/manager/api/dept/classify",
+      post: "/manager/api/dept/classify"
       body: "*"
     };
   }
 
   // UpdateDeptClassify 更新部门分类
-  rpc UpdateDeptClassify (UpdateDeptClassifyRequest) returns (UpdateDeptClassifyReply) {
+  rpc UpdateDeptClassify(UpdateDeptClassifyRequest) returns (UpdateDeptClassifyReply) {
     option (google.api.http) = {
-      put: "/manager/api/dept/classify",
+      put: "/manager/api/dept/classify"
       body: "*"
     };
   }
 
   // DeleteDeptClassify 删除部门分类
-  rpc DeleteDeptClassify (DeleteDeptClassifyRequest) returns (DeleteDeptClassifyReply) {
-    option (google.api.http) = {
-      delete: "/manager/api/dept/classify",
-    };
+  rpc DeleteDeptClassify(DeleteDeptClassifyRequest) returns (DeleteDeptClassifyReply) {
+    option (google.api.http) = {delete: "/manager/api/dept/classify"};
   }
 
   // ListCurrentDept 获取当前的部门信息列表
-  rpc ListCurrentDept (ListDeptRequest) returns (ListDeptReply) {
-    option (google.api.http) = {
-      get: "/manager/api/depts/current",
-    };
+  rpc ListCurrentDept(ListDeptRequest) returns (ListDeptReply) {
+    option (google.api.http) = {get: "/manager/api/depts/current"};
   }
-  
+
   // ListDept 获取部门信息列表
-  rpc ListDept (ListDeptRequest) returns (ListDeptReply) {
-    option (google.api.http) = {
-      get: "/manager/api/depts",
-    };
+  rpc ListDept(ListDeptRequest) returns (ListDeptReply) {
+    option (google.api.http) = {get: "/manager/api/depts"};
   }
 
   // CreateDept 创建部门信息
-  rpc CreateDept (CreateDeptRequest) returns (CreateDeptReply) {
+  rpc CreateDept(CreateDeptRequest) returns (CreateDeptReply) {
     option (google.api.http) = {
-      post: "/manager/api/dept",
+      post: "/manager/api/dept"
       body: "*"
     };
   }
 
   // UpdateDept 更新部门信息
-  rpc UpdateDept (UpdateDeptRequest) returns (UpdateDeptReply) {
+  rpc UpdateDept(UpdateDeptRequest) returns (UpdateDeptReply) {
     option (google.api.http) = {
-      put: "/manager/api/dept",
+      put: "/manager/api/dept"
       body: "*"
     };
   }
 
   // DeleteDept 删除部门信息
-  rpc DeleteDept (DeleteDeptRequest) returns (DeleteDeptReply) {
-    option (google.api.http) = {
-      delete: "/manager/api/dept",
-    };
+  rpc DeleteDept(DeleteDeptRequest) returns (DeleteDeptReply) {
+    option (google.api.http) = {delete: "/manager/api/dept"};
   }
 
   // GetDept 获取指定的部门信息
-  rpc GetDept (GetDeptRequest) returns (GetDeptReply) {
-    option (google.api.http) = {
-      get: "/manager/api/dept",
-    };
+  rpc GetDept(GetDeptRequest) returns (GetDeptReply) {
+    option (google.api.http) = {get: "/manager/api/dept"};
   }
-
 }

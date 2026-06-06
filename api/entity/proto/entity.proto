@@ -2,19 +2,33 @@ syntax = "proto3";
 
 package manager.api.entity;
 
-option go_package = "manager/api/entity;entity";
-option java_multiple_files = true;
-option java_package = "manager.api.entity";
-option java_outer_classname = "EntityV1";
-
 import "validate/validate.proto";
 
+option go_package = "manager/api/entity;entity";
+option java_multiple_files = true;
+option java_outer_classname = "EntityV1";
+option java_package = "manager.api.entity";
+
 message ListEntityRequest {
-  uint32 page = 1[(validate.rules).uint32 = {gte: 1}];
-  uint32 pageSize = 2[(validate.rules).uint32 = {gte: 1,lte:50}];
-  uint32 appId = 3[(validate.rules).uint32 = {gte: 1}];
-  optional string order = 4[(validate.rules).string = {in: ["asc","desc"]}];
-  optional string orderBy = 5[(validate.rules).string = {in: ["id","created_at","updated_at"]}];
+  uint32 page = 1 [(validate.rules).uint32 = {gte: 1}];
+  uint32 pageSize = 2 [(validate.rules).uint32 = {
+    gte: 1
+    lte: 50
+  }];
+  uint32 appId = 3 [(validate.rules).uint32 = {gte: 1}];
+  optional string order = 4 [(validate.rules).string = {
+    in: [
+      "asc",
+      "desc"
+    ]
+  }];
+  optional string orderBy = 5 [(validate.rules).string = {
+    in: [
+      "id",
+      "created_at",
+      "updated_at"
+    ]
+  }];
   optional string name = 6;
   optional string database = 7;
 }
@@ -34,7 +48,7 @@ message ListEntityReply {
 }
 
 message LoadEntityReply {
-  message EntityField{
+  message EntityField {
     string name = 1;
     string comment = 2;
   }
@@ -49,7 +63,7 @@ message LoadEntityReply {
 }
 
 message ImportEntityRequest {
-  message EntityField{
+  message EntityField {
     string name = 1;
     string comment = 2;
   }
@@ -64,10 +78,19 @@ message ImportEntityRequest {
 }
 
 message CreateEntityRequest {
-  uint32 appId = 1[(validate.rules).uint32 = {gte: 1}];
-  string database = 2[(validate.rules).string = {min_len: 1, max_len: 64}];
-  string name = 3[(validate.rules).string = {min_len: 1, max_len: 64}];
-  string comment = 4[(validate.rules).string = {min_len: 1, max_len: 128}];
+  uint32 appId = 1 [(validate.rules).uint32 = {gte: 1}];
+  string database = 2 [(validate.rules).string = {
+    min_len: 1
+    max_len: 64
+  }];
+  string name = 3 [(validate.rules).string = {
+    min_len: 1
+    max_len: 64
+  }];
+  string comment = 4 [(validate.rules).string = {
+    min_len: 1
+    max_len: 128
+  }];
 }
 
 message CreateEntityReply {
@@ -75,24 +98,31 @@ message CreateEntityReply {
 }
 
 message UpdateEntityRequest {
-  uint32 id = 1[(validate.rules).uint32 = {gte: 1}];
-  optional string database = 2[(validate.rules).string = {min_len: 1, max_len: 64}];
-  optional string name = 3[(validate.rules).string = {min_len: 1, max_len: 64}];
-  optional string comment = 4[(validate.rules).string = {min_len: 1, max_len: 128}];
+  uint32 id = 1 [(validate.rules).uint32 = {gte: 1}];
+  optional string database = 2 [(validate.rules).string = {
+    min_len: 1
+    max_len: 64
+  }];
+  optional string name = 3 [(validate.rules).string = {
+    min_len: 1
+    max_len: 64
+  }];
+  optional string comment = 4 [(validate.rules).string = {
+    min_len: 1
+    max_len: 128
+  }];
 }
 
-message UpdateEntityReply {
-}
+message UpdateEntityReply {}
 
 message DeleteEntityRequest {
-  uint32 id = 1[(validate.rules).uint32 = {gte:1}];
+  uint32 id = 1 [(validate.rules).uint32 = {gte: 1}];
 }
 
-message DeleteEntityReply {
-}
+message DeleteEntityReply {}
 
 message ListEntityFieldRequest {
-  uint32 entityId = 1[(validate.rules).uint32 = {gte: 1}];
+  uint32 entityId = 1 [(validate.rules).uint32 = {gte: 1}];
   optional string name = 2;
 }
 
@@ -112,10 +142,16 @@ message ListEntityFieldReply {
 }
 
 message CreateEntityFieldRequest {
-  uint32 entityId = 1[(validate.rules).uint32 = {gte: 1}];
-  string name = 2[(validate.rules).string = {min_len: 1, max_len: 64}];
-  string comment = 3[(validate.rules).string = {min_len: 1, max_len: 128}];
-  uint32 index = 4[(validate.rules).uint32 = {gte: 0}];
+  uint32 entityId = 1 [(validate.rules).uint32 = {gte: 1}];
+  string name = 2 [(validate.rules).string = {
+    min_len: 1
+    max_len: 64
+  }];
+  string comment = 3 [(validate.rules).string = {
+    min_len: 1
+    max_len: 128
+  }];
+  uint32 index = 4 [(validate.rules).uint32 = {gte: 0}];
 }
 
 message CreateEntityFieldReply {
@@ -123,43 +159,74 @@ message CreateEntityFieldReply {
 }
 
 message UpdateEntityFieldRequest {
-  uint32 id = 1[(validate.rules).uint32 = {gt: 0}];
-  optional uint32 entityId = 2[(validate.rules).uint32 = {gte: 1}];
-  optional string name = 3[(validate.rules).string = {min_len: 1, max_len: 64}];
-  optional string comment = 4[(validate.rules).string = {min_len: 1, max_len: 128}];
-  optional uint32 index = 5[(validate.rules).uint32 = {gte: 0}];
+  uint32 id = 1 [(validate.rules).uint32 = {gt: 0}];
+  optional uint32 entityId = 2 [(validate.rules).uint32 = {gte: 1}];
+  optional string name = 3 [(validate.rules).string = {
+    min_len: 1
+    max_len: 64
+  }];
+  optional string comment = 4 [(validate.rules).string = {
+    min_len: 1
+    max_len: 128
+  }];
+  optional uint32 index = 5 [(validate.rules).uint32 = {gte: 0}];
 }
 
-message UpdateEntityFieldReply {
-}
+message UpdateEntityFieldReply {}
 
 message DeleteEntityFieldRequest {
-  uint32 id = 1[(validate.rules).uint32 = {gte:0}];
+  uint32 id = 1 [(validate.rules).uint32 = {gte: 0}];
 }
 
-message DeleteEntityFieldReply {
-}
-
+message DeleteEntityFieldReply {}
 
 message ListEntityRuleRequest {
-  uint32 page = 1[(validate.rules).uint32 = {gte: 1}];
-  uint32 pageSize = 2[(validate.rules).uint32 = {gte: 1,lte:50}];
-  optional string order = 3[(validate.rules).string = {in: ["asc","desc"]}];
-  optional string orderBy = 4[(validate.rules).string = {in: ["id","created_at","updated_at"]}];
-  optional uint32 entityId = 5[(validate.rules).uint32 = {gte: 1}];
+  uint32 page = 1 [(validate.rules).uint32 = {gte: 1}];
+  uint32 pageSize = 2 [(validate.rules).uint32 = {
+    gte: 1
+    lte: 50
+  }];
+  optional string order = 3 [(validate.rules).string = {
+    in: [
+      "asc",
+      "desc"
+    ]
+  }];
+  optional string orderBy = 4 [(validate.rules).string = {
+    in: [
+      "id",
+      "created_at",
+      "updated_at"
+    ]
+  }];
+  optional uint32 entityId = 5 [(validate.rules).uint32 = {gte: 1}];
   optional string name = 6;
   optional bool status = 7;
 }
 
-message Condition{
-  string field = 1[(validate.rules).string = {min_len: 1, max_len: 64}];
-  string operator = 2[(validate.rules).string = {min_len: 1, max_len: 64}];
-  string value = 3[(validate.rules).string = {min_len: 1, max_len: 64}];
+message Condition {
+  string field = 1 [(validate.rules).string = {
+    min_len: 1
+    max_len: 64
+  }];
+  string operator = 2 [(validate.rules).string = {
+    min_len: 1
+    max_len: 64
+  }];
+  string value = 3 [(validate.rules).string = {
+    min_len: 1
+    max_len: 64
+  }];
 }
 
-message ConditionGroup{
-  string logic = 1[(validate.rules).string = {in: ["AND","OR"]}];
-  repeated Condition conditions = 2[(validate.rules).repeated = {min_items: 1}];
+message ConditionGroup {
+  string logic = 1 [(validate.rules).string = {
+    in: [
+      "AND",
+      "OR"
+    ]
+  }];
+  repeated Condition conditions = 2 [(validate.rules).repeated = {min_items: 1}];
   repeated ConditionGroup groups = 3;
 }
 
@@ -180,9 +247,15 @@ message ListEntityRuleReply {
 }
 
 message CreateEntityRuleRequest {
-  uint32 entityId = 1[(validate.rules).uint32 = {gte: 1}];
-  string name = 2[(validate.rules).string = {min_len: 1, max_len: 64}];
-  string description = 3[(validate.rules).string = {min_len: 1, max_len: 128}];
+  uint32 entityId = 1 [(validate.rules).uint32 = {gte: 1}];
+  string name = 2 [(validate.rules).string = {
+    min_len: 1
+    max_len: 64
+  }];
+  string description = 3 [(validate.rules).string = {
+    min_len: 1
+    max_len: 128
+  }];
   ConditionGroup expression = 4;
 }
 
@@ -191,20 +264,24 @@ message CreateEntityRuleReply {
 }
 
 message UpdateEntityRuleRequest {
-  uint32 id = 1[(validate.rules).uint32 = {gt: 0}];
-  optional uint32 entityId = 2[(validate.rules).uint32 = {gte: 1}];
-  optional string name = 3[(validate.rules).string = {min_len: 1, max_len: 64}];
+  uint32 id = 1 [(validate.rules).uint32 = {gt: 0}];
+  optional uint32 entityId = 2 [(validate.rules).uint32 = {gte: 1}];
+  optional string name = 3 [(validate.rules).string = {
+    min_len: 1
+    max_len: 64
+  }];
   optional ConditionGroup expression = 4;
-  optional string description = 5[(validate.rules).string = {min_len: 1, max_len: 128}];
+  optional string description = 5 [(validate.rules).string = {
+    min_len: 1
+    max_len: 128
+  }];
   optional bool status = 6;
 }
 
-message UpdateEntityRuleReply {
-}
+message UpdateEntityRuleReply {}
 
 message DeleteEntityRuleRequest {
-  uint32 id = 1[(validate.rules).uint32 = {gte:0}];
+  uint32 id = 1 [(validate.rules).uint32 = {gte: 0}];
 }
 
-message DeleteEntityRuleReply {
-}
+message DeleteEntityRuleReply {}

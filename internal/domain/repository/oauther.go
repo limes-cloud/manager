@@ -7,6 +7,9 @@ import (
 )
 
 type OAutherFunc interface {
+	// Visible 是否可见
+	Visible(ctx core.Context, req *types.OAutherVisibleRequest) (*types.OAutherVisibleReply, error)
+
 	// Handler 授权处理
 	Handler(core.Context, *types.OAutherHandleRequest) (*types.OAutherHandleReply, error)
 

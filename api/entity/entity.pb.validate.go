@@ -91,6 +91,7 @@ func (m *ListEntityRequest) validate(all bool) error {
 	}
 
 	if m.Order != nil {
+
 		if _, ok := _ListEntityRequest_Order_InLookup[m.GetOrder()]; !ok {
 			err := ListEntityRequestValidationError{
 				field:  "Order",
@@ -101,9 +102,11 @@ func (m *ListEntityRequest) validate(all bool) error {
 			}
 			errors = append(errors, err)
 		}
+
 	}
 
 	if m.OrderBy != nil {
+
 		if _, ok := _ListEntityRequest_OrderBy_InLookup[m.GetOrderBy()]; !ok {
 			err := ListEntityRequestValidationError{
 				field:  "OrderBy",
@@ -114,6 +117,7 @@ func (m *ListEntityRequest) validate(all bool) error {
 			}
 			errors = append(errors, err)
 		}
+
 	}
 
 	if m.Name != nil {
@@ -909,6 +913,7 @@ func (m *UpdateEntityRequest) validate(all bool) error {
 	}
 
 	if m.Database != nil {
+
 		if l := utf8.RuneCountInString(m.GetDatabase()); l < 1 || l > 64 {
 			err := UpdateEntityRequestValidationError{
 				field:  "Database",
@@ -919,9 +924,11 @@ func (m *UpdateEntityRequest) validate(all bool) error {
 			}
 			errors = append(errors, err)
 		}
+
 	}
 
 	if m.Name != nil {
+
 		if l := utf8.RuneCountInString(m.GetName()); l < 1 || l > 64 {
 			err := UpdateEntityRequestValidationError{
 				field:  "Name",
@@ -932,9 +939,11 @@ func (m *UpdateEntityRequest) validate(all bool) error {
 			}
 			errors = append(errors, err)
 		}
+
 	}
 
 	if m.Comment != nil {
+
 		if l := utf8.RuneCountInString(m.GetComment()); l < 1 || l > 128 {
 			err := UpdateEntityRequestValidationError{
 				field:  "Comment",
@@ -945,6 +954,7 @@ func (m *UpdateEntityRequest) validate(all bool) error {
 			}
 			errors = append(errors, err)
 		}
+
 	}
 
 	if len(errors) > 0 {
@@ -1996,6 +2006,7 @@ func (m *UpdateEntityFieldRequest) validate(all bool) error {
 	}
 
 	if m.EntityId != nil {
+
 		if m.GetEntityId() < 1 {
 			err := UpdateEntityFieldRequestValidationError{
 				field:  "EntityId",
@@ -2006,9 +2017,11 @@ func (m *UpdateEntityFieldRequest) validate(all bool) error {
 			}
 			errors = append(errors, err)
 		}
+
 	}
 
 	if m.Name != nil {
+
 		if l := utf8.RuneCountInString(m.GetName()); l < 1 || l > 64 {
 			err := UpdateEntityFieldRequestValidationError{
 				field:  "Name",
@@ -2019,9 +2032,11 @@ func (m *UpdateEntityFieldRequest) validate(all bool) error {
 			}
 			errors = append(errors, err)
 		}
+
 	}
 
 	if m.Comment != nil {
+
 		if l := utf8.RuneCountInString(m.GetComment()); l < 1 || l > 128 {
 			err := UpdateEntityFieldRequestValidationError{
 				field:  "Comment",
@@ -2032,9 +2047,11 @@ func (m *UpdateEntityFieldRequest) validate(all bool) error {
 			}
 			errors = append(errors, err)
 		}
+
 	}
 
 	if m.Index != nil {
+
 		if m.GetIndex() < 0 {
 			err := UpdateEntityFieldRequestValidationError{
 				field:  "Index",
@@ -2045,6 +2062,7 @@ func (m *UpdateEntityFieldRequest) validate(all bool) error {
 			}
 			errors = append(errors, err)
 		}
+
 	}
 
 	if len(errors) > 0 {
@@ -2489,6 +2507,7 @@ func (m *ListEntityRuleRequest) validate(all bool) error {
 	}
 
 	if m.Order != nil {
+
 		if _, ok := _ListEntityRuleRequest_Order_InLookup[m.GetOrder()]; !ok {
 			err := ListEntityRuleRequestValidationError{
 				field:  "Order",
@@ -2499,9 +2518,11 @@ func (m *ListEntityRuleRequest) validate(all bool) error {
 			}
 			errors = append(errors, err)
 		}
+
 	}
 
 	if m.OrderBy != nil {
+
 		if _, ok := _ListEntityRuleRequest_OrderBy_InLookup[m.GetOrderBy()]; !ok {
 			err := ListEntityRuleRequestValidationError{
 				field:  "OrderBy",
@@ -2512,9 +2533,11 @@ func (m *ListEntityRuleRequest) validate(all bool) error {
 			}
 			errors = append(errors, err)
 		}
+
 	}
 
 	if m.EntityId != nil {
+
 		if m.GetEntityId() < 1 {
 			err := ListEntityRuleRequestValidationError{
 				field:  "EntityId",
@@ -2525,6 +2548,7 @@ func (m *ListEntityRuleRequest) validate(all bool) error {
 			}
 			errors = append(errors, err)
 		}
+
 	}
 
 	if m.Name != nil {
@@ -3535,6 +3559,7 @@ func (m *UpdateEntityRuleRequest) validate(all bool) error {
 	}
 
 	if m.EntityId != nil {
+
 		if m.GetEntityId() < 1 {
 			err := UpdateEntityRuleRequestValidationError{
 				field:  "EntityId",
@@ -3545,9 +3570,11 @@ func (m *UpdateEntityRuleRequest) validate(all bool) error {
 			}
 			errors = append(errors, err)
 		}
+
 	}
 
 	if m.Name != nil {
+
 		if l := utf8.RuneCountInString(m.GetName()); l < 1 || l > 64 {
 			err := UpdateEntityRuleRequestValidationError{
 				field:  "Name",
@@ -3558,9 +3585,11 @@ func (m *UpdateEntityRuleRequest) validate(all bool) error {
 			}
 			errors = append(errors, err)
 		}
+
 	}
 
 	if m.Expression != nil {
+
 		if all {
 			switch v := interface{}(m.GetExpression()).(type) {
 			case interface{ ValidateAll() error }:
@@ -3589,9 +3618,11 @@ func (m *UpdateEntityRuleRequest) validate(all bool) error {
 				}
 			}
 		}
+
 	}
 
 	if m.Description != nil {
+
 		if l := utf8.RuneCountInString(m.GetDescription()); l < 1 || l > 128 {
 			err := UpdateEntityRuleRequestValidationError{
 				field:  "Description",
@@ -3602,6 +3633,7 @@ func (m *UpdateEntityRuleRequest) validate(all bool) error {
 			}
 			errors = append(errors, err)
 		}
+
 	}
 
 	if m.Status != nil {

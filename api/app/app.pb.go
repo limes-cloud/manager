@@ -7,12 +7,11 @@
 package app
 
 import (
-	reflect "reflect"
-	sync "sync"
-
 	_ "github.com/envoyproxy/protoc-gen-validate/validate"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	reflect "reflect"
+	sync "sync"
 )
 
 const (
@@ -1732,30 +1731,27 @@ func file_api_app_proto_app_proto_rawDescGZIP() []byte {
 	return file_api_app_proto_app_proto_rawDescData
 }
 
-var (
-	file_api_app_proto_app_proto_msgTypes = make([]protoimpl.MessageInfo, 18)
-	file_api_app_proto_app_proto_goTypes  = []interface{}{
-		(*AppSettingWeb)(nil),             // 0: manager.api.app.AppSettingWeb
-		(*AppSettingJWT)(nil),             // 1: manager.api.app.AppSettingJWT
-		(*AppSettingTenant)(nil),          // 2: manager.api.app.AppSettingTenant
-		(*AppSetting)(nil),                // 3: manager.api.app.AppSetting
-		(*GetAppRequest)(nil),             // 4: manager.api.app.GetAppRequest
-		(*GetAppReply)(nil),               // 5: manager.api.app.GetAppReply
-		(*GetSampleAppRequest)(nil),       // 6: manager.api.app.GetSampleAppRequest
-		(*GetSampleAppReply)(nil),         // 7: manager.api.app.GetSampleAppReply
-		(*ListAppRequest)(nil),            // 8: manager.api.app.ListAppRequest
-		(*ListAppReply)(nil),              // 9: manager.api.app.ListAppReply
-		(*CreateAppRequest)(nil),          // 10: manager.api.app.CreateAppRequest
-		(*CreateAppReply)(nil),            // 11: manager.api.app.CreateAppReply
-		(*UpdateAppRequest)(nil),          // 12: manager.api.app.UpdateAppRequest
-		(*UpdateAppReply)(nil),            // 13: manager.api.app.UpdateAppReply
-		(*DeleteAppRequest)(nil),          // 14: manager.api.app.DeleteAppRequest
-		(*DeleteAppReply)(nil),            // 15: manager.api.app.DeleteAppReply
-		(*GetSampleAppReply_Setting)(nil), // 16: manager.api.app.GetSampleAppReply.Setting
-		(*ListAppReply_Data)(nil),         // 17: manager.api.app.ListAppReply.Data
-	}
-)
-
+var file_api_app_proto_app_proto_msgTypes = make([]protoimpl.MessageInfo, 18)
+var file_api_app_proto_app_proto_goTypes = []interface{}{
+	(*AppSettingWeb)(nil),             // 0: manager.api.app.AppSettingWeb
+	(*AppSettingJWT)(nil),             // 1: manager.api.app.AppSettingJWT
+	(*AppSettingTenant)(nil),          // 2: manager.api.app.AppSettingTenant
+	(*AppSetting)(nil),                // 3: manager.api.app.AppSetting
+	(*GetAppRequest)(nil),             // 4: manager.api.app.GetAppRequest
+	(*GetAppReply)(nil),               // 5: manager.api.app.GetAppReply
+	(*GetSampleAppRequest)(nil),       // 6: manager.api.app.GetSampleAppRequest
+	(*GetSampleAppReply)(nil),         // 7: manager.api.app.GetSampleAppReply
+	(*ListAppRequest)(nil),            // 8: manager.api.app.ListAppRequest
+	(*ListAppReply)(nil),              // 9: manager.api.app.ListAppReply
+	(*CreateAppRequest)(nil),          // 10: manager.api.app.CreateAppRequest
+	(*CreateAppReply)(nil),            // 11: manager.api.app.CreateAppReply
+	(*UpdateAppRequest)(nil),          // 12: manager.api.app.UpdateAppRequest
+	(*UpdateAppReply)(nil),            // 13: manager.api.app.UpdateAppReply
+	(*DeleteAppRequest)(nil),          // 14: manager.api.app.DeleteAppRequest
+	(*DeleteAppReply)(nil),            // 15: manager.api.app.DeleteAppReply
+	(*GetSampleAppReply_Setting)(nil), // 16: manager.api.app.GetSampleAppReply.Setting
+	(*ListAppReply_Data)(nil),         // 17: manager.api.app.ListAppReply.Data
+}
 var file_api_app_proto_app_proto_depIdxs = []int32{
 	1,  // 0: manager.api.app.AppSetting.jwt:type_name -> manager.api.app.AppSettingJWT
 	2,  // 1: manager.api.app.AppSetting.tenant:type_name -> manager.api.app.AppSettingTenant

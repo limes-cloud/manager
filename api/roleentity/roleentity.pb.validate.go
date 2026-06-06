@@ -341,6 +341,7 @@ func (m *ListRoleEntityRequest) validate(all bool) error {
 	}
 
 	if m.EntityId != nil {
+
 		if m.GetEntityId() < 1 {
 			err := ListRoleEntityRequestValidationError{
 				field:  "EntityId",
@@ -351,6 +352,7 @@ func (m *ListRoleEntityRequest) validate(all bool) error {
 			}
 			errors = append(errors, err)
 		}
+
 	}
 
 	if len(errors) > 0 {
@@ -605,6 +607,7 @@ func (m *UpdateRoleEntityRequest) validate(all bool) error {
 	}
 
 	if m.RoleId != nil {
+
 		if m.GetRoleId() < 1 {
 			err := UpdateRoleEntityRequestValidationError{
 				field:  "RoleId",
@@ -615,9 +618,11 @@ func (m *UpdateRoleEntityRequest) validate(all bool) error {
 			}
 			errors = append(errors, err)
 		}
+
 	}
 
 	if m.EntityId != nil {
+
 		if m.GetEntityId() < 1 {
 			err := UpdateRoleEntityRequestValidationError{
 				field:  "EntityId",
@@ -628,9 +633,11 @@ func (m *UpdateRoleEntityRequest) validate(all bool) error {
 			}
 			errors = append(errors, err)
 		}
+
 	}
 
 	if m.Action != nil {
+
 		if utf8.RuneCountInString(m.GetAction()) < 1 {
 			err := UpdateRoleEntityRequestValidationError{
 				field:  "Action",
@@ -641,9 +648,11 @@ func (m *UpdateRoleEntityRequest) validate(all bool) error {
 			}
 			errors = append(errors, err)
 		}
+
 	}
 
 	if m.Scope != nil {
+
 		if utf8.RuneCountInString(m.GetScope()) < 1 {
 			err := UpdateRoleEntityRequestValidationError{
 				field:  "Scope",
@@ -654,6 +663,7 @@ func (m *UpdateRoleEntityRequest) validate(all bool) error {
 			}
 			errors = append(errors, err)
 		}
+
 	}
 
 	if len(errors) > 0 {

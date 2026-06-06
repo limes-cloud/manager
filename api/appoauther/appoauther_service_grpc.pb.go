@@ -8,7 +8,6 @@ package appoauther
 
 import (
 	context "context"
-
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -86,16 +85,15 @@ type AppOAutherServer interface {
 }
 
 // UnimplementedAppOAutherServer must be embedded to have forward compatible implementations.
-type UnimplementedAppOAutherServer struct{}
+type UnimplementedAppOAutherServer struct {
+}
 
 func (UnimplementedAppOAutherServer) ListAppOAuther(context.Context, *ListAppOAutherRequest) (*ListAppOAutherReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListAppOAuther not implemented")
 }
-
 func (UnimplementedAppOAutherServer) CreateAppOAuther(context.Context, *CreateAppOAutherRequest) (*CreateAppOAutherReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateAppOAuther not implemented")
 }
-
 func (UnimplementedAppOAutherServer) DeleteAppOAuther(context.Context, *DeleteAppOAutherRequest) (*DeleteAppOAutherReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteAppOAuther not implemented")
 }

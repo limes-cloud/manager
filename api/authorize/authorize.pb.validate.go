@@ -515,64 +515,46 @@ var _ interface {
 	ErrorName() string
 } = LoginReplyValidationError{}
 
-// Validate checks the field values on ListOAutherRequest with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the first error encountered is returned, or nil if there are no violations.
-func (m *ListOAutherRequest) Validate() error {
+// Validate checks the field values on RefreshTokenReply with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// first error encountered is returned, or nil if there are no violations.
+func (m *RefreshTokenReply) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on ListOAutherRequest with the rules
+// ValidateAll checks the field values on RefreshTokenReply with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the result is a list of violation errors wrapped in
-// ListOAutherRequestMultiError, or nil if none found.
-func (m *ListOAutherRequest) ValidateAll() error {
+// RefreshTokenReplyMultiError, or nil if none found.
+func (m *RefreshTokenReply) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *ListOAutherRequest) validate(all bool) error {
+func (m *RefreshTokenReply) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
 
 	var errors []error
 
-	if utf8.RuneCountInString(m.GetApp()) < 1 {
-		err := ListOAutherRequestValidationError{
-			field:  "App",
-			reason: "value length must be at least 1 runes",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
+	// no validation rules for NeedInfo
 
-	if utf8.RuneCountInString(m.GetTenant()) < 1 {
-		err := ListOAutherRequestValidationError{
-			field:  "Tenant",
-			reason: "value length must be at least 1 runes",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
+	// no validation rules for Token
 
 	if len(errors) > 0 {
-		return ListOAutherRequestMultiError(errors)
+		return RefreshTokenReplyMultiError(errors)
 	}
 
 	return nil
 }
 
-// ListOAutherRequestMultiError is an error wrapping multiple validation errors
-// returned by ListOAutherRequest.ValidateAll() if the designated constraints
+// RefreshTokenReplyMultiError is an error wrapping multiple validation errors
+// returned by RefreshTokenReply.ValidateAll() if the designated constraints
 // aren't met.
-type ListOAutherRequestMultiError []error
+type RefreshTokenReplyMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m ListOAutherRequestMultiError) Error() string {
+func (m RefreshTokenReplyMultiError) Error() string {
 	var msgs []string
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -581,11 +563,11 @@ func (m ListOAutherRequestMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m ListOAutherRequestMultiError) AllErrors() []error { return m }
+func (m RefreshTokenReplyMultiError) AllErrors() []error { return m }
 
-// ListOAutherRequestValidationError is the validation error returned by
-// ListOAutherRequest.Validate if the designated constraints aren't met.
-type ListOAutherRequestValidationError struct {
+// RefreshTokenReplyValidationError is the validation error returned by
+// RefreshTokenReply.Validate if the designated constraints aren't met.
+type RefreshTokenReplyValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -593,24 +575,24 @@ type ListOAutherRequestValidationError struct {
 }
 
 // Field function returns field value.
-func (e ListOAutherRequestValidationError) Field() string { return e.field }
+func (e RefreshTokenReplyValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e ListOAutherRequestValidationError) Reason() string { return e.reason }
+func (e RefreshTokenReplyValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e ListOAutherRequestValidationError) Cause() error { return e.cause }
+func (e RefreshTokenReplyValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e ListOAutherRequestValidationError) Key() bool { return e.key }
+func (e RefreshTokenReplyValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e ListOAutherRequestValidationError) ErrorName() string {
-	return "ListOAutherRequestValidationError"
+func (e RefreshTokenReplyValidationError) ErrorName() string {
+	return "RefreshTokenReplyValidationError"
 }
 
 // Error satisfies the builtin error interface
-func (e ListOAutherRequestValidationError) Error() string {
+func (e RefreshTokenReplyValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -622,14 +604,14 @@ func (e ListOAutherRequestValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sListOAutherRequest.%s: %s%s",
+		"invalid %sRefreshTokenReply.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = ListOAutherRequestValidationError{}
+var _ error = RefreshTokenReplyValidationError{}
 
 var _ interface {
 	Field() string
@@ -637,24 +619,159 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = ListOAutherRequestValidationError{}
+} = RefreshTokenReplyValidationError{}
 
-// Validate checks the field values on ListOAutherReply with the rules defined
-// in the proto definition for this message. If any rules are violated, the
-// first error encountered is returned, or nil if there are no violations.
-func (m *ListOAutherReply) Validate() error {
+// Validate checks the field values on ListVisibleOAutherRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *ListVisibleOAutherRequest) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on ListOAutherReply with the rules
-// defined in the proto definition for this message. If any rules are
+// ValidateAll checks the field values on ListVisibleOAutherRequest with the
+// rules defined in the proto definition for this message. If any rules are
 // violated, the result is a list of violation errors wrapped in
-// ListOAutherReplyMultiError, or nil if none found.
-func (m *ListOAutherReply) ValidateAll() error {
+// ListVisibleOAutherRequestMultiError, or nil if none found.
+func (m *ListVisibleOAutherRequest) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *ListOAutherReply) validate(all bool) error {
+func (m *ListVisibleOAutherRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if utf8.RuneCountInString(m.GetApp()) < 1 {
+		err := ListVisibleOAutherRequestValidationError{
+			field:  "App",
+			reason: "value length must be at least 1 runes",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if utf8.RuneCountInString(m.GetTenant()) < 1 {
+		err := ListVisibleOAutherRequestValidationError{
+			field:  "Tenant",
+			reason: "value length must be at least 1 runes",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if utf8.RuneCountInString(m.GetPlatform()) < 1 {
+		err := ListVisibleOAutherRequestValidationError{
+			field:  "Platform",
+			reason: "value length must be at least 1 runes",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if len(errors) > 0 {
+		return ListVisibleOAutherRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// ListVisibleOAutherRequestMultiError is an error wrapping multiple validation
+// errors returned by ListVisibleOAutherRequest.ValidateAll() if the
+// designated constraints aren't met.
+type ListVisibleOAutherRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m ListVisibleOAutherRequestMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m ListVisibleOAutherRequestMultiError) AllErrors() []error { return m }
+
+// ListVisibleOAutherRequestValidationError is the validation error returned by
+// ListVisibleOAutherRequest.Validate if the designated constraints aren't met.
+type ListVisibleOAutherRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e ListVisibleOAutherRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e ListVisibleOAutherRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e ListVisibleOAutherRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e ListVisibleOAutherRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e ListVisibleOAutherRequestValidationError) ErrorName() string {
+	return "ListVisibleOAutherRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e ListVisibleOAutherRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sListVisibleOAutherRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = ListVisibleOAutherRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = ListVisibleOAutherRequestValidationError{}
+
+// Validate checks the field values on ListVisibleOAutherReply with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *ListVisibleOAutherReply) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on ListVisibleOAutherReply with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// ListVisibleOAutherReplyMultiError, or nil if none found.
+func (m *ListVisibleOAutherReply) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *ListVisibleOAutherReply) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
@@ -668,7 +785,7 @@ func (m *ListOAutherReply) validate(all bool) error {
 			switch v := interface{}(item).(type) {
 			case interface{ ValidateAll() error }:
 				if err := v.ValidateAll(); err != nil {
-					errors = append(errors, ListOAutherReplyValidationError{
+					errors = append(errors, ListVisibleOAutherReplyValidationError{
 						field:  fmt.Sprintf("List[%v]", idx),
 						reason: "embedded message failed validation",
 						cause:  err,
@@ -676,7 +793,7 @@ func (m *ListOAutherReply) validate(all bool) error {
 				}
 			case interface{ Validate() error }:
 				if err := v.Validate(); err != nil {
-					errors = append(errors, ListOAutherReplyValidationError{
+					errors = append(errors, ListVisibleOAutherReplyValidationError{
 						field:  fmt.Sprintf("List[%v]", idx),
 						reason: "embedded message failed validation",
 						cause:  err,
@@ -685,7 +802,7 @@ func (m *ListOAutherReply) validate(all bool) error {
 			}
 		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
 			if err := v.Validate(); err != nil {
-				return ListOAutherReplyValidationError{
+				return ListVisibleOAutherReplyValidationError{
 					field:  fmt.Sprintf("List[%v]", idx),
 					reason: "embedded message failed validation",
 					cause:  err,
@@ -696,19 +813,19 @@ func (m *ListOAutherReply) validate(all bool) error {
 	}
 
 	if len(errors) > 0 {
-		return ListOAutherReplyMultiError(errors)
+		return ListVisibleOAutherReplyMultiError(errors)
 	}
 
 	return nil
 }
 
-// ListOAutherReplyMultiError is an error wrapping multiple validation errors
-// returned by ListOAutherReply.ValidateAll() if the designated constraints
-// aren't met.
-type ListOAutherReplyMultiError []error
+// ListVisibleOAutherReplyMultiError is an error wrapping multiple validation
+// errors returned by ListVisibleOAutherReply.ValidateAll() if the designated
+// constraints aren't met.
+type ListVisibleOAutherReplyMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m ListOAutherReplyMultiError) Error() string {
+func (m ListVisibleOAutherReplyMultiError) Error() string {
 	var msgs []string
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -717,11 +834,11 @@ func (m ListOAutherReplyMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m ListOAutherReplyMultiError) AllErrors() []error { return m }
+func (m ListVisibleOAutherReplyMultiError) AllErrors() []error { return m }
 
-// ListOAutherReplyValidationError is the validation error returned by
-// ListOAutherReply.Validate if the designated constraints aren't met.
-type ListOAutherReplyValidationError struct {
+// ListVisibleOAutherReplyValidationError is the validation error returned by
+// ListVisibleOAutherReply.Validate if the designated constraints aren't met.
+type ListVisibleOAutherReplyValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -729,22 +846,24 @@ type ListOAutherReplyValidationError struct {
 }
 
 // Field function returns field value.
-func (e ListOAutherReplyValidationError) Field() string { return e.field }
+func (e ListVisibleOAutherReplyValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e ListOAutherReplyValidationError) Reason() string { return e.reason }
+func (e ListVisibleOAutherReplyValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e ListOAutherReplyValidationError) Cause() error { return e.cause }
+func (e ListVisibleOAutherReplyValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e ListOAutherReplyValidationError) Key() bool { return e.key }
+func (e ListVisibleOAutherReplyValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e ListOAutherReplyValidationError) ErrorName() string { return "ListOAutherReplyValidationError" }
+func (e ListVisibleOAutherReplyValidationError) ErrorName() string {
+	return "ListVisibleOAutherReplyValidationError"
+}
 
 // Error satisfies the builtin error interface
-func (e ListOAutherReplyValidationError) Error() string {
+func (e ListVisibleOAutherReplyValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -756,14 +875,14 @@ func (e ListOAutherReplyValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sListOAutherReply.%s: %s%s",
+		"invalid %sListVisibleOAutherReply.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = ListOAutherReplyValidationError{}
+var _ error = ListVisibleOAutherReplyValidationError{}
 
 var _ interface {
 	Field() string
@@ -771,7 +890,7 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = ListOAutherReplyValidationError{}
+} = ListVisibleOAutherReplyValidationError{}
 
 // Validate checks the field values on OAutherHandleRequest with the rules
 // defined in the proto definition for this message. If any rules are
@@ -820,6 +939,17 @@ func (m *OAutherHandleRequest) validate(all bool) error {
 	if utf8.RuneCountInString(m.GetKeyword()) < 1 {
 		err := OAutherHandleRequestValidationError{
 			field:  "Keyword",
+			reason: "value length must be at least 1 runes",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if utf8.RuneCountInString(m.GetPlatform()) < 1 {
+		err := OAutherHandleRequestValidationError{
+			field:  "Platform",
 			reason: "value length must be at least 1 runes",
 		}
 		if !all {
@@ -2965,22 +3095,22 @@ var _ interface {
 	ErrorName() string
 } = FillInfoReplyValidationError{}
 
-// Validate checks the field values on ListOAutherReply_OAuther with the rules
-// defined in the proto definition for this message. If any rules are
+// Validate checks the field values on ListVisibleOAutherReply_OAuther with the
+// rules defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
-func (m *ListOAutherReply_OAuther) Validate() error {
+func (m *ListVisibleOAutherReply_OAuther) Validate() error {
 	return m.validate(false)
 }
 
-// ValidateAll checks the field values on ListOAutherReply_OAuther with the
-// rules defined in the proto definition for this message. If any rules are
-// violated, the result is a list of violation errors wrapped in
-// ListOAutherReply_OAutherMultiError, or nil if none found.
-func (m *ListOAutherReply_OAuther) ValidateAll() error {
+// ValidateAll checks the field values on ListVisibleOAutherReply_OAuther with
+// the rules defined in the proto definition for this message. If any rules
+// are violated, the result is a list of violation errors wrapped in
+// ListVisibleOAutherReply_OAutherMultiError, or nil if none found.
+func (m *ListVisibleOAutherReply_OAuther) ValidateAll() error {
 	return m.validate(true)
 }
 
-func (m *ListOAutherReply_OAuther) validate(all bool) error {
+func (m *ListVisibleOAutherReply_OAuther) validate(all bool) error {
 	if m == nil {
 		return nil
 	}
@@ -2997,20 +3127,24 @@ func (m *ListOAutherReply_OAuther) validate(all bool) error {
 
 	// no validation rules for Type
 
+	// no validation rules for Recommend
+
+	// no validation rules for RecommendText
+
 	if len(errors) > 0 {
-		return ListOAutherReply_OAutherMultiError(errors)
+		return ListVisibleOAutherReply_OAutherMultiError(errors)
 	}
 
 	return nil
 }
 
-// ListOAutherReply_OAutherMultiError is an error wrapping multiple validation
-// errors returned by ListOAutherReply_OAuther.ValidateAll() if the designated
-// constraints aren't met.
-type ListOAutherReply_OAutherMultiError []error
+// ListVisibleOAutherReply_OAutherMultiError is an error wrapping multiple
+// validation errors returned by ListVisibleOAutherReply_OAuther.ValidateAll()
+// if the designated constraints aren't met.
+type ListVisibleOAutherReply_OAutherMultiError []error
 
 // Error returns a concatenation of all the error messages it wraps.
-func (m ListOAutherReply_OAutherMultiError) Error() string {
+func (m ListVisibleOAutherReply_OAutherMultiError) Error() string {
 	var msgs []string
 	for _, err := range m {
 		msgs = append(msgs, err.Error())
@@ -3019,11 +3153,12 @@ func (m ListOAutherReply_OAutherMultiError) Error() string {
 }
 
 // AllErrors returns a list of validation violation errors.
-func (m ListOAutherReply_OAutherMultiError) AllErrors() []error { return m }
+func (m ListVisibleOAutherReply_OAutherMultiError) AllErrors() []error { return m }
 
-// ListOAutherReply_OAutherValidationError is the validation error returned by
-// ListOAutherReply_OAuther.Validate if the designated constraints aren't met.
-type ListOAutherReply_OAutherValidationError struct {
+// ListVisibleOAutherReply_OAutherValidationError is the validation error
+// returned by ListVisibleOAutherReply_OAuther.Validate if the designated
+// constraints aren't met.
+type ListVisibleOAutherReply_OAutherValidationError struct {
 	field  string
 	reason string
 	cause  error
@@ -3031,24 +3166,24 @@ type ListOAutherReply_OAutherValidationError struct {
 }
 
 // Field function returns field value.
-func (e ListOAutherReply_OAutherValidationError) Field() string { return e.field }
+func (e ListVisibleOAutherReply_OAutherValidationError) Field() string { return e.field }
 
 // Reason function returns reason value.
-func (e ListOAutherReply_OAutherValidationError) Reason() string { return e.reason }
+func (e ListVisibleOAutherReply_OAutherValidationError) Reason() string { return e.reason }
 
 // Cause function returns cause value.
-func (e ListOAutherReply_OAutherValidationError) Cause() error { return e.cause }
+func (e ListVisibleOAutherReply_OAutherValidationError) Cause() error { return e.cause }
 
 // Key function returns key value.
-func (e ListOAutherReply_OAutherValidationError) Key() bool { return e.key }
+func (e ListVisibleOAutherReply_OAutherValidationError) Key() bool { return e.key }
 
 // ErrorName returns error name.
-func (e ListOAutherReply_OAutherValidationError) ErrorName() string {
-	return "ListOAutherReply_OAutherValidationError"
+func (e ListVisibleOAutherReply_OAutherValidationError) ErrorName() string {
+	return "ListVisibleOAutherReply_OAutherValidationError"
 }
 
 // Error satisfies the builtin error interface
-func (e ListOAutherReply_OAutherValidationError) Error() string {
+func (e ListVisibleOAutherReply_OAutherValidationError) Error() string {
 	cause := ""
 	if e.cause != nil {
 		cause = fmt.Sprintf(" | caused by: %v", e.cause)
@@ -3060,14 +3195,14 @@ func (e ListOAutherReply_OAutherValidationError) Error() string {
 	}
 
 	return fmt.Sprintf(
-		"invalid %sListOAutherReply_OAuther.%s: %s%s",
+		"invalid %sListVisibleOAutherReply_OAuther.%s: %s%s",
 		key,
 		e.field,
 		e.reason,
 		cause)
 }
 
-var _ error = ListOAutherReply_OAutherValidationError{}
+var _ error = ListVisibleOAutherReply_OAutherValidationError{}
 
 var _ interface {
 	Field() string
@@ -3075,7 +3210,7 @@ var _ interface {
 	Key() bool
 	Cause() error
 	ErrorName() string
-} = ListOAutherReply_OAutherValidationError{}
+} = ListVisibleOAutherReply_OAutherValidationError{}
 
 // Validate checks the field values on GetFillInfoReply_Field with the rules
 // defined in the proto definition for this message. If any rules are

@@ -2,17 +2,17 @@ syntax = "proto3";
 
 package manager.api.roleentity;
 
+import "validate/validate.proto";
+
 option go_package = "manager/api/roleentity;roleentity";
 option java_multiple_files = true;
 option java_package = "manager.api.roleentity";
 
-import "validate/validate.proto";
-
 message CreateRoleEntityRequest {
-  uint32 roleId = 1[(validate.rules).uint32 = {gte: 1}];
-  uint32 entityId = 2[(validate.rules).uint32 = {gte: 1}];
-  string action = 3[(validate.rules).string = {min_len: 1}];
-  string scope = 4[(validate.rules).string = {min_len: 1}];
+  uint32 roleId = 1 [(validate.rules).uint32 = {gte: 1}];
+  uint32 entityId = 2 [(validate.rules).uint32 = {gte: 1}];
+  string action = 3 [(validate.rules).string = {min_len: 1}];
+  string scope = 4 [(validate.rules).string = {min_len: 1}];
   repeated uint32 fields = 5;
   repeated uint32 rules = 6;
   repeated uint32 depts = 7;
@@ -23,24 +23,27 @@ message CreateRoleEntityReply {
 }
 
 message ListRoleEntityRequest {
-  uint32 page = 1[(validate.rules).uint32 = {gte: 1}];
-  uint32 pageSize = 2[(validate.rules).uint32 = {gte: 1 ,lte: 50}];
-  uint32 roleId = 3[(validate.rules).uint32 = {gte: 1}];
-  optional uint32 entityId = 4[(validate.rules).uint32 = {gte: 1}];
+  uint32 page = 1 [(validate.rules).uint32 = {gte: 1}];
+  uint32 pageSize = 2 [(validate.rules).uint32 = {
+    gte: 1
+    lte: 50
+  }];
+  uint32 roleId = 3 [(validate.rules).uint32 = {gte: 1}];
+  optional uint32 entityId = 4 [(validate.rules).uint32 = {gte: 1}];
 }
 
 message ListRoleEntityReply {
-  message App{
+  message App {
     uint32 id = 1;
     string name = 2;
   }
-  message Entity{
+  message Entity {
     uint32 id = 1;
     string name = 2;
     string comment = 3;
     App app = 4;
   }
-  message Data{
+  message Data {
     uint32 id = 1;
     uint32 roleId = 2;
     uint32 entityId = 3;
@@ -58,26 +61,20 @@ message ListRoleEntityReply {
 }
 
 message UpdateRoleEntityRequest {
-  uint32 id = 1[(validate.rules).uint32 = {gte: 1}];
-  optional uint32 roleId = 2[(validate.rules).uint32 = {gte: 1}];
-  optional uint32 entityId = 3[(validate.rules).uint32 = {gte: 1}];
-  optional string action = 4[(validate.rules).string = {min_len: 1}];
-  optional string scope = 5[(validate.rules).string = {min_len: 1}];
+  uint32 id = 1 [(validate.rules).uint32 = {gte: 1}];
+  optional uint32 roleId = 2 [(validate.rules).uint32 = {gte: 1}];
+  optional uint32 entityId = 3 [(validate.rules).uint32 = {gte: 1}];
+  optional string action = 4 [(validate.rules).string = {min_len: 1}];
+  optional string scope = 5 [(validate.rules).string = {min_len: 1}];
   repeated uint32 fields = 6;
   repeated uint32 rules = 7;
   repeated uint32 depts = 8;
-
 }
 
-message UpdateRoleEntityReply {
-}
-
+message UpdateRoleEntityReply {}
 
 message DeleteRoleEntityRequest {
-  uint32 id = 1[(validate.rules).uint32 = {gte: 1}];
+  uint32 id = 1 [(validate.rules).uint32 = {gte: 1}];
 }
 
-message DeleteRoleEntityReply {
-}
-
-
+message DeleteRoleEntityReply {}

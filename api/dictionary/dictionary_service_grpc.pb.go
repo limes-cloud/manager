@@ -8,7 +8,6 @@ package dictionary
 
 import (
 	context "context"
-
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -170,40 +169,33 @@ type DictionaryServer interface {
 }
 
 // UnimplementedDictionaryServer must be embedded to have forward compatible implementations.
-type UnimplementedDictionaryServer struct{}
+type UnimplementedDictionaryServer struct {
+}
 
 func (UnimplementedDictionaryServer) GetDictionary(context.Context, *GetDictionaryRequest) (*GetDictionaryReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetDictionary not implemented")
 }
-
 func (UnimplementedDictionaryServer) ListDictionary(context.Context, *ListDictionaryRequest) (*ListDictionaryReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListDictionary not implemented")
 }
-
 func (UnimplementedDictionaryServer) CreateDictionary(context.Context, *CreateDictionaryRequest) (*CreateDictionaryReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateDictionary not implemented")
 }
-
 func (UnimplementedDictionaryServer) UpdateDictionary(context.Context, *UpdateDictionaryRequest) (*UpdateDictionaryReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateDictionary not implemented")
 }
-
 func (UnimplementedDictionaryServer) DeleteDictionary(context.Context, *DeleteDictionaryRequest) (*DeleteDictionaryReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteDictionary not implemented")
 }
-
 func (UnimplementedDictionaryServer) ListDictionaryValue(context.Context, *ListDictionaryValueRequest) (*ListDictionaryValueReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListDictionaryValue not implemented")
 }
-
 func (UnimplementedDictionaryServer) CreateDictionaryValue(context.Context, *CreateDictionaryValueRequest) (*CreateDictionaryValueReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateDictionaryValue not implemented")
 }
-
 func (UnimplementedDictionaryServer) UpdateDictionaryValue(context.Context, *UpdateDictionaryValueRequest) (*UpdateDictionaryValueReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateDictionaryValue not implemented")
 }
-
 func (UnimplementedDictionaryServer) DeleteDictionaryValue(context.Context, *DeleteDictionaryValueRequest) (*DeleteDictionaryValueReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteDictionaryValue not implemented")
 }

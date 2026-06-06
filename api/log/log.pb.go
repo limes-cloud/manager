@@ -7,12 +7,11 @@
 package log
 
 import (
-	reflect "reflect"
-	sync "sync"
-
 	_ "github.com/envoyproxy/protoc-gen-validate/validate"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	reflect "reflect"
+	sync "sync"
 )
 
 const (
@@ -942,23 +941,20 @@ func file_api_log_proto_log_proto_rawDescGZIP() []byte {
 	return file_api_log_proto_log_proto_rawDescData
 }
 
-var (
-	file_api_log_proto_log_proto_msgTypes = make([]protoimpl.MessageInfo, 11)
-	file_api_log_proto_log_proto_goTypes  = []interface{}{
-		(*ListLoginLogRequest)(nil),       // 0: manager.api.log.ListLoginLogRequest
-		(*ListLoginLogReply)(nil),         // 1: manager.api.log.ListLoginLogReply
-		(*ListAuthLogRequest)(nil),        // 2: manager.api.log.ListAuthLogRequest
-		(*ListAuthLogReply)(nil),          // 3: manager.api.log.ListAuthLogReply
-		(*ListLoginLogReply_User)(nil),    // 4: manager.api.log.ListLoginLogReply.User
-		(*ListLoginLogReply_App)(nil),     // 5: manager.api.log.ListLoginLogReply.App
-		(*ListLoginLogReply_Log)(nil),     // 6: manager.api.log.ListLoginLogReply.Log
-		(*ListAuthLogReply_Log)(nil),      // 7: manager.api.log.ListAuthLogReply.Log
-		(*ListAuthLogReply_Log_User)(nil), // 8: manager.api.log.ListAuthLogReply.Log.User
-		(*ListAuthLogReply_Log_App)(nil),  // 9: manager.api.log.ListAuthLogReply.Log.App
-		(*ListAuthLogReply_Log_Menu)(nil), // 10: manager.api.log.ListAuthLogReply.Log.Menu
-	}
-)
-
+var file_api_log_proto_log_proto_msgTypes = make([]protoimpl.MessageInfo, 11)
+var file_api_log_proto_log_proto_goTypes = []interface{}{
+	(*ListLoginLogRequest)(nil),       // 0: manager.api.log.ListLoginLogRequest
+	(*ListLoginLogReply)(nil),         // 1: manager.api.log.ListLoginLogReply
+	(*ListAuthLogRequest)(nil),        // 2: manager.api.log.ListAuthLogRequest
+	(*ListAuthLogReply)(nil),          // 3: manager.api.log.ListAuthLogReply
+	(*ListLoginLogReply_User)(nil),    // 4: manager.api.log.ListLoginLogReply.User
+	(*ListLoginLogReply_App)(nil),     // 5: manager.api.log.ListLoginLogReply.App
+	(*ListLoginLogReply_Log)(nil),     // 6: manager.api.log.ListLoginLogReply.Log
+	(*ListAuthLogReply_Log)(nil),      // 7: manager.api.log.ListAuthLogReply.Log
+	(*ListAuthLogReply_Log_User)(nil), // 8: manager.api.log.ListAuthLogReply.Log.User
+	(*ListAuthLogReply_Log_App)(nil),  // 9: manager.api.log.ListAuthLogReply.Log.App
+	(*ListAuthLogReply_Log_Menu)(nil), // 10: manager.api.log.ListAuthLogReply.Log.Menu
+}
 var file_api_log_proto_log_proto_depIdxs = []int32{
 	6,  // 0: manager.api.log.ListLoginLogReply.list:type_name -> manager.api.log.ListLoginLogReply.Log
 	7,  // 1: manager.api.log.ListAuthLogReply.list:type_name -> manager.api.log.ListAuthLogReply.Log

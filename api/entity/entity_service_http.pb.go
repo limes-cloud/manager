@@ -8,7 +8,6 @@ package entity
 
 import (
 	context "context"
-
 	http "github.com/go-kratos/kratos/v2/transport/http"
 	binding "github.com/go-kratos/kratos/v2/transport/http/binding"
 	emptypb "google.golang.org/protobuf/types/known/emptypb"
@@ -16,29 +15,25 @@ import (
 
 // This is a compile-time assertion to ensure that this generated file
 // is compatible with the kratos package it is being compiled against.
-var (
-	_ = new(context.Context)
-	_ = binding.EncodeURL
-)
+var _ = new(context.Context)
+var _ = binding.EncodeURL
 
 const _ = http.SupportPackageIsVersion1
 
-const (
-	OperationEntityCreateEntity      = "/manager.api.entity.Entity/CreateEntity"
-	OperationEntityCreateEntityField = "/manager.api.entity.Entity/CreateEntityField"
-	OperationEntityCreateEntityRule  = "/manager.api.entity.Entity/CreateEntityRule"
-	OperationEntityDeleteEntity      = "/manager.api.entity.Entity/DeleteEntity"
-	OperationEntityDeleteEntityField = "/manager.api.entity.Entity/DeleteEntityField"
-	OperationEntityDeleteEntityRule  = "/manager.api.entity.Entity/DeleteEntityRule"
-	OperationEntityImportEntity      = "/manager.api.entity.Entity/ImportEntity"
-	OperationEntityListEntity        = "/manager.api.entity.Entity/ListEntity"
-	OperationEntityListEntityField   = "/manager.api.entity.Entity/ListEntityField"
-	OperationEntityListEntityRule    = "/manager.api.entity.Entity/ListEntityRule"
-	OperationEntityLoadEntity        = "/manager.api.entity.Entity/LoadEntity"
-	OperationEntityUpdateEntity      = "/manager.api.entity.Entity/UpdateEntity"
-	OperationEntityUpdateEntityField = "/manager.api.entity.Entity/UpdateEntityField"
-	OperationEntityUpdateEntityRule  = "/manager.api.entity.Entity/UpdateEntityRule"
-)
+const OperationEntityCreateEntity = "/manager.api.entity.Entity/CreateEntity"
+const OperationEntityCreateEntityField = "/manager.api.entity.Entity/CreateEntityField"
+const OperationEntityCreateEntityRule = "/manager.api.entity.Entity/CreateEntityRule"
+const OperationEntityDeleteEntity = "/manager.api.entity.Entity/DeleteEntity"
+const OperationEntityDeleteEntityField = "/manager.api.entity.Entity/DeleteEntityField"
+const OperationEntityDeleteEntityRule = "/manager.api.entity.Entity/DeleteEntityRule"
+const OperationEntityImportEntity = "/manager.api.entity.Entity/ImportEntity"
+const OperationEntityListEntity = "/manager.api.entity.Entity/ListEntity"
+const OperationEntityListEntityField = "/manager.api.entity.Entity/ListEntityField"
+const OperationEntityListEntityRule = "/manager.api.entity.Entity/ListEntityRule"
+const OperationEntityLoadEntity = "/manager.api.entity.Entity/LoadEntity"
+const OperationEntityUpdateEntity = "/manager.api.entity.Entity/UpdateEntity"
+const OperationEntityUpdateEntityField = "/manager.api.entity.Entity/UpdateEntityField"
+const OperationEntityUpdateEntityRule = "/manager.api.entity.Entity/UpdateEntityRule"
 
 type EntityHTTPServer interface {
 	// CreateEntity CreateEntity 创建实体

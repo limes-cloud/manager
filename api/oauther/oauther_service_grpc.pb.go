@@ -8,7 +8,6 @@ package oauther
 
 import (
 	context "context"
-
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -114,24 +113,21 @@ type OAutherServer interface {
 }
 
 // UnimplementedOAutherServer must be embedded to have forward compatible implementations.
-type UnimplementedOAutherServer struct{}
+type UnimplementedOAutherServer struct {
+}
 
 func (UnimplementedOAutherServer) ListOAutherType(context.Context, *ListOAutherTypeRequest) (*ListOAutherTypeReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListOAutherType not implemented")
 }
-
 func (UnimplementedOAutherServer) ListOAuther(context.Context, *ListOAutherRequest) (*ListOAutherReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListOAuther not implemented")
 }
-
 func (UnimplementedOAutherServer) CreateOAuther(context.Context, *CreateOAutherRequest) (*CreateOAutherReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateOAuther not implemented")
 }
-
 func (UnimplementedOAutherServer) UpdateOAuther(context.Context, *UpdateOAutherRequest) (*UpdateOAutherReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateOAuther not implemented")
 }
-
 func (UnimplementedOAutherServer) DeleteOAuther(context.Context, *DeleteOAutherRequest) (*DeleteOAutherReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteOAuther not implemented")
 }

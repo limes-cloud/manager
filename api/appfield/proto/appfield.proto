@@ -2,20 +2,34 @@ syntax = "proto3";
 
 package manager.api.appfield;
 
+import "validate/validate.proto";
+
 option go_package = "manager/api/appfield;appfield";
 option java_multiple_files = true;
 option java_package = "manager.api.appfield";
 
-import "validate/validate.proto";
-
 message ListAppFieldRequest {
-  uint32 page = 1[(validate.rules).uint32 = {gte: 1}];
-  uint32 pageSize = 2[(validate.rules).uint32 = {gte: 1,lte:50}];
-  optional string order = 3[(validate.rules).string = {in: ["asc","desc"]}];
-  optional string orderBy = 4[(validate.rules).string = {in: ["id","created_at","updated_at"]}];
+  uint32 page = 1 [(validate.rules).uint32 = {gte: 1}];
+  uint32 pageSize = 2 [(validate.rules).uint32 = {
+    gte: 1
+    lte: 50
+  }];
+  optional string order = 3 [(validate.rules).string = {
+    in: [
+      "asc",
+      "desc"
+    ]
+  }];
+  optional string orderBy = 4 [(validate.rules).string = {
+    in: [
+      "id",
+      "created_at",
+      "updated_at"
+    ]
+  }];
   optional string keyword = 5;
   optional string name = 6;
-  uint32 appId = 7[(validate.rules).uint32 = {gte: 1}];
+  uint32 appId = 7 [(validate.rules).uint32 = {gte: 1}];
 }
 
 message ListAppFieldReply {
@@ -41,8 +55,8 @@ message ListAppFieldReply {
 }
 
 message CreateAppFieldRequest {
-  uint32 appId = 1[(validate.rules).uint32 = {gte: 1}];
-  uint32 fieldId = 2[(validate.rules).uint32 = {gte: 1}];
+  uint32 appId = 1 [(validate.rules).uint32 = {gte: 1}];
+  uint32 fieldId = 2 [(validate.rules).uint32 = {gte: 1}];
   bool required = 3;
 }
 
@@ -51,16 +65,14 @@ message CreateAppFieldReply {
 }
 
 message UpdateAppFieldRequest {
-  uint32 id = 1[(validate.rules).uint32 = {gt: 0}];
+  uint32 id = 1 [(validate.rules).uint32 = {gt: 0}];
   bool required = 3;
 }
 
-message UpdateAppFieldReply {
-}
+message UpdateAppFieldReply {}
 
 message DeleteAppFieldRequest {
-  uint32 id = 1[(validate.rules).uint32 = {gt: 0}];
+  uint32 id = 1 [(validate.rules).uint32 = {gt: 0}];
 }
 
-message DeleteAppFieldReply {
-}
+message DeleteAppFieldReply {}

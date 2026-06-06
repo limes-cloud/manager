@@ -8,7 +8,6 @@ package log
 
 import (
 	context "context"
-
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -72,12 +71,12 @@ type LogServer interface {
 }
 
 // UnimplementedLogServer must be embedded to have forward compatible implementations.
-type UnimplementedLogServer struct{}
+type UnimplementedLogServer struct {
+}
 
 func (UnimplementedLogServer) ListLoginLog(context.Context, *ListLoginLogRequest) (*ListLoginLogReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListLoginLog not implemented")
 }
-
 func (UnimplementedLogServer) ListAuthLog(context.Context, *ListAuthLogRequest) (*ListAuthLogReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListAuthLog not implemented")
 }

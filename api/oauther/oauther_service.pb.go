@@ -7,11 +7,10 @@
 package oauther
 
 import (
-	reflect "reflect"
-
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	reflect "reflect"
 )
 
 const (
@@ -93,7 +92,6 @@ var file_api_oauther_proto_oauther_service_proto_goTypes = []interface{}{
 	(*UpdateOAutherReply)(nil),     // 8: manager.api.oauther.UpdateOAutherReply
 	(*DeleteOAutherReply)(nil),     // 9: manager.api.oauther.DeleteOAutherReply
 }
-
 var file_api_oauther_proto_oauther_service_proto_depIdxs = []int32{
 	0, // 0: manager.api.oauther.OAuther.ListOAutherType:input_type -> manager.api.oauther.ListOAutherTypeRequest
 	1, // 1: manager.api.oauther.OAuther.ListOAuther:input_type -> manager.api.oauther.ListOAutherRequest

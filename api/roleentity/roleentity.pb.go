@@ -7,12 +7,11 @@
 package roleentity
 
 import (
-	reflect "reflect"
-	sync "sync"
-
 	_ "github.com/envoyproxy/protoc-gen-validate/validate"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	reflect "reflect"
+	sync "sync"
 )
 
 const (
@@ -890,23 +889,20 @@ func file_api_roleentity_proto_roleentity_proto_rawDescGZIP() []byte {
 	return file_api_roleentity_proto_roleentity_proto_rawDescData
 }
 
-var (
-	file_api_roleentity_proto_roleentity_proto_msgTypes = make([]protoimpl.MessageInfo, 11)
-	file_api_roleentity_proto_roleentity_proto_goTypes  = []interface{}{
-		(*CreateRoleEntityRequest)(nil),    // 0: manager.api.roleentity.CreateRoleEntityRequest
-		(*CreateRoleEntityReply)(nil),      // 1: manager.api.roleentity.CreateRoleEntityReply
-		(*ListRoleEntityRequest)(nil),      // 2: manager.api.roleentity.ListRoleEntityRequest
-		(*ListRoleEntityReply)(nil),        // 3: manager.api.roleentity.ListRoleEntityReply
-		(*UpdateRoleEntityRequest)(nil),    // 4: manager.api.roleentity.UpdateRoleEntityRequest
-		(*UpdateRoleEntityReply)(nil),      // 5: manager.api.roleentity.UpdateRoleEntityReply
-		(*DeleteRoleEntityRequest)(nil),    // 6: manager.api.roleentity.DeleteRoleEntityRequest
-		(*DeleteRoleEntityReply)(nil),      // 7: manager.api.roleentity.DeleteRoleEntityReply
-		(*ListRoleEntityReply_App)(nil),    // 8: manager.api.roleentity.ListRoleEntityReply.App
-		(*ListRoleEntityReply_Entity)(nil), // 9: manager.api.roleentity.ListRoleEntityReply.Entity
-		(*ListRoleEntityReply_Data)(nil),   // 10: manager.api.roleentity.ListRoleEntityReply.Data
-	}
-)
-
+var file_api_roleentity_proto_roleentity_proto_msgTypes = make([]protoimpl.MessageInfo, 11)
+var file_api_roleentity_proto_roleentity_proto_goTypes = []interface{}{
+	(*CreateRoleEntityRequest)(nil),    // 0: manager.api.roleentity.CreateRoleEntityRequest
+	(*CreateRoleEntityReply)(nil),      // 1: manager.api.roleentity.CreateRoleEntityReply
+	(*ListRoleEntityRequest)(nil),      // 2: manager.api.roleentity.ListRoleEntityRequest
+	(*ListRoleEntityReply)(nil),        // 3: manager.api.roleentity.ListRoleEntityReply
+	(*UpdateRoleEntityRequest)(nil),    // 4: manager.api.roleentity.UpdateRoleEntityRequest
+	(*UpdateRoleEntityReply)(nil),      // 5: manager.api.roleentity.UpdateRoleEntityReply
+	(*DeleteRoleEntityRequest)(nil),    // 6: manager.api.roleentity.DeleteRoleEntityRequest
+	(*DeleteRoleEntityReply)(nil),      // 7: manager.api.roleentity.DeleteRoleEntityReply
+	(*ListRoleEntityReply_App)(nil),    // 8: manager.api.roleentity.ListRoleEntityReply.App
+	(*ListRoleEntityReply_Entity)(nil), // 9: manager.api.roleentity.ListRoleEntityReply.Entity
+	(*ListRoleEntityReply_Data)(nil),   // 10: manager.api.roleentity.ListRoleEntityReply.Data
+}
 var file_api_roleentity_proto_roleentity_proto_depIdxs = []int32{
 	10, // 0: manager.api.roleentity.ListRoleEntityReply.list:type_name -> manager.api.roleentity.ListRoleEntityReply.Data
 	8,  // 1: manager.api.roleentity.ListRoleEntityReply.Entity.app:type_name -> manager.api.roleentity.ListRoleEntityReply.App

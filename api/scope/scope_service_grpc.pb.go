@@ -8,7 +8,6 @@ package scope
 
 import (
 	context "context"
-
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -68,12 +67,12 @@ type ScopeServer interface {
 }
 
 // UnimplementedScopeServer must be embedded to have forward compatible implementations.
-type UnimplementedScopeServer struct{}
+type UnimplementedScopeServer struct {
+}
 
 func (UnimplementedScopeServer) GetScope(context.Context, *GetScopeRequest) (*GetScopeReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetScope not implemented")
 }
-
 func (UnimplementedScopeServer) GetUserDeptId(context.Context, *GetUserDeptIdRequest) (*GetUserDeptIdReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetUserDeptId not implemented")
 }

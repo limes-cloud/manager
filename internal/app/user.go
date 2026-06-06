@@ -72,6 +72,7 @@ func (app *User) GetCurrentUser(c context.Context, req *user.GetCurrentUserReque
 		Id:        result.Id,
 		Nickname:  result.Nickname,
 		Username:  result.Username,
+		Signature: result.Signature,
 		Avatar:    result.Avatar,
 		Status:    result.Status,
 		LoggedAt:  uint32(result.LoggedAt),
@@ -119,8 +120,10 @@ func (app *User) UpdateCurrentUserSetting(c context.Context, req *user.UpdateCur
 func (app *User) UpdateCurrentUser(c context.Context, req *user.UpdateCurrentUserRequest) (*emptypb.Empty, error) {
 	ctx := core.MustContext(c)
 	err := app.srv.UpdateCurrentUser(ctx, &types.UpdateCurrentUserRequest{
-		Avatar:   req.GetAvatar(),
-		Nickname: req.GetNickname(),
+		Avatar:    req.GetAvatar(),
+		Nickname:  req.GetNickname(),
+		Signature: req.Signature,
+		Infos:     req.Infos,
 	})
 	if err != nil {
 		return nil, err
@@ -159,6 +162,7 @@ func (app *User) GetUser(c context.Context, req *user.GetUserRequest) (*user.Use
 		Id:        result.Id,
 		Nickname:  result.Nickname,
 		Username:  result.Username,
+		Signature: result.Signature,
 		Avatar:    result.Avatar,
 		Status:    result.Status,
 		LoggedAt:  uint32(result.LoggedAt),
@@ -206,9 +210,10 @@ func (app *User) CreateUser(c context.Context, req *user.CreateUserRequest) (*us
 	ctx := core.MustContext(c)
 
 	info := &entity.User{
-		Avatar:   req.Avatar,
-		Nickname: req.Nickname,
-		Username: req.Username,
+		Avatar:    req.Avatar,
+		Nickname:  req.Nickname,
+		Username:  req.Username,
+		Signature: req.Signature,
 	}
 	for key, val := range req.Infos {
 		info.Infos = append(info.Infos, &entity.Userinfo{
@@ -246,6 +251,7 @@ func (app *User) UpdateUser(c context.Context, req *user.UpdateUserRequest) (*us
 		BaseTenantModel: model.BaseTenantModel{Id: req.Id},
 		Avatar:          value.Value(req.Avatar),
 		Nickname:        value.Value(req.Nickname),
+		Signature:       req.Signature,
 		Status:          req.Status,
 		Reason:          req.Reason,
 	}

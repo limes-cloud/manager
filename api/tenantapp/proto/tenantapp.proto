@@ -2,22 +2,22 @@ syntax = "proto3";
 
 package manager.api.tenantapp;
 
+import "validate/validate.proto";
+
 option go_package = "manager/api/tenantapp;tenantapp";
 option java_multiple_files = true;
 option java_package = "manager.api.tenantapp.proto";
 
-import "validate/validate.proto";
-
-message TenantAppSetting{
+message TenantAppSetting {
   optional bool enableNotice = 1;
-  optional string noticeEmail = 2[(validate.rules).string = {email: true}];
+  optional string noticeEmail = 2 [(validate.rules).string = {email: true}];
 }
 
 message CreateTenantAppRequest {
-  uint32 tenantId = 1[(validate.rules).uint32 = {gte: 1}];
-  uint32 appId = 2[(validate.rules).uint32 = {gte: 1}];
-  uint32 expiredAt = 3[(validate.rules).uint32 = {gte: 1}];
-  repeated uint32 menuIds = 4[(validate.rules).repeated = {min_items: 1}];
+  uint32 tenantId = 1 [(validate.rules).uint32 = {gte: 1}];
+  uint32 appId = 2 [(validate.rules).uint32 = {gte: 1}];
+  uint32 expiredAt = 3 [(validate.rules).uint32 = {gte: 1}];
+  repeated uint32 menuIds = 4 [(validate.rules).repeated = {min_items: 1}];
   TenantAppSetting setting = 5;
 }
 
@@ -26,33 +26,34 @@ message CreateTenantAppReply {
 }
 
 message UpdateTenantAppRequest {
-  uint32 tenantId = 1[(validate.rules).uint32 = {gte: 1}];
-  uint32 appId = 2[(validate.rules).uint32 = {gte: 1}];
-  uint32 expiredAt = 3[(validate.rules).uint32 = {gte: 1}];
-  repeated uint32 menuIds = 4[(validate.rules).repeated = {min_items: 1}];
+  uint32 tenantId = 1 [(validate.rules).uint32 = {gte: 1}];
+  uint32 appId = 2 [(validate.rules).uint32 = {gte: 1}];
+  uint32 expiredAt = 3 [(validate.rules).uint32 = {gte: 1}];
+  repeated uint32 menuIds = 4 [(validate.rules).repeated = {min_items: 1}];
   optional TenantAppSetting setting = 5;
 }
-message UpdateTenantAppReply {
-}
+message UpdateTenantAppReply {}
 
 message DeleteTenantAppRequest {
-  uint32 tenantId = 1[(validate.rules).uint32 = {gte: 1}];
-  uint32 appId = 2[(validate.rules).uint32 = {gte: 1}];
+  uint32 tenantId = 1 [(validate.rules).uint32 = {gte: 1}];
+  uint32 appId = 2 [(validate.rules).uint32 = {gte: 1}];
 }
 message DeleteTenantAppReply {}
 
-
 message ListTenantAppRequest {
-  uint32 page = 1[(validate.rules).uint32 = {gte: 1}];
-  uint32 pageSize = 2[(validate.rules).uint32 = {gte: 1,lte:50}];
+  uint32 page = 1 [(validate.rules).uint32 = {gte: 1}];
+  uint32 pageSize = 2 [(validate.rules).uint32 = {
+    gte: 1
+    lte: 50
+  }];
   optional string order = 3;
   optional string orderBy = 4;
   optional string appName = 5;
   optional string appKeyword = 6;
-  uint32 tenantId = 7[(validate.rules).uint32 = {gte: 1}];
+  uint32 tenantId = 7 [(validate.rules).uint32 = {gte: 1}];
 }
 
-message App{
+message App {
   uint32 id = 1;
   string logo = 2;
   string keyword = 3;
@@ -60,7 +61,7 @@ message App{
 }
 
 message ListTenantAppReply {
-  message Data{
+  message Data {
     uint32 id = 1;
     uint32 appId = 2;
     uint32 tenantId = 3;
@@ -76,11 +77,11 @@ message ListTenantAppReply {
 }
 
 message GetTenantAppRequest {
-  uint32 tenantId = 1[(validate.rules).uint32 = {gte: 1}];
-  uint32 appId = 2[(validate.rules).uint32 = {gte: 1}];
+  uint32 tenantId = 1 [(validate.rules).uint32 = {gte: 1}];
+  uint32 appId = 2 [(validate.rules).uint32 = {gte: 1}];
 }
 
-message GetTenantAppReply{
+message GetTenantAppReply {
   uint32 id = 1;
   uint32 appId = 2;
   uint32 tenantId = 3;

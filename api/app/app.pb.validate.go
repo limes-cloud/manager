@@ -1135,6 +1135,7 @@ func (m *ListAppRequest) validate(all bool) error {
 	}
 
 	if m.Order != nil {
+
 		if _, ok := _ListAppRequest_Order_InLookup[m.GetOrder()]; !ok {
 			err := ListAppRequestValidationError{
 				field:  "Order",
@@ -1145,9 +1146,11 @@ func (m *ListAppRequest) validate(all bool) error {
 			}
 			errors = append(errors, err)
 		}
+
 	}
 
 	if m.OrderBy != nil {
+
 		if _, ok := _ListAppRequest_OrderBy_InLookup[m.GetOrderBy()]; !ok {
 			err := ListAppRequestValidationError{
 				field:  "OrderBy",
@@ -1158,6 +1161,7 @@ func (m *ListAppRequest) validate(all bool) error {
 			}
 			errors = append(errors, err)
 		}
+
 	}
 
 	if m.Keyword != nil {
@@ -1730,6 +1734,7 @@ func (m *UpdateAppRequest) validate(all bool) error {
 	}
 
 	if m.Type != nil {
+
 		if utf8.RuneCountInString(m.GetType()) > 128 {
 			err := UpdateAppRequestValidationError{
 				field:  "Type",
@@ -1740,9 +1745,11 @@ func (m *UpdateAppRequest) validate(all bool) error {
 			}
 			errors = append(errors, err)
 		}
+
 	}
 
 	if m.Logo != nil {
+
 		if utf8.RuneCountInString(m.GetLogo()) > 128 {
 			err := UpdateAppRequestValidationError{
 				field:  "Logo",
@@ -1753,9 +1760,11 @@ func (m *UpdateAppRequest) validate(all bool) error {
 			}
 			errors = append(errors, err)
 		}
+
 	}
 
 	if m.Favicon != nil {
+
 		if utf8.RuneCountInString(m.GetFavicon()) > 128 {
 			err := UpdateAppRequestValidationError{
 				field:  "Favicon",
@@ -1766,9 +1775,11 @@ func (m *UpdateAppRequest) validate(all bool) error {
 			}
 			errors = append(errors, err)
 		}
+
 	}
 
 	if m.Secret != nil {
+
 		if utf8.RuneCountInString(m.GetSecret()) > 128 {
 			err := UpdateAppRequestValidationError{
 				field:  "Secret",
@@ -1779,9 +1790,11 @@ func (m *UpdateAppRequest) validate(all bool) error {
 			}
 			errors = append(errors, err)
 		}
+
 	}
 
 	if m.Name != nil {
+
 		if utf8.RuneCountInString(m.GetName()) > 64 {
 			err := UpdateAppRequestValidationError{
 				field:  "Name",
@@ -1792,9 +1805,11 @@ func (m *UpdateAppRequest) validate(all bool) error {
 			}
 			errors = append(errors, err)
 		}
+
 	}
 
 	if m.ShowName != nil {
+
 		if utf8.RuneCountInString(m.GetShowName()) > 64 {
 			err := UpdateAppRequestValidationError{
 				field:  "ShowName",
@@ -1805,6 +1820,7 @@ func (m *UpdateAppRequest) validate(all bool) error {
 			}
 			errors = append(errors, err)
 		}
+
 	}
 
 	if m.Private != nil {
@@ -1828,6 +1844,7 @@ func (m *UpdateAppRequest) validate(all bool) error {
 	}
 
 	if m.Setting != nil {
+
 		if all {
 			switch v := interface{}(m.GetSetting()).(type) {
 			case interface{ ValidateAll() error }:
@@ -1856,6 +1873,7 @@ func (m *UpdateAppRequest) validate(all bool) error {
 				}
 			}
 		}
+
 	}
 
 	if len(errors) > 0 {

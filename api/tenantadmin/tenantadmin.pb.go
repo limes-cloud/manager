@@ -7,12 +7,11 @@
 package tenantadmin
 
 import (
-	reflect "reflect"
-	sync "sync"
-
 	_ "github.com/envoyproxy/protoc-gen-validate/validate"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	reflect "reflect"
+	sync "sync"
 )
 
 const (
@@ -483,19 +482,16 @@ func file_api_tenantadmin_proto_tenantadmin_proto_rawDescGZIP() []byte {
 	return file_api_tenantadmin_proto_tenantadmin_proto_rawDescData
 }
 
-var (
-	file_api_tenantadmin_proto_tenantadmin_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
-	file_api_tenantadmin_proto_tenantadmin_proto_goTypes  = []interface{}{
-		(*CreateTenantAdminRequest)(nil),  // 0: manager.api.tenantadmin.CreateTenantAdminRequest
-		(*CreateTenantAdminReply)(nil),    // 1: manager.api.tenantadmin.CreateTenantAdminReply
-		(*DeleteTenantAdminRequest)(nil),  // 2: manager.api.tenantadmin.DeleteTenantAdminRequest
-		(*DeleteTenantAdminReply)(nil),    // 3: manager.api.tenantadmin.DeleteTenantAdminReply
-		(*ListTenantAdminRequest)(nil),    // 4: manager.api.tenantadmin.ListTenantAdminRequest
-		(*ListTenantAdminReply)(nil),      // 5: manager.api.tenantadmin.ListTenantAdminReply
-		(*ListTenantAdminReply_Data)(nil), // 6: manager.api.tenantadmin.ListTenantAdminReply.Data
-	}
-)
-
+var file_api_tenantadmin_proto_tenantadmin_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
+var file_api_tenantadmin_proto_tenantadmin_proto_goTypes = []interface{}{
+	(*CreateTenantAdminRequest)(nil),  // 0: manager.api.tenantadmin.CreateTenantAdminRequest
+	(*CreateTenantAdminReply)(nil),    // 1: manager.api.tenantadmin.CreateTenantAdminReply
+	(*DeleteTenantAdminRequest)(nil),  // 2: manager.api.tenantadmin.DeleteTenantAdminRequest
+	(*DeleteTenantAdminReply)(nil),    // 3: manager.api.tenantadmin.DeleteTenantAdminReply
+	(*ListTenantAdminRequest)(nil),    // 4: manager.api.tenantadmin.ListTenantAdminRequest
+	(*ListTenantAdminReply)(nil),      // 5: manager.api.tenantadmin.ListTenantAdminReply
+	(*ListTenantAdminReply_Data)(nil), // 6: manager.api.tenantadmin.ListTenantAdminReply.Data
+}
 var file_api_tenantadmin_proto_tenantadmin_proto_depIdxs = []int32{
 	6, // 0: manager.api.tenantadmin.ListTenantAdminReply.list:type_name -> manager.api.tenantadmin.ListTenantAdminReply.Data
 	1, // [1:1] is the sub-list for method output_type

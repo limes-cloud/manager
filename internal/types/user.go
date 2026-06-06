@@ -1,6 +1,8 @@
 package types
 
-import "github.com/limes-cloud/kratosx/model/page"
+import (
+	"github.com/limes-cloud/kratosx/model/page"
+)
 
 type OfflineUserRequest struct {
 	UserId uint32   `json:"userId"`
@@ -12,8 +14,10 @@ type GetCurrentUserRequest struct {
 }
 
 type UpdateCurrentUserRequest struct {
-	Avatar   string `json:"avatar"`
-	Nickname string `json:"nickname"`
+	Avatar    string            `json:"avatar"`
+	Nickname  string            `json:"nickname"`
+	Signature *string           `json:"signature"`
+	Infos     map[string]string `json:"infos"`
 }
 
 type UpdateCurrentUserPasswordRequest struct {

@@ -8,26 +8,21 @@ package job
 
 import (
 	context "context"
-
 	http "github.com/go-kratos/kratos/v2/transport/http"
 	binding "github.com/go-kratos/kratos/v2/transport/http/binding"
 )
 
 // This is a compile-time assertion to ensure that this generated file
 // is compatible with the kratos package it is being compiled against.
-var (
-	_ = new(context.Context)
-	_ = binding.EncodeURL
-)
+var _ = new(context.Context)
+var _ = binding.EncodeURL
 
 const _ = http.SupportPackageIsVersion1
 
-const (
-	OperationJobCreateJob = "/manager.api.job.Job/CreateJob"
-	OperationJobDeleteJob = "/manager.api.job.Job/DeleteJob"
-	OperationJobListJob   = "/manager.api.job.Job/ListJob"
-	OperationJobUpdateJob = "/manager.api.job.Job/UpdateJob"
-)
+const OperationJobCreateJob = "/manager.api.job.Job/CreateJob"
+const OperationJobDeleteJob = "/manager.api.job.Job/DeleteJob"
+const OperationJobListJob = "/manager.api.job.Job/ListJob"
+const OperationJobUpdateJob = "/manager.api.job.Job/UpdateJob"
 
 type JobHTTPServer interface {
 	// CreateJob CreateJob 创建部门

@@ -254,8 +254,8 @@ github.com/lestrrat/go-strftime v0.0.0-20180220042222-ba3bf9c1d042 h1:Bvq8AziQ5j
 github.com/lestrrat/go-strftime v0.0.0-20180220042222-ba3bf9c1d042/go.mod h1:TPpsiPUEh0zFL1Snz4crhMlBe60PYxRHr5oFF3rRYg0=
 github.com/limes-cloud/configure v1.0.49 h1:3iXHL9MJm6BNWxfJ/tsJ0iPfUvcjHDs74rH5PnGPBpY=
 github.com/limes-cloud/configure v1.0.49/go.mod h1:nFIiU4egJcKmUOYSb7DfwojO/NDsTbgJqM0ZUkPwmy4=
-github.com/limes-cloud/kratosx v1.2.9 h1:LpQbyVcr1+SaJJwUS6OOk7sPzTkqGibvR9n9A7LXnzg=
-github.com/limes-cloud/kratosx v1.2.9/go.mod h1:p+/uTTqVMjQ4YJRAr7wqZ21VdqwXMroDAgOBgFQwx28=
+github.com/limes-cloud/kratosx v1.3.2 h1:9Xf1I0TVm/WzdYoKZCm/qEUUyKoZ5rQX74cBYoqiJ9s=
+github.com/limes-cloud/kratosx v1.3.2/go.mod h1:p+/uTTqVMjQ4YJRAr7wqZ21VdqwXMroDAgOBgFQwx28=
 github.com/lufia/plan9stats v0.0.0-20211012122336-39d0f177ccd0/go.mod h1:zJYVVT2jmtg6P3p1VtQj7WsuWi/y4VnjVBn7F8KPB3I=
 github.com/lufia/plan9stats v0.0.0-20240408141607-282e7b5d6b74 h1:1KuuSOy4ZNgW0KA2oYIngXVFhQcXxhLqCVK7cBcldkk=
 github.com/lufia/plan9stats v0.0.0-20240408141607-282e7b5d6b74/go.mod h1:ilwx/Dta8jXAgpFYFvSWEMwxmbWXyiUHkd5FwyKhb5k=

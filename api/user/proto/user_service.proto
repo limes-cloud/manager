@@ -2,103 +2,95 @@ syntax = "proto3";
 
 package manager.api.user;
 
-option go_package = "manager/api/user;user";
-option java_multiple_files = true;
-option java_package = "manager.api.user";
-
 import "api/user/proto/user.proto";
 import "google/api/annotations.proto";
 import "google/protobuf/empty.proto";
 
-service User{
+option go_package = "manager/api/user;user";
+option java_multiple_files = true;
+option java_package = "manager.api.user";
+
+service User {
   // GetCurrentUser 获取当前用户信息
-  rpc GetCurrentUser (GetCurrentUserRequest) returns (UserObject) {
-    option (google.api.http) = {
-      get: "/manager/api/current/user",
-    };
+  rpc GetCurrentUser(GetCurrentUserRequest) returns (UserObject) {
+    option (google.api.http) = {get: "/manager/api/current/user"};
   }
 
   // UpdateCurrentUserPassword 更新当前用户密码
-  rpc UpdateCurrentUserPassword (UpdateCurrentUserPasswordRequest) returns (UpdateCurrentUserPasswordReply) {
+  rpc UpdateCurrentUserPassword(UpdateCurrentUserPasswordRequest) returns (UpdateCurrentUserPasswordReply) {
     option (google.api.http) = {
-      post: "/manager/api/current/user/password",
+      post: "/manager/api/current/user/password"
       body: "*"
     };
   }
 
   // UpdateCurrentUserSetting 更新当前用户设置
-  rpc UpdateCurrentUserSetting (UpdateCurrentUserSettingRequest) returns (google.protobuf.Empty) {
+  rpc UpdateCurrentUserSetting(UpdateCurrentUserSettingRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
-      put: "/manager/api/current/user/setting",
+      put: "/manager/api/current/user/setting"
       body: "*"
     };
   }
 
   // UpdateCurrentUserSetting 更新当前用户设置
-  rpc UpdateCurrentUser (UpdateCurrentUserRequest) returns (google.protobuf.Empty) {
+  rpc UpdateCurrentUser(UpdateCurrentUserRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
-      put: "/manager/api/current/user",
+      put: "/manager/api/current/user"
       body: "*"
     };
   }
 
   // GetUser 获取用户信息
-  rpc GetUser (GetUserRequest) returns (UserObject) {
-    option (google.api.http) = {
-      get: "/manager/api/user",
-    };
+  rpc GetUser(GetUserRequest) returns (UserObject) {
+    option (google.api.http) = {get: "/manager/api/user"};
   }
 
   // ListUser 获取用户信息列表
-  rpc ListUser (ListUserRequest) returns (ListUserReply) {
-    option (google.api.http) = {
-      get: "/manager/api/users",
-    };
+  rpc ListUser(ListUserRequest) returns (ListUserReply) {
+    option (google.api.http) = {get: "/manager/api/users"};
   }
 
   // CreateUser 创建用户信息
-  rpc CreateUser (CreateUserRequest) returns (CreateUserReply) {
+  rpc CreateUser(CreateUserRequest) returns (CreateUserReply) {
     option (google.api.http) = {
-      post: "/manager/api/user",
+      post: "/manager/api/user"
       body: "*"
     };
   }
 
   // UpdateUser 更新用户信息
-  rpc ResetPassword (ResetPasswordRequest) returns (google.protobuf.Empty) {
+  rpc ResetPassword(ResetPasswordRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
-      post: "/manager/api/user/password/reset",
+      post: "/manager/api/user/password/reset"
       body: "*"
     };
   }
 
   // UpdateUser 更新用户信息
-  rpc UpdateUser (UpdateUserRequest) returns (UpdateUserReply) {
+  rpc UpdateUser(UpdateUserRequest) returns (UpdateUserReply) {
     option (google.api.http) = {
-      put: "/manager/api/user",
+      put: "/manager/api/user"
       body: "*"
     };
   }
 
   // DeleteUser 删除用户信息
-  rpc DeleteUser (DeleteUserRequest) returns (DeleteUserReply) {
-    option (google.api.http) = {
-      delete: "/manager/api/user",
-    };
+  rpc DeleteUser(DeleteUserRequest) returns (DeleteUserReply) {
+    option (google.api.http) = {delete: "/manager/api/user"};
   }
 
   // UpdateUserinfo 更新用户信息
-  rpc UpdateUserinfo (UpdateUserinfoRequest) returns (UpdateUserinfoReply) {
+  rpc UpdateUserinfo(UpdateUserinfoRequest) returns (UpdateUserinfoReply) {
     option (google.api.http) = {
-      put: "/manager/api/user/info",
+      put: "/manager/api/user/info"
       body: "*"
     };
   }
 
   // OfflineUser 下线用户信息
-  rpc OfflineUser (OfflineUserRequest) returns (google.protobuf.Empty) {
+  rpc OfflineUser(OfflineUserRequest) returns (google.protobuf.Empty) {
     option (google.api.http) = {
-      post: "/manager/api/user/offline",
+      post: "/manager/api/user/offline"
       body: "*"
     };
   }

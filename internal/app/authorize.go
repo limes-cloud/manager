@@ -3,6 +3,8 @@ package app
 import (
 	"context"
 
+	"google.golang.org/protobuf/types/known/emptypb"
+
 	"github.com/limes-cloud/manager/internal/infra/apis"
 
 	"github.com/limes-cloud/manager/internal/infra/oauther"
@@ -57,23 +59,29 @@ func init() {
 	})
 }
 
-// ListOAuther 获取登陆渠道信息
-func (az *Authorize) ListOAuther(c context.Context, req *authorize.ListOAutherRequest) (*authorize.ListOAutherReply, error) {
+// ListVisibleOAuther 获取可见的登陆渠道
+func (az *Authorize) ListVisibleOAuther(c context.Context, req *authorize.ListVisibleOAutherRequest) (*authorize.ListVisibleOAutherReply, error) {
 	ctx := core.MustContext(c, kratosx.WithSkipDBHook())
 
 	// 调用服务
-	list, err := az.srv.ListOAuther(ctx, req.Tenant, req.App)
+	list, err := az.srv.ListVisibleOAuther(ctx, &types.ListVisibleOAutherRequest{
+		App:      req.App,
+		Tenant:   req.Tenant,
+		Platform: req.Platform,
+	})
 	if err != nil {
 		return nil, err
 	}
-	reply := authorize.ListOAutherReply{}
+	reply := authorize.ListVisibleOAutherReply{}
 	for _, item := range list {
-		reply.List = append(reply.List, &authorize.ListOAutherReply_OAuther{
-			Id:      item.OAuther.Id,
-			Logo:    item.OAuther.Logo,
-			Name:    item.OAuther.Name,
-			Keyword: item.OAuther.Keyword,
-			Type:    item.OAuther.Type,
+		reply.List = append(reply.List, &authorize.ListVisibleOAutherReply_OAuther{
+			Id:            item.Id,
+			Logo:          item.Logo,
+			Name:          item.Name,
+			Keyword:       item.Keyword,
+			Type:          item.Type,
+			Recommend:     item.Recommend,
+			RecommendText: item.RecommendText,
 		})
 	}
 
@@ -83,10 +91,11 @@ func (az *Authorize) ListOAuther(c context.Context, req *authorize.ListOAutherRe
 func (az *Authorize) OAutherHandle(c context.Context, req *authorize.OAutherHandleRequest) (*authorize.OAutherHandleReply, error) {
 	ctx := core.MustContext(c, kratosx.WithSkipDBHook())
 	resp, err := az.srv.OAutherHandle(ctx, &types.OAutherHandleRequest{
-		Tenant:  req.Tenant,
-		App:     req.App,
-		Keyword: req.Keyword,
-		Account: req.Account,
+		Tenant:   req.Tenant,
+		App:      req.App,
+		Keyword:  req.Keyword,
+		Account:  req.Account,
+		Platform: req.Platform,
 	})
 	if err != nil {
 		return nil, err
@@ -220,7 +229,25 @@ func (az *Authorize) CheckAuth(c context.Context, req *authorize.CheckAuthReques
 	}, nil
 }
 
-func (az *Authorize) ParseToken(c context.Context, req *authorize.ParseTokenRequest) (*authorize.ParseTokenReply, error) {
+func (az *Authorize) RefreshToken(c context.Context, _ *emptypb.Empty) (*authorize.RefreshTokenReply, error) {
+	ctx := core.MustContext(c, kratosx.WithSkipDBHook())
+	token, err := az.srv.RefreshToken(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return &authorize.RefreshTokenReply{Token: token}, nil
+}
+
+func (az *Authorize) Logout(c context.Context, _ *emptypb.Empty) (*emptypb.Empty, error) {
+	ctx := core.MustContext(c, kratosx.WithSkipDBHook())
+	err := az.srv.Logout(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return &emptypb.Empty{}, nil
+}
+
+func (az *Authorize) ParseToken(c context.Context, _ *authorize.ParseTokenRequest) (*authorize.ParseTokenReply, error) {
 	ctx := core.MustContext(c, kratosx.WithSkipDBHook())
 
 	return &authorize.ParseTokenReply{

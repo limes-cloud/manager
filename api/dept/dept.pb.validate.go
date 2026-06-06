@@ -183,6 +183,7 @@ func (m *ListDeptClassifyRequest) validate(all bool) error {
 	}
 
 	if m.Order != nil {
+
 		if _, ok := _ListDeptClassifyRequest_Order_InLookup[m.GetOrder()]; !ok {
 			err := ListDeptClassifyRequestValidationError{
 				field:  "Order",
@@ -193,9 +194,11 @@ func (m *ListDeptClassifyRequest) validate(all bool) error {
 			}
 			errors = append(errors, err)
 		}
+
 	}
 
 	if m.OrderBy != nil {
+
 		if _, ok := _ListDeptClassifyRequest_OrderBy_InLookup[m.GetOrderBy()]; !ok {
 			err := ListDeptClassifyRequestValidationError{
 				field:  "OrderBy",
@@ -206,6 +209,7 @@ func (m *ListDeptClassifyRequest) validate(all bool) error {
 			}
 			errors = append(errors, err)
 		}
+
 	}
 
 	if m.Name != nil {
@@ -748,6 +752,7 @@ func (m *UpdateDeptClassifyRequest) validate(all bool) error {
 	}
 
 	if m.Name != nil {
+
 		if utf8.RuneCountInString(m.GetName()) > 128 {
 			err := UpdateDeptClassifyRequestValidationError{
 				field:  "Name",
@@ -758,6 +763,7 @@ func (m *UpdateDeptClassifyRequest) validate(all bool) error {
 			}
 			errors = append(errors, err)
 		}
+
 	}
 
 	if m.Description != nil {
@@ -1325,6 +1331,7 @@ func (m *GetDeptReply) validate(all bool) error {
 	}
 
 	if m.Classify != nil {
+
 		if all {
 			switch v := interface{}(m.GetClassify()).(type) {
 			case interface{ ValidateAll() error }:
@@ -1353,6 +1360,7 @@ func (m *GetDeptReply) validate(all bool) error {
 				}
 			}
 		}
+
 	}
 
 	if len(errors) > 0 {
@@ -1982,6 +1990,7 @@ func (m *UpdateDeptRequest) validate(all bool) error {
 	}
 
 	if m.ParentId != nil {
+
 		if m.GetParentId() < 0 {
 			err := UpdateDeptRequestValidationError{
 				field:  "ParentId",
@@ -1992,9 +2001,11 @@ func (m *UpdateDeptRequest) validate(all bool) error {
 			}
 			errors = append(errors, err)
 		}
+
 	}
 
 	if m.ClassifyId != nil {
+
 		if m.GetClassifyId() < 1 {
 			err := UpdateDeptRequestValidationError{
 				field:  "ClassifyId",
@@ -2005,9 +2016,11 @@ func (m *UpdateDeptRequest) validate(all bool) error {
 			}
 			errors = append(errors, err)
 		}
+
 	}
 
 	if m.Name != nil {
+
 		if l := utf8.RuneCountInString(m.GetName()); l < 1 || l > 128 {
 			err := UpdateDeptRequestValidationError{
 				field:  "Name",
@@ -2018,9 +2031,11 @@ func (m *UpdateDeptRequest) validate(all bool) error {
 			}
 			errors = append(errors, err)
 		}
+
 	}
 
 	if m.Description != nil {
+
 		if l := utf8.RuneCountInString(m.GetDescription()); l < 1 || l > 256 {
 			err := UpdateDeptRequestValidationError{
 				field:  "Description",
@@ -2031,6 +2046,7 @@ func (m *UpdateDeptRequest) validate(all bool) error {
 			}
 			errors = append(errors, err)
 		}
+
 	}
 
 	if m.Status != nil {
@@ -2636,6 +2652,7 @@ func (m *ListDeptReply_Dept) validate(all bool) error {
 	}
 
 	if m.Classify != nil {
+
 		if all {
 			switch v := interface{}(m.GetClassify()).(type) {
 			case interface{ ValidateAll() error }:
@@ -2664,6 +2681,7 @@ func (m *ListDeptReply_Dept) validate(all bool) error {
 				}
 			}
 		}
+
 	}
 
 	if len(errors) > 0 {

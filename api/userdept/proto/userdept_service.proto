@@ -2,39 +2,33 @@ syntax = "proto3";
 
 package manager.api.userdept;
 
+import "api/userdept/proto/userdept.proto";
+import "google/api/annotations.proto";
+
 option go_package = "manager/api/userdept;userdept";
 option java_multiple_files = true;
 option java_package = "manager.api.userdept.proto";
 
-import "google/api/annotations.proto";
-import "api/userdept/proto/userdept.proto";
-
 service UserDept {
+  rpc ListUserDept(ListUserDeptRequest) returns (ListUserDeptReply) {
+    option (google.api.http) = {get: "/manager/api/userdepts"};
+  }
 
-	rpc ListUserDept (ListUserDeptRequest) returns (ListUserDeptReply){
-		option (google.api.http) = {
-			get: "/manager/api/userdepts"
-		};
-	}
+  rpc CreateUserDept(CreateUserDeptRequest) returns (CreateUserDeptReply) {
+    option (google.api.http) = {
+      post: "/manager/api/userdept"
+      body: "*"
+    };
+  }
 
-	rpc CreateUserDept (CreateUserDeptRequest) returns (CreateUserDeptReply){
-		option (google.api.http) = {
-			post: "/manager/api/userdept",
-			body: "*"
-		};
-	}
+  rpc UpdateUserDept(UpdateUserDeptRequest) returns (UpdateUserDeptReply) {
+    option (google.api.http) = {
+      put: "/manager/api/userdept"
+      body: "*"
+    };
+  }
 
-	rpc UpdateUserDept (UpdateUserDeptRequest) returns (UpdateUserDeptReply){
-		option (google.api.http) = {
-			put: "/manager/api/userdept",
-			body: "*"
-		};
-	}
-
-	rpc DeleteUserDept (DeleteUserDeptRequest) returns (DeleteUserDeptReply){
-		option (google.api.http) = {
-			delete: "/manager/api/userdept"
-		};
-	}
-
+  rpc DeleteUserDept(DeleteUserDeptRequest) returns (DeleteUserDeptReply) {
+    option (google.api.http) = {delete: "/manager/api/userdept"};
+  }
 }

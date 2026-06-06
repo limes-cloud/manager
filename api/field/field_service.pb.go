@@ -7,11 +7,10 @@
 package field
 
 import (
-	reflect "reflect"
-
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	reflect "reflect"
 )
 
 const (
@@ -99,7 +98,6 @@ var file_api_field_proto_field_service_proto_goTypes = []interface{}{
 	(*UpdateFieldReply)(nil),         // 10: manager.api.field.UpdateFieldReply
 	(*DeleteFieldReply)(nil),         // 11: manager.api.field.DeleteFieldReply
 }
-
 var file_api_field_proto_field_service_proto_depIdxs = []int32{
 	0,  // 0: manager.api.field.Field.ListFieldType:input_type -> manager.api.field.ListFieldTypeRequest
 	1,  // 1: manager.api.field.Field.ListField:input_type -> manager.api.field.ListFieldRequest

@@ -7,12 +7,11 @@
 package errors
 
 import (
-	reflect "reflect"
-	sync "sync"
-
 	_ "github.com/go-kratos/kratos/v2/errors"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	reflect "reflect"
+	sync "sync"
 )
 
 const (
@@ -360,13 +359,10 @@ func file_api_errors_proto_errors_proto_rawDescGZIP() []byte {
 	return file_api_errors_proto_errors_proto_rawDescData
 }
 
-var (
-	file_api_errors_proto_errors_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
-	file_api_errors_proto_errors_proto_goTypes   = []interface{}{
-		(ErrorReason)(0), // 0: manager.api.error.ErrorReason
-	}
-)
-
+var file_api_errors_proto_errors_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
+var file_api_errors_proto_errors_proto_goTypes = []interface{}{
+	(ErrorReason)(0), // 0: manager.api.error.ErrorReason
+}
 var file_api_errors_proto_errors_proto_depIdxs = []int32{
 	0, // [0:0] is the sub-list for method output_type
 	0, // [0:0] is the sub-list for method input_type

@@ -547,6 +547,7 @@ func (m *UpdateNoticeClassifyRequest) validate(all bool) error {
 	}
 
 	if m.Name != nil {
+
 		if utf8.RuneCountInString(m.GetName()) < 1 {
 			err := UpdateNoticeClassifyRequestValidationError{
 				field:  "Name",
@@ -557,9 +558,11 @@ func (m *UpdateNoticeClassifyRequest) validate(all bool) error {
 			}
 			errors = append(errors, err)
 		}
+
 	}
 
 	if m.Logo != nil {
+
 		if utf8.RuneCountInString(m.GetLogo()) < 1 {
 			err := UpdateNoticeClassifyRequestValidationError{
 				field:  "Logo",
@@ -570,9 +573,11 @@ func (m *UpdateNoticeClassifyRequest) validate(all bool) error {
 			}
 			errors = append(errors, err)
 		}
+
 	}
 
 	if m.Weight != nil {
+
 		if m.GetWeight() < 0 {
 			err := UpdateNoticeClassifyRequestValidationError{
 				field:  "Weight",
@@ -583,6 +588,7 @@ func (m *UpdateNoticeClassifyRequest) validate(all bool) error {
 			}
 			errors = append(errors, err)
 		}
+
 	}
 
 	if len(errors) > 0 {
@@ -1324,6 +1330,7 @@ func (m *ListNoticeRequest) validate(all bool) error {
 	}
 
 	if m.AppId != nil {
+
 		if m.GetAppId() < 1 {
 			err := ListNoticeRequestValidationError{
 				field:  "AppId",
@@ -1334,9 +1341,11 @@ func (m *ListNoticeRequest) validate(all bool) error {
 			}
 			errors = append(errors, err)
 		}
+
 	}
 
 	if m.ClassifyId != nil {
+
 		if m.GetClassifyId() < 1 {
 			err := ListNoticeRequestValidationError{
 				field:  "ClassifyId",
@@ -1347,9 +1356,11 @@ func (m *ListNoticeRequest) validate(all bool) error {
 			}
 			errors = append(errors, err)
 		}
+
 	}
 
 	if m.Title != nil {
+
 		if l := utf8.RuneCountInString(m.GetTitle()); l < 1 || l > 40 {
 			err := ListNoticeRequestValidationError{
 				field:  "Title",
@@ -1360,6 +1371,7 @@ func (m *ListNoticeRequest) validate(all bool) error {
 			}
 			errors = append(errors, err)
 		}
+
 	}
 
 	if m.IsTop != nil {
@@ -1499,6 +1511,7 @@ func (m *ListVisibleNoticeRequest) validate(all bool) error {
 	}
 
 	if m.AppId != nil {
+
 		if m.GetAppId() < 1 {
 			err := ListVisibleNoticeRequestValidationError{
 				field:  "AppId",
@@ -1509,9 +1522,11 @@ func (m *ListVisibleNoticeRequest) validate(all bool) error {
 			}
 			errors = append(errors, err)
 		}
+
 	}
 
 	if m.ClassifyId != nil {
+
 		if m.GetClassifyId() < 1 {
 			err := ListVisibleNoticeRequestValidationError{
 				field:  "ClassifyId",
@@ -1522,9 +1537,11 @@ func (m *ListVisibleNoticeRequest) validate(all bool) error {
 			}
 			errors = append(errors, err)
 		}
+
 	}
 
 	if m.Title != nil {
+
 		if l := utf8.RuneCountInString(m.GetTitle()); l < 1 || l > 40 {
 			err := ListVisibleNoticeRequestValidationError{
 				field:  "Title",
@@ -1535,6 +1552,7 @@ func (m *ListVisibleNoticeRequest) validate(all bool) error {
 			}
 			errors = append(errors, err)
 		}
+
 	}
 
 	if m.NotRead != nil {
@@ -2053,6 +2071,7 @@ func (m *UpdateNoticeRequest) validate(all bool) error {
 	// no validation rules for Id
 
 	if m.AppId != nil {
+
 		if m.GetAppId() < 1 {
 			err := UpdateNoticeRequestValidationError{
 				field:  "AppId",
@@ -2063,9 +2082,11 @@ func (m *UpdateNoticeRequest) validate(all bool) error {
 			}
 			errors = append(errors, err)
 		}
+
 	}
 
 	if m.ClassifyId != nil {
+
 		if m.GetClassifyId() < 1 {
 			err := UpdateNoticeRequestValidationError{
 				field:  "ClassifyId",
@@ -2076,9 +2097,11 @@ func (m *UpdateNoticeRequest) validate(all bool) error {
 			}
 			errors = append(errors, err)
 		}
+
 	}
 
 	if m.Title != nil {
+
 		if l := utf8.RuneCountInString(m.GetTitle()); l < 1 || l > 40 {
 			err := UpdateNoticeRequestValidationError{
 				field:  "Title",
@@ -2089,9 +2112,11 @@ func (m *UpdateNoticeRequest) validate(all bool) error {
 			}
 			errors = append(errors, err)
 		}
+
 	}
 
 	if m.Description != nil {
+
 		if utf8.RuneCountInString(m.GetDescription()) < 1 {
 			err := UpdateNoticeRequestValidationError{
 				field:  "Description",
@@ -2102,9 +2127,11 @@ func (m *UpdateNoticeRequest) validate(all bool) error {
 			}
 			errors = append(errors, err)
 		}
+
 	}
 
 	if m.Unit != nil {
+
 		if utf8.RuneCountInString(m.GetUnit()) < 1 {
 			err := UpdateNoticeRequestValidationError{
 				field:  "Unit",
@@ -2115,6 +2142,7 @@ func (m *UpdateNoticeRequest) validate(all bool) error {
 			}
 			errors = append(errors, err)
 		}
+
 	}
 
 	if m.Content != nil {

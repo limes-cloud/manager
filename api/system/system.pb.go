@@ -7,12 +7,11 @@
 package system
 
 import (
-	reflect "reflect"
-	sync "sync"
-
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	_ "google.golang.org/protobuf/types/known/anypb"
+	reflect "reflect"
+	sync "sync"
 )
 
 const (
@@ -341,17 +340,14 @@ func file_api_system_proto_system_proto_rawDescGZIP() []byte {
 	return file_api_system_proto_system_proto_rawDescData
 }
 
-var (
-	file_api_system_proto_system_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
-	file_api_system_proto_system_proto_goTypes  = []interface{}{
-		(*GetSystemSettingRequest)(nil),                   // 0: manager.api.system.GetSystemSettingRequest
-		(*DictionaryValue)(nil),                           // 1: manager.api.system.DictionaryValue
-		(*GetSystemSettingReply)(nil),                     // 2: manager.api.system.GetSystemSettingReply
-		(*GetSystemSettingReply_DictionaryValueList)(nil), // 3: manager.api.system.GetSystemSettingReply.DictionaryValueList
-		nil, // 4: manager.api.system.GetSystemSettingReply.DictionariesEntry
-	}
-)
-
+var file_api_system_proto_system_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
+var file_api_system_proto_system_proto_goTypes = []interface{}{
+	(*GetSystemSettingRequest)(nil),                   // 0: manager.api.system.GetSystemSettingRequest
+	(*DictionaryValue)(nil),                           // 1: manager.api.system.DictionaryValue
+	(*GetSystemSettingReply)(nil),                     // 2: manager.api.system.GetSystemSettingReply
+	(*GetSystemSettingReply_DictionaryValueList)(nil), // 3: manager.api.system.GetSystemSettingReply.DictionaryValueList
+	nil, // 4: manager.api.system.GetSystemSettingReply.DictionariesEntry
+}
 var file_api_system_proto_system_proto_depIdxs = []int32{
 	4, // 0: manager.api.system.GetSystemSettingReply.dictionaries:type_name -> manager.api.system.GetSystemSettingReply.DictionariesEntry
 	1, // 1: manager.api.system.GetSystemSettingReply.DictionaryValueList.list:type_name -> manager.api.system.DictionaryValue

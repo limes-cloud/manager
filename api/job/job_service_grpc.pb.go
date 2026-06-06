@@ -8,7 +8,6 @@ package job
 
 import (
 	context "context"
-
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -100,20 +99,18 @@ type JobServer interface {
 }
 
 // UnimplementedJobServer must be embedded to have forward compatible implementations.
-type UnimplementedJobServer struct{}
+type UnimplementedJobServer struct {
+}
 
 func (UnimplementedJobServer) ListJob(context.Context, *ListJobRequest) (*ListJobReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListJob not implemented")
 }
-
 func (UnimplementedJobServer) CreateJob(context.Context, *CreateJobRequest) (*CreateJobReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateJob not implemented")
 }
-
 func (UnimplementedJobServer) UpdateJob(context.Context, *UpdateJobRequest) (*UpdateJobReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateJob not implemented")
 }
-
 func (UnimplementedJobServer) DeleteJob(context.Context, *DeleteJobRequest) (*DeleteJobReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteJob not implemented")
 }

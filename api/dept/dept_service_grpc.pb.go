@@ -8,7 +8,6 @@ package dept
 
 import (
 	context "context"
-
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -184,44 +183,36 @@ type DeptServer interface {
 }
 
 // UnimplementedDeptServer must be embedded to have forward compatible implementations.
-type UnimplementedDeptServer struct{}
+type UnimplementedDeptServer struct {
+}
 
 func (UnimplementedDeptServer) ListDeptClassify(context.Context, *ListDeptClassifyRequest) (*ListDeptClassifyReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListDeptClassify not implemented")
 }
-
 func (UnimplementedDeptServer) CreateDeptClassify(context.Context, *CreateDeptClassifyRequest) (*CreateDeptClassifyReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateDeptClassify not implemented")
 }
-
 func (UnimplementedDeptServer) UpdateDeptClassify(context.Context, *UpdateDeptClassifyRequest) (*UpdateDeptClassifyReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateDeptClassify not implemented")
 }
-
 func (UnimplementedDeptServer) DeleteDeptClassify(context.Context, *DeleteDeptClassifyRequest) (*DeleteDeptClassifyReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteDeptClassify not implemented")
 }
-
 func (UnimplementedDeptServer) ListCurrentDept(context.Context, *ListDeptRequest) (*ListDeptReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListCurrentDept not implemented")
 }
-
 func (UnimplementedDeptServer) ListDept(context.Context, *ListDeptRequest) (*ListDeptReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListDept not implemented")
 }
-
 func (UnimplementedDeptServer) CreateDept(context.Context, *CreateDeptRequest) (*CreateDeptReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateDept not implemented")
 }
-
 func (UnimplementedDeptServer) UpdateDept(context.Context, *UpdateDeptRequest) (*UpdateDeptReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateDept not implemented")
 }
-
 func (UnimplementedDeptServer) DeleteDept(context.Context, *DeleteDeptRequest) (*DeleteDeptReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteDept not implemented")
 }
-
 func (UnimplementedDeptServer) GetDept(context.Context, *GetDeptRequest) (*GetDeptReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetDept not implemented")
 }

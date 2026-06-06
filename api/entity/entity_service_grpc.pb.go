@@ -8,7 +8,6 @@ package entity
 
 import (
 	context "context"
-
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -241,60 +240,48 @@ type EntityServer interface {
 }
 
 // UnimplementedEntityServer must be embedded to have forward compatible implementations.
-type UnimplementedEntityServer struct{}
+type UnimplementedEntityServer struct {
+}
 
 func (UnimplementedEntityServer) LoadEntity(context.Context, *emptypb.Empty) (*LoadEntityReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method LoadEntity not implemented")
 }
-
 func (UnimplementedEntityServer) ImportEntity(context.Context, *ImportEntityRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ImportEntity not implemented")
 }
-
 func (UnimplementedEntityServer) ListEntity(context.Context, *ListEntityRequest) (*ListEntityReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListEntity not implemented")
 }
-
 func (UnimplementedEntityServer) CreateEntity(context.Context, *CreateEntityRequest) (*CreateEntityReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateEntity not implemented")
 }
-
 func (UnimplementedEntityServer) UpdateEntity(context.Context, *UpdateEntityRequest) (*UpdateEntityReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateEntity not implemented")
 }
-
 func (UnimplementedEntityServer) DeleteEntity(context.Context, *DeleteEntityRequest) (*DeleteEntityReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteEntity not implemented")
 }
-
 func (UnimplementedEntityServer) ListEntityField(context.Context, *ListEntityFieldRequest) (*ListEntityFieldReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListEntityField not implemented")
 }
-
 func (UnimplementedEntityServer) CreateEntityField(context.Context, *CreateEntityFieldRequest) (*CreateEntityFieldReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateEntityField not implemented")
 }
-
 func (UnimplementedEntityServer) UpdateEntityField(context.Context, *UpdateEntityFieldRequest) (*UpdateEntityFieldReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateEntityField not implemented")
 }
-
 func (UnimplementedEntityServer) DeleteEntityField(context.Context, *DeleteEntityFieldRequest) (*DeleteEntityFieldReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteEntityField not implemented")
 }
-
 func (UnimplementedEntityServer) ListEntityRule(context.Context, *ListEntityRuleRequest) (*ListEntityRuleReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListEntityRule not implemented")
 }
-
 func (UnimplementedEntityServer) CreateEntityRule(context.Context, *CreateEntityRuleRequest) (*CreateEntityRuleReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateEntityRule not implemented")
 }
-
 func (UnimplementedEntityServer) UpdateEntityRule(context.Context, *UpdateEntityRuleRequest) (*UpdateEntityRuleReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateEntityRule not implemented")
 }
-
 func (UnimplementedEntityServer) DeleteEntityRule(context.Context, *DeleteEntityRuleRequest) (*DeleteEntityRuleReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteEntityRule not implemented")
 }

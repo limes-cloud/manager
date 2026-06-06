@@ -7,12 +7,11 @@
 package userdept
 
 import (
-	reflect "reflect"
-	sync "sync"
-
 	_ "github.com/envoyproxy/protoc-gen-validate/validate"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	reflect "reflect"
+	sync "sync"
 )
 
 const (
@@ -793,23 +792,20 @@ func file_api_userdept_proto_userdept_proto_rawDescGZIP() []byte {
 	return file_api_userdept_proto_userdept_proto_rawDescData
 }
 
-var (
-	file_api_userdept_proto_userdept_proto_msgTypes = make([]protoimpl.MessageInfo, 11)
-	file_api_userdept_proto_userdept_proto_goTypes  = []interface{}{
-		(*CreateUserDeptRequest)(nil),      // 0: manager.api.userdept.CreateUserDeptRequest
-		(*CreateUserDeptReply)(nil),        // 1: manager.api.userdept.CreateUserDeptReply
-		(*UpdateUserDeptRequest)(nil),      // 2: manager.api.userdept.UpdateUserDeptRequest
-		(*UpdateUserDeptReply)(nil),        // 3: manager.api.userdept.UpdateUserDeptReply
-		(*ListUserDeptRequest)(nil),        // 4: manager.api.userdept.ListUserDeptRequest
-		(*ListUserDeptReply)(nil),          // 5: manager.api.userdept.ListUserDeptReply
-		(*DeleteUserDeptRequest)(nil),      // 6: manager.api.userdept.DeleteUserDeptRequest
-		(*DeleteUserDeptReply)(nil),        // 7: manager.api.userdept.DeleteUserDeptReply
-		(*ListUserDeptReply_Job)(nil),      // 8: manager.api.userdept.ListUserDeptReply.Job
-		(*ListUserDeptReply_Dept)(nil),     // 9: manager.api.userdept.ListUserDeptReply.Dept
-		(*ListUserDeptReply_UserDept)(nil), // 10: manager.api.userdept.ListUserDeptReply.UserDept
-	}
-)
-
+var file_api_userdept_proto_userdept_proto_msgTypes = make([]protoimpl.MessageInfo, 11)
+var file_api_userdept_proto_userdept_proto_goTypes = []interface{}{
+	(*CreateUserDeptRequest)(nil),      // 0: manager.api.userdept.CreateUserDeptRequest
+	(*CreateUserDeptReply)(nil),        // 1: manager.api.userdept.CreateUserDeptReply
+	(*UpdateUserDeptRequest)(nil),      // 2: manager.api.userdept.UpdateUserDeptRequest
+	(*UpdateUserDeptReply)(nil),        // 3: manager.api.userdept.UpdateUserDeptReply
+	(*ListUserDeptRequest)(nil),        // 4: manager.api.userdept.ListUserDeptRequest
+	(*ListUserDeptReply)(nil),          // 5: manager.api.userdept.ListUserDeptReply
+	(*DeleteUserDeptRequest)(nil),      // 6: manager.api.userdept.DeleteUserDeptRequest
+	(*DeleteUserDeptReply)(nil),        // 7: manager.api.userdept.DeleteUserDeptReply
+	(*ListUserDeptReply_Job)(nil),      // 8: manager.api.userdept.ListUserDeptReply.Job
+	(*ListUserDeptReply_Dept)(nil),     // 9: manager.api.userdept.ListUserDeptReply.Dept
+	(*ListUserDeptReply_UserDept)(nil), // 10: manager.api.userdept.ListUserDeptReply.UserDept
+}
 var file_api_userdept_proto_userdept_proto_depIdxs = []int32{
 	10, // 0: manager.api.userdept.ListUserDeptReply.list:type_name -> manager.api.userdept.ListUserDeptReply.UserDept
 	9,  // 1: manager.api.userdept.ListUserDeptReply.UserDept.dept:type_name -> manager.api.userdept.ListUserDeptReply.Dept

@@ -8,7 +8,6 @@ package menu
 
 import (
 	context "context"
-
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -114,24 +113,21 @@ type MenuServer interface {
 }
 
 // UnimplementedMenuServer must be embedded to have forward compatible implementations.
-type UnimplementedMenuServer struct{}
+type UnimplementedMenuServer struct {
+}
 
 func (UnimplementedMenuServer) ListCurrentMenu(context.Context, *ListCurrentMenuRequest) (*ListMenuReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListCurrentMenu not implemented")
 }
-
 func (UnimplementedMenuServer) ListMenu(context.Context, *ListMenuRequest) (*ListMenuReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListMenu not implemented")
 }
-
 func (UnimplementedMenuServer) CreateMenu(context.Context, *CreateMenuRequest) (*CreateMenuReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateMenu not implemented")
 }
-
 func (UnimplementedMenuServer) UpdateMenu(context.Context, *UpdateMenuRequest) (*UpdateMenuReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateMenu not implemented")
 }
-
 func (UnimplementedMenuServer) DeleteMenu(context.Context, *DeleteMenuRequest) (*DeleteMenuReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteMenu not implemented")
 }

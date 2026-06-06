@@ -483,6 +483,7 @@ func (m *UpdateTenantRequest) validate(all bool) error {
 	}
 
 	if m.Logo != nil {
+
 		if l := utf8.RuneCountInString(m.GetLogo()); l < 1 || l > 128 {
 			err := UpdateTenantRequestValidationError{
 				field:  "Logo",
@@ -493,9 +494,11 @@ func (m *UpdateTenantRequest) validate(all bool) error {
 			}
 			errors = append(errors, err)
 		}
+
 	}
 
 	if m.Name != nil {
+
 		if utf8.RuneCountInString(m.GetName()) > 64 {
 			err := UpdateTenantRequestValidationError{
 				field:  "Name",
@@ -506,6 +509,7 @@ func (m *UpdateTenantRequest) validate(all bool) error {
 			}
 			errors = append(errors, err)
 		}
+
 	}
 
 	if m.Status != nil {
@@ -513,6 +517,7 @@ func (m *UpdateTenantRequest) validate(all bool) error {
 	}
 
 	if m.Description != nil {
+
 		if utf8.RuneCountInString(m.GetDescription()) > 256 {
 			err := UpdateTenantRequestValidationError{
 				field:  "Description",
@@ -523,6 +528,7 @@ func (m *UpdateTenantRequest) validate(all bool) error {
 			}
 			errors = append(errors, err)
 		}
+
 	}
 
 	if m.Weight != nil {
@@ -530,6 +536,7 @@ func (m *UpdateTenantRequest) validate(all bool) error {
 	}
 
 	if m.Setting != nil {
+
 		if all {
 			switch v := interface{}(m.GetSetting()).(type) {
 			case interface{ ValidateAll() error }:
@@ -558,6 +565,7 @@ func (m *UpdateTenantRequest) validate(all bool) error {
 				}
 			}
 		}
+
 	}
 
 	if len(errors) > 0 {
@@ -1300,6 +1308,7 @@ func (m *ListTenantRequest) validate(all bool) error {
 	}
 
 	if m.Order != nil {
+
 		if _, ok := _ListTenantRequest_Order_InLookup[m.GetOrder()]; !ok {
 			err := ListTenantRequestValidationError{
 				field:  "Order",
@@ -1310,6 +1319,7 @@ func (m *ListTenantRequest) validate(all bool) error {
 			}
 			errors = append(errors, err)
 		}
+
 	}
 
 	if m.OrderBy != nil {
