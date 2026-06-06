@@ -130,7 +130,7 @@ func (fd *Field) CreateField(c context.Context, req *field.CreateFieldRequest) (
 // UpdateField 更新用户字段
 func (fd *Field) UpdateField(c context.Context, req *field.UpdateFieldRequest) (*field.UpdateFieldReply, error) {
 	if err := fd.srv.UpdateField(core.MustContext(c), &entity.Field{
-		BaseTenantModel: model.BaseTenantModel{Id: req.Id},
+		BaseModel: model.BaseModel{Id: req.Id},
 		Keyword:         req.Keyword,
 		Type:            req.Type,
 		Name:            req.Name,

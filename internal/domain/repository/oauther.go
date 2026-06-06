@@ -30,7 +30,7 @@ type OAuthExecer interface {
 
 type OAuther interface {
 	// GetOAutherByKeyword 获取指定的登陆渠道
-	GetOAutherByKeyword(ctx core.Context, tid uint32, keyword string) (*entity.OAuther, error)
+	GetOAutherByKeyword(ctx core.Context, keyword string) (*entity.OAuther, error)
 
 	// GetOAuther 获取指定的登陆渠道
 	GetOAuther(ctx core.Context, id uint32) (*entity.OAuther, error)

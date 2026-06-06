@@ -84,7 +84,6 @@ func (u *Userinfo) UpsertUserinfo(ctx core.Context, list []*entity.Userinfo) err
 		var id int
 		ctx.DB().Table(item.GetTableName()).
 			Select("id").
-			Where("tenant_id = ?", item.TenantId).
 			Where("user_id = ?", item.UserId).
 			Where("field = ?", item.Field).
 			Where("value_md5 = ?", item.ValueMd5).Scan(&id)

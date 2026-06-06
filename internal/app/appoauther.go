@@ -28,7 +28,6 @@ func NewAppOAuther() *AppOAuther {
 		srv: service.NewAppOAuther(
 			dbs.NewAppOAuther(),
 			dbs.NewApp(),
-			dbs.NewTenant(),
 			dbs.NewOAuther(),
 		),
 	}

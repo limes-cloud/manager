@@ -44,7 +44,7 @@ database:
       password: root
       host: 127.0.0.1
       port: 3306
-      dbName: ns_manager
+      dbName: ns_manager_v2
       option: ?charset=utf8mb4&parseTime=True&loc=Local
     config:
       transformError:
@@ -99,7 +99,6 @@ business:
       /manager/api/authorize/login:POST: true
       /manager/api/authorize/register:POST: true
       /manager/api/sample/app:GET: true
-      /manager/api/app/tenants:GET: true
       /manager/api/authorize/token/refresh:POST: true
       /manager/api/authorize/oauther/handler:POST: true
       /manager/api/authorize/oauther/login:POST: true

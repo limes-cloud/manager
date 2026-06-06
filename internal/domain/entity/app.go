@@ -32,13 +32,9 @@ type AppSettingJWT struct {
 	UniquePlatform bool   `json:"uniquePlatform"` // 唯一平台
 }
 
-type AppSettingTenant struct {
-	Mode string `json:"mode"`
-}
 
 type AppSetting struct {
 	JWT    AppSettingJWT    `json:"jwt"`
-	Tenant AppSettingTenant `json:"tenant"`
 }
 
 // TableName 获取表名称

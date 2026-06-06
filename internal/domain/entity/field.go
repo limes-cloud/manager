@@ -17,5 +17,5 @@ type Field struct {
 	Required    *bool   `json:"required" gorm:"column:required"`
 	Unique      *bool   `json:"unique" gorm:"column:unique"`
 	Description *string `json:"description" gorm:"column:description"`
-	model.BaseTenantModel
+	model.BaseModel
 }

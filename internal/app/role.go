@@ -31,7 +31,6 @@ func NewRole() *Role {
 			dbs.NewRole(),
 			dbs.NewRoleMenu(),
 			dbs.NewScope(),
-			dbs.NewTenantAdmin(),
 		),
 	}
 }

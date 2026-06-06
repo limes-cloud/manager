@@ -307,7 +307,7 @@ func (app *Entity) UpdateEntityRule(c context.Context, req *apientity.UpdateEnti
 
 	// 调用服务
 	if err := app.srv.UpdateEntityRule(ctx, &entity.EntityRule{
-		BaseTenantModel: model.BaseTenantModel{Id: req.Id},
+		BaseModel: model.BaseModel{Id: req.Id},
 		EntityId:        value.Value(req.EntityId),
 		Name:            value.Value(req.Name),
 		Status:          req.Status,

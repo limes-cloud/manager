@@ -29,7 +29,6 @@ func NewRoleMenu() *RoleMenu {
 			dbs.NewScope(),
 			dbs.NewMenu(),
 			dbs.NewRole(),
-			dbs.NewTenantAdmin(),
 		),
 	}
 }

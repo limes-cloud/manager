@@ -30,5 +30,5 @@ type EntityRule struct {
 	Expression  string `json:"expression" gorm:"column:expression"`
 	Description string `json:"description" gorm:"column:description"`
 	Entity      Entity `gorm:"foreignKey:EntityId;references:Id"`
-	model.BaseTenantModel
+	model.BaseModel
 }

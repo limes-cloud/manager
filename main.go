@@ -29,7 +29,6 @@ func main() {
 			library.WithDBOptions(db.WithHookScope(service.NewScope(
 				dbs.NewScope(),
 				dbs.NewUserDept(),
-				dbs.NewTenantAdmin(),
 			).Hook)),
 		),
 		kratosx.WithMiddleware(middleware.Middleware()...),

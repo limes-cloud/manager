@@ -171,8 +171,6 @@ func (m *GetScopeReply) validate(all bool) error {
 
 	// no validation rules for DeptId
 
-	// no validation rules for TenantId
-
 	if len(errors) > 0 {
 		return GetScopeReplyMultiError(errors)
 	}

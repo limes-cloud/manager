@@ -18,7 +18,6 @@ import (
 
 type Scope struct {
 	database string
-	ta       *TenantApp
 	jr       *JobRole
 	dr       *DeptRole
 	ud       *UserDept
@@ -37,7 +36,6 @@ var (
 func NewScope() *Scope {
 	scopeOnce.Do(func() {
 		scopeIns = &Scope{
-			ta:   NewTenantApp(),
 			jr:   NewJobRole(),
 			dr:   NewDeptRole(),
 			ud:   NewUserDept(),
@@ -54,11 +52,6 @@ func NewScope() *Scope {
 		})
 	})
 	return scopeIns
-}
-
-// HasAppScope 获取用户是否具有指定角色的权限
-func (s Scope) HasAppScope(ctx core.Context, roleId uint32) bool {
-	return s.ta.HasAppScope(ctx.Auth().TenantId, roleId)
 }
 
 // HasRoleScope 获取用户是否具有指定角色的权限

@@ -25,7 +25,6 @@ func NewScope() *Scope {
 		srv: service.NewScope(
 			dbs.NewScope(),
 			dbs.NewUserDept(),
-			dbs.NewTenantAdmin(),
 		),
 	}
 }
@@ -60,7 +59,6 @@ func (app *Scope) GetScope(c context.Context, req *scope.GetScopeRequest) (*scop
 		DeptScopes: depts,
 		DeptId:     ent.DeptId(),
 		UserId:     ent.UserId(),
-		TenantId:   ent.TenantId(),
 	}
 	return reply, nil
 }

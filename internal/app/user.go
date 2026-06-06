@@ -40,11 +40,9 @@ func NewUser() *User {
 			dbs.NewAppField(),
 			dbs.NewUserinfo(),
 			dbs.NewUserSetting(),
-			dbs.NewTenant(),
 			dbs.NewUserDept(),
 			dbs.NewAuthorize(),
 			dbs.NewScope(),
-			dbs.NewTenantAdmin(),
 		),
 	}
 }
@@ -248,7 +246,7 @@ func (app *User) UpdateUser(c context.Context, req *user.UpdateUserRequest) (*us
 	ctx := core.MustContext(c)
 
 	info := &entity.User{
-		BaseTenantModel: model.BaseTenantModel{Id: req.Id},
+		BaseModel: model.BaseModel{Id: req.Id},
 		Avatar:          value.Value(req.Avatar),
 		Nickname:        value.Value(req.Nickname),
 		Signature:       req.Signature,

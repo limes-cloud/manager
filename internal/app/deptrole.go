@@ -27,7 +27,6 @@ func NewDeptRole() *DeptRole {
 		srv: service.NewDeptRole(
 			dbs.NewDeptRole(),
 			dbs.NewScope(),
-			dbs.NewTenantAdmin(),
 		),
 	}
 }

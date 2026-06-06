@@ -8,7 +8,7 @@ import (
 )
 
 type Authorize struct {
-	model.CreateTenantModel
+	model.CreateModel
 	AppId     uint32 `json:"appId" gorm:"column:app_id"`
 	UserId    uint32 `json:"userId" gorm:"column:user_id"`
 	Tokens    string `json:"tokens" gorm:"column:tokens"`

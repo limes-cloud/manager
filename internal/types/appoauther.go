@@ -7,5 +7,4 @@ type ListAppOAutherRequest struct {
 	AppId    uint32  `json:"appId"`
 	Keyword  *string `json:"keyword"`
 	Name     *string `json:"name"`
-	TenantId *uint32 `json:"tenantId"`
 }

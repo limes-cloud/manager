@@ -3,7 +3,7 @@ package entity
 import "github.com/limes-cloud/kratosx/model"
 
 type AppOAuther struct {
-	model.CreateTenantModel
+	model.CreateModel
 	AppId     uint32   `json:"appId" gorm:"column:app_id"`
 	OAutherId uint32   `json:"oautherId" gorm:"column:oauther_id"`
 	Type      string   `json:"type"  gorm:"column:type"`

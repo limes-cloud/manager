@@ -32,8 +32,6 @@ func NewMenu() *Menu {
 			dbs.NewApp(),
 			dbs.NewRoleMenu(),
 			dbs.NewScope(),
-			dbs.NewTenantApp(),
-			dbs.NewTenantAdmin(),
 		),
 	}
 }

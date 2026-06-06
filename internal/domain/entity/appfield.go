@@ -3,7 +3,7 @@ package entity
 import "github.com/limes-cloud/kratosx/model"
 
 type AppField struct {
-	model.CreateTenantModel
+	model.CreateModel
 	AppId    uint32 `json:"appId" gorm:"column:app_id"`
 	FieldId  uint32 `json:"fieldId" gorm:"column:field_id"`
 	Required *bool  `json:"required" gorm:"column:required" `

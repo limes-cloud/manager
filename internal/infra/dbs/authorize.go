@@ -26,7 +26,6 @@ func NewAuthorize() *Authorize {
 func (infra *Authorize) GetAuthorize(ctx core.Context, req *types.GetAuthorizeRequest) (*entity.Authorize, error) {
 	var res entity.Authorize
 	return &res, ctx.DB().
-		Where("tenant_id = ?", req.TenantId).
 		Where("user_id = ?", req.UserId).
 		Where("app_id = ?", req.AppId).
 		First(&res).Error

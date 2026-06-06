@@ -19,7 +19,7 @@ type User struct {
 	UserDepts []*UserDept `json:"userDepts" gorm:"foreignKey:user_id;references:id"` // 用户部门
 	Infos     []*Userinfo `json:"infos" gorm:"-"`                                    // 用户信息
 	Authorize *Authorize  `json:"authorize" gorm:"foreignKey:user_id;references:id"` // 用户授权
-	model.BaseTenantModel
+	model.BaseModel
 }
 
 type UserSetting struct {
@@ -30,7 +30,6 @@ type UserSetting struct {
 }
 
 type Userinfo struct {
-	TenantId uint32 `json:"tenantId" gorm:"column:tenant_id"`
 	UserId   uint32 `json:"userId" gorm:"column:user_id"`
 	Field    string `json:"field" gorm:"column:field"`
 	Value    string `json:"value" gorm:"column:value"`

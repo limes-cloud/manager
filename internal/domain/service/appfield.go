@@ -11,14 +11,12 @@ import (
 type AppField struct {
 	repo   repository.AppField
 	app    repository.App
-	tenant repository.Tenant
 }
 
-func NewAppField(repo repository.AppField, app repository.App, tenant repository.Tenant) *AppField {
+func NewAppField(repo repository.AppField, app repository.App) *AppField {
 	return &AppField{
 		repo:   repo,
 		app:    app,
-		tenant: tenant,
 	}
 }
 

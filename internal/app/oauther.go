@@ -121,7 +121,7 @@ func (ch *OAuther) CreateOAuther(c context.Context, req *oauther.CreateOAutherRe
 func (ch *OAuther) UpdateOAuther(c context.Context, req *oauther.UpdateOAutherRequest) (*oauther.UpdateOAutherReply, error) {
 	ctx := core.MustContext(c)
 	if err := ch.srv.UpdateOAuther(ctx, &entity.OAuther{
-		BaseTenantModel: model.BaseTenantModel{Id: req.Id},
+		BaseModel: model.BaseModel{Id: req.Id},
 		Logo:            value.Value(req.Logo),
 		Type:            value.Value(req.Type),
 		Name:            value.Value(req.Name),

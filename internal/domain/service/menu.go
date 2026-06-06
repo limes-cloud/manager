@@ -16,8 +16,6 @@ type Menu struct {
 	app   repository.App
 	rm    repository.RoleMenu
 	scope repository.Scope
-	ta    repository.TenantApp
-	tad   repository.TenantAdmin
 }
 
 func NewMenu(
@@ -25,16 +23,12 @@ func NewMenu(
 	app repository.App,
 	rm repository.RoleMenu,
 	scope repository.Scope,
-	ta repository.TenantApp,
-	tad repository.TenantAdmin,
 ) *Menu {
 	uc := &Menu{
 		repo:  repo,
 		app:   app,
 		rm:    rm,
 		scope: scope,
-		ta:    ta,
-		tad:   tad,
 	}
 	return uc
 }
@@ -45,17 +39,11 @@ func (u *Menu) ListCurrentMenu(ctx core.Context, req *types.ListMenuRequest) ([]
 	info := ctx.Auth()
 	if info.UserId != 1 {
 		// todo 切换到应用模式
-		req.InIds = u.ta.GetTenantMenuIds(info.TenantId)
 	}
 
-	if !u.tad.IsAdmin(info.TenantId, info.UserId) {
-		rids := u.scope.RoleScopes(ctx)
-		if len(rids) == 0 {
-			return nil, errors.AppScopeError("当前用户没有分配菜单权限")
-		}
-		mids := u.rm.GetMenuIdsByRoleIds(rids)
-		req.InIds = lo.Intersect(mids, req.InIds)
-	}
+	rids := u.scope.RoleIds(ctx)
+	mids := u.rm.GetMenuIdsByRoleIds(rids)
+	req.InIds = lo.Intersect(mids, req.InIds)
 
 	// 获取当前角色有权限的菜单ID
 	list, err := u.ListMenu(ctx, req)

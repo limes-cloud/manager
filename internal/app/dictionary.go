@@ -104,7 +104,7 @@ func (s *Dictionary) CreateDictionary(c context.Context, req *dictionary.CreateD
 // UpdateDictionary 更新字典目录
 func (s *Dictionary) UpdateDictionary(c context.Context, req *dictionary.UpdateDictionaryRequest) (*dictionary.UpdateDictionaryReply, error) {
 	if err := s.srv.UpdateDictionary(kratosx.MustContext(c), &entity.Dictionary{
-		BaseTenantModel: model.BaseTenantModel{Id: req.Id},
+		BaseModel: model.BaseModel{Id: req.Id},
 		Keyword:         req.Keyword,
 		Name:            req.Name,
 		Type:            req.Type,

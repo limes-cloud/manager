@@ -8,5 +8,5 @@ type Job struct {
 	Description *string `json:"description" gorm:"column:description"`
 	Status      *bool   `json:"status" gorm:"column:status"`
 	Weight      uint32  `json:"weight" gorm:"column:weight"`
-	model.BaseTenantModel
+	model.BaseModel
 }

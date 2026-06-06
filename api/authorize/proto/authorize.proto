@@ -24,7 +24,6 @@ message LoginRequest {
   string password = 2 [(validate.rules).string = {min_len: 4}];
   string captchaId = 3 [(validate.rules).string = {min_len: 1}];
   string captcha = 4 [(validate.rules).string = {min_len: 1}];
-  string tenant = 5 [(validate.rules).string = {min_len: 1}];
   string app = 6 [(validate.rules).string = {min_len: 1}];
 }
 
@@ -40,7 +39,6 @@ message RefreshTokenReply {
 
 message ListVisibleOAutherRequest {
   string app = 1 [(validate.rules).string = {min_len: 1}];
-  string tenant = 2 [(validate.rules).string = {min_len: 1}];
   string platform = 3 [(validate.rules).string = {min_len: 1}];
 }
 
@@ -59,7 +57,6 @@ message ListVisibleOAutherReply {
 
 message OAutherHandleRequest {
   string app = 1 [(validate.rules).string = {min_len: 1}];
-  string tenant = 2 [(validate.rules).string = {min_len: 1}];
   string keyword = 3 [(validate.rules).string = {min_len: 1}];
   string platform = 4 [(validate.rules).string = {min_len: 1}];
   string account = 5;
@@ -111,7 +108,6 @@ message RegisterRequest {
   string password = 2 [(validate.rules).string = {min_len: 4}];
   string captchaId = 3 [(validate.rules).string = {min_len: 1}];
   string captcha = 4 [(validate.rules).string = {min_len: 1}];
-  string tenant = 5 [(validate.rules).string = {min_len: 1}];
   string app = 6 [(validate.rules).string = {min_len: 1}];
 }
 
@@ -126,7 +122,6 @@ message CheckAuthRequest {
 }
 
 message CheckAuthReply {
-  uint32 tenantId = 1;
   uint32 userId = 2;
   uint32 deptId = 3;
 }
@@ -136,7 +131,6 @@ message ParseTokenRequest {}
 message ParseTokenReply {
   uint32 userId = 1;
   uint32 deptId = 2;
-  uint32 tenantId = 3;
   string username = 4;
 }
 

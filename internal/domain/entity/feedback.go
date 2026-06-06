@@ -23,10 +23,10 @@ type Feedback struct {
 	User            *User             `json:"user"`
 	Classify        *FeedbackClassify `json:"classify" gorm:"foreignKey:classify_id;references:id"`
 	ImageUrls       []string          `json:"imageUrls" gorm:"-"`
-	model.BaseTenantModel
+	model.BaseModel
 }
 
 type FeedbackClassify struct {
 	Name string `json:"name" gorm:"column:name"`
-	model.BaseTenantModel
+	model.BaseModel
 }

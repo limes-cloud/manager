@@ -16,7 +16,6 @@ type RoleMenu struct {
 	scope repository.Scope
 	menu  repository.Menu
 	role  repository.Role
-	tad   repository.TenantAdmin
 }
 
 func NewRoleMenu(
@@ -25,7 +24,6 @@ func NewRoleMenu(
 	scope repository.Scope,
 	menu repository.Menu,
 	role repository.Role,
-	tad repository.TenantAdmin,
 ) *RoleMenu {
 	return &RoleMenu{
 		app:   app,
@@ -33,17 +31,11 @@ func NewRoleMenu(
 		scope: scope,
 		menu:  menu,
 		role:  role,
-		tad:   tad,
 	}
 }
 
 // GetRoleMenuIds 获取角色的菜单id列表
 func (rm *RoleMenu) GetRoleMenuIds(ctx core.Context, req *types.GetRoleMenuIdsRequest) ([]uint32, error) {
-	rids := rm.scope.RoleScopes(ctx)
-	if !rm.tad.IsAdmin(ctx.Auth().TenantId, ctx.Auth().UserId) && !lo.Contains(rids, req.RoleId) {
-		return nil, errors.RoleScopeError()
-	}
-
 	mrs := rm.repo.GetMenuIdsByRoleIds([]uint32{req.RoleId})
 	if req.AppId != nil {
 		appMenuIds, err := rm.menu.GetMenuIdsByAppId(ctx, *req.AppId)
@@ -59,35 +51,22 @@ func (rm *RoleMenu) GetRoleMenuIds(ctx core.Context, req *types.GetRoleMenuIdsRe
 func (rm *RoleMenu) GetMenuRoleIds(ctx core.Context, req *types.GetMenuRoleIdsRequest) ([]uint32, error) {
 	rids := rm.scope.RoleScopes(ctx)
 	mrs := rm.repo.GetRoleIdsByMenuIds([]uint32{req.MenuId})
-	if !rm.tad.IsAdmin(ctx.Auth().TenantId, ctx.Auth().UserId) {
-		// 验证当前角色是否具有指定菜单的权限
-		lom.Filter(mrs, func(item uint32) bool {
-			return !lo.Contains(rids, item)
-		})
-	}
+	// 验证当前角色是否具有指定菜单的权限
+	mrs = lom.Filter(mrs, func(item uint32) bool {
+		return lo.Contains(rids, item)
+	})
 	return mrs, nil
 }
 
 // CreateMenuRoles 菜单批量授权给角色
 func (rm *RoleMenu) CreateMenuRoles(ctx core.Context, req *types.CreateMenuRolesRequest) error {
-	// 超级管理员不做权限校验
-	if !rm.tad.IsAdmin(ctx.Auth().TenantId, ctx.Auth().UserId) {
-		// 获取当前有权限的角色ID
-		rids := rm.scope.RoleScopes(ctx)
-		if len(rids) == 0 {
-			return errors.RoleScopeError()
-		}
-
-		// 判断是否拥有角色权限
-		if len(lo.Intersect(rids, req.RoleIds)) != len(req.RoleIds) {
-			return errors.RoleScopeError()
-		}
-
-		// 获取当前角色有权限的菜单ID,验证当前角色是否具有指定菜单的权限
-		mids := rm.repo.GetMenuIdsByRoleIds(rids)
-		if !lo.Contains(mids, req.MenuId) {
-			return errors.MenuScopeError()
-		}
+	rids := rm.scope.RoleIds(ctx)
+	if len(lo.Intersect(rids, req.RoleIds)) != len(req.RoleIds) {
+		return errors.RoleScopeError()
+	}
+	mids := rm.repo.GetMenuIdsByRoleIds(rids)
+	if !lo.Contains(mids, req.MenuId) {
+		return errors.MenuScopeError()
 	}
 
 	// 组装为实体列表
@@ -114,9 +93,6 @@ func (rm *RoleMenu) CreateRoleMenus(ctx core.Context, req *types.CreateRoleMenus
 
 	// 获取当前角色的菜单
 	roleMenuIds := appMenuIds
-	if !rm.tad.IsAdmin(ctx.Auth().TenantId, ctx.Auth().UserId) {
-		roleMenuIds = rm.repo.GetMenuIdsByRoleIds(rm.scope.RoleScopes(ctx))
-	}
 
 	// 获取应用下当前角色的最大菜单权限
 	roleMenuIds = lo.Intersect(appMenuIds, roleMenuIds)
@@ -183,28 +159,13 @@ func (rm *RoleMenu) CreateRoleMenus(ctx core.Context, req *types.CreateRoleMenus
 }
 
 func (rm *RoleMenu) DeleteRoleMenus(ctx core.Context, req *types.DeleteRoleMenusRequest) error {
-	if !rm.tad.IsAdmin(ctx.Auth().TenantId, ctx.Auth().UserId) {
-		// 获取当前有权限的角色ID
-		rids := rm.scope.RoleScopes(ctx)
-		if len(rids) == 0 {
-			return errors.RoleScopeError()
-		}
-
-		// 判断是否拥有角色权限
-		if !lo.Contains(rids, req.RoleId) {
-			return errors.RoleScopeError()
-		}
-
-		// 不能取消当前角色的菜单
-		if !lo.Contains(rm.scope.RoleIds(ctx), req.RoleId) {
-			return errors.DeleteError("不能取消当前角色的菜单")
-		}
-
-		// 判断菜单是否在可操作的菜单内
-		mids := rm.repo.GetMenuIdsByRoleIds(rids)
-		if len(lo.Intersect(mids, req.MenuIds)) != len(req.MenuIds) {
-			return errors.MenuScopeError()
-		}
+	rids := rm.scope.RoleIds(ctx)
+	if !lo.Contains(rids, req.RoleId) {
+		return errors.RoleScopeError()
+	}
+	mids := rm.repo.GetMenuIdsByRoleIds(rids)
+	if len(lo.Intersect(mids, req.MenuIds)) != len(req.MenuIds) {
+		return errors.MenuScopeError()
 	}
 
 	// 组装数据
@@ -222,29 +183,15 @@ func (rm *RoleMenu) DeleteRoleMenus(ctx core.Context, req *types.DeleteRoleMenus
 }
 
 func (rm *RoleMenu) DeleteMenuRoles(ctx core.Context, req *types.DeleteMenuRolesRequest) error {
-	if !rm.tad.IsAdmin(ctx.Auth().TenantId, ctx.Auth().UserId) {
-		// 获取当前有权限的角色ID
-		rids := rm.scope.RoleScopes(ctx)
-		if len(rids) == 0 {
-			return errors.RoleScopeError()
-		}
-
-		// 判断是否拥有角色权限
-		if len(lo.Intersect(rids, req.RoleIds)) != len(req.RoleIds) {
-			return errors.RoleScopeError()
-		}
-
-		// 不能取消当前角色的菜单
-		if len(lo.Intersect(rm.scope.RoleIds(ctx), req.RoleIds)) > 1 {
-			return errors.DeleteError("不能取消当前角色的菜单")
-		}
-
-		// 判断菜单是否在可操作的菜单内
-		mids := rm.repo.GetMenuIdsByRoleIds(rids)
-		if lo.Contains(mids, req.MenuId) {
-			return errors.MenuScopeError()
-		}
+	rids := rm.scope.RoleIds(ctx)
+	if len(lo.Intersect(rids, req.RoleIds)) != len(req.RoleIds) {
+		return errors.RoleScopeError()
 	}
+	mids := rm.repo.GetMenuIdsByRoleIds(rids)
+	if lo.Contains(mids, req.MenuId) {
+		return errors.MenuScopeError()
+	}
+
 
 	// 组装数据
 	var rms []*entity.RoleMenu

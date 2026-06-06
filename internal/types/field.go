@@ -4,7 +4,6 @@ import "github.com/limes-cloud/kratosx/model/page"
 
 type ListFieldRequest struct {
 	*page.Search
-	TenantId uint32   `json:"tenantId"`
 	Keywords []string `json:"keywords"`
 	Keyword  *string  `json:"keyword"`
 	Name     *string  `json:"name"`

@@ -37,7 +37,6 @@ const (
 )
 
 type ListVisibleOAutherRequest struct {
-	Tenant   string `json:"tenant"`
 	App      string `json:"app"`
 	Platform string `json:"platform"`
 }
@@ -55,7 +54,6 @@ type AuthorizeBase struct {
 type AuthorizeInfo struct {
 	*AuthorizeBase
 	AppId    uint32 `json:"appId"`
-	TenantId uint32 `json:"tenantId"`
 	UserId   uint32 `json:"userId"`
 	DeptId   uint32 `json:"deptId"`
 	JobId    uint32 `json:"jobId"`
@@ -63,10 +61,10 @@ type AuthorizeInfo struct {
 
 func (az AuthorizeInfo) ToMap() map[string]any {
 	return map[string]any{
-		"appId":    az.AppId,
-		"tenantId": az.TenantId,
-		"userId":   az.UserId,
-		"deptId":   az.DeptId,
+		"appId":  az.AppId,
+		"userId": az.UserId,
+		"deptId": az.DeptId,
+		"jobId":  az.JobId,
 	}
 }
 
@@ -77,7 +75,6 @@ type Captcha struct {
 }
 
 type LoginRequest struct {
-	Tenant    string `json:"tenant"`
 	App       string `json:"app"`
 	Username  string `json:"username"`
 	Password  string `json:"password"`
@@ -91,7 +88,6 @@ type LoginReply struct {
 }
 
 type RegisterRequest struct {
-	Tenant    string `json:"tenant"`
 	App       string `json:"app"`
 	Username  string `json:"username"`
 	Password  string `json:"password"`
@@ -122,13 +118,11 @@ type OAutherVisibleReply struct {
 }
 
 type GetAuthorizeRequest struct {
-	TenantId uint32 `json:"tenantId"`
 	AppId    uint32 `json:"appId"`
 	UserId   uint32 `json:"userId"`
 }
 
 type OAutherHandleRequest struct {
-	Tenant    string `json:"tenant"`
 	App       string `json:"app"`
 	Keyword   string `json:"keyword"`
 	UserAgent string `json:"userAgent"`

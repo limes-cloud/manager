@@ -40,7 +40,6 @@ const (
 type Authorize struct {
 	repo     repository.Authorize
 	scope    repository.Scope
-	tenant   repository.Tenant
 	app      repository.App
 	user     repository.User
 	ao       repository.AppOAuther
@@ -53,14 +52,12 @@ type Authorize struct {
 	address  repository.Address
 	info     repository.Userinfo
 	userdept repository.UserDept
-	tad      repository.TenantAdmin
 	menu     repository.Menu
 }
 
 func NewAuthorize(
 	repo repository.Authorize,
 	scope repository.Scope,
-	tenant repository.Tenant,
 	app repository.App,
 	user repository.User,
 	ao repository.AppOAuther,
@@ -73,13 +70,11 @@ func NewAuthorize(
 	address repository.Address,
 	info repository.Userinfo,
 	userdept repository.UserDept,
-	tad repository.TenantAdmin,
 	menu repository.Menu,
 ) *Authorize {
 	return &Authorize{
 		repo:     repo,
 		scope:    scope,
-		tenant:   tenant,
 		app:      app,
 		user:     user,
 		ao:       ao,
@@ -92,13 +87,11 @@ func NewAuthorize(
 		address:  address,
 		info:     info,
 		userdept: userdept,
-		tad:      tad,
 		menu:     menu,
 	}
 }
 
 type cacheData struct {
-	TenantId  uint32 `json:"tenantId"`
 	AppId     uint32 `json:"appId"`
 	OAutherId uint32 `json:"oautherId"`
 	UserId    uint32 `json:"userId"`
@@ -114,16 +107,9 @@ func (s *Authorize) ListVisibleOAuther(ctx core.Context, req *types.ListVisibleO
 		return nil, errors.GetError("获取应用失败")
 	}
 
-	// 获取租户
-	tenant, err := s.tenant.GetTenantByKeyword(ctx, req.Tenant)
-	if err != nil {
-		return nil, errors.GetError("获取租户失败")
-	}
-
 	// 获取授权列表
 	list, _, err := s.ao.ListAppOAuther(ctx, &types.ListAppOAutherRequest{
-		AppId:    app.Id,
-		TenantId: value.Pointer(tenant.Id),
+		AppId: app.Id,
 	})
 	if err != nil {
 		return nil, errors.GetError(err.Error())
@@ -159,16 +145,6 @@ func (s *Authorize) ListVisibleOAuther(ctx core.Context, req *types.ListVisibleO
 
 // OAutherHandle 授权处理
 func (s *Authorize) OAutherHandle(ctx core.Context, req *types.OAutherHandleRequest) (*types.OAutherHandleReply, error) {
-	// 获取租户信息
-	tenant, err := s.tenant.GetTenantByKeyword(ctx, req.Tenant)
-	if err != nil {
-		ctx.Logger().Errorw("msg", "get tenant info error", "err", err.Error())
-		return nil, errors.TenantNotFoundError()
-	}
-	if !value.Value(tenant.Status) {
-		return nil, errors.SystemError("租户已禁用")
-	}
-
 	// 获取应用信息
 	app, err := s.app.GetAppByKeyword(req.App)
 	if err != nil {
@@ -180,7 +156,7 @@ func (s *Authorize) OAutherHandle(ctx core.Context, req *types.OAutherHandleRequ
 	}
 
 	// 获取渠道信息
-	oauther, err := s.oa.GetOAutherByKeyword(ctx, tenant.Id, req.Keyword)
+	oauther, err := s.oa.GetOAutherByKeyword(ctx, req.Keyword)
 	if err != nil {
 		return nil, errors.SystemError(err.Error())
 	}
@@ -211,7 +187,6 @@ func (s *Authorize) OAutherHandle(ctx core.Context, req *types.OAutherHandleRequ
 	if err := s.setCacheData(
 		ctx, reply.UUID,
 		&cacheData{
-			TenantId:  tenant.Id,
 			AppId:     app.Id,
 			OAutherId: oauther.Id,
 		},
@@ -228,16 +203,6 @@ func (s *Authorize) OAutherLogin(ctx core.Context, req *types.OAutherLoginReques
 	data, err := s.getCacheData(ctx, req.UUID)
 	if err != nil {
 		return nil, errors.LoginExpiredError()
-	}
-
-	// 获取租户信息r
-	tenant, err := s.tenant.GetTenant(ctx, data.TenantId)
-	if err != nil {
-		ctx.Logger().Errorw("msg", "get tenant info error", "err", err.Error())
-		return nil, errors.TenantNotFoundError()
-	}
-	if !value.Value(tenant.Status) {
-		return nil, errors.SystemError("租户已禁用")
 	}
 
 	// 获取应用信息
@@ -304,7 +269,6 @@ func (s *Authorize) OAutherLogin(ctx core.Context, req *types.OAutherLoginReques
 	if !s.uo.IsBindUserOAuther(ctx, oauter.Id, ui.OID) {
 		// 设置token，等待绑定
 		if err := s.setCacheData(ctx, req.UUID, &cacheData{
-			TenantId:  tenant.Id,
 			AppId:     app.Id,
 			OAutherId: oauter.Id,
 			Token:     token,
@@ -336,17 +300,15 @@ func (s *Authorize) OAutherLogin(ctx core.Context, req *types.OAutherLoginReques
 
 	// 获取授权信息
 	az, err := s.repo.GetAuthorize(ctx, &types.GetAuthorizeRequest{
-		TenantId: tenant.Id,
-		AppId:    app.Id,
-		UserId:   user.Id,
+		AppId:  app.Id,
+		UserId: user.Id,
 	})
 	// 如果不是私有的应用，且用户第一次登陆，则自动创建授权信息
 	if gormtranserror.Is(err, gorm.ErrRecordNotFound) && !value.Value(app.Private) {
 		az.Id, err = s.repo.CreateAuthorize(ctx, &entity.Authorize{
-			CreateTenantModel: model.CreateTenantModel{TenantId: tenant.Id},
-			UserId:            user.Id,
-			AppId:             app.Id,
-		})
+				UserId: user.Id,
+				AppId:  app.Id,
+			})
 	}
 	if err != nil {
 		ctx.Logger().Errorw("msg", "get authorize info error", "err", err.Error())
@@ -367,15 +329,14 @@ func (s *Authorize) OAutherLogin(ctx core.Context, req *types.OAutherLoginReques
 	}
 
 	// 判断是否需要补充资料信息
-	ni, err := s.needInfo(ctx, tenant.Id, app.Id, user)
+	ni, err := s.needInfo(ctx, app.Id, user)
 	if err != nil {
 		return nil, err
 	}
 	if ni {
 		err := s.setCacheData(ctx, req.UUID, &cacheData{
-			TenantId: tenant.Id,
-			AppId:    app.Id,
-			UserId:   user.Id,
+			AppId:  app.Id,
+			UserId: user.Id,
 		}, nil)
 		if err != nil {
 			return nil, errors.SystemError(err.Error())
@@ -398,7 +359,7 @@ func (s *Authorize) OAutherBind(ctx core.Context, req *types.OAutherBindRequest)
 	if err != nil {
 		return nil, errors.BindExpiredError()
 	}
-	if cd.AppId == 0 || cd.TenantId == 0 {
+	if cd.AppId == 0 {
 		return nil, errors.SystemError()
 	}
 
@@ -416,16 +377,6 @@ func (s *Authorize) OAutherBind(ctx core.Context, req *types.OAutherBindRequest)
 	}); err != nil {
 		ctx.Logger().Warnw("msg", "captcha verify error", "err", err.Error())
 		return nil, errors.VerifyCaptchaError()
-	}
-
-	// 获取租户信息
-	tenant, err := s.tenant.GetTenant(ctx, cd.TenantId)
-	if err != nil {
-		ctx.Logger().Errorw("msg", "get tenant info error", "err", err.Error())
-		return nil, errors.TenantNotFoundError()
-	}
-	if !value.Value(tenant.Status) {
-		return nil, errors.SystemError("租户已禁用")
 	}
 
 	// 获取应用信息
@@ -446,7 +397,7 @@ func (s *Authorize) OAutherBind(ctx core.Context, req *types.OAutherBindRequest)
 	}
 
 	// 获取用户信息
-	user, err := s.user.GetUserByTU(ctx, tenant.Id, req.Username)
+	user, err := s.user.GetUserByUsername(ctx, req.Username)
 	if err != nil {
 		if !gormtranserror.Is(err, gorm.ErrRecordNotFound) {
 			ctx.Logger().Errorw("msg", "get user info error", "err", err.Error())
@@ -455,14 +406,11 @@ func (s *Authorize) OAutherBind(ctx core.Context, req *types.OAutherBindRequest)
 
 		// 自动注册用户
 		if !value.Value(app.Private) && req.Register {
-			setting := tenant.GetSetting()
 			user = &entity.User{
-				BaseTenantModel: model.BaseTenantModel{TenantId: tenant.Id},
-				Username:        req.Username,
-				Password:        crypto.EncodePwd(req.Password),
-				Nickname:        setting.DefaultUserNickname,
-				Avatar:          setting.DefaultUserAvatar,
-				Status:          value.Pointer(true),
+				Username: req.Username,
+				Password: crypto.EncodePwd(req.Password),
+				Nickname: "用户",
+				Status:   value.Pointer(true),
 			}
 			if _, err := s.user.CreateUser(ctx, user); err != nil {
 				return nil, err
@@ -474,17 +422,15 @@ func (s *Authorize) OAutherBind(ctx core.Context, req *types.OAutherBindRequest)
 
 	// 获取授权信息
 	az, err := s.repo.GetAuthorize(ctx, &types.GetAuthorizeRequest{
-		TenantId: tenant.Id,
-		AppId:    app.Id,
-		UserId:   user.Id,
+		AppId:  app.Id,
+		UserId: user.Id,
 	})
 	// 如果不是私有的应用，且用户第一次登陆，则自动创建授权信息
 	if gormtranserror.Is(err, gorm.ErrRecordNotFound) {
 		if !value.Value(app.Private) {
 			az.Id, err = s.repo.CreateAuthorize(ctx, &entity.Authorize{
-				CreateTenantModel: model.CreateTenantModel{TenantId: tenant.Id},
-				UserId:            user.Id,
-				AppId:             app.Id,
+				UserId: user.Id,
+				AppId:  app.Id,
 			})
 		} else {
 			return nil, errors.AppScopeError()
@@ -497,8 +443,7 @@ func (s *Authorize) OAutherBind(ctx core.Context, req *types.OAutherBindRequest)
 
 	// 写入三方绑定信息
 	if _, err := s.uo.CreateUserOAuther(ctx, &entity.UserOAuther{
-		BaseTenantModel: model.BaseTenantModel{TenantId: tenant.Id},
-		UserId:          user.Id,
+		UserId: user.Id,
 		OAutherId:       cd.OAutherId,
 		OID:             cd.OID,
 		Token:           cd.Token,
@@ -509,15 +454,14 @@ func (s *Authorize) OAutherBind(ctx core.Context, req *types.OAutherBindRequest)
 	}
 
 	// 判断是否需要补充资料信息
-	ni, err := s.needInfo(ctx, tenant.Id, app.Id, user)
+	ni, err := s.needInfo(ctx, app.Id, user)
 	if err != nil {
 		return nil, err
 	}
 	if ni {
 		err := s.setCacheData(ctx, req.CaptchaId, &cacheData{
-			TenantId: tenant.Id,
-			AppId:    app.Id,
-			UserId:   user.Id,
+			AppId:  app.Id,
+			UserId: user.Id,
 		}, nil)
 		if err != nil {
 			return nil, errors.SystemError(err.Error())
@@ -612,16 +556,6 @@ func (s *Authorize) Login(ctx core.Context, req *types.LoginRequest) (reply *typ
 		return
 	}
 
-	// 获取租户信息
-	tenant, err := s.tenant.GetTenantByKeyword(ctx, req.Tenant)
-	if err != nil {
-		ctx.Logger().Errorw("msg", "get tenant info error", "err", err.Error())
-		return nil, errors.TenantNotFoundError()
-	}
-	if !value.Value(tenant.Status) {
-		return nil, errors.SystemError("租户已禁用")
-	}
-
 	// 获取应用信息
 	app, err := s.app.GetAppByKeyword(req.App)
 	if err != nil {
@@ -660,7 +594,7 @@ func (s *Authorize) Login(ctx core.Context, req *types.LoginRequest) (reply *typ
 		}
 	} else {
 		// 获取用户信息
-		user, err = s.user.GetUserByTU(ctx, tenant.Id, req.Username)
+		user, err = s.user.GetUserByUsername(ctx, req.Username)
 		if err != nil {
 			ctx.Logger().Errorw("msg", "get user info error", "err", err.Error())
 			return nil, errors.UsernameNotExistError()
@@ -680,17 +614,15 @@ func (s *Authorize) Login(ctx core.Context, req *types.LoginRequest) (reply *typ
 
 	// 获取授权信息
 	az, err := s.repo.GetAuthorize(ctx, &types.GetAuthorizeRequest{
-		TenantId: tenant.Id,
-		AppId:    app.Id,
-		UserId:   user.Id,
+		AppId:  app.Id,
+		UserId: user.Id,
 	})
 	// 如果不是私有的应用，且用户第一次登陆，则自动创建授权信息
 	if gormtranserror.Is(err, gorm.ErrRecordNotFound) {
 		if !value.Value(app.Private) {
 			az.Id, err = s.repo.CreateAuthorize(ctx, &entity.Authorize{
-				CreateTenantModel: model.CreateTenantModel{TenantId: tenant.Id},
-				UserId:            user.Id,
-				AppId:             app.Id,
+				UserId: user.Id,
+				AppId:  app.Id,
 			})
 		} else {
 			return nil, errors.AppScopeError()
@@ -703,15 +635,14 @@ func (s *Authorize) Login(ctx core.Context, req *types.LoginRequest) (reply *typ
 	}
 
 	// 判断是否需要补充资料信息
-	ni, err := s.needInfo(ctx, tenant.Id, app.Id, user)
+	ni, err := s.needInfo(ctx, app.Id, user)
 	if err != nil {
 		return nil, err
 	}
 	if ni {
 		err := s.setCacheData(ctx, req.CaptchaId, &cacheData{
-			TenantId: tenant.Id,
-			AppId:    app.Id,
-			UserId:   user.Id,
+			AppId:  app.Id,
+			UserId: user.Id,
 		}, nil)
 		if err != nil {
 			return nil, errors.SystemError(err.Error())
@@ -749,16 +680,6 @@ func (s *Authorize) Register(ctx core.Context, req *types.RegisterRequest) (*typ
 		return nil, errors.VerifyCaptchaError()
 	}
 
-	// 获取租户信息
-	tenant, err := s.tenant.GetTenantByKeyword(ctx, req.Tenant)
-	if err != nil {
-		ctx.Logger().Errorw("msg", "get tenant info error", "err", err.Error())
-		return nil, errors.TenantNotFoundError()
-	}
-	if !value.Value(tenant.Status) {
-		return nil, errors.SystemError("租户已禁用")
-	}
-
 	// 获取应用信息
 	app, err := s.app.GetAppByKeyword(req.App)
 	if err != nil {
@@ -773,21 +694,18 @@ func (s *Authorize) Register(ctx core.Context, req *types.RegisterRequest) (*typ
 	}
 
 	// 判断用户是否存在
-	_, err = s.user.GetUserByTU(ctx, tenant.Id, req.Username)
+	_, err = s.user.GetUserByUsername(ctx, req.Username)
 	if err == nil {
 		return nil, errors.RegisterError("用户已存在")
 	}
 
 	// 写入用户信息
-	setting := tenant.GetSetting()
 	user := &entity.User{
-		BaseTenantModel: model.BaseTenantModel{TenantId: tenant.Id},
-		Username:        req.Username,
-		Password:        crypto.EncodePwd(req.Password),
-		Status:          value.Pointer(true),
-		Nickname:        setting.DefaultUserNickname,
-		Avatar:          setting.DefaultUserAvatar,
-		LoggedAt:        time.Now().Unix(),
+		Username: req.Username,
+		Password: crypto.EncodePwd(req.Password),
+		Status:   value.Pointer(true),
+		Nickname: "用户",
+		LoggedAt: time.Now().Unix(),
 	}
 	user.Id, err = s.user.CreateUser(ctx, user)
 	if err != nil {
@@ -797,17 +715,15 @@ func (s *Authorize) Register(ctx core.Context, req *types.RegisterRequest) (*typ
 
 	// 获取授权信息
 	az, err := s.repo.GetAuthorize(ctx, &types.GetAuthorizeRequest{
-		TenantId: tenant.Id,
-		AppId:    app.Id,
-		UserId:   user.Id,
+		AppId:  app.Id,
+		UserId: user.Id,
 	})
 	// 如果不是私有的应用，且用户第一次登陆，则自动创建授权信息
 	if gormtranserror.Is(err, gorm.ErrRecordNotFound) {
 		if !value.Value(app.Private) {
 			az.Id, err = s.repo.CreateAuthorize(ctx, &entity.Authorize{
-				CreateTenantModel: model.CreateTenantModel{TenantId: tenant.Id},
-				UserId:            user.Id,
-				AppId:             app.Id,
+				UserId: user.Id,
+				AppId:  app.Id,
 			})
 		} else {
 			return nil, errors.AppScopeError()
@@ -819,15 +735,14 @@ func (s *Authorize) Register(ctx core.Context, req *types.RegisterRequest) (*typ
 	}
 
 	// 判断是否需要补充资料信息
-	ni, err := s.needInfo(ctx, tenant.Id, app.Id, user)
+	ni, err := s.needInfo(ctx, app.Id, user)
 	if err != nil {
 		return nil, err
 	}
 	if ni {
 		err = s.setCacheData(ctx, req.CaptchaId, &cacheData{
-			TenantId: tenant.Id,
-			AppId:    app.Id,
-			UserId:   user.Id,
+			AppId:  app.Id,
+			UserId: user.Id,
 		}, nil)
 		if err != nil {
 			return nil, errors.SystemError(err.Error())
@@ -847,12 +762,11 @@ func (s *Authorize) Register(ctx core.Context, req *types.RegisterRequest) (*typ
 	}, nil
 }
 
-func (s *Authorize) needInfo(ctx core.Context, tid, appid uint32, user *entity.User) (bool, error) {
+func (s *Authorize) needInfo(ctx core.Context, appid uint32, user *entity.User) (bool, error) {
 	if user.Infos == nil {
 		// 获取用户应用信息
 		infos, _ := s.info.ListUserinfo(ctx, &types.ListUserinfoRequest{
-			UserId:   user.Id,
-			TenantId: tid,
+			UserId: user.Id,
 		})
 		if infos != nil {
 			user.Infos = infos
@@ -866,7 +780,6 @@ func (s *Authorize) needInfo(ctx core.Context, tid, appid uint32, user *entity.U
 
 	// 获取租户层级下的必填字段
 	list, _, err := s.field.ListField(ctx, &types.ListFieldRequest{
-		TenantId: tid,
 		Required: value.Pointer(true),
 	})
 	if err != nil {
@@ -952,10 +865,9 @@ func (s *Authorize) genToken(ctx core.Context, app *entity.App, az *entity.Autho
 	//}
 
 	info := types.AuthorizeInfo{
-		AppId:    app.Id,
-		TenantId: user.TenantId,
-		UserId:   user.Id,
-		DeptId:   s.userdept.GetUserMainDeptId(user.Id),
+		AppId:  app.Id,
+		UserId: user.Id,
+		DeptId: s.userdept.GetUserMainDeptId(user.Id),
 	}
 	token, err = jwter.NewToken(info.ToMap())
 	if err != nil {
@@ -982,7 +894,7 @@ func (s *Authorize) genToken(ctx core.Context, app *entity.App, az *entity.Autho
 	tokens[tm] = expired
 
 	data := &entity.Authorize{
-		CreateTenantModel: model.CreateTenantModel{Id: az.Id},
+		CreateModel: model.CreateModel{Id: az.Id},
 		Tokens:            value.ObjToString(tokens),
 		LoggedAt:          time.Now().Unix(),
 		ExpiredAt:         expired,
@@ -995,7 +907,7 @@ func (s *Authorize) genToken(ctx core.Context, app *entity.App, az *entity.Autho
 
 	// 更新用户登陆时间
 	if err = s.user.UpdateUser(ctx, &entity.User{
-		BaseTenantModel: model.BaseTenantModel{Id: user.Id},
+		BaseModel: model.BaseModel{Id: user.Id},
 		LoggedAt:        time.Now().Unix(),
 	}); err != nil {
 		ctx.Logger().Errorw("msg", "update user login info error", "err", err.Error())
@@ -1009,8 +921,7 @@ func (s *Authorize) genToken(ctx core.Context, app *entity.App, az *entity.Autho
 func (s *Authorize) AddLoginLog(ctx core.Context, tp string, appId uint32, user *entity.User, err error) {
 	if errors.IsUserDisableError(err) ||
 		errors.IsVerifyCaptchaError(err) ||
-		errors.IsPasswordError(err) ||
-		errors.IsTenantNotFoundError(err) {
+		errors.IsPasswordError(err) {
 		return
 	}
 
@@ -1038,12 +949,9 @@ func (s *Authorize) AddLoginLog(ctx core.Context, tp string, appId uint32, user 
 	}
 
 	_, _ = s.log.CreateLoginLog(ctx, &entity.LoginLog{
-		AppId: appId,
-		CreateTenantUserModel: model.CreateTenantUserModel{
-			UserId:   user.Id,
-			DeptId:   s.userdept.GetUserMainDeptId(user.Id),
-			TenantId: user.TenantId,
-		},
+		AppId:  appId,
+		UserId: user.Id,
+		DeptId: s.userdept.GetUserMainDeptId(user.Id),
 		Type:        tp,
 		IP:          ctx.ClientIP(),
 		Address:     s.address.GetAddressByIP(ip),
@@ -1056,12 +964,9 @@ func (s *Authorize) AddLoginLog(ctx core.Context, tp string, appId uint32, user 
 
 func (s *Authorize) AddAuthLog(ctx core.Context, appId uint32, menuId uint32) {
 	_, _ = s.log.CreateAuthLog(ctx, &entity.AuthLog{
-		AppId: appId,
-		CreateTenantUserModel: model.CreateTenantUserModel{
-			UserId:   ctx.Auth().UserId,
-			DeptId:   ctx.Auth().DeptId,
-			TenantId: ctx.Auth().TenantId,
-		},
+		AppId:  appId,
+		UserId: ctx.Auth().UserId,
+		DeptId: ctx.Auth().DeptId,
 		MenuId: menuId,
 	})
 }
@@ -1077,9 +982,8 @@ func (u *Authorize) GetUserinfo(ctx core.Context, appId uint32, userId uint32) (
 
 	// 获取用户应用信息
 	infos, _ := u.info.ListUserinfo(ctx, &types.ListUserinfoRequest{
-		UserId:   userId,
-		TenantId: ctx.Auth().TenantId,
-		Fields:   fields,
+		UserId: userId,
+		Fields: fields,
 	})
 
 	var res map[string]any
@@ -1100,11 +1004,6 @@ func (u *Authorize) GetUserDepts(ctx core.Context, userId uint32) ([]*entity.Use
 // CheckAuth api鉴权
 func (u *Authorize) CheckAuth(ctx core.Context, req *types.CheckAuthRequest) (*types.AuthorizeInfo, error) {
 	validate := func(method string, path string) error {
-		// 如果是管理员则默认获取全部权限
-		if u.tad.IsAdmin(ctx.Auth().TenantId, ctx.Auth().UserId) {
-			return nil
-		}
-
 		// 获取鉴权器，判断是否为白名单
 		menu, has := u.menu.GetCacheMenu(req.Path, req.Method)
 		if !has {
@@ -1133,9 +1032,8 @@ func (u *Authorize) CheckAuth(ctx core.Context, req *types.CheckAuthRequest) (*t
 			return nil, nil
 		}
 		return &types.AuthorizeInfo{
-			UserId:   ctx.Auth().UserId,
-			TenantId: ctx.Auth().TenantId,
-			DeptId:   ctx.Auth().DeptId,
+			UserId: ctx.Auth().UserId,
+			DeptId: ctx.Auth().DeptId,
 		}, nil
 	}
 
@@ -1146,10 +1044,9 @@ func (u *Authorize) CheckAuth(ctx core.Context, req *types.CheckAuthRequest) (*t
 
 	// 获取用户token信息
 	return &types.AuthorizeInfo{
-		UserId:   ctx.Auth().UserId,
-		TenantId: ctx.Auth().TenantId,
-		DeptId:   ctx.Auth().DeptId,
-	}, nil
+			UserId: ctx.Auth().UserId,
+			DeptId: ctx.Auth().DeptId,
+		}, nil
 }
 
 // OAutherReport 上报授权code
@@ -1194,13 +1091,12 @@ func (u *Authorize) GetFillInfo(ctx core.Context, uuid string) ([]*types.FillInf
 	if err != nil {
 		return nil, errors.LoginExpiredError()
 	}
-	if cd.AppId == 0 || cd.TenantId == 0 || cd.UserId == 0 {
+	if cd.AppId == 0 || cd.UserId == 0 {
 		return nil, errors.SystemError()
 	}
 
 	// 获取租户层级下的必填字段
 	list, _, err := u.field.ListField(ctx, &types.ListFieldRequest{
-		TenantId: cd.TenantId,
 		Required: value.Pointer(true),
 	})
 	if err != nil {
@@ -1235,9 +1131,8 @@ func (u *Authorize) GetFillInfo(ctx core.Context, uuid string) ([]*types.FillInf
 
 	// 获取用户信息
 	infos, err := u.info.ListUserinfo(ctx, &types.ListUserinfoRequest{
-		UserId:   cd.UserId,
-		TenantId: cd.TenantId,
-		Fields:   keys,
+		UserId: cd.UserId,
+		Fields: keys,
 	})
 	if err != nil {
 		return nil, errors.SystemError(err.Error())
@@ -1265,32 +1160,21 @@ func (u *Authorize) FillInfo(ctx core.Context, uuid string, infos map[string]*st
 	if err != nil {
 		return "", errors.BindExpiredError()
 	}
-	if cd.AppId == 0 || cd.TenantId == 0 || cd.UserId == 0 {
+	if cd.AppId == 0 || cd.UserId == 0 {
 		return "", errors.SystemError()
 	}
 
 	var list []*entity.Userinfo
 	for k, v := range infos {
 		list = append(list, &entity.Userinfo{
-			Field:    k,
-			Value:    v.GetStringValue(),
-			UserId:   cd.UserId,
-			TenantId: cd.TenantId,
+			Field:  k,
+			Value:  v.GetStringValue(),
+			UserId: cd.UserId,
 		})
 	}
 
 	if err := u.info.UpsertUserinfo(ctx, list); err != nil {
 		return "", err
-	}
-
-	// 获取租户信息
-	tenant, err := u.tenant.GetTenant(ctx, cd.TenantId)
-	if err != nil {
-		ctx.Logger().Errorw("msg", "get tenant info error", "err", err.Error())
-		return "", errors.TenantNotFoundError()
-	}
-	if !value.Value(tenant.Status) {
-		return "", errors.SystemError("租户已禁用")
 	}
 
 	// 获取应用信息
@@ -1315,17 +1199,15 @@ func (u *Authorize) FillInfo(ctx core.Context, uuid string, infos map[string]*st
 
 	// 获取授权信息
 	az, err := u.repo.GetAuthorize(ctx, &types.GetAuthorizeRequest{
-		TenantId: tenant.Id,
-		AppId:    app.Id,
-		UserId:   user.Id,
+		AppId:  app.Id,
+		UserId: user.Id,
 	})
 	// 如果不是私有的应用，且用户第一次登陆，则自动创建授权信息
 	if gormtranserror.Is(err, gorm.ErrRecordNotFound) {
 		if !value.Value(app.Private) {
 			az.Id, err = u.repo.CreateAuthorize(ctx, &entity.Authorize{
-				CreateTenantModel: model.CreateTenantModel{TenantId: tenant.Id},
-				UserId:            user.Id,
-				AppId:             app.Id,
+				UserId: user.Id,
+				AppId:  app.Id,
 			})
 		} else {
 			return "", errors.AppScopeError()
@@ -1337,7 +1219,7 @@ func (u *Authorize) FillInfo(ctx core.Context, uuid string, infos map[string]*st
 	}
 
 	// 判断是否需要补充资料信息
-	_, err = u.needInfo(ctx, tenant.Id, app.Id, user)
+	_, err = u.needInfo(ctx, app.Id, user)
 	if err != nil {
 		return "", errors.SystemError("存在未补充完整的资料")
 	}

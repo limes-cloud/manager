@@ -11,7 +11,7 @@ type Role struct {
 	Children    []*Role     `json:"children" gorm:"-"`
 	RoleMenus   []*RoleMenu `json:"roleMenus" gorm:"foreignKey:role_id;references:id"`
 	DeptRoles   []*DeptRole
-	model.BaseTenantModel
+	model.BaseModel
 }
 
 type RoleClosure struct {

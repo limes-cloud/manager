@@ -23,13 +23,8 @@ message AppSettingJWT {
   bool uniquePlatform = 5;
 }
 
-message AppSettingTenant {
-  string mode = 1;
-}
-
 message AppSetting {
   AppSettingJWT jwt = 1;
-  AppSettingTenant tenant = 2;
   AppSettingWeb web = 3;
 }
 
@@ -62,7 +57,6 @@ message GetSampleAppRequest {
 
 message GetSampleAppReply {
   message Setting {
-    AppSettingTenant tenant = 1;
     AppSettingWeb web = 2;
   }
   uint32 id = 1;

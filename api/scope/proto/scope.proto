@@ -21,7 +21,6 @@ message GetScopeReply {
   repeated string fields = 4;
   uint32 userId = 5;
   uint32 deptId = 6;
-  uint32 tenantId = 7;
 }
 
 message GetUserDeptIdRequest {

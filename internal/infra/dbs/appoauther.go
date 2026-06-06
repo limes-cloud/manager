@@ -43,9 +43,6 @@ func (r AppOAuther) ListAppOAuther(ctx core.Context, req *types.ListAppOAutherRe
 	db = db.Joins("OAuther", join)
 	db = db.Where("OAuther.status is not null")
 
-	if req.TenantId != nil {
-		db = db.Where("app_oauther.tenant_id = ?", *req.TenantId)
-	}
 
 	if req.Search != nil {
 		// 查询条件下数据总数

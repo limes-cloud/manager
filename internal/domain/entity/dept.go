@@ -10,7 +10,7 @@ type DeptClassify struct {
 	Name        string  `json:"name" gorm:"column:name"`
 	Description *string `json:"description" gorm:"column:description"`
 	Weight      uint32  `json:"weight" gorm:"column:weight"`
-	model.BaseTenantModel
+	model.BaseModel
 }
 
 type Dept struct {
@@ -22,7 +22,6 @@ type Dept struct {
 	Name        string        `json:"name" gorm:"column:name"`
 	Status      *bool         `json:"status" gorm:"column:status"`
 	Description *string       `json:"description" gorm:"column:description"`
-	TenantId    uint32        `json:"tenantId" gorm:"column:tenant_id;hook:tenant"`
 	CreatedAt   int64         `json:"createdAt,omitempty" gorm:"column:created_at;"`
 	UpdatedAt   int64         `json:"updatedAt,omitempty" gorm:"column:updated_at;"`
 	Classify    *DeptClassify `json:"classify"`

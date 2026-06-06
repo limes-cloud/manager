@@ -313,17 +313,6 @@ func (m *LoginRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	if utf8.RuneCountInString(m.GetTenant()) < 1 {
-		err := LoginRequestValidationError{
-			field:  "Tenant",
-			reason: "value length must be at least 1 runes",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
 	if utf8.RuneCountInString(m.GetApp()) < 1 {
 		err := LoginRequestValidationError{
 			field:  "App",
@@ -654,17 +643,6 @@ func (m *ListVisibleOAutherRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	if utf8.RuneCountInString(m.GetTenant()) < 1 {
-		err := ListVisibleOAutherRequestValidationError{
-			field:  "Tenant",
-			reason: "value length must be at least 1 runes",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
 	if utf8.RuneCountInString(m.GetPlatform()) < 1 {
 		err := ListVisibleOAutherRequestValidationError{
 			field:  "Platform",
@@ -917,17 +895,6 @@ func (m *OAutherHandleRequest) validate(all bool) error {
 	if utf8.RuneCountInString(m.GetApp()) < 1 {
 		err := OAutherHandleRequestValidationError{
 			field:  "App",
-			reason: "value length must be at least 1 runes",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if utf8.RuneCountInString(m.GetTenant()) < 1 {
-		err := OAutherHandleRequestValidationError{
-			field:  "Tenant",
 			reason: "value length must be at least 1 runes",
 		}
 		if !all {
@@ -1936,17 +1903,6 @@ func (m *RegisterRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	if utf8.RuneCountInString(m.GetTenant()) < 1 {
-		err := RegisterRequestValidationError{
-			field:  "Tenant",
-			reason: "value length must be at least 1 runes",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
 	if utf8.RuneCountInString(m.GetApp()) < 1 {
 		err := RegisterRequestValidationError{
 			field:  "App",
@@ -2284,8 +2240,6 @@ func (m *CheckAuthReply) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for TenantId
-
 	// no validation rules for UserId
 
 	// no validation rules for DeptId
@@ -2495,8 +2449,6 @@ func (m *ParseTokenReply) validate(all bool) error {
 	// no validation rules for UserId
 
 	// no validation rules for DeptId
-
-	// no validation rules for TenantId
 
 	// no validation rules for Username
 

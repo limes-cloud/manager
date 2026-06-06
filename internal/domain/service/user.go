@@ -3,7 +3,6 @@ package service
 import (
 	"time"
 
-	"github.com/samber/lo"
 
 	"github.com/limes-cloud/kratosx/model"
 	"github.com/limes-cloud/kratosx/pkg/crypto"
@@ -22,11 +21,9 @@ type User struct {
 	af       repository.AppField
 	info     repository.Userinfo
 	setting  repository.UserSetting
-	tenant   repository.Tenant
 	userdept repository.UserDept
 	az       repository.Authorize
 	scope    repository.Scope
-	tad      repository.TenantAdmin
 }
 
 func NewUser(
@@ -35,11 +32,9 @@ func NewUser(
 	af repository.AppField,
 	info repository.Userinfo,
 	setting repository.UserSetting,
-	tenant repository.Tenant,
 	userdept repository.UserDept,
 	az repository.Authorize,
 	scope repository.Scope,
-	tad repository.TenantAdmin,
 ) *User {
 	return &User{
 		repo:     repo,
@@ -47,11 +42,9 @@ func NewUser(
 		af:       af,
 		info:     info,
 		setting:  setting,
-		tenant:   tenant,
 		userdept: userdept,
 		az:       az,
 		scope:    scope,
-		tad:      tad,
 	}
 }
 
@@ -70,9 +63,7 @@ func (u *User) GetCurrentUser(ctx core.Context, req *types.GetCurrentUserRequest
 // UpdateCurrentUser 更新租户
 func (u *User) UpdateCurrentUser(ctx core.Context, req *types.UpdateCurrentUserRequest) error {
 	if err := u.repo.UpdateUser(ctx, &entity.User{
-		BaseTenantModel: model.BaseTenantModel{
-			Id: ctx.Auth().UserId,
-		},
+		BaseModel: model.BaseModel{Id: ctx.Auth().UserId},
 		Avatar:    req.Avatar,
 		Nickname:  req.Nickname,
 		Signature: req.Signature,
@@ -98,9 +89,7 @@ func (u *User) UpdateCurrentUserPassword(ctx core.Context, req *types.UpdateCurr
 
 	// 更新密码
 	if err := u.repo.UpdateUser(ctx, &entity.User{
-		BaseTenantModel: model.BaseTenantModel{
-			Id: ctx.Auth().UserId,
-		},
+		BaseModel: model.BaseModel{Id: ctx.Auth().UserId},
 		Password: crypto.EncodePwd(req.Password),
 	}); err != nil {
 		ctx.Logger().Warnw("msg", "update user error", "err", err.Error())
@@ -174,8 +163,7 @@ func (u *User) GetUser(ctx core.Context, req *types.GetUserRequest) (*entity.Use
 
 	// 获取用户应用信息
 	infos, _ := u.info.ListUserinfo(ctx, &types.ListUserinfoRequest{
-		UserId:   res.Id,
-		TenantId: ctx.Auth().TenantId,
+		UserId: res.Id,
 	})
 	if infos != nil {
 		res.Infos = infos
@@ -194,17 +182,6 @@ func (u *User) GetUser(ctx core.Context, req *types.GetUserRequest) (*entity.Use
 
 // ListUser 获取租户列表
 func (u *User) ListUser(ctx core.Context, req *types.ListUserRequest) ([]*entity.User, uint32, error) {
-	if !u.tad.IsAdmin(ctx.Auth().TenantId, ctx.Auth().UserId) {
-		all, ids := u.scope.SystemDeptScopes(ctx, "user", entity.ActionRead)
-		if !all {
-			if len(ids) == 0 {
-				req.InIds = []uint32{ctx.Auth().UserId}
-			} else {
-				req.InDeptIds = lo.Intersect(req.InDeptIds, ids)
-			}
-		}
-	}
-
 	if req.DeptId != nil {
 		req.InDeptIds = append(req.InDeptIds, *req.DeptId)
 	}
@@ -230,24 +207,14 @@ func (u *User) ListUser(ctx core.Context, req *types.ListUserRequest) ([]*entity
 
 // CreateUser 创建租户
 func (u *User) CreateUser(ctx core.Context, req *entity.User) (uint32, error) {
-	// 获取租户信息
-	tenant, err := u.tenant.GetTenant(ctx, ctx.Auth().TenantId)
-	if err != nil {
-		ctx.Logger().Warnw("msg", "get tenant error", "err", err.Error())
-		return 0, errors.CreateError()
+	if req.Password != "" {
+		req.Password = crypto.EncodePwd(req.Password)
 	}
 
-	setting := tenant.GetSetting()
-	req.Password = crypto.EncodePwd(setting.DefaultUserPassword)
-	if req.Avatar == "" {
-		req.Avatar = setting.DefaultUserAvatar
-	}
-	if req.Nickname == "" {
-		req.Nickname = setting.DefaultUserNickname
-	}
-
-	// 创建用户信息
-	var id uint32
+	var (
+		id  uint32
+		err error
+	)
 	_ = ctx.Transaction(func(ctx core.Context) error {
 		id, err = u.repo.CreateUser(ctx, req)
 		if err != nil {
@@ -256,7 +223,6 @@ func (u *User) CreateUser(ctx core.Context, req *entity.User) (uint32, error) {
 		}
 		for _, info := range req.Infos {
 			info.UserId = id
-			info.TenantId = ctx.Auth().TenantId
 		}
 		return u.info.UpsertUserinfo(ctx, req.Infos)
 	})
@@ -269,15 +235,6 @@ func (u *User) CreateUser(ctx core.Context, req *entity.User) (uint32, error) {
 
 // UpdateUser 更新租户
 func (u *User) UpdateUser(ctx core.Context, req *entity.User) error {
-	// 获取用户所属的部门
-	deptIds := u.userdept.GetDeptIdsByUserId(req.Id)
-	if !u.tad.IsAdmin(ctx.Auth().TenantId, ctx.Auth().UserId) {
-		all, ids := u.scope.SystemDeptScopes(ctx, "user", entity.ActionUpdate)
-		if !all && len(lo.Intersect(ids, deptIds)) == 0 {
-			return errors.UserScopeError()
-		}
-	}
-
 	return ctx.Transaction(func(ctx core.Context) error {
 		if err := u.repo.UpdateUser(ctx, req); err != nil {
 			ctx.Logger().Warnw("msg", "update user error", "err", err.Error())
@@ -293,15 +250,6 @@ func (u *User) UpdateUser(ctx core.Context, req *entity.User) error {
 
 // DeleteUser 删除租户
 func (u *User) DeleteUser(ctx core.Context, id uint32) error {
-	// 获取用户所属的部门
-	deptIds := u.userdept.GetDeptIdsByUserId(id)
-	if !u.tad.IsAdmin(ctx.Auth().TenantId, ctx.Auth().UserId) {
-		all, ids := u.scope.SystemDeptScopes(ctx, "user", entity.ActionDelete)
-		if !all && len(lo.Intersect(ids, deptIds)) == 0 {
-			return errors.UserScopeError()
-		}
-	}
-
 	if err := u.repo.DeleteUser(ctx, id); err != nil {
 		ctx.Logger().Warnw("msg", "delete user error", "err", err.Error())
 		return errors.DeleteError()
@@ -320,18 +268,9 @@ func (u *User) UpdateUserinfo(ctx core.Context, list []*entity.Userinfo) error {
 
 // ResetPassword 更新用户
 func (u *User) ResetPassword(ctx core.Context, uid uint32) error {
-	// 获取租户信息
-	tenant, err := u.tenant.GetTenant(ctx, ctx.Auth().TenantId)
-	if err != nil {
-		ctx.Logger().Warnw("msg", "get tenant error", "err", err.Error())
-		return errors.CreateError()
-	}
-
-	setting := tenant.GetSetting()
-
 	req := &entity.User{
-		BaseTenantModel: model.BaseTenantModel{Id: uid},
-		Password:        crypto.EncodePwd(setting.DefaultUserPassword),
+		BaseModel: model.BaseModel{Id: uid},
+		Password:  crypto.EncodePwd("Aa123456!"),
 	}
 	if err := u.repo.UpdateUser(ctx, req); err != nil {
 		ctx.Logger().Warnw("msg", "update user error", "err", err.Error())

@@ -11,20 +11,17 @@ import (
 type AppOAuther struct {
 	repo    repository.AppOAuther
 	app     repository.App
-	tenant  repository.Tenant
 	oauther repository.OAuther
 }
 
 func NewAppOAuther(
 	repo repository.AppOAuther,
 	app repository.App,
-	tenant repository.Tenant,
 	oauther repository.OAuther,
 ) *AppOAuther {
 	return &AppOAuther{
 		repo:    repo,
 		app:     app,
-		tenant:  tenant,
 		oauther: oauther,
 	}
 }

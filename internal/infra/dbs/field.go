@@ -34,9 +34,6 @@ func (r Field) ListField(ctx core.Context, req *types.ListFieldRequest) ([]*enti
 
 	db := ctx.DB().Model(entity.Field{})
 
-	if req.TenantId != 0 {
-		db = db.Where("tenant_id = ?", req.TenantId)
-	}
 	if req.Keywords != nil {
 		db = db.Where("keyword in ?", req.Keywords)
 	}

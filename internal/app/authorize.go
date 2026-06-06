@@ -32,7 +32,6 @@ func NewAuthorize() *Authorize {
 		srv: service.NewAuthorize(
 			dbs.NewAuthorize(),
 			dbs.NewScope(),
-			dbs.NewTenant(),
 			dbs.NewApp(),
 			dbs.NewUser(),
 			dbs.NewAppOAuther(),
@@ -45,7 +44,6 @@ func NewAuthorize() *Authorize {
 			apis.NewAddress(),
 			dbs.NewUserinfo(),
 			dbs.NewUserDept(),
-			dbs.NewTenantAdmin(),
 			dbs.NewMenu(),
 		),
 	}
@@ -66,7 +64,6 @@ func (az *Authorize) ListVisibleOAuther(c context.Context, req *authorize.ListVi
 	// 调用服务
 	list, err := az.srv.ListVisibleOAuther(ctx, &types.ListVisibleOAutherRequest{
 		App:      req.App,
-		Tenant:   req.Tenant,
 		Platform: req.Platform,
 	})
 	if err != nil {
@@ -91,8 +88,7 @@ func (az *Authorize) ListVisibleOAuther(c context.Context, req *authorize.ListVi
 func (az *Authorize) OAutherHandle(c context.Context, req *authorize.OAutherHandleRequest) (*authorize.OAutherHandleReply, error) {
 	ctx := core.MustContext(c, kratosx.WithSkipDBHook())
 	resp, err := az.srv.OAutherHandle(ctx, &types.OAutherHandleRequest{
-		Tenant:   req.Tenant,
-		App:      req.App,
+		App: req.App,
 		Keyword:  req.Keyword,
 		Account:  req.Account,
 		Platform: req.Platform,
@@ -173,8 +169,7 @@ func (az *Authorize) GetImageCaptcha(c context.Context, req *authorize.GetImageC
 func (az *Authorize) Login(c context.Context, req *authorize.LoginRequest) (*authorize.LoginReply, error) {
 	ctx := core.MustContext(c, kratosx.WithSkipDBHook())
 	reply, err := az.srv.Login(ctx, &types.LoginRequest{
-		Tenant:    req.Tenant,
-		App:       req.App,
+		App: req.App,
 		CaptchaId: req.CaptchaId,
 		Captcha:   req.Captcha,
 		Username:  req.Username,
@@ -192,8 +187,7 @@ func (az *Authorize) Login(c context.Context, req *authorize.LoginRequest) (*aut
 func (az *Authorize) Register(c context.Context, req *authorize.RegisterRequest) (*authorize.RegisterReply, error) {
 	ctx := core.MustContext(c, kratosx.WithSkipDBHook())
 	reply, err := az.srv.Register(ctx, &types.RegisterRequest{
-		Tenant:    req.Tenant,
-		App:       req.App,
+		App: req.App,
 		CaptchaId: req.CaptchaId,
 		Captcha:   req.Captcha,
 		Username:  req.Username,
@@ -223,9 +217,8 @@ func (az *Authorize) CheckAuth(c context.Context, req *authorize.CheckAuthReques
 	}
 
 	return &authorize.CheckAuthReply{
-		TenantId: reply.TenantId,
-		UserId:   reply.UserId,
-		DeptId:   reply.DeptId,
+		UserId: reply.UserId,
+		DeptId: reply.DeptId,
 	}, nil
 }
 
@@ -251,9 +244,8 @@ func (az *Authorize) ParseToken(c context.Context, _ *authorize.ParseTokenReques
 	ctx := core.MustContext(c, kratosx.WithSkipDBHook())
 
 	return &authorize.ParseTokenReply{
-		UserId:   ctx.Auth().UserId,
-		TenantId: ctx.Auth().TenantId,
-		DeptId:   ctx.Auth().DeptId,
+		UserId: ctx.Auth().UserId,
+		DeptId: ctx.Auth().DeptId,
 	}, nil
 }
 

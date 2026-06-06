@@ -215,11 +215,6 @@ enum ErrorReason {
     (errors.message) = "用户未登陆"
   ];
 
-  TenantNotFoundError = 50 [
-    (errors.code) = 403,
-    (errors.message) = "租户不存在"
-  ];
-
   AppNotFoundError = 51 [
     (errors.code) = 403,
     (errors.message) = "应用不存在"

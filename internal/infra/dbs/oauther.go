@@ -24,12 +24,9 @@ func NewOAuther() *OAuther {
 }
 
 // GetOAutherByKeyword 获取指定数据
-func (r *OAuther) GetOAutherByKeyword(ctx core.Context, tid uint32, keyword string) (*entity.OAuther, error) {
+func (r *OAuther) GetOAutherByKeyword(ctx core.Context, keyword string) (*entity.OAuther, error) {
 	channel := entity.OAuther{}
-	return &channel, ctx.DB().
-		Where("tenant_id = ?", tid).
-		Where("keyword = ?", keyword).
-		First(&channel).Error
+	return &channel, ctx.DB().Where("keyword = ?", keyword).First(&channel).Error
 }
 
 // GetOAuther 获取指定的数据

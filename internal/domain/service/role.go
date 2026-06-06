@@ -15,20 +15,17 @@ type Role struct {
 	repo  repository.Role
 	rm    repository.RoleMenu
 	scope repository.Scope
-	tad   repository.TenantAdmin
 }
 
 func NewRole(
 	repo repository.Role,
 	rm repository.RoleMenu,
 	scope repository.Scope,
-	tad repository.TenantAdmin,
 ) *Role {
 	return &Role{
 		repo:  repo,
 		rm:    rm,
 		scope: scope,
-		tad:   tad,
 	}
 }
 
@@ -56,9 +53,6 @@ func (u *Role) GetRole(ctx core.Context, req *types.GetRoleRequest) (*entity.Rol
 // ListCurrentRole 获取当前角色信息列表树
 func (u *Role) ListCurrentRole(ctx core.Context, req *types.ListRoleRequest) ([]*entity.Role, error) {
 	// 获取角色权限
-	if !u.tad.IsAdmin(ctx.Auth().TenantId, ctx.Auth().UserId) {
-		req.InIds = u.scope.RoleScopes(ctx)
-	}
 	req.Status = value.Pointer(true)
 	return u.ListRole(ctx, req)
 }
@@ -75,13 +69,6 @@ func (u *Role) ListRole(ctx core.Context, req *types.ListRoleRequest) ([]*entity
 
 // CreateRole 创建角色
 func (u *Role) CreateRole(ctx core.Context, req *entity.Role) (uint32, error) {
-	if !u.tad.IsAdmin(ctx.Auth().TenantId, ctx.Auth().UserId) {
-		// 判断是否具有角色权限
-		if !u.scope.HasRoleScope(ctx, req.ParentId) {
-			return 0, errors.RoleScopeError()
-		}
-	}
-
 	// 创建角色
 	id, err := u.repo.CreateRole(ctx, req)
 	if err != nil {
@@ -93,13 +80,6 @@ func (u *Role) CreateRole(ctx core.Context, req *entity.Role) (uint32, error) {
 
 // UpdateRole 更新角色
 func (u *Role) UpdateRole(ctx core.Context, req *entity.Role) error {
-	if !u.tad.IsAdmin(ctx.Auth().TenantId, ctx.Auth().UserId) {
-		// 获取角色信息
-		old, err := u.repo.GetRole(ctx, req.Id)
-		if err != nil {
-			ctx.Logger().Warnw("msg", "get role error", "err", err.Error())
-			return errors.GetError()
-		}
 
 		// 不能修改自己的角色，防止主动提权
 		if lo.Contains(u.scope.RoleIds(ctx), req.Id) {
@@ -112,11 +92,12 @@ func (u *Role) UpdateRole(ctx core.Context, req *entity.Role) error {
 		}
 
 		// 如果修改父级菜单,判断是否具有角色权限
-		if old.ParentId != req.ParentId {
-			if !u.scope.HasRoleScope(ctx, req.ParentId) {
-				return errors.RoleScopeError()
-			}
-		}
+	old, err := u.repo.GetRole(ctx, req.Id)
+	if err != nil {
+		return errors.UpdateError()
+	}
+	if old.ParentId != req.ParentId && !u.scope.HasRoleScope(ctx, req.ParentId) {
+		return errors.RoleScopeError()
 	}
 
 	// 更新角色
@@ -129,16 +110,8 @@ func (u *Role) UpdateRole(ctx core.Context, req *entity.Role) error {
 
 // DeleteRole 删除角色
 func (u *Role) DeleteRole(ctx core.Context, id uint32) error {
-	if !u.tad.IsAdmin(ctx.Auth().TenantId, ctx.Auth().UserId) {
-		// 不能修改自己的角色
-		if lo.Contains(u.scope.RoleIds(ctx), id) {
-			return errors.UpdateError("不能删除当前用户所属角色")
-		}
-
-		// 判断是否具有角色权限
-		if !u.scope.HasRoleScope(ctx, id) {
-			return errors.RoleScopeError()
-		}
+	if !u.scope.HasRoleScope(ctx, id) {
+		return errors.RoleScopeError()
 	}
 
 	// 查询下级角色

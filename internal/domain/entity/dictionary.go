@@ -9,7 +9,7 @@ type Dictionary struct {
 	Name        string  `json:"name" gorm:"column:name"`
 	Type        string  `json:"type" gorm:"column:type"`
 	Description *string `json:"description" gorm:"column:description"`
-	model.BaseTenantModel
+	model.BaseModel
 }
 
 type DictionaryValue struct {

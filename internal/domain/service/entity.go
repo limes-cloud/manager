@@ -156,7 +156,6 @@ func (u *Entity) LoadEntity(ctx core.Context) ([]*entity.Entity, error) {
 		"user",
 	}
 	filterColumn := []string{
-		"tenant_id",
 		"deleted_at",
 	}
 

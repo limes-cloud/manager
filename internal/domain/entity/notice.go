@@ -6,11 +6,11 @@ type NoticeClassify struct {
 	Name   string `json:"name" gorm:"column:name"`
 	Logo   string `json:"logo" gorm:"column:logo"`
 	Weight uint32 `json:"weight" gorm:"column:weight"`
-	model.BaseTenantModel
+	model.BaseModel
 }
 
 type Notice struct {
-	model.BaseTenantModel
+	model.BaseModel
 	AppId       uint32          `gorm:"column:app_id" json:"appId"`
 	ClassifyId  uint32          `gorm:"column:classify_id" json:"classifyId"`
 	Title       string          `gorm:"column:title" json:"title"`             // 通知标题

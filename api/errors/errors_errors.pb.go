@@ -831,26 +831,6 @@ func NotLoginError(args ...any) *errors.Error {
 	}
 }
 
-func IsTenantNotFoundError(err error) bool {
-	if err == nil {
-		return false
-	}
-	e := errors.FromError(err)
-	return e.Reason == ErrorReason_TenantNotFoundError.String() && e.Code == 403
-}
-
-func TenantNotFoundError(args ...any) *errors.Error {
-	switch len(args) {
-	case 0:
-		return errors.New(403, ErrorReason_TenantNotFoundError.String(), "租户不存在")
-	case 1:
-		return errors.New(403, ErrorReason_TenantNotFoundError.String(), "租户不存在:"+fmt.Sprint(args[0]))
-	default:
-		msg := fmt.Sprintf(fmt.Sprint(args[0]), args[1:]...)
-		return errors.New(403, ErrorReason_TenantNotFoundError.String(), "租户不存在:"+msg)
-	}
-}
-
 func IsAppNotFoundError(err error) bool {
 	if err == nil {
 		return false

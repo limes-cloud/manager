@@ -5,8 +5,6 @@ import (
 
 	"gorm.io/gorm"
 
-	"github.com/limes-cloud/kratosx"
-
 	"github.com/limes-cloud/kratosx/model/page"
 
 	"github.com/limes-cloud/manager/internal/core"
@@ -42,14 +40,6 @@ func (u *User) GetUserByUsername(ctx core.Context, keyword string) (*entity.User
 		First(&m).Error
 }
 
-func (u *User) GetUserByTU(ctx core.Context, tid uint32, un string) (*entity.User, error) {
-	m := entity.User{}
-	ctx = core.MustContext(ctx, kratosx.WithSkipDBHook())
-	return &m, ctx.DB().
-		Where("tenant_id = ?", tid).
-		Where("username = ?", un).
-		First(&m).Error
-}
 
 // ListUser 获取列表
 func (u *User) ListUser(ctx core.Context, req *types.ListUserRequest) ([]*entity.User, uint32, error) {

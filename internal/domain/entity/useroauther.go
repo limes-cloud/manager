@@ -15,7 +15,7 @@ type UserOAuther struct {
 	ExpiredAt int64    `json:"expiredAt" gorm:"column:expired_at"`
 	Extra     string   `json:"extra" gorm:"column:extra"`
 	OAuther   *OAuther `json:"oauther"`
-	model.BaseTenantModel
+	model.BaseModel
 }
 
 func (c UserOAuther) TableName() string {

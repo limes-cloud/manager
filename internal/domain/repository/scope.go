@@ -10,8 +10,6 @@ type Scope interface {
 
 	HasMenuScope(ctx core.Context, menuId uint32) bool
 
-	HasAppScope(ctx core.Context, roleId uint32) bool
-
 	// HasRoleScope 判断是否具有角色权限
 	HasRoleScope(ctx core.Context, roleId uint32) bool
 

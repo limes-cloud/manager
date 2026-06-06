@@ -25,7 +25,6 @@ type scopeData struct {
 	Fields     []string
 	UserId     uint32
 	DeptId     uint32
-	TenantId   uint32
 }
 
 func Hook(c context.Context, db, model, method string) (hook.ScopeResponse, error) {
@@ -60,7 +59,6 @@ func Hook(c context.Context, db, model, method string) (hook.ScopeResponse, erro
 		Fields:     reply.Fields,
 		UserId:     reply.UserId,
 		DeptId:     reply.DeptId,
-		TenantId:   reply.TenantId,
 	}
 
 	return ins, nil
@@ -98,6 +96,3 @@ func (r *h) UserId() uint32 {
 	return r.data.UserId
 }
 
-func (r *h) TenantId() uint32 {
-	return r.data.TenantId
-}

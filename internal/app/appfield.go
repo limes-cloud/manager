@@ -30,7 +30,6 @@ func NewAppField() *AppField {
 		srv: service.NewAppField(
 			dbs.NewAppField(),
 			dbs.NewApp(),
-			dbs.NewTenant(),
 		),
 	}
 }
@@ -93,7 +92,7 @@ func (s *AppField) CreateAppField(c context.Context, req *appfield.CreateAppFiel
 func (s *AppField) UpdateAppField(c context.Context, req *appfield.UpdateAppFieldRequest) (*appfield.UpdateAppFieldReply, error) {
 	// 调用服务
 	err := s.srv.UpdateAppField(core.MustContext(c), &entity.AppField{
-		CreateTenantModel: model.CreateTenantModel{Id: req.Id},
+		CreateModel: model.CreateModel{Id: req.Id},
 		Required:          &req.Required,
 	})
 	if err != nil {

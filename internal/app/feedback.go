@@ -84,7 +84,7 @@ func (fb *Feedback) CreateFeedbackClassify(c context.Context, req *feedback.Crea
 // UpdateFeedbackClassify 更新反馈建议分类
 func (fb *Feedback) UpdateFeedbackClassify(c context.Context, req *feedback.UpdateFeedbackClassifyRequest) (*feedback.UpdateFeedbackClassifyReply, error) {
 	if err := fb.srv.UpdateFeedbackClassify(core.MustContext(c), &entity.FeedbackClassify{
-		BaseTenantModel: model.BaseTenantModel{Id: req.Id},
+		BaseModel: model.BaseModel{Id: req.Id},
 		Name:            req.Name,
 	}); err != nil {
 		return nil, err
@@ -156,7 +156,7 @@ func (fb *Feedback) DeleteFeedback(c context.Context, req *feedback.DeleteFeedba
 // UpdateFeedback 更新反馈建议
 func (fb *Feedback) UpdateFeedback(c context.Context, req *feedback.UpdateFeedbackRequest) (*feedback.UpdateFeedbackReply, error) {
 	if err := fb.srv.UpdateFeedback(core.MustContext(c), &entity.Feedback{
-		BaseTenantModel: model.BaseTenantModel{Id: req.Id},
+		BaseModel: model.BaseModel{Id: req.Id},
 		Status:          req.Status,
 		ProcessedResult: req.ProcessedResult,
 	}); err != nil {
