@@ -37,7 +37,6 @@ func NewRoleMenu() *RoleMenu {
 		ctx := core.MustContext(
 			context.Background(),
 			kratosx.WithTrace("watch role_menu policy", ""),
-			kratosx.WithSkipDBHook(),
 		)
 		ctx.BeforeStart("load cache role menu", func() {
 			rmIns.cache = cache.NewCacheAndInit[string, struct{}](

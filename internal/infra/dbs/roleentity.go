@@ -12,6 +12,7 @@ import (
 
 	"dario.cat/mergo"
 	"github.com/limes-cloud/kratosx/model/page"
+
 	"github.com/limes-cloud/manager/internal/domain/entity"
 	"github.com/limes-cloud/manager/internal/types"
 )
@@ -33,10 +34,9 @@ func NewRoleEntity() *RoleEntity {
 		ctx := core.MustContext(
 			context.Background(),
 			kratosx.WithTrace("cache", "role entity"),
-			kratosx.WithSkipDBHook(),
 		)
 		ctx.BeforeStart("load cache role entity", func() {
-			reIns.cache = cache.NewCacheAndInit[string, *entity.RoleEntity](
+			reIns.cache = cache.NewCacheAndInit(
 				ctx,
 				ctx.Redis(),
 				reCacheKey,

@@ -34,7 +34,6 @@ func NewJobRole() *JobRole {
 		ctx := core.MustContext(
 			context.Background(),
 			kratosx.WithTrace("cache", "job role"),
-			kratosx.WithSkipDBHook(),
 		)
 		ctx.BeforeStart("load cache job role", func() {
 			jrIns.cache = cache.NewCacheAndInit[string, struct{}](

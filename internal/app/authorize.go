@@ -9,7 +9,6 @@ import (
 
 	"github.com/limes-cloud/manager/internal/infra/oauther"
 
-	"github.com/limes-cloud/kratosx"
 	"github.com/limes-cloud/manager/internal/infra/dbs"
 
 	"github.com/limes-cloud/manager/internal/types"
@@ -59,7 +58,7 @@ func init() {
 
 // ListVisibleOAuther 获取可见的登陆渠道
 func (az *Authorize) ListVisibleOAuther(c context.Context, req *authorize.ListVisibleOAutherRequest) (*authorize.ListVisibleOAutherReply, error) {
-	ctx := core.MustContext(c, kratosx.WithSkipDBHook())
+	ctx := core.MustContext(c)
 
 	// 调用服务
 	list, err := az.srv.ListVisibleOAuther(ctx, &types.ListVisibleOAutherRequest{
@@ -86,7 +85,7 @@ func (az *Authorize) ListVisibleOAuther(c context.Context, req *authorize.ListVi
 }
 
 func (az *Authorize) OAutherHandle(c context.Context, req *authorize.OAutherHandleRequest) (*authorize.OAutherHandleReply, error) {
-	ctx := core.MustContext(c, kratosx.WithSkipDBHook())
+	ctx := core.MustContext(c)
 	resp, err := az.srv.OAutherHandle(ctx, &types.OAutherHandleRequest{
 		App: req.App,
 		Keyword:  req.Keyword,
@@ -106,7 +105,7 @@ func (az *Authorize) OAutherHandle(c context.Context, req *authorize.OAutherHand
 }
 
 func (az *Authorize) OAutherLogin(c context.Context, req *authorize.OAutherLoginRequest) (*authorize.OAutherLoginReply, error) {
-	ctx := core.MustContext(c, kratosx.WithSkipDBHook())
+	ctx := core.MustContext(c)
 	reply, err := az.srv.OAutherLogin(ctx, &types.OAutherLoginRequest{
 		Account: req.Account,
 		Code:    req.Code,
@@ -123,7 +122,7 @@ func (az *Authorize) OAutherLogin(c context.Context, req *authorize.OAutherLogin
 }
 
 func (az *Authorize) OAutherReport(c context.Context, req *authorize.OAutherReportRequest) (*authorize.OAutherReportReply, error) {
-	ctx := core.MustContext(c, kratosx.WithSkipDBHook())
+	ctx := core.MustContext(c)
 	err := az.srv.OAutherReport(ctx, &types.OAutherReportRequest{
 		Code: req.Code,
 		UUID: req.Uuid,
@@ -135,7 +134,7 @@ func (az *Authorize) OAutherReport(c context.Context, req *authorize.OAutherRepo
 }
 
 func (az *Authorize) OAutherBind(c context.Context, req *authorize.OAutherBindRequest) (*authorize.OAutherBindReply, error) {
-	ctx := core.MustContext(c, kratosx.WithSkipDBHook())
+	ctx := core.MustContext(c)
 	reply, err := az.srv.OAutherBind(ctx, &types.OAutherBindRequest{
 		Username:  req.Username,
 		Password:  req.Password,
@@ -154,7 +153,7 @@ func (az *Authorize) OAutherBind(c context.Context, req *authorize.OAutherBindRe
 }
 
 func (az *Authorize) GetImageCaptcha(c context.Context, req *authorize.GetImageCaptchaRequest) (*authorize.GetImageCaptchaReply, error) {
-	ctx := core.MustContext(c, kratosx.WithSkipDBHook())
+	ctx := core.MustContext(c)
 	reply, err := az.srv.GetImageCaptcha(ctx, req.Scene)
 	if err != nil {
 		return nil, err
@@ -167,7 +166,7 @@ func (az *Authorize) GetImageCaptcha(c context.Context, req *authorize.GetImageC
 }
 
 func (az *Authorize) Login(c context.Context, req *authorize.LoginRequest) (*authorize.LoginReply, error) {
-	ctx := core.MustContext(c, kratosx.WithSkipDBHook())
+	ctx := core.MustContext(c)
 	reply, err := az.srv.Login(ctx, &types.LoginRequest{
 		App: req.App,
 		CaptchaId: req.CaptchaId,
@@ -185,7 +184,7 @@ func (az *Authorize) Login(c context.Context, req *authorize.LoginRequest) (*aut
 }
 
 func (az *Authorize) Register(c context.Context, req *authorize.RegisterRequest) (*authorize.RegisterReply, error) {
-	ctx := core.MustContext(c, kratosx.WithSkipDBHook())
+	ctx := core.MustContext(c)
 	reply, err := az.srv.Register(ctx, &types.RegisterRequest{
 		App: req.App,
 		CaptchaId: req.CaptchaId,
@@ -203,7 +202,7 @@ func (az *Authorize) Register(c context.Context, req *authorize.RegisterRequest)
 }
 
 func (az *Authorize) CheckAuth(c context.Context, req *authorize.CheckAuthRequest) (*authorize.CheckAuthReply, error) {
-	ctx := core.MustContext(c, kratosx.WithSkipDBHook())
+	ctx := core.MustContext(c)
 	reply, err := az.srv.CheckAuth(ctx, &types.CheckAuthRequest{
 		Path:   req.Path,
 		Method: req.Method,
@@ -223,7 +222,7 @@ func (az *Authorize) CheckAuth(c context.Context, req *authorize.CheckAuthReques
 }
 
 func (az *Authorize) RefreshToken(c context.Context, _ *emptypb.Empty) (*authorize.RefreshTokenReply, error) {
-	ctx := core.MustContext(c, kratosx.WithSkipDBHook())
+	ctx := core.MustContext(c)
 	token, err := az.srv.RefreshToken(ctx)
 	if err != nil {
 		return nil, err
@@ -232,7 +231,7 @@ func (az *Authorize) RefreshToken(c context.Context, _ *emptypb.Empty) (*authori
 }
 
 func (az *Authorize) Logout(c context.Context, _ *emptypb.Empty) (*emptypb.Empty, error) {
-	ctx := core.MustContext(c, kratosx.WithSkipDBHook())
+	ctx := core.MustContext(c)
 	err := az.srv.Logout(ctx)
 	if err != nil {
 		return nil, err
@@ -241,7 +240,7 @@ func (az *Authorize) Logout(c context.Context, _ *emptypb.Empty) (*emptypb.Empty
 }
 
 func (az *Authorize) ParseToken(c context.Context, _ *authorize.ParseTokenRequest) (*authorize.ParseTokenReply, error) {
-	ctx := core.MustContext(c, kratosx.WithSkipDBHook())
+	ctx := core.MustContext(c)
 
 	return &authorize.ParseTokenReply{
 		UserId: ctx.Auth().UserId,
@@ -250,7 +249,7 @@ func (az *Authorize) ParseToken(c context.Context, _ *authorize.ParseTokenReques
 }
 
 func (az *Authorize) GetFillInfo(c context.Context, req *authorize.GetFillInfoRequest) (*authorize.GetFillInfoReply, error) {
-	ctx := core.MustContext(c, kratosx.WithSkipDBHook())
+	ctx := core.MustContext(c)
 	list, err := az.srv.GetFillInfo(ctx, req.Uuid)
 	if err != nil {
 		return nil, err
@@ -270,7 +269,7 @@ func (az *Authorize) GetFillInfo(c context.Context, req *authorize.GetFillInfoRe
 }
 
 func (az *Authorize) FillInfo(c context.Context, req *authorize.FillInfoRequest) (*authorize.FillInfoReply, error) {
-	ctx := core.MustContext(c, kratosx.WithSkipDBHook())
+	ctx := core.MustContext(c)
 	token, err := az.srv.FillInfo(ctx, req.Uuid, req.Infos)
 	if err != nil {
 		return nil, err

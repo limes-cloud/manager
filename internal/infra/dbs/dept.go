@@ -35,7 +35,6 @@ func NewDept() *Dept {
 		ctx := core.MustContext(
 			context.Background(),
 			kratosx.WithTrace("cache", "dept"),
-			kratosx.WithSkipDBHook(),
 		)
 		deptIns = &Dept{}
 

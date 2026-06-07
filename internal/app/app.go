@@ -8,7 +8,6 @@ import (
 
 	"github.com/go-kratos/kratos/v2/transport/grpc"
 	"github.com/go-kratos/kratos/v2/transport/http"
-	"github.com/limes-cloud/kratosx"
 	"github.com/limes-cloud/kratosx/model/page"
 	"github.com/limes-cloud/kratosx/pkg/value"
 	"github.com/limes-cloud/manager/api/app"
@@ -42,14 +41,14 @@ func init() {
 
 // GetAppByKeyword 获取指定的应用信息
 func (s *App) GetAppByKeyword(c context.Context, keyword string) (*entity.App, error) {
-	ctx := core.MustContext(c, kratosx.WithSkipDBHook())
+	ctx := core.MustContext(c)
 	data, err := s.srv.GetAppByKeyword(ctx, keyword)
 	return data, err
 }
 
 // GetSampleApp 获取指定的应用信息
 func (s *App) GetSampleApp(c context.Context, req *app.GetSampleAppRequest) (*app.GetSampleAppReply, error) {
-	ctx := core.MustContext(c, kratosx.WithSkipDBHook())
+	ctx := core.MustContext(c)
 	data, err := s.srv.GetAppByKeyword(ctx, req.Keyword)
 	if err != nil {
 		return nil, err
@@ -76,7 +75,7 @@ func (s *App) GetSampleApp(c context.Context, req *app.GetSampleAppRequest) (*ap
 
 // GetApp 获取指定的应用信息
 func (s *App) GetApp(c context.Context, req *app.GetAppRequest) (*app.GetAppReply, error) {
-	ctx := core.MustContext(c, kratosx.WithSkipDBHook())
+	ctx := core.MustContext(c)
 	data, err := s.srv.GetApp(ctx, req.GetId())
 	if err != nil {
 		return nil, err

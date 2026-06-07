@@ -35,7 +35,6 @@ func NewDeptRole() *DeptRole {
 		ctx := core.MustContext(
 			context.Background(),
 			kratosx.WithTrace("cache", "dept role"),
-			kratosx.WithSkipDBHook(),
 		)
 
 		ctx.BeforeStart("load cache dept role", func() {

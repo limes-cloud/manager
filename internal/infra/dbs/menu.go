@@ -37,7 +37,6 @@ func NewMenu() *Menu {
 		ctx := core.MustContext(
 			context.Background(),
 			kratosx.WithTrace("cache", "menu"),
-			kratosx.WithSkipDBHook(),
 		)
 		ctx.BeforeStart("load cache menu", func() {
 			menuIns.cache = cache.NewCacheAndInit[string, *types.CacheMenu](

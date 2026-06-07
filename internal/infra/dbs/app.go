@@ -31,7 +31,6 @@ func NewApp() *App {
 		ctx := core.MustContext(
 			context.Background(),
 			kratosx.WithTrace("cache", "app"),
-			kratosx.WithSkipDBHook(),
 		)
 		appIns = &App{}
 

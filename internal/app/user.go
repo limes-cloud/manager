@@ -3,7 +3,6 @@ package app
 import (
 	"context"
 
-	"github.com/limes-cloud/kratosx"
 
 	"github.com/limes-cloud/kratosx/model"
 
@@ -57,7 +56,7 @@ func init() {
 }
 
 func (app *User) GetCurrentUser(c context.Context, req *user.GetCurrentUserRequest) (*user.UserObject, error) {
-	ctx := core.MustContext(c, kratosx.WithSkipDBHook())
+	ctx := core.MustContext(c)
 
 	result, err := app.srv.GetCurrentUser(ctx, &types.GetCurrentUserRequest{
 		App: req.App,

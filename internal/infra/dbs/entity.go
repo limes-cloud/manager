@@ -38,7 +38,6 @@ func NewEntity() *Entity {
 		ctx := core.MustContext(
 			context.Background(),
 			kratosx.WithTrace("cache", "entity"),
-			kratosx.WithSkipDBHook(),
 		)
 		ctx.BeforeStart("load entity", func() {
 			entityIns.entCache = cache.NewCacheAndInit[string, uint32](

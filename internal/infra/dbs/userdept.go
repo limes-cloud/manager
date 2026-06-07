@@ -34,7 +34,6 @@ func NewUserDept() *UserDept {
 		ctx := core.MustContext(
 			context.Background(),
 			kratosx.WithTrace("cache", "user dept"),
-			kratosx.WithSkipDBHook(),
 		)
 		ctx.BeforeStart("load cache user dept", func() {
 			udIns.cache = cache.NewCacheAndInit[uint32, []*entity.UserDept](
