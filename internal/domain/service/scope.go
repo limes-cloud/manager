@@ -6,6 +6,7 @@ import (
 	"github.com/limes-cloud/manager/internal/types"
 
 	mhook "github.com/limes-cloud/kratosx/model/hook"
+
 	"github.com/limes-cloud/manager/internal/core"
 	"github.com/limes-cloud/manager/internal/domain/repository"
 )
@@ -64,4 +65,3 @@ func (r *resp) DeptId() uint32 {
 func (r *resp) UserId() uint32 {
 	return r.ctx.Auth().UserId
 }
-

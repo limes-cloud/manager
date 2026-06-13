@@ -1210,6 +1210,479 @@ var _ interface {
 	ErrorName() string
 } = DeleteMenuReplyValidationError{}
 
+// Validate checks the field values on RegisterMenuNode with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// first error encountered is returned, or nil if there are no violations.
+func (m *RegisterMenuNode) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on RegisterMenuNode with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// RegisterMenuNodeMultiError, or nil if none found.
+func (m *RegisterMenuNode) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *RegisterMenuNode) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if utf8.RuneCountInString(m.GetTitle()) < 1 {
+		err := RegisterMenuNodeValidationError{
+			field:  "Title",
+			reason: "value length must be at least 1 runes",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if utf8.RuneCountInString(m.GetType()) < 1 {
+		err := RegisterMenuNodeValidationError{
+			field:  "Type",
+			reason: "value length must be at least 1 runes",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	for idx, item := range m.GetChildren() {
+		_, _ = idx, item
+
+		if all {
+			switch v := interface{}(item).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, RegisterMenuNodeValidationError{
+						field:  fmt.Sprintf("Children[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, RegisterMenuNodeValidationError{
+						field:  fmt.Sprintf("Children[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return RegisterMenuNodeValidationError{
+					field:  fmt.Sprintf("Children[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	if m.Key != nil {
+		// no validation rules for Key
+	}
+
+	if m.Icon != nil {
+		// no validation rules for Icon
+	}
+
+	if m.Api != nil {
+		// no validation rules for Api
+	}
+
+	if m.Method != nil {
+		// no validation rules for Method
+	}
+
+	if m.Path != nil {
+		// no validation rules for Path
+	}
+
+	if m.Permission != nil {
+		// no validation rules for Permission
+	}
+
+	if m.Component != nil {
+		// no validation rules for Component
+	}
+
+	if m.Url != nil {
+		// no validation rules for Url
+	}
+
+	if m.Redirect != nil {
+		// no validation rules for Redirect
+	}
+
+	if m.Weight != nil {
+		// no validation rules for Weight
+	}
+
+	if m.IsIframe != nil {
+		// no validation rules for IsIframe
+	}
+
+	if m.IsHidden != nil {
+		// no validation rules for IsHidden
+	}
+
+	if m.IsCache != nil {
+		// no validation rules for IsCache
+	}
+
+	if m.IsHome != nil {
+		// no validation rules for IsHome
+	}
+
+	if m.IsAffix != nil {
+		// no validation rules for IsAffix
+	}
+
+	if len(errors) > 0 {
+		return RegisterMenuNodeMultiError(errors)
+	}
+
+	return nil
+}
+
+// RegisterMenuNodeMultiError is an error wrapping multiple validation errors
+// returned by RegisterMenuNode.ValidateAll() if the designated constraints
+// aren't met.
+type RegisterMenuNodeMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m RegisterMenuNodeMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m RegisterMenuNodeMultiError) AllErrors() []error { return m }
+
+// RegisterMenuNodeValidationError is the validation error returned by
+// RegisterMenuNode.Validate if the designated constraints aren't met.
+type RegisterMenuNodeValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e RegisterMenuNodeValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e RegisterMenuNodeValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e RegisterMenuNodeValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e RegisterMenuNodeValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e RegisterMenuNodeValidationError) ErrorName() string { return "RegisterMenuNodeValidationError" }
+
+// Error satisfies the builtin error interface
+func (e RegisterMenuNodeValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sRegisterMenuNode.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = RegisterMenuNodeValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = RegisterMenuNodeValidationError{}
+
+// Validate checks the field values on RegisterMenuRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *RegisterMenuRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on RegisterMenuRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// RegisterMenuRequestMultiError, or nil if none found.
+func (m *RegisterMenuRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *RegisterMenuRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if utf8.RuneCountInString(m.GetAppKeyword()) < 1 {
+		err := RegisterMenuRequestValidationError{
+			field:  "AppKeyword",
+			reason: "value length must be at least 1 runes",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	// no validation rules for Mode
+
+	for idx, item := range m.GetMenus() {
+		_, _ = idx, item
+
+		if all {
+			switch v := interface{}(item).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, RegisterMenuRequestValidationError{
+						field:  fmt.Sprintf("Menus[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, RegisterMenuRequestValidationError{
+						field:  fmt.Sprintf("Menus[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return RegisterMenuRequestValidationError{
+					field:  fmt.Sprintf("Menus[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	if len(errors) > 0 {
+		return RegisterMenuRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// RegisterMenuRequestMultiError is an error wrapping multiple validation
+// errors returned by RegisterMenuRequest.ValidateAll() if the designated
+// constraints aren't met.
+type RegisterMenuRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m RegisterMenuRequestMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m RegisterMenuRequestMultiError) AllErrors() []error { return m }
+
+// RegisterMenuRequestValidationError is the validation error returned by
+// RegisterMenuRequest.Validate if the designated constraints aren't met.
+type RegisterMenuRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e RegisterMenuRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e RegisterMenuRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e RegisterMenuRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e RegisterMenuRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e RegisterMenuRequestValidationError) ErrorName() string {
+	return "RegisterMenuRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e RegisterMenuRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sRegisterMenuRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = RegisterMenuRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = RegisterMenuRequestValidationError{}
+
+// Validate checks the field values on RegisterMenuReply with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// first error encountered is returned, or nil if there are no violations.
+func (m *RegisterMenuReply) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on RegisterMenuReply with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// RegisterMenuReplyMultiError, or nil if none found.
+func (m *RegisterMenuReply) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *RegisterMenuReply) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Created
+
+	// no validation rules for Updated
+
+	// no validation rules for Deleted
+
+	if len(errors) > 0 {
+		return RegisterMenuReplyMultiError(errors)
+	}
+
+	return nil
+}
+
+// RegisterMenuReplyMultiError is an error wrapping multiple validation errors
+// returned by RegisterMenuReply.ValidateAll() if the designated constraints
+// aren't met.
+type RegisterMenuReplyMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m RegisterMenuReplyMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m RegisterMenuReplyMultiError) AllErrors() []error { return m }
+
+// RegisterMenuReplyValidationError is the validation error returned by
+// RegisterMenuReply.Validate if the designated constraints aren't met.
+type RegisterMenuReplyValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e RegisterMenuReplyValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e RegisterMenuReplyValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e RegisterMenuReplyValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e RegisterMenuReplyValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e RegisterMenuReplyValidationError) ErrorName() string {
+	return "RegisterMenuReplyValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e RegisterMenuReplyValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sRegisterMenuReply.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = RegisterMenuReplyValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = RegisterMenuReplyValidationError{}
+
 // Validate checks the field values on ListMenuReply_Data with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.

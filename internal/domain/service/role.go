@@ -3,12 +3,13 @@ package service
 import (
 	"github.com/limes-cloud/kratosx/pkg/tree"
 	"github.com/limes-cloud/kratosx/pkg/value"
+	"github.com/samber/lo"
+
 	"github.com/limes-cloud/manager/api/errors"
 	"github.com/limes-cloud/manager/internal/core"
 	"github.com/limes-cloud/manager/internal/domain/entity"
 	"github.com/limes-cloud/manager/internal/domain/repository"
 	"github.com/limes-cloud/manager/internal/types"
-	"github.com/samber/lo"
 )
 
 type Role struct {
@@ -81,17 +82,17 @@ func (u *Role) CreateRole(ctx core.Context, req *entity.Role) (uint32, error) {
 // UpdateRole 更新角色
 func (u *Role) UpdateRole(ctx core.Context, req *entity.Role) error {
 
-		// 不能修改自己的角色，防止主动提权
-		if lo.Contains(u.scope.RoleIds(ctx), req.Id) {
-			return errors.UpdateError("不能修改当前用户所属角色")
-		}
+	// 不能修改自己的角色，防止主动提权
+	if lo.Contains(u.scope.RoleIds(ctx), req.Id) {
+		return errors.UpdateError("不能修改当前用户所属角色")
+	}
 
-		// 判断是否具有角色权限
-		if !u.scope.HasRoleScope(ctx, req.Id) {
-			return errors.RoleScopeError()
-		}
+	// 判断是否具有角色权限
+	if !u.scope.HasRoleScope(ctx, req.Id) {
+		return errors.RoleScopeError()
+	}
 
-		// 如果修改父级菜单,判断是否具有角色权限
+	// 如果修改父级菜单,判断是否具有角色权限
 	old, err := u.repo.GetRole(ctx, req.Id)
 	if err != nil {
 		return errors.UpdateError()

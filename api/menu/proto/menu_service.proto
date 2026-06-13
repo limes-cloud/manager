@@ -40,4 +40,12 @@ service Menu {
   rpc DeleteMenu(DeleteMenuRequest) returns (DeleteMenuReply) {
     option (google.api.http) = {delete: "/manager/api/menu"};
   }
+
+  // RegisterMenu 注册应用菜单
+  rpc RegisterMenu(RegisterMenuRequest) returns (RegisterMenuReply) {
+    option (google.api.http) = {
+      post: "/manager/api/menu/register"
+      body: "*"
+    };
+  }
 }

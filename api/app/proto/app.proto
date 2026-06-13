@@ -115,6 +115,7 @@ message ListAppReply {
     optional string comment = 11;
     uint32 createdAt = 12;
     uint32 updatedAt = 13;
+    string type = 14;
   }
 
   uint32 total = 1;

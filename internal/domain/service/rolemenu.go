@@ -1,13 +1,14 @@
 package service
 
 import (
+	"github.com/samber/lo"
+	lom "github.com/samber/lo/mutable"
+
 	"github.com/limes-cloud/manager/api/errors"
 	"github.com/limes-cloud/manager/internal/core"
 	"github.com/limes-cloud/manager/internal/domain/entity"
 	"github.com/limes-cloud/manager/internal/domain/repository"
 	"github.com/limes-cloud/manager/internal/types"
-	"github.com/samber/lo"
-	lom "github.com/samber/lo/mutable"
 )
 
 type RoleMenu struct {
@@ -191,7 +192,6 @@ func (rm *RoleMenu) DeleteMenuRoles(ctx core.Context, req *types.DeleteMenuRoles
 	if lo.Contains(mids, req.MenuId) {
 		return errors.MenuScopeError()
 	}
-
 
 	// 组装数据
 	var rms []*entity.RoleMenu

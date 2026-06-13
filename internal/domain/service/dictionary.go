@@ -3,8 +3,9 @@ package service
 import (
 	"github.com/limes-cloud/kratosx"
 	"github.com/limes-cloud/kratosx/pkg/tree"
-	"github.com/limes-cloud/manager/api/errors"
 	"google.golang.org/protobuf/proto"
+
+	"github.com/limes-cloud/manager/api/errors"
 
 	"github.com/limes-cloud/manager/internal/domain/entity"
 	"github.com/limes-cloud/manager/internal/domain/repository"

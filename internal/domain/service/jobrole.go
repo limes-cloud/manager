@@ -1,12 +1,13 @@
 package service
 
 import (
+	"github.com/samber/lo"
+
 	"github.com/limes-cloud/manager/api/errors"
 	"github.com/limes-cloud/manager/internal/core"
 	"github.com/limes-cloud/manager/internal/domain/entity"
 	"github.com/limes-cloud/manager/internal/domain/repository"
 	"github.com/limes-cloud/manager/internal/types"
-	"github.com/samber/lo"
 )
 
 type JobRole struct {

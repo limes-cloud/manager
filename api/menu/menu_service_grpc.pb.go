@@ -24,6 +24,7 @@ const (
 	Menu_CreateMenu_FullMethodName      = "/manager.api.menu.Menu/CreateMenu"
 	Menu_UpdateMenu_FullMethodName      = "/manager.api.menu.Menu/UpdateMenu"
 	Menu_DeleteMenu_FullMethodName      = "/manager.api.menu.Menu/DeleteMenu"
+	Menu_RegisterMenu_FullMethodName    = "/manager.api.menu.Menu/RegisterMenu"
 )
 
 // MenuClient is the client API for Menu service.
@@ -40,6 +41,8 @@ type MenuClient interface {
 	UpdateMenu(ctx context.Context, in *UpdateMenuRequest, opts ...grpc.CallOption) (*UpdateMenuReply, error)
 	// DeleteMenu 删除菜单信息
 	DeleteMenu(ctx context.Context, in *DeleteMenuRequest, opts ...grpc.CallOption) (*DeleteMenuReply, error)
+	// RegisterMenu 注册应用菜单
+	RegisterMenu(ctx context.Context, in *RegisterMenuRequest, opts ...grpc.CallOption) (*RegisterMenuReply, error)
 }
 
 type menuClient struct {
@@ -95,6 +98,15 @@ func (c *menuClient) DeleteMenu(ctx context.Context, in *DeleteMenuRequest, opts
 	return out, nil
 }
 
+func (c *menuClient) RegisterMenu(ctx context.Context, in *RegisterMenuRequest, opts ...grpc.CallOption) (*RegisterMenuReply, error) {
+	out := new(RegisterMenuReply)
+	err := c.cc.Invoke(ctx, Menu_RegisterMenu_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // MenuServer is the server API for Menu service.
 // All implementations must embed UnimplementedMenuServer
 // for forward compatibility
@@ -109,6 +121,8 @@ type MenuServer interface {
 	UpdateMenu(context.Context, *UpdateMenuRequest) (*UpdateMenuReply, error)
 	// DeleteMenu 删除菜单信息
 	DeleteMenu(context.Context, *DeleteMenuRequest) (*DeleteMenuReply, error)
+	// RegisterMenu 注册应用菜单
+	RegisterMenu(context.Context, *RegisterMenuRequest) (*RegisterMenuReply, error)
 	mustEmbedUnimplementedMenuServer()
 }
 
@@ -130,6 +144,9 @@ func (UnimplementedMenuServer) UpdateMenu(context.Context, *UpdateMenuRequest) (
 }
 func (UnimplementedMenuServer) DeleteMenu(context.Context, *DeleteMenuRequest) (*DeleteMenuReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteMenu not implemented")
+}
+func (UnimplementedMenuServer) RegisterMenu(context.Context, *RegisterMenuRequest) (*RegisterMenuReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RegisterMenu not implemented")
 }
 func (UnimplementedMenuServer) mustEmbedUnimplementedMenuServer() {}
 
@@ -234,6 +251,24 @@ func _Menu_DeleteMenu_Handler(srv interface{}, ctx context.Context, dec func(int
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Menu_RegisterMenu_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RegisterMenuRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MenuServer).RegisterMenu(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Menu_RegisterMenu_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MenuServer).RegisterMenu(ctx, req.(*RegisterMenuRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Menu_ServiceDesc is the grpc.ServiceDesc for Menu service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -260,6 +295,10 @@ var Menu_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DeleteMenu",
 			Handler:    _Menu_DeleteMenu_Handler,
+		},
+		{
+			MethodName: "RegisterMenu",
+			Handler:    _Menu_RegisterMenu_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

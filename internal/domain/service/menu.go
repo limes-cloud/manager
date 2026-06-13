@@ -1,14 +1,20 @@
 package service
 
 import (
+	"fmt"
+	"strings"
+
+	"github.com/limes-cloud/kratosx/library/db/gormtranserror"
 	"github.com/limes-cloud/kratosx/pkg/tree"
 	"github.com/limes-cloud/kratosx/pkg/value"
+	"github.com/samber/lo"
+	"gorm.io/gorm"
+
 	"github.com/limes-cloud/manager/api/errors"
 	"github.com/limes-cloud/manager/internal/core"
 	"github.com/limes-cloud/manager/internal/domain/entity"
 	"github.com/limes-cloud/manager/internal/domain/repository"
 	"github.com/limes-cloud/manager/internal/types"
-	"github.com/samber/lo"
 )
 
 type Menu struct {
@@ -16,6 +22,18 @@ type Menu struct {
 	app   repository.App
 	rm    repository.RoleMenu
 	scope repository.Scope
+}
+
+const (
+	RegisterMenuModeAppend = "append"
+	RegisterMenuModeSync   = "sync"
+)
+
+type registerMenuState struct {
+	AppId   uint32
+	SeenKey map[string]struct{}
+	SeenApi map[string]struct{}
+	Reply   *types.RegisterMenuReply
 }
 
 func NewMenu(
@@ -35,15 +53,14 @@ func NewMenu(
 
 // ListCurrentMenu 获取当前的菜单信息列表树
 func (u *Menu) ListCurrentMenu(ctx core.Context, req *types.ListMenuRequest) ([]*entity.Menu, error) {
-	// 获取当前的角色列表
 	info := ctx.Auth()
-	if info.UserId != 1 {
-		// todo 切换到应用模式
-	}
 
-	rids := u.scope.RoleIds(ctx)
-	mids := u.rm.GetMenuIdsByRoleIds(rids)
-	req.InIds = lo.Intersect(mids, req.InIds)
+	// 超级管理员直接查全量菜单，不经过角色过滤
+	if !info.IsAdmin {
+		rids := u.scope.RoleIds(ctx)
+		mids := u.rm.GetMenuIdsByRoleIds(rids)
+		req.InIds = lo.Intersect(mids, req.InIds)
+	}
 
 	// 获取当前角色有权限的菜单ID
 	list, err := u.ListMenu(ctx, req)
@@ -178,8 +195,221 @@ func (u *Menu) DeleteMenu(ctx core.Context, id uint32) error {
 		if err = u.repo.DeleteMenu(ctx, id); err != nil {
 			return err
 		}
-		return nil
 		// 删除权限
-		// return u.rm.DeleteMenus(ctx, mids)
+		return u.rm.DeleteMenus(ctx, mids)
 	})
+}
+
+// RegisterMenu 注册应用菜单树
+func (u *Menu) RegisterMenu(ctx core.Context, req *types.RegisterMenuRequest) (*types.RegisterMenuReply, error) {
+	app, err := u.app.GetAppByKeyword(req.AppKeyword)
+	if err != nil {
+		ctx.Logger().Warnw("msg", "get app error", "err", err.Error())
+		return nil, errors.GetError("应用不存在")
+	}
+
+	mode := strings.ToLower(strings.TrimSpace(req.Mode))
+	if mode == "" {
+		mode = RegisterMenuModeAppend
+	}
+	if mode != RegisterMenuModeAppend && mode != RegisterMenuModeSync {
+		return nil, errors.ParamsError("mode仅支持append或sync")
+	}
+
+	state := &registerMenuState{
+		AppId:   app.Id,
+		SeenKey: map[string]struct{}{},
+		SeenApi: map[string]struct{}{},
+		Reply:   &types.RegisterMenuReply{},
+	}
+	if err = ctx.Transaction(func(ctx core.Context) error {
+		for _, item := range req.Menus {
+			if err := u.registerMenuNode(ctx, state, 0, item); err != nil {
+				return err
+			}
+		}
+
+		if mode != RegisterMenuModeSync {
+			return nil
+		}
+		return u.deleteUnregisteredMenus(ctx, state)
+	}); err != nil {
+		ctx.Logger().Warnw("msg", "register menu error", "err", err.Error())
+		return nil, errors.UpdateError(err.Error())
+	}
+
+	return state.Reply, nil
+}
+
+func (u *Menu) registerMenuNode(
+	ctx core.Context,
+	state *registerMenuState,
+	parentId uint32,
+	node *types.RegisterMenuNode,
+) error {
+	if node == nil {
+		return nil
+	}
+
+	menu, err := u.toRegisterMenu(state.AppId, parentId, node)
+	if err != nil {
+		return err
+	}
+
+	old, err := u.matchRegisterMenu(ctx, state, menu)
+	if err != nil {
+		return err
+	}
+	if err := u.saveRegisterMenu(ctx, menu, old, state.Reply); err != nil {
+		return err
+	}
+
+	for _, child := range node.Children {
+		if err := u.registerMenuNode(ctx, state, menu.Id, child); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (u *Menu) matchRegisterMenu(ctx core.Context, state *registerMenuState, menu *entity.Menu) (*entity.Menu, error) {
+	var (
+		old *entity.Menu
+		err error
+	)
+
+	if key := value.Value(menu.Keyword); key != "" {
+		if _, ok := state.SeenKey[key]; ok {
+			return nil, fmt.Errorf("菜单key重复: %s", key)
+		}
+		state.SeenKey[key] = struct{}{}
+		old, err = u.repo.GetMenuByKeyword(ctx, state.AppId, key)
+	} else if u.isApiMenu(menu.Type) {
+		apiKey := u.getRegisterApiKey(menu)
+		if _, ok := state.SeenApi[apiKey]; ok {
+			return nil, fmt.Errorf("接口菜单重复: %s", apiKey)
+		}
+		state.SeenApi[apiKey] = struct{}{}
+		old, err = u.repo.GetMenuByApi(ctx, state.AppId, menu.GetApi(), menu.GetMethod())
+	} else {
+		return nil, nil
+	}
+
+	if gormtranserror.Is(err, gorm.ErrRecordNotFound) {
+		return nil, nil
+	}
+	return old, err
+}
+
+func (u *Menu) saveRegisterMenu(
+	ctx core.Context,
+	menu *entity.Menu,
+	old *entity.Menu,
+	reply *types.RegisterMenuReply,
+) error {
+	if old == nil {
+		id, err := u.repo.CreateMenu(ctx, menu)
+		if err != nil {
+			return err
+		}
+		menu.Id = id
+		reply.Created++
+		return nil
+	}
+
+	menu.Id = old.Id
+	if err := u.repo.UpdateRegisteredMenu(ctx, menu); err != nil {
+		return err
+	}
+	reply.Updated++
+	return nil
+}
+
+func (u *Menu) toRegisterMenu(appId uint32, parentId uint32, node *types.RegisterMenuNode) (*entity.Menu, error) {
+	var key *string
+	if node.Key != nil {
+		trimKey := strings.TrimSpace(*node.Key)
+		if trimKey != "" {
+			key = value.Pointer(trimKey)
+		}
+	}
+
+	menu := &entity.Menu{
+		AppId:      appId,
+		ParentId:   value.Pointer(parentId),
+		Title:      node.Title,
+		Type:       node.Type,
+		Keyword:    key,
+		Icon:       node.Icon,
+		Api:        node.Api,
+		Method:     node.Method,
+		Path:       node.Path,
+		Permission: node.Permission,
+		Component:  node.Component,
+		Redirect:   node.Redirect,
+		Url:        node.Url,
+		Weight:     node.Weight,
+		IsIframe:   node.IsIframe,
+		IsHidden:   node.IsHidden,
+		IsCache:    node.IsCache,
+		IsHome:     node.IsHome,
+		IsAffix:    node.IsAffix,
+	}
+	if u.isApiMenu(menu.Type) {
+		method := strings.ToUpper(strings.TrimSpace(value.Value(menu.Method)))
+		api := strings.TrimSpace(value.Value(menu.Api))
+		if api == "" || method == "" {
+			return nil, fmt.Errorf("接口菜单%s缺少api或method", node.Title)
+		}
+		menu.Api = value.Pointer(api)
+		menu.Method = value.Pointer(method)
+	}
+	return menu, nil
+}
+
+func (u *Menu) deleteUnregisteredMenus(
+	ctx core.Context,
+	state *registerMenuState,
+) error {
+	list, err := u.repo.ListMenu(ctx, &types.ListMenuRequest{AppId: value.Pointer(state.AppId)})
+	if err != nil {
+		return err
+	}
+
+	var ids []uint32
+	for _, item := range list {
+		if item.Keyword != nil && strings.TrimSpace(*item.Keyword) != "" {
+			if _, ok := state.SeenKey[*item.Keyword]; ok {
+				continue
+			}
+			ids = append(ids, item.Id)
+			continue
+		}
+
+		if u.isApiMenu(item.Type) {
+			if _, ok := state.SeenApi[u.getRegisterApiKey(item)]; ok {
+				continue
+			}
+			ids = append(ids, item.Id)
+		}
+	}
+	if len(ids) == 0 {
+		return nil
+	}
+	if err := u.repo.DeleteMenus(ctx, ids); err != nil {
+		return err
+	}
+	if err := u.rm.DeleteMenus(ctx, ids); err != nil {
+		return err
+	}
+	state.Reply.Deleted = uint32(len(ids))
+	return nil
+}
+
+func (u *Menu) getRegisterApiKey(menu *entity.Menu) string {
+	return strings.ToUpper(menu.GetMethod()) + ":" + menu.GetApi()
+}
+
+func (u *Menu) isApiMenu(tp string) bool {
+	return tp == entity.MenuTypeApi || tp == entity.MenuTypeBasic
 }

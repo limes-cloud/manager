@@ -23,6 +23,9 @@ type Conf struct {
 	}
 	ChangePasswordType string
 
+	// SuperAdminUsernames 超级管理员用户名列表，这些用户绕过所有API权限检查
+	SuperAdminUsernames []string
+
 	// jwt 白名单
 	JWT struct {
 		Whitelist map[string]bool

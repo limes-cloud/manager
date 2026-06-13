@@ -3,20 +3,16 @@ package app
 import (
 	"context"
 
-	"google.golang.org/protobuf/types/known/emptypb"
-
-	"github.com/limes-cloud/manager/internal/infra/apis"
-
-	"github.com/limes-cloud/manager/internal/infra/oauther"
-
-	"github.com/limes-cloud/manager/internal/infra/dbs"
-
-	"github.com/limes-cloud/manager/internal/types"
-
-	"github.com/limes-cloud/manager/internal/core"
-
 	"github.com/go-kratos/kratos/v2/transport/grpc"
 	"github.com/go-kratos/kratos/v2/transport/http"
+	"google.golang.org/protobuf/types/known/emptypb"
+
+	"github.com/limes-cloud/manager/internal/core"
+	"github.com/limes-cloud/manager/internal/infra/apis"
+	"github.com/limes-cloud/manager/internal/infra/dbs"
+	"github.com/limes-cloud/manager/internal/infra/oauther"
+	"github.com/limes-cloud/manager/internal/types"
+
 	"github.com/limes-cloud/manager/api/authorize"
 	"github.com/limes-cloud/manager/internal/domain/service"
 )
@@ -87,7 +83,7 @@ func (az *Authorize) ListVisibleOAuther(c context.Context, req *authorize.ListVi
 func (az *Authorize) OAutherHandle(c context.Context, req *authorize.OAutherHandleRequest) (*authorize.OAutherHandleReply, error) {
 	ctx := core.MustContext(c)
 	resp, err := az.srv.OAutherHandle(ctx, &types.OAutherHandleRequest{
-		App: req.App,
+		App:      req.App,
 		Keyword:  req.Keyword,
 		Account:  req.Account,
 		Platform: req.Platform,
@@ -168,7 +164,7 @@ func (az *Authorize) GetImageCaptcha(c context.Context, req *authorize.GetImageC
 func (az *Authorize) Login(c context.Context, req *authorize.LoginRequest) (*authorize.LoginReply, error) {
 	ctx := core.MustContext(c)
 	reply, err := az.srv.Login(ctx, &types.LoginRequest{
-		App: req.App,
+		App:       req.App,
 		CaptchaId: req.CaptchaId,
 		Captcha:   req.Captcha,
 		Username:  req.Username,
@@ -186,7 +182,7 @@ func (az *Authorize) Login(c context.Context, req *authorize.LoginRequest) (*aut
 func (az *Authorize) Register(c context.Context, req *authorize.RegisterRequest) (*authorize.RegisterReply, error) {
 	ctx := core.MustContext(c)
 	reply, err := az.srv.Register(ctx, &types.RegisterRequest{
-		App: req.App,
+		App:       req.App,
 		CaptchaId: req.CaptchaId,
 		Captcha:   req.Captcha,
 		Username:  req.Username,

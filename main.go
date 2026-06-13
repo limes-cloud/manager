@@ -14,6 +14,7 @@ import (
 	"github.com/limes-cloud/manager/internal/app"
 	"github.com/limes-cloud/manager/internal/core"
 	"github.com/limes-cloud/manager/internal/domain/service"
+	initmenu "github.com/limes-cloud/manager/internal/initiator/menu"
 	"github.com/limes-cloud/manager/internal/middleware"
 )
 
@@ -33,6 +34,8 @@ func main() {
 		),
 		kratosx.WithMiddleware(middleware.Middleware()...),
 	)
+
+	initmenu.Register(core.MustContext(context.Background()))
 
 	if err := srv.App().Run(); err != nil {
 		log.Fatal(err)

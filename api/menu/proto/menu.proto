@@ -99,3 +99,36 @@ message DeleteMenuRequest {
 }
 
 message DeleteMenuReply {}
+
+message RegisterMenuNode {
+  optional string key = 1;
+  string title = 2 [(validate.rules).string = {min_len: 1}];
+  string type = 3 [(validate.rules).string = {min_len: 1}];
+  optional string icon = 4;
+  optional string api = 5;
+  optional string method = 6;
+  optional string path = 7;
+  optional string permission = 8;
+  optional string component = 9;
+  optional string url = 10;
+  optional string redirect = 11;
+  optional int32 weight = 12;
+  optional bool isIframe = 13;
+  optional bool isHidden = 14;
+  optional bool isCache = 15;
+  optional bool isHome = 16;
+  optional bool isAffix = 17;
+  repeated RegisterMenuNode children = 18;
+}
+
+message RegisterMenuRequest {
+  string appKeyword = 1 [(validate.rules).string = {min_len: 1}];
+  string mode = 2;
+  repeated RegisterMenuNode menus = 3;
+}
+
+message RegisterMenuReply {
+  uint32 created = 1;
+  uint32 updated = 2;
+  uint32 deleted = 3;
+}

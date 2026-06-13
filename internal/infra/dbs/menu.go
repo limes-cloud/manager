@@ -85,7 +85,7 @@ func (infra *Menu) CreateMenu(ctx core.Context, menu *entity.Menu) (uint32, erro
 		menu.ParentId = value.Pointer(uint32(0))
 	}
 
-	return menu.Id, ctx.Transaction(func(ctx core.Context) error {
+	err := ctx.Transaction(func(ctx core.Context) error {
 		if err := ctx.DB().Create(menu).Error; err != nil {
 			return err
 		}
@@ -107,12 +107,29 @@ func (infra *Menu) CreateMenu(ctx core.Context, menu *entity.Menu) (uint32, erro
 
 		return nil
 	})
+	return menu.Id, err
 }
 
 // GetMenu 获取指定的数据
 func (infra *Menu) GetMenu(ctx core.Context, id uint32) (*entity.Menu, error) {
 	menu := entity.Menu{}
 	return &menu, ctx.DB().First(&menu, id).Error
+}
+
+// GetMenuByKeyword 获取指定应用下指定标识的菜单
+func (infra *Menu) GetMenuByKeyword(ctx core.Context, appId uint32, keyword string) (*entity.Menu, error) {
+	menu := entity.Menu{}
+	return &menu, ctx.DB().
+		Where("app_id = ? AND keyword = ?", appId, keyword).
+		First(&menu).Error
+}
+
+// GetMenuByApi 获取指定应用下指定接口的菜单
+func (infra *Menu) GetMenuByApi(ctx core.Context, appId uint32, api string, method string) (*entity.Menu, error) {
+	menu := entity.Menu{}
+	return &menu, ctx.DB().
+		Where("app_id = ? AND api = ? AND method = ?", appId, api, method).
+		First(&menu).Error
 }
 
 // UpdateMenu 更新数据
@@ -128,7 +145,7 @@ func (infra *Menu) UpdateMenu(ctx core.Context, menu *entity.Menu) error {
 	}
 
 	// 出现了父级菜单变化
-	if old.ParentId != menu.ParentId {
+	if value.Value(old.ParentId) != value.Value(menu.ParentId) {
 		if err := infra.removeMenuParent(ctx, menu.Id); err != nil {
 			return err
 		}
@@ -159,6 +176,58 @@ func (infra *Menu) UpdateMenu(ctx core.Context, menu *entity.Menu) error {
 	})
 }
 
+// UpdateRegisteredMenu 更新注册菜单数据
+func (infra *Menu) UpdateRegisteredMenu(ctx core.Context, menu *entity.Menu) error {
+	if menu.Id == value.Value(menu.ParentId) {
+		return errors.New("父级不能为自己")
+	}
+
+	old, err := infra.GetMenu(ctx, menu.Id)
+	if err != nil {
+		return err
+	}
+
+	return ctx.Transaction(func(ctx core.Context) error {
+		if value.Value(old.ParentId) != value.Value(menu.ParentId) {
+			if err := infra.removeMenuParent(ctx, menu.Id); err != nil {
+				return err
+			}
+			pid := value.Value(menu.ParentId)
+			if pid != 0 {
+				if err := infra.appendMenuChildren(ctx, pid, menu.Id); err != nil {
+					return err
+				}
+			}
+		}
+
+		if err := ctx.DB().Model(&entity.Menu{}).
+			Where("id = ?", menu.Id).
+			Omit("title", "icon").
+			Updates(menu).Error; err != nil {
+			return err
+		}
+
+		oldIsApi := lo.Contains([]string{entity.MenuTypeApi, entity.MenuTypeBasic}, old.Type)
+		newIsApi := lo.Contains([]string{entity.MenuTypeApi, entity.MenuTypeBasic}, menu.Type)
+		op := infra.cache.OP(ctx)
+		if oldIsApi {
+			op = op.Delete(infra.getCacheKey(old.GetApi(), old.GetMethod()))
+		}
+		if newIsApi {
+			op = op.Put(infra.getCacheKey(menu.GetApi(), menu.GetMethod()), &types.CacheMenu{
+				Id:    menu.Id,
+				Type:  menu.Type,
+				AppId: menu.AppId,
+				Name:  old.Title,
+			})
+		}
+		if oldIsApi || newIsApi {
+			return op.Do()
+		}
+		return nil
+	})
+}
+
 // DeleteMenu 删除数据
 func (infra *Menu) DeleteMenu(ctx core.Context, id uint32) error {
 	ids, err := infra.GetMenuChildrenIds(ctx, id)
@@ -181,6 +250,39 @@ func (infra *Menu) DeleteMenu(ctx core.Context, id uint32) error {
 	op := infra.cache.OP(ctx)
 	return ctx.Transaction(func(ctx core.Context) error {
 		if err := ctx.DB().Where("id in ?", ids).Delete(&entity.Menu{}).Error; err != nil {
+			return err
+		}
+		for _, item := range apis {
+			op = op.Delete(infra.getCacheKey(item.GetApi(), item.GetMethod()))
+		}
+		return op.Do()
+	})
+}
+
+// DeleteMenus 删除多个菜单数据
+func (infra *Menu) DeleteMenus(ctx core.Context, ids []uint32) error {
+	ids = lo.Uniq(ids)
+	if len(ids) == 0 {
+		return nil
+	}
+
+	var apis []*entity.Menu
+	if err := ctx.DB().
+		Where("id in ?", ids).
+		Where("type in ?", []string{
+			entity.MenuTypeApi,
+			entity.MenuTypeBasic,
+		}).
+		Find(&apis).Error; err != nil {
+		return err
+	}
+
+	op := infra.cache.OP(ctx)
+	return ctx.Transaction(func(ctx core.Context) error {
+		if err := ctx.DB().Where("id in ?", ids).Delete(&entity.Menu{}).Error; err != nil {
+			return err
+		}
+		if err := ctx.DB().Delete(&entity.MenuClosure{}, "parent in ? OR children in ?", ids, ids).Error; err != nil {
 			return err
 		}
 		for _, item := range apis {

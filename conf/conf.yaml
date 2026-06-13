@@ -4,6 +4,7 @@ server:
   http:
     host: 127.0.0.1
     port: 7010
+    formatResponse: true
     pprof:
       enable: true
       query: secret
@@ -63,6 +64,14 @@ request:
   retryWaitTime: 1s
   maxRetryWaitTime: 2s
   timeout: 10s
+signature:
+  enable: true
+  ak: manager
+  sk: manager
+  expire: 10s
+  onlyList:
+    /manager/api/menu/register:POST: true
+    /manager.api.menu.Menu/RegisterMenu: true
 redis:
   - enable: true
     name: cache
@@ -85,6 +94,8 @@ pool: #并非池配置
   maxBlockingTasks: 1000 #最大的并发任务
   nonblocking: true #设置为true时maxBlockingTasks将失效，不限制并发任务
 business:
+  superAdminUsernames:
+    - superadmin
   setting:
     title: "统一应用管理平台"
     desc: "开放协作，拥抱未来，统一应用管理平台"
@@ -106,6 +117,6 @@ business:
       /manager/api/authorize/fill/infos:GET: true
       /manager/api/authorize/fill/infos:POST: true
       /manager/api/authorize/oauther/report:POST: true
-      /manager/api/authorize/token/refresh:POST: true
       /manager/api/authorize/logout:POST: true
-
+      /manager/api/menu/register:POST: true
+      /manager.api.menu.Menu/RegisterMenu:GRPC: true

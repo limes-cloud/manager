@@ -13,19 +13,21 @@ import (
 	"github.com/limes-cloud/kratosx/library/db/gormtranserror"
 	"github.com/limes-cloud/kratosx/pkg/ua"
 	"github.com/limes-cloud/kratosx/pkg/value"
-	"github.com/limes-cloud/manager/internal/pkg/jwt"
 	"gorm.io/gorm"
+
+	"github.com/limes-cloud/manager/internal/pkg/jwt"
 
 	kerrors "github.com/go-kratos/kratos/v2/errors"
 	"github.com/limes-cloud/kratosx/library/captcha"
 	"github.com/limes-cloud/kratosx/model"
 	"github.com/limes-cloud/kratosx/pkg/crypto"
+	bc "github.com/mojocn/base64Captcha"
+
 	"github.com/limes-cloud/manager/api/errors"
 	"github.com/limes-cloud/manager/internal/core"
 	"github.com/limes-cloud/manager/internal/domain/entity"
 	"github.com/limes-cloud/manager/internal/domain/repository"
 	"github.com/limes-cloud/manager/internal/types"
-	bc "github.com/mojocn/base64Captcha"
 )
 
 const (
@@ -306,9 +308,9 @@ func (s *Authorize) OAutherLogin(ctx core.Context, req *types.OAutherLoginReques
 	// 如果不是私有的应用，且用户第一次登陆，则自动创建授权信息
 	if gormtranserror.Is(err, gorm.ErrRecordNotFound) && !value.Value(app.Private) {
 		az.Id, err = s.repo.CreateAuthorize(ctx, &entity.Authorize{
-				UserId: user.Id,
-				AppId:  app.Id,
-			})
+			UserId: user.Id,
+			AppId:  app.Id,
+		})
 	}
 	if err != nil {
 		ctx.Logger().Errorw("msg", "get authorize info error", "err", err.Error())
@@ -443,12 +445,12 @@ func (s *Authorize) OAutherBind(ctx core.Context, req *types.OAutherBindRequest)
 
 	// 写入三方绑定信息
 	if _, err := s.uo.CreateUserOAuther(ctx, &entity.UserOAuther{
-		UserId: user.Id,
-		OAutherId:       cd.OAutherId,
-		OID:             cd.OID,
-		Token:           cd.Token,
-		ExpiredAt:       cd.Expire,
-		LoggedAt:        time.Now().Unix(),
+		UserId:    user.Id,
+		OAutherId: cd.OAutherId,
+		OID:       cd.OID,
+		Token:     cd.Token,
+		ExpiredAt: cd.Expire,
+		LoggedAt:  time.Now().Unix(),
 	}); err != nil {
 		return nil, errors.SystemError(err.Error())
 	}
@@ -839,16 +841,6 @@ func (s *Authorize) genToken(ctx core.Context, app *entity.App, az *entity.Autho
 		return
 	}
 
-	//infos, err := s.GetUserinfo(ctx, app.Id, user.Id)
-	//if err != nil {
-	//	return "", errors.SystemError(err.Error())
-	//}
-
-	//userdepts, err := s.GetUserDepts(ctx, user.Id)
-	//if err != nil {
-	//	return "", errors.SystemError(err.Error())
-	//}
-
 	jc := app.GetSetting().JWT
 	jwter := jwt.New(ctx.Context, &jwt.Config{
 		Secret:  jc.Secret,
@@ -857,17 +849,11 @@ func (s *Authorize) genToken(ctx core.Context, app *entity.App, az *entity.Autho
 		App:     app.Keyword,
 	})
 
-	//var mainDeptId uint32
-	//for _, item := range userdepts {
-	//	if value.Value(item.Main) {
-	//		mainDeptId = item.DeptId
-	//	}
-	//}
-
 	info := types.AuthorizeInfo{
-		AppId:  app.Id,
-		UserId: user.Id,
-		DeptId: s.userdept.GetUserMainDeptId(user.Id),
+		AppId:   app.Id,
+		UserId:  user.Id,
+		DeptId:  s.userdept.GetUserMainDeptId(user.Id),
+		IsAdmin: value.InList(ctx.Config().SuperAdminUsernames, user.Username),
 	}
 	token, err = jwter.NewToken(info.ToMap())
 	if err != nil {
@@ -895,9 +881,9 @@ func (s *Authorize) genToken(ctx core.Context, app *entity.App, az *entity.Autho
 
 	data := &entity.Authorize{
 		CreateModel: model.CreateModel{Id: az.Id},
-		Tokens:            value.ObjToString(tokens),
-		LoggedAt:          time.Now().Unix(),
-		ExpiredAt:         expired,
+		Tokens:      value.ObjToString(tokens),
+		LoggedAt:    time.Now().Unix(),
+		ExpiredAt:   expired,
 	}
 	if err = s.repo.UpdateAuthorize(ctx, data); err != nil {
 		ctx.Logger().Errorw("msg", "update user login info error", "err", err.Error())
@@ -908,7 +894,7 @@ func (s *Authorize) genToken(ctx core.Context, app *entity.App, az *entity.Autho
 	// 更新用户登陆时间
 	if err = s.user.UpdateUser(ctx, &entity.User{
 		BaseModel: model.BaseModel{Id: user.Id},
-		LoggedAt:        time.Now().Unix(),
+		LoggedAt:  time.Now().Unix(),
 	}); err != nil {
 		ctx.Logger().Errorw("msg", "update user login info error", "err", err.Error())
 		err = errors.SystemError()
@@ -949,9 +935,9 @@ func (s *Authorize) AddLoginLog(ctx core.Context, tp string, appId uint32, user 
 	}
 
 	_, _ = s.log.CreateLoginLog(ctx, &entity.LoginLog{
-		AppId:  appId,
-		UserId: user.Id,
-		DeptId: s.userdept.GetUserMainDeptId(user.Id),
+		AppId:       appId,
+		UserId:      user.Id,
+		DeptId:      s.userdept.GetUserMainDeptId(user.Id),
 		Type:        tp,
 		IP:          ctx.ClientIP(),
 		Address:     s.address.GetAddressByIP(ip),
@@ -1037,6 +1023,15 @@ func (u *Authorize) CheckAuth(ctx core.Context, req *types.CheckAuthRequest) (*t
 		}, nil
 	}
 
+	// 超级管理员绕过所有API权限检查
+	if ctx.Auth().IsAdmin {
+		return &types.AuthorizeInfo{
+			UserId:  ctx.Auth().UserId,
+			DeptId:  ctx.Auth().DeptId,
+			IsAdmin: true,
+		}, nil
+	}
+
 	// 验证接口
 	if err := validate(req.Method, req.Path); err != nil {
 		return nil, err
@@ -1044,9 +1039,9 @@ func (u *Authorize) CheckAuth(ctx core.Context, req *types.CheckAuthRequest) (*t
 
 	// 获取用户token信息
 	return &types.AuthorizeInfo{
-			UserId: ctx.Auth().UserId,
-			DeptId: ctx.Auth().DeptId,
-		}, nil
+		UserId: ctx.Auth().UserId,
+		DeptId: ctx.Auth().DeptId,
+	}, nil
 }
 
 // OAutherReport 上报授权code

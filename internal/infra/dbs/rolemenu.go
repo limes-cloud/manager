@@ -151,7 +151,12 @@ func (rm *RoleMenu) DeleteMenus(ctx core.Context, mids []uint32) error {
 		}
 	}
 
-	return op.Do()
+	return ctx.Transaction(func(ctx core.Context) error {
+		if err := ctx.DB().Where("menu_id in ?", mids).Delete(&entity.RoleMenu{}).Error; err != nil {
+			return err
+		}
+		return op.Do()
+	})
 }
 
 // load 加载全量的数据

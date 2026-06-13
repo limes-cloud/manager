@@ -9,14 +9,14 @@ import (
 )
 
 type AppField struct {
-	repo   repository.AppField
-	app    repository.App
+	repo repository.AppField
+	app  repository.App
 }
 
 func NewAppField(repo repository.AppField, app repository.App) *AppField {
 	return &AppField{
-		repo:   repo,
-		app:    app,
+		repo: repo,
+		app:  app,
 	}
 }
 

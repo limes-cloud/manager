@@ -2,6 +2,7 @@ package service
 
 import (
 	"github.com/limes-cloud/kratosx/pkg/tree"
+
 	"github.com/limes-cloud/manager/api/errors"
 	"github.com/limes-cloud/manager/internal/core"
 	"github.com/limes-cloud/manager/internal/domain/entity"

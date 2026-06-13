@@ -53,18 +53,20 @@ type AuthorizeBase struct {
 
 type AuthorizeInfo struct {
 	*AuthorizeBase
-	AppId    uint32 `json:"appId"`
-	UserId   uint32 `json:"userId"`
-	DeptId   uint32 `json:"deptId"`
-	JobId    uint32 `json:"jobId"`
+	AppId   uint32 `json:"appId"`
+	UserId  uint32 `json:"userId"`
+	DeptId  uint32 `json:"deptId"`
+	JobId   uint32 `json:"jobId"`
+	IsAdmin bool   `json:"isAdmin"` // 是否为超级管理员（绕过所有API权限检查）
 }
 
 func (az AuthorizeInfo) ToMap() map[string]any {
 	return map[string]any{
-		"appId":  az.AppId,
-		"userId": az.UserId,
-		"deptId": az.DeptId,
-		"jobId":  az.JobId,
+		"appId":   az.AppId,
+		"userId":  az.UserId,
+		"deptId":  az.DeptId,
+		"jobId":   az.JobId,
+		"isAdmin": az.IsAdmin,
 	}
 }
 

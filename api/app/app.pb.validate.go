@@ -2303,6 +2303,8 @@ func (m *ListAppReply_Data) validate(all bool) error {
 
 	// no validation rules for UpdatedAt
 
+	// no validation rules for Type
+
 	if m.Status != nil {
 		// no validation rules for Status
 	}

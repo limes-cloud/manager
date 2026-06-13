@@ -3,10 +3,10 @@ package service
 import (
 	"time"
 
-
 	"github.com/limes-cloud/kratosx/model"
 	"github.com/limes-cloud/kratosx/pkg/crypto"
 	"github.com/limes-cloud/kratosx/pkg/value"
+
 	"github.com/limes-cloud/manager/api/errors"
 	"github.com/limes-cloud/manager/internal/core"
 	"github.com/limes-cloud/manager/internal/domain/entity"
@@ -90,7 +90,7 @@ func (u *User) UpdateCurrentUserPassword(ctx core.Context, req *types.UpdateCurr
 	// 更新密码
 	if err := u.repo.UpdateUser(ctx, &entity.User{
 		BaseModel: model.BaseModel{Id: ctx.Auth().UserId},
-		Password: crypto.EncodePwd(req.Password),
+		Password:  crypto.EncodePwd(req.Password),
 	}); err != nil {
 		ctx.Logger().Warnw("msg", "update user error", "err", err.Error())
 		return errors.UpdateError()

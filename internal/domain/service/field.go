@@ -1,9 +1,10 @@
 package service
 
 import (
+	"google.golang.org/protobuf/proto"
+
 	"github.com/limes-cloud/manager/api/errors"
 	"github.com/limes-cloud/manager/internal/core"
-	"google.golang.org/protobuf/proto"
 
 	"github.com/limes-cloud/manager/internal/domain/entity"
 	"github.com/limes-cloud/manager/internal/domain/repository"

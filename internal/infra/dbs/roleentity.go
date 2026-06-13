@@ -36,7 +36,7 @@ func NewRoleEntity() *RoleEntity {
 			kratosx.WithTrace("cache", "role entity"),
 		)
 		ctx.BeforeStart("load cache role entity", func() {
-			reIns.cache = cache.NewCacheAndInit(
+			reIns.cache = cache.NewCacheAndInit[string, *entity.RoleEntity](
 				ctx,
 				ctx.Redis(),
 				reCacheKey,

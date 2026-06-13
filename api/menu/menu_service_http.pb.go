@@ -23,6 +23,7 @@ const OperationMenuCreateMenu = "/manager.api.menu.Menu/CreateMenu"
 const OperationMenuDeleteMenu = "/manager.api.menu.Menu/DeleteMenu"
 const OperationMenuListCurrentMenu = "/manager.api.menu.Menu/ListCurrentMenu"
 const OperationMenuListMenu = "/manager.api.menu.Menu/ListMenu"
+const OperationMenuRegisterMenu = "/manager.api.menu.Menu/RegisterMenu"
 const OperationMenuUpdateMenu = "/manager.api.menu.Menu/UpdateMenu"
 
 type MenuHTTPServer interface {
@@ -34,6 +35,8 @@ type MenuHTTPServer interface {
 	ListCurrentMenu(context.Context, *ListCurrentMenuRequest) (*ListMenuReply, error)
 	// ListMenu ListMenu 获取菜单信息列表
 	ListMenu(context.Context, *ListMenuRequest) (*ListMenuReply, error)
+	// RegisterMenu RegisterMenu 注册应用菜单
+	RegisterMenu(context.Context, *RegisterMenuRequest) (*RegisterMenuReply, error)
 	// UpdateMenu UpdateMenu 更新菜单信息
 	UpdateMenu(context.Context, *UpdateMenuRequest) (*UpdateMenuReply, error)
 }
@@ -45,6 +48,7 @@ func RegisterMenuHTTPServer(s *http.Server, srv MenuHTTPServer) {
 	r.POST("/manager/api/menu", _Menu_CreateMenu0_HTTP_Handler(srv))
 	r.PUT("/manager/api/menu", _Menu_UpdateMenu0_HTTP_Handler(srv))
 	r.DELETE("/manager/api/menu", _Menu_DeleteMenu0_HTTP_Handler(srv))
+	r.POST("/manager/api/menu/register", _Menu_RegisterMenu0_HTTP_Handler(srv))
 }
 
 func _Menu_ListCurrentMenu0_HTTP_Handler(srv MenuHTTPServer) func(ctx http.Context) error {
@@ -148,11 +152,34 @@ func _Menu_DeleteMenu0_HTTP_Handler(srv MenuHTTPServer) func(ctx http.Context) e
 	}
 }
 
+func _Menu_RegisterMenu0_HTTP_Handler(srv MenuHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in RegisterMenuRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationMenuRegisterMenu)
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
+			return srv.RegisterMenu(ctx, req.(*RegisterMenuRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*RegisterMenuReply)
+		return ctx.Result(200, reply)
+	}
+}
+
 type MenuHTTPClient interface {
 	CreateMenu(ctx context.Context, req *CreateMenuRequest, opts ...http.CallOption) (rsp *CreateMenuReply, err error)
 	DeleteMenu(ctx context.Context, req *DeleteMenuRequest, opts ...http.CallOption) (rsp *DeleteMenuReply, err error)
 	ListCurrentMenu(ctx context.Context, req *ListCurrentMenuRequest, opts ...http.CallOption) (rsp *ListMenuReply, err error)
 	ListMenu(ctx context.Context, req *ListMenuRequest, opts ...http.CallOption) (rsp *ListMenuReply, err error)
+	RegisterMenu(ctx context.Context, req *RegisterMenuRequest, opts ...http.CallOption) (rsp *RegisterMenuReply, err error)
 	UpdateMenu(ctx context.Context, req *UpdateMenuRequest, opts ...http.CallOption) (rsp *UpdateMenuReply, err error)
 }
 
@@ -210,6 +237,19 @@ func (c *MenuHTTPClientImpl) ListMenu(ctx context.Context, in *ListMenuRequest, 
 	opts = append(opts, http.Operation(OperationMenuListMenu))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &out, err
+}
+
+func (c *MenuHTTPClientImpl) RegisterMenu(ctx context.Context, in *RegisterMenuRequest, opts ...http.CallOption) (*RegisterMenuReply, error) {
+	var out RegisterMenuReply
+	pattern := "/manager/api/menu/register"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationMenuRegisterMenu))
+	opts = append(opts, http.PathTemplate(pattern))
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
 	if err != nil {
 		return nil, err
 	}

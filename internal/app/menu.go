@@ -6,17 +6,14 @@ import (
 	"github.com/go-kratos/kratos/v2/transport/grpc"
 	"github.com/go-kratos/kratos/v2/transport/http"
 
-	"github.com/limes-cloud/manager/internal/infra/dbs"
-
-	"github.com/limes-cloud/manager/api/menu"
-
-	"github.com/limes-cloud/manager/internal/core"
-
 	"github.com/limes-cloud/kratosx/pkg/value"
 
 	"github.com/limes-cloud/manager/api/errors"
+	"github.com/limes-cloud/manager/api/menu"
+	"github.com/limes-cloud/manager/internal/core"
 	"github.com/limes-cloud/manager/internal/domain/entity"
 	"github.com/limes-cloud/manager/internal/domain/service"
+	"github.com/limes-cloud/manager/internal/infra/dbs"
 	"github.com/limes-cloud/manager/internal/types"
 )
 
@@ -143,4 +140,52 @@ func (s *Menu) UpdateMenu(c context.Context, req *menu.UpdateMenuRequest) (*menu
 // DeleteMenu 删除菜单
 func (s *Menu) DeleteMenu(c context.Context, req *menu.DeleteMenuRequest) (*menu.DeleteMenuReply, error) {
 	return &menu.DeleteMenuReply{}, s.srv.DeleteMenu(core.MustContext(c), req.Id)
+}
+
+// RegisterMenu 注册应用菜单
+func (s *Menu) RegisterMenu(c context.Context, req *menu.RegisterMenuRequest) (*menu.RegisterMenuReply, error) {
+	ctx := core.MustContext(c)
+	reply, err := s.srv.RegisterMenu(ctx, &types.RegisterMenuRequest{
+		AppKeyword: req.AppKeyword,
+		Mode:       req.Mode,
+		Menus:      transRegisterMenuNodes(req.Menus),
+	})
+	if err != nil {
+		return nil, err
+	}
+	return &menu.RegisterMenuReply{
+		Created: reply.Created,
+		Updated: reply.Updated,
+		Deleted: reply.Deleted,
+	}, nil
+}
+
+func transRegisterMenuNodes(list []*menu.RegisterMenuNode) []*types.RegisterMenuNode {
+	var res []*types.RegisterMenuNode
+	for _, item := range list {
+		if item == nil {
+			continue
+		}
+		res = append(res, &types.RegisterMenuNode{
+			Key:        item.Key,
+			Title:      item.Title,
+			Type:       item.Type,
+			Icon:       item.Icon,
+			Api:        item.Api,
+			Method:     item.Method,
+			Path:       item.Path,
+			Permission: item.Permission,
+			Component:  item.Component,
+			Url:        item.Url,
+			Redirect:   item.Redirect,
+			Weight:     item.Weight,
+			IsIframe:   item.IsIframe,
+			IsHidden:   item.IsHidden,
+			IsCache:    item.IsCache,
+			IsHome:     item.IsHome,
+			IsAffix:    item.IsAffix,
+			Children:   transRegisterMenuNodes(item.Children),
+		})
+	}
+	return res
 }

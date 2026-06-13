@@ -10,6 +10,7 @@ import (
 	"github.com/go-kratos/kratos/v2/transport/http"
 	"github.com/limes-cloud/kratosx/model/page"
 	"github.com/limes-cloud/kratosx/pkg/value"
+
 	"github.com/limes-cloud/manager/api/app"
 	"github.com/limes-cloud/manager/internal/core"
 	"github.com/limes-cloud/manager/internal/domain/entity"
@@ -126,6 +127,7 @@ func (s *App) ListApp(c context.Context, req *app.ListAppRequest) (*app.ListAppR
 	for _, ent := range list {
 		reply.List = append(reply.List, &app.ListAppReply_Data{
 			Id:          ent.Id,
+			Type:        ent.Type,
 			Logo:        ent.Logo,
 			Favicon:     ent.Favicon,
 			Keyword:     ent.Keyword,

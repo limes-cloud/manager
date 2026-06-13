@@ -35,7 +35,7 @@ func NewApp() *App {
 		appIns = &App{}
 
 		ctx.BeforeStart("load cache app", func() {
-			appIns.cache = cache.NewCacheAndInit[string, *entity.App](
+			appIns.cache = cache.NewCacheAndInit(
 				ctx,
 				ctx.Redis(),
 				appCacheKey,
