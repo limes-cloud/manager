@@ -4,6 +4,7 @@ go 1.24.6
 
 require (
 	dario.cat/mergo v1.0.0
+	github.com/alicebob/miniredis/v2 v2.33.0
 	github.com/forgoer/openssl v1.8.0
 	github.com/go-kratos/kratos/v2 v2.8.4
 	github.com/go-resty/resty/v2 v2.16.5
@@ -11,13 +12,12 @@ require (
 	github.com/google/uuid v1.6.0
 	github.com/json-iterator/go v1.1.12
 	github.com/limes-cloud/configure v1.0.49
-	github.com/limes-cloud/kratosx v1.3.2
+	github.com/limes-cloud/kratosx v1.3.3
 	github.com/limes-cloud/manager/api v0.0.0
 	github.com/mojocn/base64Captcha v1.3.8
 	github.com/redis/go-redis/v9 v9.7.3
 	github.com/samber/lo v1.51.0
 	github.com/silenceper/wechat/v2 v2.0.0
-	github.com/spf13/cast v1.9.2
 	golang.org/x/text v0.31.0
 	google.golang.org/protobuf v1.36.8
 	gopkg.in/gomail.v2 v2.0.0-20160411212932-81ebce5c23df
@@ -27,7 +27,6 @@ require (
 require (
 	filippo.io/edwards25519 v1.1.0 // indirect
 	github.com/alicebob/gopher-json v0.0.0-20200520072559-a9ecdc9d1d3a // indirect
-	github.com/alicebob/miniredis/v2 v2.33.0 // indirect
 	github.com/armon/go-metrics v0.4.1 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/bradfitz/gomemcache v0.0.0-20190913173617-a41fca850d0b // indirect
@@ -93,6 +92,7 @@ require (
 	github.com/shirou/gopsutil/v3 v3.24.4 // indirect
 	github.com/shoenig/go-m1cpu v0.1.6 // indirect
 	github.com/sirupsen/logrus v1.6.0 // indirect
+	github.com/spf13/cast v1.9.2 // indirect
 	github.com/tklauser/go-sysconf v0.3.14 // indirect
 	github.com/tklauser/numcpus v0.8.0 // indirect
 	github.com/yuin/gopher-lua v1.1.1 // indirect
@@ -125,5 +125,3 @@ require (
 )
 
 replace github.com/limes-cloud/manager/api v0.0.0 => ./api
-
-replace github.com/limes-cloud/kratosx v1.3.2 => ../../framework/kratosx
