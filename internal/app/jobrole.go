@@ -51,6 +51,7 @@ func (s *JobRole) ListJobRole(c context.Context, req *jobrole.ListJobRoleRequest
 		},
 		JobId: req.JobId,
 		Name:  req.Name,
+		App:   req.GetApp(),
 	})
 	if err != nil {
 		return nil, err
@@ -71,6 +72,7 @@ func (s *JobRole) CreateJobRole(c context.Context, req *jobrole.CreateJobRoleReq
 	err := s.srv.CreateJobRole(ctx, &types.CreateJobRoleRequest{
 		JobId:  req.JobId,
 		RoleId: req.RoleId,
+		App:    req.GetApp(),
 	})
 	if err != nil {
 		return nil, err
@@ -83,6 +85,7 @@ func (s *JobRole) DeleteJobRole(c context.Context, req *jobrole.DeleteJobRoleReq
 	err := s.srv.DeleteJobRole(ctx, &types.DeleteJobRoleRequest{
 		JobId:  req.JobId,
 		RoleId: req.RoleId,
+		App:    req.GetApp(),
 	})
 	if err != nil {
 		return nil, err

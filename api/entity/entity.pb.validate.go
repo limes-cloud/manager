@@ -79,10 +79,10 @@ func (m *ListEntityRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	if m.GetAppId() < 1 {
+	if l := utf8.RuneCountInString(m.GetApp()); l < 1 || l > 64 {
 		err := ListEntityRequestValidationError{
-			field:  "AppId",
-			reason: "value must be greater than or equal to 1",
+			field:  "App",
+			reason: "value length must be between 1 and 64 runes, inclusive",
 		}
 		if !all {
 			return err
@@ -355,280 +355,6 @@ var _ interface {
 	ErrorName() string
 } = ListEntityReplyValidationError{}
 
-// Validate checks the field values on LoadEntityReply with the rules defined
-// in the proto definition for this message. If any rules are violated, the
-// first error encountered is returned, or nil if there are no violations.
-func (m *LoadEntityReply) Validate() error {
-	return m.validate(false)
-}
-
-// ValidateAll checks the field values on LoadEntityReply with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the result is a list of violation errors wrapped in
-// LoadEntityReplyMultiError, or nil if none found.
-func (m *LoadEntityReply) ValidateAll() error {
-	return m.validate(true)
-}
-
-func (m *LoadEntityReply) validate(all bool) error {
-	if m == nil {
-		return nil
-	}
-
-	var errors []error
-
-	// no validation rules for Total
-
-	for idx, item := range m.GetList() {
-		_, _ = idx, item
-
-		if all {
-			switch v := interface{}(item).(type) {
-			case interface{ ValidateAll() error }:
-				if err := v.ValidateAll(); err != nil {
-					errors = append(errors, LoadEntityReplyValidationError{
-						field:  fmt.Sprintf("List[%v]", idx),
-						reason: "embedded message failed validation",
-						cause:  err,
-					})
-				}
-			case interface{ Validate() error }:
-				if err := v.Validate(); err != nil {
-					errors = append(errors, LoadEntityReplyValidationError{
-						field:  fmt.Sprintf("List[%v]", idx),
-						reason: "embedded message failed validation",
-						cause:  err,
-					})
-				}
-			}
-		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
-			if err := v.Validate(); err != nil {
-				return LoadEntityReplyValidationError{
-					field:  fmt.Sprintf("List[%v]", idx),
-					reason: "embedded message failed validation",
-					cause:  err,
-				}
-			}
-		}
-
-	}
-
-	if len(errors) > 0 {
-		return LoadEntityReplyMultiError(errors)
-	}
-
-	return nil
-}
-
-// LoadEntityReplyMultiError is an error wrapping multiple validation errors
-// returned by LoadEntityReply.ValidateAll() if the designated constraints
-// aren't met.
-type LoadEntityReplyMultiError []error
-
-// Error returns a concatenation of all the error messages it wraps.
-func (m LoadEntityReplyMultiError) Error() string {
-	var msgs []string
-	for _, err := range m {
-		msgs = append(msgs, err.Error())
-	}
-	return strings.Join(msgs, "; ")
-}
-
-// AllErrors returns a list of validation violation errors.
-func (m LoadEntityReplyMultiError) AllErrors() []error { return m }
-
-// LoadEntityReplyValidationError is the validation error returned by
-// LoadEntityReply.Validate if the designated constraints aren't met.
-type LoadEntityReplyValidationError struct {
-	field  string
-	reason string
-	cause  error
-	key    bool
-}
-
-// Field function returns field value.
-func (e LoadEntityReplyValidationError) Field() string { return e.field }
-
-// Reason function returns reason value.
-func (e LoadEntityReplyValidationError) Reason() string { return e.reason }
-
-// Cause function returns cause value.
-func (e LoadEntityReplyValidationError) Cause() error { return e.cause }
-
-// Key function returns key value.
-func (e LoadEntityReplyValidationError) Key() bool { return e.key }
-
-// ErrorName returns error name.
-func (e LoadEntityReplyValidationError) ErrorName() string { return "LoadEntityReplyValidationError" }
-
-// Error satisfies the builtin error interface
-func (e LoadEntityReplyValidationError) Error() string {
-	cause := ""
-	if e.cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.cause)
-	}
-
-	key := ""
-	if e.key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %sLoadEntityReply.%s: %s%s",
-		key,
-		e.field,
-		e.reason,
-		cause)
-}
-
-var _ error = LoadEntityReplyValidationError{}
-
-var _ interface {
-	Field() string
-	Reason() string
-	Key() bool
-	Cause() error
-	ErrorName() string
-} = LoadEntityReplyValidationError{}
-
-// Validate checks the field values on ImportEntityRequest with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the first error encountered is returned, or nil if there are no violations.
-func (m *ImportEntityRequest) Validate() error {
-	return m.validate(false)
-}
-
-// ValidateAll checks the field values on ImportEntityRequest with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the result is a list of violation errors wrapped in
-// ImportEntityRequestMultiError, or nil if none found.
-func (m *ImportEntityRequest) ValidateAll() error {
-	return m.validate(true)
-}
-
-func (m *ImportEntityRequest) validate(all bool) error {
-	if m == nil {
-		return nil
-	}
-
-	var errors []error
-
-	// no validation rules for AppId
-
-	for idx, item := range m.GetList() {
-		_, _ = idx, item
-
-		if all {
-			switch v := interface{}(item).(type) {
-			case interface{ ValidateAll() error }:
-				if err := v.ValidateAll(); err != nil {
-					errors = append(errors, ImportEntityRequestValidationError{
-						field:  fmt.Sprintf("List[%v]", idx),
-						reason: "embedded message failed validation",
-						cause:  err,
-					})
-				}
-			case interface{ Validate() error }:
-				if err := v.Validate(); err != nil {
-					errors = append(errors, ImportEntityRequestValidationError{
-						field:  fmt.Sprintf("List[%v]", idx),
-						reason: "embedded message failed validation",
-						cause:  err,
-					})
-				}
-			}
-		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
-			if err := v.Validate(); err != nil {
-				return ImportEntityRequestValidationError{
-					field:  fmt.Sprintf("List[%v]", idx),
-					reason: "embedded message failed validation",
-					cause:  err,
-				}
-			}
-		}
-
-	}
-
-	if len(errors) > 0 {
-		return ImportEntityRequestMultiError(errors)
-	}
-
-	return nil
-}
-
-// ImportEntityRequestMultiError is an error wrapping multiple validation
-// errors returned by ImportEntityRequest.ValidateAll() if the designated
-// constraints aren't met.
-type ImportEntityRequestMultiError []error
-
-// Error returns a concatenation of all the error messages it wraps.
-func (m ImportEntityRequestMultiError) Error() string {
-	var msgs []string
-	for _, err := range m {
-		msgs = append(msgs, err.Error())
-	}
-	return strings.Join(msgs, "; ")
-}
-
-// AllErrors returns a list of validation violation errors.
-func (m ImportEntityRequestMultiError) AllErrors() []error { return m }
-
-// ImportEntityRequestValidationError is the validation error returned by
-// ImportEntityRequest.Validate if the designated constraints aren't met.
-type ImportEntityRequestValidationError struct {
-	field  string
-	reason string
-	cause  error
-	key    bool
-}
-
-// Field function returns field value.
-func (e ImportEntityRequestValidationError) Field() string { return e.field }
-
-// Reason function returns reason value.
-func (e ImportEntityRequestValidationError) Reason() string { return e.reason }
-
-// Cause function returns cause value.
-func (e ImportEntityRequestValidationError) Cause() error { return e.cause }
-
-// Key function returns key value.
-func (e ImportEntityRequestValidationError) Key() bool { return e.key }
-
-// ErrorName returns error name.
-func (e ImportEntityRequestValidationError) ErrorName() string {
-	return "ImportEntityRequestValidationError"
-}
-
-// Error satisfies the builtin error interface
-func (e ImportEntityRequestValidationError) Error() string {
-	cause := ""
-	if e.cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.cause)
-	}
-
-	key := ""
-	if e.key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %sImportEntityRequest.%s: %s%s",
-		key,
-		e.field,
-		e.reason,
-		cause)
-}
-
-var _ error = ImportEntityRequestValidationError{}
-
-var _ interface {
-	Field() string
-	Reason() string
-	Key() bool
-	Cause() error
-	ErrorName() string
-} = ImportEntityRequestValidationError{}
-
 // Validate checks the field values on CreateEntityRequest with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
@@ -651,10 +377,10 @@ func (m *CreateEntityRequest) validate(all bool) error {
 
 	var errors []error
 
-	if m.GetAppId() < 1 {
+	if l := utf8.RuneCountInString(m.GetApp()); l < 1 || l > 64 {
 		err := CreateEntityRequestValidationError{
-			field:  "AppId",
-			reason: "value must be greater than or equal to 1",
+			field:  "App",
+			reason: "value length must be between 1 and 64 runes, inclusive",
 		}
 		if !all {
 			return err
@@ -2269,10 +1995,10 @@ func (m *DeleteEntityFieldRequest) validate(all bool) error {
 
 	var errors []error
 
-	if m.GetId() < 0 {
+	if m.GetId() < 1 {
 		err := DeleteEntityFieldRequestValidationError{
 			field:  "Id",
-			reason: "value must be greater than or equal to 0",
+			reason: "value must be greater than or equal to 1",
 		}
 		if !all {
 			return err
@@ -3844,10 +3570,10 @@ func (m *DeleteEntityRuleRequest) validate(all bool) error {
 
 	var errors []error
 
-	if m.GetId() < 0 {
+	if m.GetId() < 1 {
 		err := DeleteEntityRuleRequestValidationError{
 			field:  "Id",
-			reason: "value must be greater than or equal to 0",
+			reason: "value must be greater than or equal to 1",
 		}
 		if !all {
 			return err
@@ -4037,6 +3763,700 @@ var _ interface {
 	ErrorName() string
 } = DeleteEntityRuleReplyValidationError{}
 
+// Validate checks the field values on RegisterEntityRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *RegisterEntityRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on RegisterEntityRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// RegisterEntityRequestMultiError, or nil if none found.
+func (m *RegisterEntityRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *RegisterEntityRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if utf8.RuneCountInString(m.GetAppKeyword()) < 1 {
+		err := RegisterEntityRequestValidationError{
+			field:  "AppKeyword",
+			reason: "value length must be at least 1 runes",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if _, ok := _RegisterEntityRequest_Mode_InLookup[m.GetMode()]; !ok {
+		err := RegisterEntityRequestValidationError{
+			field:  "Mode",
+			reason: "value must be in list [append sync]",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	for idx, item := range m.GetEntities() {
+		_, _ = idx, item
+
+		if all {
+			switch v := interface{}(item).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, RegisterEntityRequestValidationError{
+						field:  fmt.Sprintf("Entities[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, RegisterEntityRequestValidationError{
+						field:  fmt.Sprintf("Entities[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return RegisterEntityRequestValidationError{
+					field:  fmt.Sprintf("Entities[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	if len(errors) > 0 {
+		return RegisterEntityRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// RegisterEntityRequestMultiError is an error wrapping multiple validation
+// errors returned by RegisterEntityRequest.ValidateAll() if the designated
+// constraints aren't met.
+type RegisterEntityRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m RegisterEntityRequestMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m RegisterEntityRequestMultiError) AllErrors() []error { return m }
+
+// RegisterEntityRequestValidationError is the validation error returned by
+// RegisterEntityRequest.Validate if the designated constraints aren't met.
+type RegisterEntityRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e RegisterEntityRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e RegisterEntityRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e RegisterEntityRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e RegisterEntityRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e RegisterEntityRequestValidationError) ErrorName() string {
+	return "RegisterEntityRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e RegisterEntityRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sRegisterEntityRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = RegisterEntityRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = RegisterEntityRequestValidationError{}
+
+var _RegisterEntityRequest_Mode_InLookup = map[string]struct{}{
+	"append": {},
+	"sync":   {},
+}
+
+// Validate checks the field values on RegisterEntityNode with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *RegisterEntityNode) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on RegisterEntityNode with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// RegisterEntityNodeMultiError, or nil if none found.
+func (m *RegisterEntityNode) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *RegisterEntityNode) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Database
+
+	if utf8.RuneCountInString(m.GetName()) < 1 {
+		err := RegisterEntityNodeValidationError{
+			field:  "Name",
+			reason: "value length must be at least 1 runes",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	// no validation rules for Comment
+
+	for idx, item := range m.GetFields() {
+		_, _ = idx, item
+
+		if all {
+			switch v := interface{}(item).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, RegisterEntityNodeValidationError{
+						field:  fmt.Sprintf("Fields[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, RegisterEntityNodeValidationError{
+						field:  fmt.Sprintf("Fields[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return RegisterEntityNodeValidationError{
+					field:  fmt.Sprintf("Fields[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	for idx, item := range m.GetRules() {
+		_, _ = idx, item
+
+		if all {
+			switch v := interface{}(item).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, RegisterEntityNodeValidationError{
+						field:  fmt.Sprintf("Rules[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, RegisterEntityNodeValidationError{
+						field:  fmt.Sprintf("Rules[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return RegisterEntityNodeValidationError{
+					field:  fmt.Sprintf("Rules[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	if len(errors) > 0 {
+		return RegisterEntityNodeMultiError(errors)
+	}
+
+	return nil
+}
+
+// RegisterEntityNodeMultiError is an error wrapping multiple validation errors
+// returned by RegisterEntityNode.ValidateAll() if the designated constraints
+// aren't met.
+type RegisterEntityNodeMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m RegisterEntityNodeMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m RegisterEntityNodeMultiError) AllErrors() []error { return m }
+
+// RegisterEntityNodeValidationError is the validation error returned by
+// RegisterEntityNode.Validate if the designated constraints aren't met.
+type RegisterEntityNodeValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e RegisterEntityNodeValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e RegisterEntityNodeValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e RegisterEntityNodeValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e RegisterEntityNodeValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e RegisterEntityNodeValidationError) ErrorName() string {
+	return "RegisterEntityNodeValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e RegisterEntityNodeValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sRegisterEntityNode.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = RegisterEntityNodeValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = RegisterEntityNodeValidationError{}
+
+// Validate checks the field values on RegisterEntityField with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *RegisterEntityField) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on RegisterEntityField with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// RegisterEntityFieldMultiError, or nil if none found.
+func (m *RegisterEntityField) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *RegisterEntityField) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if utf8.RuneCountInString(m.GetName()) < 1 {
+		err := RegisterEntityFieldValidationError{
+			field:  "Name",
+			reason: "value length must be at least 1 runes",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	// no validation rules for Comment
+
+	// no validation rules for Index
+
+	if len(errors) > 0 {
+		return RegisterEntityFieldMultiError(errors)
+	}
+
+	return nil
+}
+
+// RegisterEntityFieldMultiError is an error wrapping multiple validation
+// errors returned by RegisterEntityField.ValidateAll() if the designated
+// constraints aren't met.
+type RegisterEntityFieldMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m RegisterEntityFieldMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m RegisterEntityFieldMultiError) AllErrors() []error { return m }
+
+// RegisterEntityFieldValidationError is the validation error returned by
+// RegisterEntityField.Validate if the designated constraints aren't met.
+type RegisterEntityFieldValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e RegisterEntityFieldValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e RegisterEntityFieldValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e RegisterEntityFieldValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e RegisterEntityFieldValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e RegisterEntityFieldValidationError) ErrorName() string {
+	return "RegisterEntityFieldValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e RegisterEntityFieldValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sRegisterEntityField.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = RegisterEntityFieldValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = RegisterEntityFieldValidationError{}
+
+// Validate checks the field values on RegisterEntityRule with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *RegisterEntityRule) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on RegisterEntityRule with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// RegisterEntityRuleMultiError, or nil if none found.
+func (m *RegisterEntityRule) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *RegisterEntityRule) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if utf8.RuneCountInString(m.GetName()) < 1 {
+		err := RegisterEntityRuleValidationError{
+			field:  "Name",
+			reason: "value length must be at least 1 runes",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	// no validation rules for Expression
+
+	// no validation rules for Description
+
+	if m.Status != nil {
+		// no validation rules for Status
+	}
+
+	if len(errors) > 0 {
+		return RegisterEntityRuleMultiError(errors)
+	}
+
+	return nil
+}
+
+// RegisterEntityRuleMultiError is an error wrapping multiple validation errors
+// returned by RegisterEntityRule.ValidateAll() if the designated constraints
+// aren't met.
+type RegisterEntityRuleMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m RegisterEntityRuleMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m RegisterEntityRuleMultiError) AllErrors() []error { return m }
+
+// RegisterEntityRuleValidationError is the validation error returned by
+// RegisterEntityRule.Validate if the designated constraints aren't met.
+type RegisterEntityRuleValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e RegisterEntityRuleValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e RegisterEntityRuleValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e RegisterEntityRuleValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e RegisterEntityRuleValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e RegisterEntityRuleValidationError) ErrorName() string {
+	return "RegisterEntityRuleValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e RegisterEntityRuleValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sRegisterEntityRule.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = RegisterEntityRuleValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = RegisterEntityRuleValidationError{}
+
+// Validate checks the field values on RegisterEntityReply with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *RegisterEntityReply) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on RegisterEntityReply with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// RegisterEntityReplyMultiError, or nil if none found.
+func (m *RegisterEntityReply) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *RegisterEntityReply) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Created
+
+	// no validation rules for Updated
+
+	// no validation rules for Deleted
+
+	if len(errors) > 0 {
+		return RegisterEntityReplyMultiError(errors)
+	}
+
+	return nil
+}
+
+// RegisterEntityReplyMultiError is an error wrapping multiple validation
+// errors returned by RegisterEntityReply.ValidateAll() if the designated
+// constraints aren't met.
+type RegisterEntityReplyMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m RegisterEntityReplyMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m RegisterEntityReplyMultiError) AllErrors() []error { return m }
+
+// RegisterEntityReplyValidationError is the validation error returned by
+// RegisterEntityReply.Validate if the designated constraints aren't met.
+type RegisterEntityReplyValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e RegisterEntityReplyValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e RegisterEntityReplyValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e RegisterEntityReplyValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e RegisterEntityReplyValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e RegisterEntityReplyValidationError) ErrorName() string {
+	return "RegisterEntityReplyValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e RegisterEntityReplyValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sRegisterEntityReply.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = RegisterEntityReplyValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = RegisterEntityReplyValidationError{}
+
 // Validate checks the field values on ListEntityReply_Entity with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.
@@ -4061,7 +4481,7 @@ func (m *ListEntityReply_Entity) validate(all bool) error {
 
 	// no validation rules for Id
 
-	// no validation rules for AppId
+	// no validation rules for App
 
 	// no validation rules for Database
 
@@ -4152,501 +4572,3 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = ListEntityReply_EntityValidationError{}
-
-// Validate checks the field values on LoadEntityReply_EntityField with the
-// rules defined in the proto definition for this message. If any rules are
-// violated, the first error encountered is returned, or nil if there are no violations.
-func (m *LoadEntityReply_EntityField) Validate() error {
-	return m.validate(false)
-}
-
-// ValidateAll checks the field values on LoadEntityReply_EntityField with the
-// rules defined in the proto definition for this message. If any rules are
-// violated, the result is a list of violation errors wrapped in
-// LoadEntityReply_EntityFieldMultiError, or nil if none found.
-func (m *LoadEntityReply_EntityField) ValidateAll() error {
-	return m.validate(true)
-}
-
-func (m *LoadEntityReply_EntityField) validate(all bool) error {
-	if m == nil {
-		return nil
-	}
-
-	var errors []error
-
-	// no validation rules for Name
-
-	// no validation rules for Comment
-
-	if len(errors) > 0 {
-		return LoadEntityReply_EntityFieldMultiError(errors)
-	}
-
-	return nil
-}
-
-// LoadEntityReply_EntityFieldMultiError is an error wrapping multiple
-// validation errors returned by LoadEntityReply_EntityField.ValidateAll() if
-// the designated constraints aren't met.
-type LoadEntityReply_EntityFieldMultiError []error
-
-// Error returns a concatenation of all the error messages it wraps.
-func (m LoadEntityReply_EntityFieldMultiError) Error() string {
-	var msgs []string
-	for _, err := range m {
-		msgs = append(msgs, err.Error())
-	}
-	return strings.Join(msgs, "; ")
-}
-
-// AllErrors returns a list of validation violation errors.
-func (m LoadEntityReply_EntityFieldMultiError) AllErrors() []error { return m }
-
-// LoadEntityReply_EntityFieldValidationError is the validation error returned
-// by LoadEntityReply_EntityField.Validate if the designated constraints
-// aren't met.
-type LoadEntityReply_EntityFieldValidationError struct {
-	field  string
-	reason string
-	cause  error
-	key    bool
-}
-
-// Field function returns field value.
-func (e LoadEntityReply_EntityFieldValidationError) Field() string { return e.field }
-
-// Reason function returns reason value.
-func (e LoadEntityReply_EntityFieldValidationError) Reason() string { return e.reason }
-
-// Cause function returns cause value.
-func (e LoadEntityReply_EntityFieldValidationError) Cause() error { return e.cause }
-
-// Key function returns key value.
-func (e LoadEntityReply_EntityFieldValidationError) Key() bool { return e.key }
-
-// ErrorName returns error name.
-func (e LoadEntityReply_EntityFieldValidationError) ErrorName() string {
-	return "LoadEntityReply_EntityFieldValidationError"
-}
-
-// Error satisfies the builtin error interface
-func (e LoadEntityReply_EntityFieldValidationError) Error() string {
-	cause := ""
-	if e.cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.cause)
-	}
-
-	key := ""
-	if e.key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %sLoadEntityReply_EntityField.%s: %s%s",
-		key,
-		e.field,
-		e.reason,
-		cause)
-}
-
-var _ error = LoadEntityReply_EntityFieldValidationError{}
-
-var _ interface {
-	Field() string
-	Reason() string
-	Key() bool
-	Cause() error
-	ErrorName() string
-} = LoadEntityReply_EntityFieldValidationError{}
-
-// Validate checks the field values on LoadEntityReply_Entity with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the first error encountered is returned, or nil if there are no violations.
-func (m *LoadEntityReply_Entity) Validate() error {
-	return m.validate(false)
-}
-
-// ValidateAll checks the field values on LoadEntityReply_Entity with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the result is a list of violation errors wrapped in
-// LoadEntityReply_EntityMultiError, or nil if none found.
-func (m *LoadEntityReply_Entity) ValidateAll() error {
-	return m.validate(true)
-}
-
-func (m *LoadEntityReply_Entity) validate(all bool) error {
-	if m == nil {
-		return nil
-	}
-
-	var errors []error
-
-	// no validation rules for Database
-
-	// no validation rules for Name
-
-	// no validation rules for Comment
-
-	for idx, item := range m.GetFields() {
-		_, _ = idx, item
-
-		if all {
-			switch v := interface{}(item).(type) {
-			case interface{ ValidateAll() error }:
-				if err := v.ValidateAll(); err != nil {
-					errors = append(errors, LoadEntityReply_EntityValidationError{
-						field:  fmt.Sprintf("Fields[%v]", idx),
-						reason: "embedded message failed validation",
-						cause:  err,
-					})
-				}
-			case interface{ Validate() error }:
-				if err := v.Validate(); err != nil {
-					errors = append(errors, LoadEntityReply_EntityValidationError{
-						field:  fmt.Sprintf("Fields[%v]", idx),
-						reason: "embedded message failed validation",
-						cause:  err,
-					})
-				}
-			}
-		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
-			if err := v.Validate(); err != nil {
-				return LoadEntityReply_EntityValidationError{
-					field:  fmt.Sprintf("Fields[%v]", idx),
-					reason: "embedded message failed validation",
-					cause:  err,
-				}
-			}
-		}
-
-	}
-
-	if len(errors) > 0 {
-		return LoadEntityReply_EntityMultiError(errors)
-	}
-
-	return nil
-}
-
-// LoadEntityReply_EntityMultiError is an error wrapping multiple validation
-// errors returned by LoadEntityReply_Entity.ValidateAll() if the designated
-// constraints aren't met.
-type LoadEntityReply_EntityMultiError []error
-
-// Error returns a concatenation of all the error messages it wraps.
-func (m LoadEntityReply_EntityMultiError) Error() string {
-	var msgs []string
-	for _, err := range m {
-		msgs = append(msgs, err.Error())
-	}
-	return strings.Join(msgs, "; ")
-}
-
-// AllErrors returns a list of validation violation errors.
-func (m LoadEntityReply_EntityMultiError) AllErrors() []error { return m }
-
-// LoadEntityReply_EntityValidationError is the validation error returned by
-// LoadEntityReply_Entity.Validate if the designated constraints aren't met.
-type LoadEntityReply_EntityValidationError struct {
-	field  string
-	reason string
-	cause  error
-	key    bool
-}
-
-// Field function returns field value.
-func (e LoadEntityReply_EntityValidationError) Field() string { return e.field }
-
-// Reason function returns reason value.
-func (e LoadEntityReply_EntityValidationError) Reason() string { return e.reason }
-
-// Cause function returns cause value.
-func (e LoadEntityReply_EntityValidationError) Cause() error { return e.cause }
-
-// Key function returns key value.
-func (e LoadEntityReply_EntityValidationError) Key() bool { return e.key }
-
-// ErrorName returns error name.
-func (e LoadEntityReply_EntityValidationError) ErrorName() string {
-	return "LoadEntityReply_EntityValidationError"
-}
-
-// Error satisfies the builtin error interface
-func (e LoadEntityReply_EntityValidationError) Error() string {
-	cause := ""
-	if e.cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.cause)
-	}
-
-	key := ""
-	if e.key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %sLoadEntityReply_Entity.%s: %s%s",
-		key,
-		e.field,
-		e.reason,
-		cause)
-}
-
-var _ error = LoadEntityReply_EntityValidationError{}
-
-var _ interface {
-	Field() string
-	Reason() string
-	Key() bool
-	Cause() error
-	ErrorName() string
-} = LoadEntityReply_EntityValidationError{}
-
-// Validate checks the field values on ImportEntityRequest_EntityField with the
-// rules defined in the proto definition for this message. If any rules are
-// violated, the first error encountered is returned, or nil if there are no violations.
-func (m *ImportEntityRequest_EntityField) Validate() error {
-	return m.validate(false)
-}
-
-// ValidateAll checks the field values on ImportEntityRequest_EntityField with
-// the rules defined in the proto definition for this message. If any rules
-// are violated, the result is a list of violation errors wrapped in
-// ImportEntityRequest_EntityFieldMultiError, or nil if none found.
-func (m *ImportEntityRequest_EntityField) ValidateAll() error {
-	return m.validate(true)
-}
-
-func (m *ImportEntityRequest_EntityField) validate(all bool) error {
-	if m == nil {
-		return nil
-	}
-
-	var errors []error
-
-	// no validation rules for Name
-
-	// no validation rules for Comment
-
-	if len(errors) > 0 {
-		return ImportEntityRequest_EntityFieldMultiError(errors)
-	}
-
-	return nil
-}
-
-// ImportEntityRequest_EntityFieldMultiError is an error wrapping multiple
-// validation errors returned by ImportEntityRequest_EntityField.ValidateAll()
-// if the designated constraints aren't met.
-type ImportEntityRequest_EntityFieldMultiError []error
-
-// Error returns a concatenation of all the error messages it wraps.
-func (m ImportEntityRequest_EntityFieldMultiError) Error() string {
-	var msgs []string
-	for _, err := range m {
-		msgs = append(msgs, err.Error())
-	}
-	return strings.Join(msgs, "; ")
-}
-
-// AllErrors returns a list of validation violation errors.
-func (m ImportEntityRequest_EntityFieldMultiError) AllErrors() []error { return m }
-
-// ImportEntityRequest_EntityFieldValidationError is the validation error
-// returned by ImportEntityRequest_EntityField.Validate if the designated
-// constraints aren't met.
-type ImportEntityRequest_EntityFieldValidationError struct {
-	field  string
-	reason string
-	cause  error
-	key    bool
-}
-
-// Field function returns field value.
-func (e ImportEntityRequest_EntityFieldValidationError) Field() string { return e.field }
-
-// Reason function returns reason value.
-func (e ImportEntityRequest_EntityFieldValidationError) Reason() string { return e.reason }
-
-// Cause function returns cause value.
-func (e ImportEntityRequest_EntityFieldValidationError) Cause() error { return e.cause }
-
-// Key function returns key value.
-func (e ImportEntityRequest_EntityFieldValidationError) Key() bool { return e.key }
-
-// ErrorName returns error name.
-func (e ImportEntityRequest_EntityFieldValidationError) ErrorName() string {
-	return "ImportEntityRequest_EntityFieldValidationError"
-}
-
-// Error satisfies the builtin error interface
-func (e ImportEntityRequest_EntityFieldValidationError) Error() string {
-	cause := ""
-	if e.cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.cause)
-	}
-
-	key := ""
-	if e.key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %sImportEntityRequest_EntityField.%s: %s%s",
-		key,
-		e.field,
-		e.reason,
-		cause)
-}
-
-var _ error = ImportEntityRequest_EntityFieldValidationError{}
-
-var _ interface {
-	Field() string
-	Reason() string
-	Key() bool
-	Cause() error
-	ErrorName() string
-} = ImportEntityRequest_EntityFieldValidationError{}
-
-// Validate checks the field values on ImportEntityRequest_Entity with the
-// rules defined in the proto definition for this message. If any rules are
-// violated, the first error encountered is returned, or nil if there are no violations.
-func (m *ImportEntityRequest_Entity) Validate() error {
-	return m.validate(false)
-}
-
-// ValidateAll checks the field values on ImportEntityRequest_Entity with the
-// rules defined in the proto definition for this message. If any rules are
-// violated, the result is a list of violation errors wrapped in
-// ImportEntityRequest_EntityMultiError, or nil if none found.
-func (m *ImportEntityRequest_Entity) ValidateAll() error {
-	return m.validate(true)
-}
-
-func (m *ImportEntityRequest_Entity) validate(all bool) error {
-	if m == nil {
-		return nil
-	}
-
-	var errors []error
-
-	// no validation rules for Database
-
-	// no validation rules for Name
-
-	// no validation rules for Comment
-
-	for idx, item := range m.GetFields() {
-		_, _ = idx, item
-
-		if all {
-			switch v := interface{}(item).(type) {
-			case interface{ ValidateAll() error }:
-				if err := v.ValidateAll(); err != nil {
-					errors = append(errors, ImportEntityRequest_EntityValidationError{
-						field:  fmt.Sprintf("Fields[%v]", idx),
-						reason: "embedded message failed validation",
-						cause:  err,
-					})
-				}
-			case interface{ Validate() error }:
-				if err := v.Validate(); err != nil {
-					errors = append(errors, ImportEntityRequest_EntityValidationError{
-						field:  fmt.Sprintf("Fields[%v]", idx),
-						reason: "embedded message failed validation",
-						cause:  err,
-					})
-				}
-			}
-		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
-			if err := v.Validate(); err != nil {
-				return ImportEntityRequest_EntityValidationError{
-					field:  fmt.Sprintf("Fields[%v]", idx),
-					reason: "embedded message failed validation",
-					cause:  err,
-				}
-			}
-		}
-
-	}
-
-	if len(errors) > 0 {
-		return ImportEntityRequest_EntityMultiError(errors)
-	}
-
-	return nil
-}
-
-// ImportEntityRequest_EntityMultiError is an error wrapping multiple
-// validation errors returned by ImportEntityRequest_Entity.ValidateAll() if
-// the designated constraints aren't met.
-type ImportEntityRequest_EntityMultiError []error
-
-// Error returns a concatenation of all the error messages it wraps.
-func (m ImportEntityRequest_EntityMultiError) Error() string {
-	var msgs []string
-	for _, err := range m {
-		msgs = append(msgs, err.Error())
-	}
-	return strings.Join(msgs, "; ")
-}
-
-// AllErrors returns a list of validation violation errors.
-func (m ImportEntityRequest_EntityMultiError) AllErrors() []error { return m }
-
-// ImportEntityRequest_EntityValidationError is the validation error returned
-// by ImportEntityRequest_Entity.Validate if the designated constraints aren't met.
-type ImportEntityRequest_EntityValidationError struct {
-	field  string
-	reason string
-	cause  error
-	key    bool
-}
-
-// Field function returns field value.
-func (e ImportEntityRequest_EntityValidationError) Field() string { return e.field }
-
-// Reason function returns reason value.
-func (e ImportEntityRequest_EntityValidationError) Reason() string { return e.reason }
-
-// Cause function returns cause value.
-func (e ImportEntityRequest_EntityValidationError) Cause() error { return e.cause }
-
-// Key function returns key value.
-func (e ImportEntityRequest_EntityValidationError) Key() bool { return e.key }
-
-// ErrorName returns error name.
-func (e ImportEntityRequest_EntityValidationError) ErrorName() string {
-	return "ImportEntityRequest_EntityValidationError"
-}
-
-// Error satisfies the builtin error interface
-func (e ImportEntityRequest_EntityValidationError) Error() string {
-	cause := ""
-	if e.cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.cause)
-	}
-
-	key := ""
-	if e.key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %sImportEntityRequest_Entity.%s: %s%s",
-		key,
-		e.field,
-		e.reason,
-		cause)
-}
-
-var _ error = ImportEntityRequest_EntityValidationError{}
-
-var _ interface {
-	Field() string
-	Reason() string
-	Key() bool
-	Cause() error
-	ErrorName() string
-} = ImportEntityRequest_EntityValidationError{}

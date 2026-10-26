@@ -5,12 +5,11 @@ import (
 )
 
 type Entity struct {
-	AppId    uint32         `json:"appId" gorm:"column:app_id"`
+	App      string         `json:"app" gorm:"column:app"`
 	Database string         `json:"database"  gorm:"column:database"`
 	Name     string         `json:"name" gorm:"column:name"`
 	Comment  string         `json:"comment" gorm:"column:comment"`
 	Fields   []*EntityField `json:"fields" gorm:"foreignKey:entity_id;references:Id"`
-	App      *App           `json:"app" gorm:"foreignKey:AppId;references:Id"`
 	model.BaseModel
 }
 

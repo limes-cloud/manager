@@ -9,18 +9,18 @@ option java_multiple_files = true;
 option java_package = "manager.api.menu";
 
 message ListCurrentMenuRequest {
-  optional uint32 appId = 1 [(validate.rules).uint32 = {gte: 1}];
+  optional string app = 1 [(validate.rules).string = {max_len: 64}];
   bool onlyMenu = 2;
 }
 
 message ListMenuRequest {
-  uint32 appId = 1 [(validate.rules).uint32 = {gte: 1}];
+  string app = 1 [(validate.rules).string = {min_len: 1, max_len: 64}];
 }
 
 message ListMenuReply {
   message Data {
     uint32 id = 1;
-    uint32 appId = 2;
+    string app = 2;
     uint32 parentId = 3;
     string title = 4;
     string type = 5;
@@ -47,7 +47,7 @@ message ListMenuReply {
 }
 
 message CreateMenuRequest {
-  uint32 appId = 1 [(validate.rules).uint32 = {gte: 1}];
+  string app = 1 [(validate.rules).string = {min_len: 1, max_len: 64}];
   uint32 parentId = 2;
   string title = 3 [(validate.rules).string = {min_len: 1}];
   string type = 4 [(validate.rules).string = {min_len: 1}];
@@ -100,6 +100,8 @@ message DeleteMenuRequest {
 
 message DeleteMenuReply {}
 
+// 自注册菜单由服务方（如 resource）在启动时调用 RegisterMenu 注册到 manager，
+// 消息与 RPC 必须与 internal/domain/service/menu.go 的 RegisterMenu 契约保持一致。
 message RegisterMenuNode {
   optional string key = 1;
   string title = 2 [(validate.rules).string = {min_len: 1}];

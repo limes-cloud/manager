@@ -53,7 +53,7 @@ func NewDept() *Dept {
 }
 
 // ListDeptClassify 获取列表
-func (dept *Dept) ListDeptClassify(ctx core.Context, req *types.ListDeptClassifyRequest) ([]*entity.DeptClassify, uint32, error) {
+func (dept *Dept) ListDeptClassify(ctx core.Context, app string, req *types.ListDeptClassifyRequest) ([]*entity.DeptClassify, uint32, error) {
 	var (
 		list  []*entity.DeptClassify
 		total int64
@@ -61,6 +61,7 @@ func (dept *Dept) ListDeptClassify(ctx core.Context, req *types.ListDeptClassify
 	)
 
 	db := ctx.DB().Model(entity.DeptClassify{}).Select(fs)
+	db = db.Where("app = ?", app)
 	if req.Name != nil {
 		db = db.Where("name LIKE ?", *req.Name+"%")
 	}
@@ -89,39 +90,45 @@ func (dept *Dept) ListDeptClassify(ctx core.Context, req *types.ListDeptClassify
 
 // CreateDeptClassify 创建数据
 func (dept *Dept) CreateDeptClassify(ctx core.Context, tg *entity.DeptClassify) (uint32, error) {
+	if tg.App == "" {
+		return 0, errors.New("app is required")
+	}
 	return tg.Id, ctx.DB().Create(tg).Error
 }
 
 // UpdateDeptClassify 更新数据
 func (dept *Dept) UpdateDeptClassify(ctx core.Context, tg *entity.DeptClassify) error {
-	return ctx.DB().Updates(tg).Error
+	if tg.App == "" {
+		return errors.New("app is required")
+	}
+	return ctx.DB().Where("app = ?", tg.App).Updates(tg).Error
 }
 
 // DeleteDeptClassify 删除数据
-func (dept *Dept) DeleteDeptClassify(ctx core.Context, id uint32) error {
-	return ctx.DB().Where("id = ?", id).Delete(&entity.DeptClassify{}).Error
+func (dept *Dept) DeleteDeptClassify(ctx core.Context, app string, id uint32) error {
+	return ctx.DB().Where("app = ?", app).Where("id = ?", id).Delete(&entity.DeptClassify{}).Error
 }
 
 // GetDept 获取指定的数据
-func (dept *Dept) GetDept(ctx core.Context, id uint32) (*entity.Dept, error) {
+func (dept *Dept) GetDept(ctx core.Context, app string, id uint32) (*entity.Dept, error) {
 	var (
 		ent = entity.Dept{}
 		fs  = []string{"*"}
 	)
-	return &ent, ctx.DB().Select(fs).First(&ent, id).Error
+	return &ent, ctx.DB().Select(fs).Where("app = ?", app).First(&ent, id).Error
 }
 
 // GetDeptByKeyword 获取指定数据
-func (dept *Dept) GetDeptByKeyword(ctx core.Context, keyword string) (*entity.Dept, error) {
+func (dept *Dept) GetDeptByKeyword(ctx core.Context, app string, keyword string) (*entity.Dept, error) {
 	var (
 		m  = entity.Dept{}
 		fs = []string{"*"}
 	)
-	return &m, ctx.DB().Select(fs).Where("keyword = ?", keyword).First(&m).Error
+	return &m, ctx.DB().Select(fs).Where("app = ? AND keyword = ?", app, keyword).First(&m).Error
 }
 
 // ListDept 获取列表 fixed code
-func (dept *Dept) ListDept(ctx core.Context, req *types.ListDeptRequest) ([]*entity.Dept, error) {
+func (dept *Dept) ListDept(ctx core.Context, app string, req *types.ListDeptRequest) ([]*entity.Dept, error) {
 	var (
 		ms []*entity.Dept
 		fs = []string{"*"}
@@ -130,6 +137,7 @@ func (dept *Dept) ListDept(ctx core.Context, req *types.ListDeptRequest) ([]*ent
 	db := ctx.DB().Model(entity.Dept{}).
 		Select(fs).
 		Preload("Classify")
+	db = db.Where("dept.app = ?", app)
 
 	if req.Status != nil {
 		db = db.Where("status = ?", *req.Status)
@@ -149,6 +157,20 @@ func (dept *Dept) ListDept(ctx core.Context, req *types.ListDeptRequest) ([]*ent
 
 // CreateDept 创建数据
 func (dept *Dept) CreateDept(ctx core.Context, req *entity.Dept) (uint32, error) {
+	if req.App == "" {
+		return 0, errors.New("app is required")
+	}
+	if req.ClassifyId != 0 {
+		var classify entity.DeptClassify
+		if err := ctx.DB().Where("app = ? AND id = ?", req.App, req.ClassifyId).First(&classify).Error; err != nil {
+			return 0, err
+		}
+	}
+	if pid := value.Value(req.ParentId); pid != 0 {
+		if _, err := dept.GetDept(ctx, req.App, pid); err != nil {
+			return 0, err
+		}
+	}
 	return req.Id, ctx.Transaction(func(ctx core.Context) error {
 		if err := ctx.DB().Create(req).Error; err != nil {
 			return err
@@ -166,12 +188,24 @@ func (dept *Dept) UpdateDept(ctx core.Context, req *entity.Dept) error {
 	if req.Id == value.Value(req.ParentId) {
 		return errors.New("父级不能为自己")
 	}
-	old, err := dept.GetDept(ctx, req.Id)
+	old, err := dept.GetDept(ctx, req.App, req.Id)
 	if err != nil {
 		return err
 	}
+	req.App = old.App
 
 	pid := value.Value(req.ParentId)
+	if req.ClassifyId != 0 {
+		var classify entity.DeptClassify
+		if err := ctx.DB().Where("app = ? AND id = ?", old.App, req.ClassifyId).First(&classify).Error; err != nil {
+			return err
+		}
+	}
+	if pid != 0 {
+		if _, err := dept.GetDept(ctx, req.App, pid); err != nil {
+			return err
+		}
+	}
 
 	return ctx.Transaction(func(ctx core.Context) error {
 		if old.ParentId != req.ParentId {
@@ -189,10 +223,10 @@ func (dept *Dept) UpdateDept(ctx core.Context, req *entity.Dept) error {
 }
 
 // DeleteDept 删除数据
-func (dept *Dept) DeleteDept(ctx core.Context, id uint32) error {
+func (dept *Dept) DeleteDept(ctx core.Context, app string, id uint32) error {
 	ids := dept.GetDeptChildrenIds([]uint32{id})
 	ids = append(ids, id)
-	return ctx.DB().Where("id in ?", ids).Delete(&entity.Dept{}).Error
+	return ctx.DB().Where("app = ?", app).Where("id in ?", ids).Delete(&entity.Dept{}).Error
 }
 
 // GetDeptChildrenIds 获取指定id的所有子id

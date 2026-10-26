@@ -11,6 +11,7 @@ import (
 	"github.com/limes-cloud/manager/internal/types"
 
 	"github.com/limes-cloud/kratosx/pkg/value"
+
 	"github.com/limes-cloud/manager/api/errors"
 
 	"github.com/limes-cloud/manager/api/role"
@@ -50,7 +51,7 @@ func (app *Role) GetRole(c context.Context, req *role.GetRoleRequest) (*role.Get
 
 	// 调用服务
 	ent, err := app.srv.GetRole(ctx, &types.GetRoleRequest{
-		Id:      req.Id,
+		App:     ctx.AppKey(req.GetApp()),
 		Keyword: req.Keyword,
 	})
 	if err != nil {
@@ -134,6 +135,10 @@ func (app *Role) CreateRole(c context.Context, req *role.CreateRoleRequest) (*ro
 		ctx.Logger().Errorw("msg", "create role req transform error", "err", err)
 		return nil, errors.TransformError()
 	}
+	in.App = ctx.AppKey(in.App)
+	if in.ParentId == nil {
+		in.ParentId = value.Pointer(uint32(0))
+	}
 
 	// 调用服务
 	id, err := app.srv.CreateRole(ctx, &in)
@@ -157,6 +162,7 @@ func (app *Role) UpdateRole(c context.Context, req *role.UpdateRoleRequest) (*ro
 		return nil, errors.TransformError()
 	}
 
+
 	// 调用服务
 	if err := app.srv.UpdateRole(ctx, &in); err != nil {
 		return nil, err
@@ -167,5 +173,6 @@ func (app *Role) UpdateRole(c context.Context, req *role.UpdateRoleRequest) (*ro
 
 // DeleteRole 删除角色信息
 func (app *Role) DeleteRole(c context.Context, req *role.DeleteRoleRequest) (*role.DeleteRoleReply, error) {
-	return &role.DeleteRoleReply{}, app.srv.DeleteRole(core.MustContext(c), req.Id)
+	ctx := core.MustContext(c)
+	return &role.DeleteRoleReply{}, app.srv.DeleteRole(ctx, ctx.AppKey(), req.Id)
 }

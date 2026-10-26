@@ -54,7 +54,6 @@ func (app *Scope) GetScope(c context.Context, req *scope.GetScopeRequest) (*scop
 
 	reply := &scope.GetScopeReply{
 		Rule:       string(cond),
-		Fields:     ent.Fields(),
 		AllDept:    allDept,
 		DeptScopes: depts,
 		DeptId:     ent.DeptId(),

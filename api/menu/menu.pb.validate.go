@@ -59,12 +59,12 @@ func (m *ListCurrentMenuRequest) validate(all bool) error {
 
 	// no validation rules for OnlyMenu
 
-	if m.AppId != nil {
+	if m.App != nil {
 
-		if m.GetAppId() < 1 {
+		if utf8.RuneCountInString(m.GetApp()) > 64 {
 			err := ListCurrentMenuRequestValidationError{
-				field:  "AppId",
-				reason: "value must be greater than or equal to 1",
+				field:  "App",
+				reason: "value length must be at most 64 runes",
 			}
 			if !all {
 				return err
@@ -176,10 +176,10 @@ func (m *ListMenuRequest) validate(all bool) error {
 
 	var errors []error
 
-	if m.GetAppId() < 1 {
+	if l := utf8.RuneCountInString(m.GetApp()); l < 1 || l > 64 {
 		err := ListMenuRequestValidationError{
-			field:  "AppId",
-			reason: "value must be greater than or equal to 1",
+			field:  "App",
+			reason: "value length must be between 1 and 64 runes, inclusive",
 		}
 		if !all {
 			return err
@@ -421,10 +421,10 @@ func (m *CreateMenuRequest) validate(all bool) error {
 
 	var errors []error
 
-	if m.GetAppId() < 1 {
+	if l := utf8.RuneCountInString(m.GetApp()); l < 1 || l > 64 {
 		err := CreateMenuRequestValidationError{
-			field:  "AppId",
-			reason: "value must be greater than or equal to 1",
+			field:  "App",
+			reason: "value length must be between 1 and 64 runes, inclusive",
 		}
 		if !all {
 			return err
@@ -1707,7 +1707,7 @@ func (m *ListMenuReply_Data) validate(all bool) error {
 
 	// no validation rules for Id
 
-	// no validation rules for AppId
+	// no validation rules for App
 
 	// no validation rules for ParentId
 

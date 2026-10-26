@@ -8,4 +8,5 @@ type ListAppRequest struct {
 	Keyword *string  `json:"keyword"`
 	Name    *string  `json:"name"`
 	Status  *bool    `json:"status"`
+	Type    *string  `json:"type"`
 }

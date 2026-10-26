@@ -90,7 +90,7 @@ func (ch *OAuther) ListOAuther(c context.Context, req *oauther.ListOAutherReques
 					Template: setting.Email.Template,
 				},
 			},
-			Description: item.Description,
+			Description: value.Value(item.Description),
 			CreatedAt:   uint32(item.CreatedAt),
 			UpdatedAt:   uint32(item.UpdatedAt),
 		})
@@ -109,7 +109,7 @@ func (ch *OAuther) CreateOAuther(c context.Context, req *oauther.CreateOAutherRe
 		Status:      proto.Bool(false),
 		Sk:          req.Sk,
 		Setting:     value.ObjToString(req.Setting),
-		Description: req.Description,
+		Description: value.Pointer(req.Description),
 	})
 	if err != nil {
 		return nil, err
@@ -121,15 +121,15 @@ func (ch *OAuther) CreateOAuther(c context.Context, req *oauther.CreateOAutherRe
 func (ch *OAuther) UpdateOAuther(c context.Context, req *oauther.UpdateOAutherRequest) (*oauther.UpdateOAutherReply, error) {
 	ctx := core.MustContext(c)
 	if err := ch.srv.UpdateOAuther(ctx, &entity.OAuther{
-		BaseModel: model.BaseModel{Id: req.Id},
-		Logo:            value.Value(req.Logo),
-		Type:            value.Value(req.Type),
-		Name:            value.Value(req.Name),
-		Ak:              value.Value(req.Ak),
-		Status:          req.Status,
-		Sk:              value.Value(req.Sk),
-		Setting:         value.ObjToString(req.Setting),
-		Description:     value.Value(req.Description),
+		BaseModel:   model.BaseModel{Id: req.Id},
+		Logo:        value.Value(req.Logo),
+		Type:        value.Value(req.Type),
+		Name:        value.Value(req.Name),
+		Ak:          value.Value(req.Ak),
+		Status:      req.Status,
+		Sk:          value.Value(req.Sk),
+		Setting:     value.ObjToString(req.Setting),
+		Description: req.Description,
 	}); err != nil {
 		return nil, err
 	}

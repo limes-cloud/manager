@@ -40,13 +40,6 @@ func init() {
 	})
 }
 
-// GetAppByKeyword 获取指定的应用信息
-func (s *App) GetAppByKeyword(c context.Context, keyword string) (*entity.App, error) {
-	ctx := core.MustContext(c)
-	data, err := s.srv.GetAppByKeyword(ctx, keyword)
-	return data, err
-}
-
 // GetSampleApp 获取指定的应用信息
 func (s *App) GetSampleApp(c context.Context, req *app.GetSampleAppRequest) (*app.GetSampleAppReply, error) {
 	ctx := core.MustContext(c)
@@ -70,7 +63,10 @@ func (s *App) GetSampleApp(c context.Context, req *app.GetSampleAppRequest) (*ap
 		CreatedAt:   uint32(data.CreatedAt),
 		UpdatedAt:   uint32(data.UpdatedAt),
 	}
-	_ = json.Unmarshal([]byte(data.Setting), &reply.Setting)
+	// Setting 解析失败不中断响应，记录日志便于排查（数据损坏时客户端拿到默认配置）
+	if err := json.Unmarshal([]byte(data.Setting), &reply.Setting); err != nil {
+		ctx.Logger().Warnw("msg", "parse app setting error", "app", data.Keyword, "err", err.Error())
+	}
 	return &reply, nil
 }
 
@@ -87,18 +83,21 @@ func (s *App) GetApp(c context.Context, req *app.GetAppRequest) (*app.GetAppRepl
 		Logo:        data.Logo,
 		Favicon:     data.Favicon,
 		Keyword:     data.Keyword,
-		Secret:      data.Secret,
 		Name:        data.Name,
 		ShowName:    data.ShowName,
 		Status:      value.Value(data.Status),
 		Reason:      data.Reason,
 		Private:     value.Value(data.Private),
+		Loginable:   data.IsLoginable(),
 		Description: data.Description,
 		Comment:     data.Comment,
 		CreatedAt:   uint32(data.CreatedAt),
 		UpdatedAt:   uint32(data.UpdatedAt),
 	}
-	_ = json.Unmarshal([]byte(data.Setting), &reply.Setting)
+	// Setting 解析失败不中断响应，记录日志便于排查（数据损坏时客户端拿到默认配置）
+	if err := json.Unmarshal([]byte(data.Setting), &reply.Setting); err != nil {
+		ctx.Logger().Warnw("msg", "parse app setting error", "app", data.Keyword, "err", err.Error())
+	}
 	return &reply, nil
 }
 
@@ -117,6 +116,7 @@ func (s *App) ListApp(c context.Context, req *app.ListAppRequest) (*app.ListAppR
 		Keyword: req.Keyword,
 		Name:    req.Name,
 		Status:  req.Status,
+		Type:    req.Type,
 	})
 	if err != nil {
 		return nil, err
@@ -136,6 +136,7 @@ func (s *App) ListApp(c context.Context, req *app.ListAppRequest) (*app.ListAppR
 			Status:      ent.Status,
 			Reason:      ent.Reason,
 			Private:     ent.Private,
+			Loginable:   ent.IsLoginable(),
 			Description: ent.Description,
 			Comment:     ent.Comment,
 			CreatedAt:   uint32(ent.CreatedAt),
@@ -156,11 +157,11 @@ func (s *App) CreateApp(c context.Context, req *app.CreateAppRequest) (*app.Crea
 		Logo:        req.Logo,
 		Favicon:     req.Favicon,
 		Keyword:     req.Keyword,
-		Secret:      req.Secret,
 		Name:        req.Name,
 		ShowName:    req.ShowName,
 		Status:      value.Pointer(false),
-		Private:     value.Pointer(false),
+		Private:     value.Pointer(req.Private),
+		Loginable:   value.Pointer(req.Loginable),
 		Reason:      value.Pointer("应用初始化"),
 		Description: req.Description,
 		Comment:     req.Comment,
@@ -183,11 +184,11 @@ func (s *App) UpdateApp(c context.Context, req *app.UpdateAppRequest) (*app.Upda
 		Type:        value.Value(req.Type),
 		Logo:        value.Value(req.Logo),
 		Favicon:     value.Value(req.Favicon),
-		Secret:      value.Value(req.Secret),
 		Name:        value.Value(req.Name),
 		ShowName:    value.Value(req.ShowName),
 		Status:      req.Status,
 		Private:     req.Private,
+		Loginable:   req.Loginable,
 		Reason:      req.Reason,
 		Description: req.Description,
 		Comment:     req.Comment,

@@ -2,7 +2,6 @@ package jwt
 
 import (
 	"context"
-	"encoding/base64"
 	"errors"
 	"fmt"
 	"regexp"
@@ -49,6 +48,16 @@ type jwt struct {
 
 type tokenKey struct{}
 
+// NormalizeClientIP 统一回环地址的唯一设备标识，避免 localhost、::1、127.0.0.1 被当成不同设备。
+func NormalizeClientIP(ip string) string {
+	switch strings.TrimSpace(ip) {
+	case "localhost", "::1", "[::1]":
+		return "127.0.0.1"
+	default:
+		return strings.TrimSpace(ip)
+	}
+}
+
 const (
 	blackPrefix  = "token_black"
 	uniquePrefix = "token_unique"
@@ -60,7 +69,6 @@ type Config struct {
 	Expire         time.Duration
 	Renewal        time.Duration
 	Secret         string
-	App            string
 	UniqueDevice   bool
 	UniquePlatform bool
 }
@@ -99,9 +107,6 @@ func (j *jwt) NewToken(m map[string]any) (string, error) {
 		return "", err
 	}
 
-	// 在尾部追加app信息
-	token = fmt.Sprintf("%s.%s", token, base64.StdEncoding.EncodeToString([]byte(j.conf.App)))
-
 	return token, nil
 }
 
@@ -120,7 +125,6 @@ func (j *jwt) Parse(ctx context.Context, dst any) error {
 
 // ParseByToken 解析指定的token
 func (j *jwt) ParseByToken(token string, dst any) error {
-	token = token[:strings.LastIndex(token, ".")]
 	tokenInfo, _ := jwtv5.Parse(token, func(token *jwtv5.Token) (any, error) {
 		return []byte(j.conf.Secret), nil
 	})
@@ -187,7 +191,6 @@ func (j *jwt) Renewal(token string) (string, error) {
 	if token == "" {
 		return "", errors.New("token is empty")
 	}
-	token = token[:strings.LastIndex(token, ".")]
 
 	tokenInfo, _ := jwtv5.Parse(token, func(token *jwtv5.Token) (any, error) {
 		return []byte(j.conf.Secret), nil
@@ -272,7 +275,7 @@ func (j *jwt) SetUnique(key, token string) error {
 func (j *jwt) CompareUniqueToken(key, token string) bool {
 	km := crypto.MD5([]byte(key))
 	tm := crypto.MD5([]byte(token))
-	res, _ := j.redis.HGet(context.Background(), uniquePrefix+":"+km, km).Result()
+	res, _ := j.redis.Get(context.Background(), uniquePrefix+":"+km).Result()
 	return res == tm
 }
 

@@ -1,0 +1,128 @@
+syntax = "proto3";
+
+package manager.api.form;
+
+import "api/form/proto/form.proto";
+import "google/api/annotations.proto";
+
+option go_package = "manager/api/form;form";
+
+service Form {
+  // ==================== FormScene ====================
+
+  // ListFormScene 查询场景列表
+  rpc ListFormScene(ListFormSceneRequest) returns (ListFormSceneResponse) {
+    option (google.api.http) = {
+      get: "/manager/api/form/scenes"
+    };
+  }
+
+  // CreateFormScene 创建场景
+  rpc CreateFormScene(CreateFormSceneRequest) returns (CreateFormSceneResponse) {
+    option (google.api.http) = {
+      post: "/manager/api/form/scene"
+      body: "*"
+    };
+  }
+
+  // UpdateFormScene 更新场景
+  rpc UpdateFormScene(UpdateFormSceneRequest) returns (UpdateFormSceneResponse) {
+    option (google.api.http) = {
+      put: "/manager/api/form/scene"
+      body: "*"
+    };
+  }
+
+  // DeleteFormScene 删除场景
+  rpc DeleteFormScene(DeleteFormSceneRequest) returns (DeleteFormSceneResponse) {
+    option (google.api.http) = {
+      delete: "/manager/api/form/scene"
+    };
+  }
+
+  // ==================== UserForm ====================
+
+  // ListUserForm 分页查询表单列表
+  rpc ListUserForm(ListUserFormRequest) returns (ListUserFormResponse) {
+    option (google.api.http) = {
+      get: "/manager/api/form/user-forms"
+    };
+  }
+
+  // GetUserForm 获取单个表单
+  rpc GetUserForm(GetUserFormRequest) returns (GetUserFormResponse) {
+    option (google.api.http) = {
+      get: "/manager/api/form/user-form"
+    };
+  }
+
+  // CreateUserForm 创建表单
+  rpc CreateUserForm(CreateUserFormRequest) returns (CreateUserFormResponse) {
+    option (google.api.http) = {
+      post: "/manager/api/form/user-form"
+      body: "*"
+    };
+  }
+
+  // UpdateUserForm 更新表单
+  rpc UpdateUserForm(UpdateUserFormRequest) returns (UpdateUserFormResponse) {
+    option (google.api.http) = {
+      put: "/manager/api/form/user-form"
+      body: "*"
+    };
+  }
+
+  // PublishUserForm 发布表单
+  rpc PublishUserForm(PublishUserFormRequest) returns (PublishUserFormResponse) {
+    option (google.api.http) = {
+      put: "/manager/api/form/user-form/publish"
+      body: "*"
+    };
+  }
+
+  // DeleteUserForm 删除表单
+  rpc DeleteUserForm(DeleteUserFormRequest) returns (DeleteUserFormResponse) {
+    option (google.api.http) = {
+      delete: "/manager/api/form/user-form"
+    };
+  }
+
+  // ==================== AppForm ====================
+
+  // ListAppForm 查询某应用下的表单关联列表
+  rpc ListAppForm(ListAppFormRequest) returns (ListAppFormResponse) {
+    option (google.api.http) = {
+      get: "/manager/api/form/app-forms"
+    };
+  }
+
+  // CreateAppForm 分配表单到应用
+  rpc CreateAppForm(CreateAppFormRequest) returns (CreateAppFormResponse) {
+    option (google.api.http) = {
+      post: "/manager/api/form/app-form"
+      body: "*"
+    };
+  }
+
+  // DeleteAppForm 取消分配
+  rpc DeleteAppForm(DeleteAppFormRequest) returns (DeleteAppFormResponse) {
+    option (google.api.http) = {
+      delete: "/manager/api/form/app-form"
+    };
+  }
+
+  // GetUserFormByApp 通过应用和场景获取表单（运行时用）
+  rpc GetUserFormByApp(GetUserFormByAppRequest) returns (GetUserFormByAppResponse) {
+    option (google.api.http) = {
+      get: "/manager/api/form/user-form/by-app"
+    };
+  }
+
+  // FetchRemoteOptions 远程数据代理（表单编辑器远程选项加载）
+  rpc FetchRemoteOptions(FetchRemoteOptionsRequest) returns (FetchRemoteOptionsResponse) {
+    option (google.api.http) = {
+      post: "/manager/api/form/remote-options"
+      body: "*"
+    };
+  }
+}

@@ -2,7 +2,7 @@ package types
 
 type GetRoleMenuIdsRequest struct {
 	RoleId uint32  `json:"roleId"`
-	AppId  *uint32 `json:"appId"`
+	App    *string `json:"app"`
 }
 type GetMenuRoleIdsRequest struct {
 	MenuId uint32 `json:"menuId"`
@@ -16,7 +16,7 @@ type CreateMenuRolesRequest struct {
 type CreateRoleMenusRequest struct {
 	MenuIds []uint32 `json:"menuIds"`
 	RoleId  uint32   `json:"roleId"`
-	AppId   uint32   `json:"appId"`
+	App     string   `json:"app"`
 }
 
 type DeleteRoleMenusRequest struct {

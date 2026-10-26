@@ -1,6 +1,7 @@
 package dbs
 
 import (
+	"fmt"
 	"sync"
 
 	"github.com/limes-cloud/kratosx/model/page"
@@ -24,7 +25,7 @@ func NewJob() *Job {
 }
 
 // ListJob 获取列表
-func (infra *Job) ListJob(ctx core.Context, req *types.ListJobRequest) ([]*entity.Job, uint32, error) {
+func (infra *Job) ListJob(ctx core.Context, app string, req *types.ListJobRequest) ([]*entity.Job, uint32, error) {
 	var (
 		list  []*entity.Job
 		total int64
@@ -32,6 +33,7 @@ func (infra *Job) ListJob(ctx core.Context, req *types.ListJobRequest) ([]*entit
 	)
 
 	db := ctx.DB().Model(entity.Job{}).Select(fs)
+	db = db.Where("app = ?", app)
 	if req.Name != nil {
 		db = db.Where("name LIKE ?", *req.Name+"%")
 	}
@@ -50,15 +52,21 @@ func (infra *Job) ListJob(ctx core.Context, req *types.ListJobRequest) ([]*entit
 
 // CreateJob 创建数据
 func (infra *Job) CreateJob(ctx core.Context, tg *entity.Job) (uint32, error) {
+	if tg.App == "" {
+		return 0, fmt.Errorf("app is required")
+	}
 	return tg.Id, ctx.DB().Create(tg).Error
 }
 
 // UpdateJob 更新数据
 func (infra *Job) UpdateJob(ctx core.Context, tg *entity.Job) error {
-	return ctx.DB().Updates(tg).Error
+	if tg.App == "" {
+		return fmt.Errorf("app is required")
+	}
+	return ctx.DB().Where("app = ?", tg.App).Updates(tg).Error
 }
 
 // DeleteJob 删除数据
-func (infra *Job) DeleteJob(ctx core.Context, id uint32) error {
-	return ctx.DB().Where("id = ?", id).Delete(&entity.Job{}).Error
+func (infra *Job) DeleteJob(ctx core.Context, app string, id uint32) error {
+	return ctx.DB().Where("app = ?", app).Where("id = ?", id).Delete(&entity.Job{}).Error
 }

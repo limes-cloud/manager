@@ -22,50 +22,46 @@ const _ = http.SupportPackageIsVersion1
 const OperationFieldCreateField = "/manager.api.field.Field/CreateField"
 const OperationFieldDeleteField = "/manager.api.field.Field/DeleteField"
 const OperationFieldListField = "/manager.api.field.Field/ListField"
-const OperationFieldListFieldType = "/manager.api.field.Field/ListFieldType"
-const OperationFieldListRequiredField = "/manager.api.field.Field/ListRequiredField"
+const OperationFieldListFieldOptions = "/manager.api.field.Field/ListFieldOptions"
 const OperationFieldUpdateField = "/manager.api.field.Field/UpdateField"
 
 type FieldHTTPServer interface {
-	// CreateField CreateField 创建用户字段
+	// CreateField CreateField 创建字段
 	CreateField(context.Context, *CreateFieldRequest) (*CreateFieldReply, error)
-	// DeleteField DeleteField 删除用户字段
+	// DeleteField DeleteField 删除字段
 	DeleteField(context.Context, *DeleteFieldRequest) (*DeleteFieldReply, error)
-	// ListField ListField 获取用户字段列表
+	// ListField ListField 获取字段列表
 	ListField(context.Context, *ListFieldRequest) (*ListFieldReply, error)
-	// ListFieldType ListFieldType 获取可用的字段列表
-	ListFieldType(context.Context, *ListFieldTypeRequest) (*ListFieldTypeReply, error)
-	// ListRequiredField ListRequiredField 获取必填的用户字段列表
-	ListRequiredField(context.Context, *ListRequiredFieldRequest) (*ListRequiredFieldReply, error)
-	// UpdateField UpdateField 更新用户字段
+	// ListFieldOptions ListFieldOptions 获取组件类型和校验规则枚举
+	ListFieldOptions(context.Context, *ListFieldOptionsRequest) (*ListFieldOptionsReply, error)
+	// UpdateField UpdateField 更新字段
 	UpdateField(context.Context, *UpdateFieldRequest) (*UpdateFieldReply, error)
 }
 
 func RegisterFieldHTTPServer(s *http.Server, srv FieldHTTPServer) {
 	r := s.Route("/")
-	r.GET("/manager/api/field/types", _Field_ListFieldType0_HTTP_Handler(srv))
+	r.GET("/manager/api/field/options", _Field_ListFieldOptions0_HTTP_Handler(srv))
 	r.GET("/manager/api/fields", _Field_ListField0_HTTP_Handler(srv))
-	r.GET("/manager/api/fields/required", _Field_ListRequiredField0_HTTP_Handler(srv))
 	r.POST("/manager/api/field", _Field_CreateField0_HTTP_Handler(srv))
 	r.PUT("/manager/api/field", _Field_UpdateField0_HTTP_Handler(srv))
 	r.DELETE("/manager/api/field", _Field_DeleteField0_HTTP_Handler(srv))
 }
 
-func _Field_ListFieldType0_HTTP_Handler(srv FieldHTTPServer) func(ctx http.Context) error {
+func _Field_ListFieldOptions0_HTTP_Handler(srv FieldHTTPServer) func(ctx http.Context) error {
 	return func(ctx http.Context) error {
-		var in ListFieldTypeRequest
+		var in ListFieldOptionsRequest
 		if err := ctx.BindQuery(&in); err != nil {
 			return err
 		}
-		http.SetOperation(ctx, OperationFieldListFieldType)
+		http.SetOperation(ctx, OperationFieldListFieldOptions)
 		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
-			return srv.ListFieldType(ctx, req.(*ListFieldTypeRequest))
+			return srv.ListFieldOptions(ctx, req.(*ListFieldOptionsRequest))
 		})
 		out, err := h(ctx, &in)
 		if err != nil {
 			return err
 		}
-		reply := out.(*ListFieldTypeReply)
+		reply := out.(*ListFieldOptionsReply)
 		return ctx.Result(200, reply)
 	}
 }
@@ -85,25 +81,6 @@ func _Field_ListField0_HTTP_Handler(srv FieldHTTPServer) func(ctx http.Context) 
 			return err
 		}
 		reply := out.(*ListFieldReply)
-		return ctx.Result(200, reply)
-	}
-}
-
-func _Field_ListRequiredField0_HTTP_Handler(srv FieldHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in ListRequiredFieldRequest
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationFieldListRequiredField)
-		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
-			return srv.ListRequiredField(ctx, req.(*ListRequiredFieldRequest))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*ListRequiredFieldReply)
 		return ctx.Result(200, reply)
 	}
 }
@@ -175,8 +152,7 @@ type FieldHTTPClient interface {
 	CreateField(ctx context.Context, req *CreateFieldRequest, opts ...http.CallOption) (rsp *CreateFieldReply, err error)
 	DeleteField(ctx context.Context, req *DeleteFieldRequest, opts ...http.CallOption) (rsp *DeleteFieldReply, err error)
 	ListField(ctx context.Context, req *ListFieldRequest, opts ...http.CallOption) (rsp *ListFieldReply, err error)
-	ListFieldType(ctx context.Context, req *ListFieldTypeRequest, opts ...http.CallOption) (rsp *ListFieldTypeReply, err error)
-	ListRequiredField(ctx context.Context, req *ListRequiredFieldRequest, opts ...http.CallOption) (rsp *ListRequiredFieldReply, err error)
+	ListFieldOptions(ctx context.Context, req *ListFieldOptionsRequest, opts ...http.CallOption) (rsp *ListFieldOptionsReply, err error)
 	UpdateField(ctx context.Context, req *UpdateFieldRequest, opts ...http.CallOption) (rsp *UpdateFieldReply, err error)
 }
 
@@ -227,24 +203,11 @@ func (c *FieldHTTPClientImpl) ListField(ctx context.Context, in *ListFieldReques
 	return &out, err
 }
 
-func (c *FieldHTTPClientImpl) ListFieldType(ctx context.Context, in *ListFieldTypeRequest, opts ...http.CallOption) (*ListFieldTypeReply, error) {
-	var out ListFieldTypeReply
-	pattern := "/manager/api/field/types"
+func (c *FieldHTTPClientImpl) ListFieldOptions(ctx context.Context, in *ListFieldOptionsRequest, opts ...http.CallOption) (*ListFieldOptionsReply, error) {
+	var out ListFieldOptionsReply
+	pattern := "/manager/api/field/options"
 	path := binding.EncodeURL(pattern, in, true)
-	opts = append(opts, http.Operation(OperationFieldListFieldType))
-	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return &out, err
-}
-
-func (c *FieldHTTPClientImpl) ListRequiredField(ctx context.Context, in *ListRequiredFieldRequest, opts ...http.CallOption) (*ListRequiredFieldReply, error) {
-	var out ListRequiredFieldReply
-	pattern := "/manager/api/fields/required"
-	path := binding.EncodeURL(pattern, in, true)
-	opts = append(opts, http.Operation(OperationFieldListRequiredField))
+	opts = append(opts, http.Operation(OperationFieldListFieldOptions))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
 	if err != nil {

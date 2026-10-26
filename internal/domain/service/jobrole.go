@@ -29,7 +29,7 @@ func NewJobRole(
 func (rm *JobRole) ListJobRole(ctx core.Context, req *types.ListJobRoleRequest) ([]*entity.Role, uint32, error) {
 
 	// 获取当前角色有权限的菜单ID
-	list, total, err := rm.repo.ListJobRole(ctx, req)
+	list, total, err := rm.repo.ListJobRole(ctx, ctx.AppKey(req.App), req)
 	if err != nil {
 		ctx.Logger().Warnw("msg", "get menu ids error", "err", err.Error())
 		return nil, 0, errors.ListError(err.Error())
@@ -44,7 +44,7 @@ func (rm *JobRole) CreateJobRole(ctx core.Context, req *types.CreateJobRoleReque
 	if !lo.Contains(rids, req.RoleId) {
 		return errors.RoleScopeError()
 	}
-	if err := rm.repo.CreateJobRole(ctx, req.JobId, req.RoleId); err != nil {
+	if err := rm.repo.CreateJobRole(ctx, ctx.AppKey(req.App), req.JobId, req.RoleId); err != nil {
 		return errors.CreateError(err.Error())
 	}
 	return nil
@@ -55,7 +55,7 @@ func (rm *JobRole) DeleteJobRole(ctx core.Context, req *types.DeleteJobRoleReque
 	if !lo.Contains(rids, req.RoleId) {
 		return errors.RoleScopeError()
 	}
-	if err := rm.repo.DeleteJobRole(ctx, req.JobId, req.RoleId); err != nil {
+	if err := rm.repo.DeleteJobRole(ctx, ctx.AppKey(req.App), req.JobId, req.RoleId); err != nil {
 		return errors.DeleteError(err.Error())
 	}
 	return nil

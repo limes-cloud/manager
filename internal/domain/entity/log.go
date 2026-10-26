@@ -4,7 +4,7 @@ import "github.com/limes-cloud/kratosx/model"
 
 type LoginLog struct {
 	model.CreateModel
-	AppId       uint32 `json:"appId" gorm:"column:app_id"`
+	App         string `json:"app" gorm:"column:app"`
 	DeptId      uint32 `json:"deptId" gorm:"column:dept_id"`
 	UserId      uint32 `json:"userId" gorm:"column:user_id"`
 	Type        string `json:"type" gorm:"column:type"`
@@ -15,16 +15,16 @@ type LoginLog struct {
 	Code        int    `json:"code" gorm:"column:code"`
 	Description string `json:"description" gorm:"column:description"`
 	User        *User  `json:"user" gorm:"foreignKey:user_id;references:id"`
-	App         *App   `json:"app" gorm:"foreignKey:app_id;references:id"`
+	AppInfo     *App   `json:"appInfo" gorm:"foreignKey:app;references:keyword"`
 }
 
 type AuthLog struct {
 	model.CreateModel
-	AppId  uint32 `json:"appId" gorm:"column:app_id"`
-	DeptId uint32 `json:"deptId" gorm:"column:dept_id"`
-	UserId uint32 `json:"userId" gorm:"column:user_id"`
-	MenuId uint32 `json:"menuId" gorm:"column:menu_id"`
-	App    *App   `json:"app" gorm:"foreignKey:app_id;references:id"`
-	User   *User  `json:"user" gorm:"foreignKey:user_id;references:id"`
-	Menu   *Menu  `json:"menu" gorm:"foreignKey:menu_id;references:id"`
+	App     string `json:"app" gorm:"column:app"`
+	DeptId  uint32 `json:"deptId" gorm:"column:dept_id"`
+	UserId  uint32 `json:"userId" gorm:"column:user_id"`
+	MenuId  uint32 `json:"menuId" gorm:"column:menu_id"`
+	AppInfo *App   `json:"appInfo" gorm:"foreignKey:app;references:keyword"`
+	User    *User  `json:"user" gorm:"foreignKey:user_id;references:id"`
+	Menu    *Menu  `json:"menu" gorm:"foreignKey:menu_id;references:id"`
 }

@@ -5,27 +5,22 @@ package manager.api.field;
 import "api/field/proto/field.proto";
 import "google/api/annotations.proto";
 
-option go_package = "manager/api/field;field";
+option go_package = "github.com/limes-cloud/manager/api/field;field";
 option java_multiple_files = true;
 option java_package = "manager.api.field";
 
 service Field {
-  // ListFieldType 获取可用的字段列表
-  rpc ListFieldType(ListFieldTypeRequest) returns (ListFieldTypeReply) {
-    option (google.api.http) = {get: "/manager/api/field/types"};
+  // ListFieldOptions 获取组件类型和校验规则枚举
+  rpc ListFieldOptions(ListFieldOptionsRequest) returns (ListFieldOptionsReply) {
+    option (google.api.http) = {get: "/manager/api/field/options"};
   }
 
-  // ListField 获取用户字段列表
+  // ListField 获取字段列表
   rpc ListField(ListFieldRequest) returns (ListFieldReply) {
     option (google.api.http) = {get: "/manager/api/fields"};
   }
 
-  // ListRequiredField 获取必填的用户字段列表
-  rpc ListRequiredField(ListRequiredFieldRequest) returns (ListRequiredFieldReply) {
-    option (google.api.http) = {get: "/manager/api/fields/required"};
-  }
-
-  // CreateField 创建用户字段
+  // CreateField 创建字段
   rpc CreateField(CreateFieldRequest) returns (CreateFieldReply) {
     option (google.api.http) = {
       post: "/manager/api/field"
@@ -33,7 +28,7 @@ service Field {
     };
   }
 
-  // UpdateField 更新用户字段
+  // UpdateField 更新字段
   rpc UpdateField(UpdateFieldRequest) returns (UpdateFieldReply) {
     option (google.api.http) = {
       put: "/manager/api/field"
@@ -41,7 +36,7 @@ service Field {
     };
   }
 
-  // DeleteField 删除用户字段
+  // DeleteField 删除字段
   rpc DeleteField(DeleteFieldRequest) returns (DeleteFieldReply) {
     option (google.api.http) = {delete: "/manager/api/field"};
   }

@@ -11,7 +11,7 @@ type AppOAuther interface {
 	ListAppOAuther(ctx core.Context, req *types.ListAppOAutherRequest) ([]*entity.AppOAuther, uint32, error)
 
 	// GetAppOAutherByAT 获取应用信息
-	GetAppOAutherByAT(ctx core.Context, appId uint32, tp string) (*entity.AppOAuther, error)
+	GetAppOAutherByAT(ctx core.Context, app string, tp string) (*entity.AppOAuther, error)
 
 	// CreateAppOAuther 创建应用信息
 	CreateAppOAuther(ctx core.Context, req *entity.AppOAuther) (uint32, error)

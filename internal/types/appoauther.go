@@ -4,7 +4,7 @@ import "github.com/limes-cloud/kratosx/model/page"
 
 type ListAppOAutherRequest struct {
 	*page.Search
-	AppId    uint32  `json:"appId"`
-	Keyword  *string `json:"keyword"`
-	Name     *string `json:"name"`
+	App     string  `json:"app"`
+	Keyword *string `json:"keyword"`
+	Name    *string `json:"name"`
 }

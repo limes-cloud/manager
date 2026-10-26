@@ -7,16 +7,16 @@ import (
 )
 
 type Menu interface {
-	GetMenuIdsByAppId(ctx core.Context, id uint32) ([]uint32, error)
+	GetMenuIdsByApp(ctx core.Context, app string) ([]uint32, error)
 
 	// GetMenu 获取菜单列表
 	GetMenu(ctx core.Context, id uint32) (*entity.Menu, error)
 
 	// GetMenuByKeyword 获取指定应用下指定标识的菜单
-	GetMenuByKeyword(ctx core.Context, appId uint32, keyword string) (*entity.Menu, error)
+	GetMenuByKeyword(ctx core.Context, app string, keyword string) (*entity.Menu, error)
 
 	// GetMenuByApi 获取指定应用下指定接口的菜单
-	GetMenuByApi(ctx core.Context, appId uint32, api string, method string) (*entity.Menu, error)
+	GetMenuByApi(ctx core.Context, app string, api string, method string) (*entity.Menu, error)
 
 	// ListMenu 获取菜单信息列表
 	ListMenu(ctx core.Context, req *types.ListMenuRequest) ([]*entity.Menu, error)

@@ -79,6 +79,21 @@ func (m *CreateDeptRoleRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
+	if m.App != nil {
+
+		if utf8.RuneCountInString(m.GetApp()) > 64 {
+			err := CreateDeptRoleRequestValidationError{
+				field:  "App",
+				reason: "value length must be at most 64 runes",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+	}
+
 	if len(errors) > 0 {
 		return CreateDeptRoleRequestMultiError(errors)
 	}
@@ -318,6 +333,21 @@ func (m *ListDeptRoleRequest) validate(all bool) error {
 
 	if m.Name != nil {
 		// no validation rules for Name
+	}
+
+	if m.App != nil {
+
+		if utf8.RuneCountInString(m.GetApp()) > 64 {
+			err := ListDeptRoleRequestValidationError{
+				field:  "App",
+				reason: "value length must be at most 64 runes",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
 	}
 
 	if len(errors) > 0 {
@@ -580,6 +610,21 @@ func (m *DeleteDeptRoleRequest) validate(all bool) error {
 			return err
 		}
 		errors = append(errors, err)
+	}
+
+	if m.App != nil {
+
+		if utf8.RuneCountInString(m.GetApp()) > 64 {
+			err := DeleteDeptRoleRequestValidationError{
+				field:  "App",
+				reason: "value length must be at most 64 runes",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
 	}
 
 	if len(errors) > 0 {

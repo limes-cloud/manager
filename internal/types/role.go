@@ -1,8 +1,8 @@
 package types
 
 type GetRoleRequest struct {
-	Id      *uint32 `json:"id"`
-	Keyword *string `json:"keyword"`
+	App     string `json:"app"`
+	Keyword string `json:"keyword"`
 }
 
 type ListRoleRequest struct {

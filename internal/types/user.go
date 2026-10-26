@@ -6,7 +6,7 @@ import (
 
 type OfflineUserRequest struct {
 	UserId uint32   `json:"userId"`
-	AppIds []uint32 `json:"appIds"`
+	Apps   []string `json:"apps"`
 }
 
 type GetCurrentUserRequest struct {
@@ -14,8 +14,8 @@ type GetCurrentUserRequest struct {
 }
 
 type UpdateCurrentUserRequest struct {
-	Avatar    string            `json:"avatar"`
-	Nickname  string            `json:"nickname"`
+	Avatar    *string           `json:"avatar"`
+	Nickname  *string           `json:"nickname"`
 	Signature *string           `json:"signature"`
 	Infos     map[string]string `json:"infos"`
 }
@@ -41,7 +41,6 @@ type ListUserRequest struct {
 	Status     *bool    `json:"status"`
 	LoggedAts  []uint32 `json:"loggedAts"`
 	CreatedAts []uint32 `json:"createdAts"`
-	AppId      *uint32  `json:"appId"`
 
 	// 中转参数
 	DeptId *uint32 `json:"deptId"`

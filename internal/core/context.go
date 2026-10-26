@@ -17,6 +17,8 @@ const (
 	JwterKey = "jwter"
 
 	TokenKey = "x-md-global-token"
+
+	AppKey = kratosx.AppKeyMetadataKey
 )
 
 type Context struct {

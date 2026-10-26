@@ -48,16 +48,16 @@ func (woa MiniProgram) Visible(_ core.Context, req *types.OAutherVisibleRequest)
 	}, nil
 }
 
-func (woa MiniProgram) Handler(ctx core.Context, req *types.OAutherHandleRequest) (*types.OAutherHandleReply, error) {
+func (woa MiniProgram) Start(ctx core.Context, req *types.OAutherStartRequest) (*types.OAutherStartReply, error) {
 	uid := crypto.MD5([]byte(uuid.NewString()))
-	return &types.OAutherHandleReply{
+	return &types.OAutherStartReply{
 		UUID:   uid,
 		Action: types.OAutherWayActionUniLogin,
 		Tip:    "授权登陆",
 	}, nil
 }
 
-func (woa MiniProgram) GetToken(ctx core.Context, req *types.OAutherTokenRequest) (*types.OAutherTokenReply, error) {
+func (woa MiniProgram) Complete(ctx core.Context, req *types.OAutherCompleteRequest) (*types.OAutherIdentity, error) {
 	conf := woa.config(ctx)
 	wc := wechat.NewWechat()
 	mg := wc.GetMiniProgram(conf)
@@ -67,13 +67,7 @@ func (woa MiniProgram) GetToken(ctx core.Context, req *types.OAutherTokenRequest
 		return nil, err
 	}
 
-	return &types.OAutherTokenReply{
+	return &types.OAutherIdentity{
 		OID: cs.OpenID,
-	}, nil
-}
-
-func (woa MiniProgram) GetInfo(ctx core.Context, req *types.OAutherInfoRequest) (*types.OAutherInfoReply, error) {
-	return &types.OAutherInfoReply{
-		OID: req.OID,
 	}, nil
 }

@@ -11,11 +11,22 @@ option java_package = "manager.api.roleentity";
 message CreateRoleEntityRequest {
   uint32 roleId = 1 [(validate.rules).uint32 = {gte: 1}];
   uint32 entityId = 2 [(validate.rules).uint32 = {gte: 1}];
-  string action = 3 [(validate.rules).string = {min_len: 1}];
-  string scope = 4 [(validate.rules).string = {min_len: 1}];
-  repeated uint32 fields = 5;
+  // 单条模式必填；items 批量模式忽略，故用 optional 避免空串触发 min_len 校验
+  optional string action = 3 [(validate.rules).string = {min_len: 1}];
+  optional string scope = 4 [(validate.rules).string = {min_len: 1}];
   repeated uint32 rules = 6;
   repeated uint32 depts = 7;
+  optional string app = 8 [(validate.rules).string = {max_len: 64}];
+  // items 批量配置：非空时按 items 逐条创建（action/scope 各自独立），忽略上方 action/scope/rules/depts 单条字段
+  repeated RoleEntityItem items = 9;
+}
+
+// RoleEntityItem 批量配置项：一个操作类型的完整权限配置
+message RoleEntityItem {
+  string action = 1 [(validate.rules).string = {min_len: 1}];
+  string scope = 2 [(validate.rules).string = {min_len: 1}];
+  repeated uint32 depts = 3;
+  repeated uint32 rules = 4;
 }
 
 message CreateRoleEntityReply {
@@ -30,6 +41,7 @@ message ListRoleEntityRequest {
   }];
   uint32 roleId = 3 [(validate.rules).uint32 = {gte: 1}];
   optional uint32 entityId = 4 [(validate.rules).uint32 = {gte: 1}];
+  optional string app = 5 [(validate.rules).string = {max_len: 64}];
 }
 
 message ListRoleEntityReply {
@@ -49,7 +61,6 @@ message ListRoleEntityReply {
     uint32 entityId = 3;
     string action = 4;
     string scope = 5;
-    repeated uint32 fields = 6;
     repeated uint32 rules = 7;
     repeated uint32 depts = 9;
     uint32 createdAt = 10;
@@ -60,15 +71,15 @@ message ListRoleEntityReply {
   uint32 total = 2;
 }
 
+// 更新时不允许修改操作类型（action 在创建后不可变），故请求中不收 action 字段
 message UpdateRoleEntityRequest {
   uint32 id = 1 [(validate.rules).uint32 = {gte: 1}];
   optional uint32 roleId = 2 [(validate.rules).uint32 = {gte: 1}];
   optional uint32 entityId = 3 [(validate.rules).uint32 = {gte: 1}];
-  optional string action = 4 [(validate.rules).string = {min_len: 1}];
   optional string scope = 5 [(validate.rules).string = {min_len: 1}];
-  repeated uint32 fields = 6;
   repeated uint32 rules = 7;
   repeated uint32 depts = 8;
+  optional string app = 9 [(validate.rules).string = {max_len: 64}];
 }
 
 message UpdateRoleEntityReply {}

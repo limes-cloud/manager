@@ -2,33 +2,27 @@ package jwt
 
 import (
 	"context"
-	"encoding/base64"
 	"strings"
 	"time"
-
-	"github.com/limes-cloud/manager/internal/core"
-
-	"github.com/go-kratos/kratos/v2/transport/http"
-
-	"github.com/limes-cloud/manager/api/authorize"
-
-	"github.com/limes-cloud/manager/internal/app"
-
-	"github.com/limes-cloud/kratosx/pkg/crypto"
-
-	"github.com/limes-cloud/manager/internal/infra/dbs"
-
-	"github.com/limes-cloud/kratosx"
-
-	"github.com/limes-cloud/manager/internal/types"
 
 	"github.com/go-kratos/kratos/v2/metadata"
 	"github.com/go-kratos/kratos/v2/middleware"
 	kratosJwt "github.com/go-kratos/kratos/v2/middleware/auth/jwt"
 	"github.com/go-kratos/kratos/v2/transport"
+	"github.com/go-kratos/kratos/v2/transport/http"
+	"github.com/limes-cloud/kratosx"
+	"github.com/limes-cloud/kratosx/pkg/crypto"
+
+	"github.com/limes-cloud/manager/api/authorize"
 	"github.com/limes-cloud/manager/api/errors"
+	"github.com/limes-cloud/manager/internal/app"
+	"github.com/limes-cloud/manager/internal/core"
+	"github.com/limes-cloud/manager/internal/infra/dbs"
 	pkgtjwt "github.com/limes-cloud/manager/internal/pkg/jwt"
+	"github.com/limes-cloud/manager/internal/types"
 )
+
+const appHeaderKey = kratosx.AppKeyHeaderKey
 
 // Token 获取并设置token
 func Token() middleware.Middleware {
@@ -57,31 +51,39 @@ func Token() middleware.Middleware {
 			}
 			md.Set(core.TokenKey, token)
 
-			// 判断token格式
-			if strings.Count(token, ".") != 3 {
-				return nil, kratosJwt.ErrTokenInvalid
+			appKey := md.Get(core.AppKey)
+			if appKey == "" {
+				header, ok := transport.FromServerContext(ctx)
+				if !ok {
+					return nil, kratosJwt.ErrTokenInvalid
+				}
+				appKey = strings.TrimSpace(header.RequestHeader().Get(appHeaderKey))
+				if appKey == "" {
+					return nil, kratosJwt.ErrTokenInvalid
+				}
+				md.Set(core.AppKey, appKey)
 			}
-
-			// 获取app key
-			appEncode := token[strings.LastIndex(token, ".")+1:]
-			token = token[:strings.LastIndex(token, ".")]
-
-			// 切分最后一个.
-			appByte, _ := base64.StdEncoding.DecodeString(appEncode)
+			kratosx.MustContext(ctx).SetAppKey(appKey)
 
 			// 获取app信息
-			data, err := appIns.GetAppByKeyword(string(appByte))
+			data, err := appIns.GetAppByKeyword(appKey)
 			if err != nil {
 				return nil, errors.SystemError()
 			}
-			jc := data.GetSetting().JWT
+
+			// 配置解析失败会导致 JWT 密钥为空，必须记录而非静默降级
+			setting, err := data.ParseSetting()
+			if err != nil {
+				kratosx.MustContext(ctx).Logger().Errorw("msg", "parse app setting error", "err", err.Error(), "app", appKey)
+				return nil, errors.SystemError()
+			}
+			jc := setting.JWT
 
 			// 初始化app jwt
 			jwter := pkgtjwt.New(kratosx.MustContext(ctx), &pkgtjwt.Config{
 				Secret:         jc.Secret,
 				Expire:         time.Duration(jc.Expire) * time.Second,
 				Renewal:        time.Duration(jc.Renewal) * time.Second,
-				App:            data.Keyword,
 				UniqueDevice:   jc.UniqueDevice,
 				UniquePlatform: jc.UniquePlatform,
 			})
@@ -112,6 +114,7 @@ func getPathInfo(ctx context.Context) (string, string) {
 
 // TokenValidate jwt校验
 func TokenValidate() middleware.Middleware {
+	userDeptIns := dbs.NewUserDept()
 	return func(handler middleware.Handler) middleware.Handler {
 		return func(ctx context.Context, req any) (any, error) {
 			// 设置token到metadata
@@ -140,6 +143,12 @@ func TokenValidate() middleware.Middleware {
 			if err := jwter.ParseByToken(token, info); err != nil {
 				return nil, err
 			}
+			if info.AuthorizeBase == nil {
+				info.AuthorizeBase = &types.AuthorizeBase{}
+			}
+			info.AppKey = cctx.AppKey()
+			info.DeptId = userDeptIns.GetUserMainDeptId(cctx, info.AppKey, info.UserId)
+			info.JobId = userDeptIns.GetUserMainJobId(cctx, info.AppKey, info.UserId)
 
 			// 判断jwt是否过期
 			if info.Exp < time.Now().Unix() {
@@ -156,17 +165,25 @@ func TokenValidate() middleware.Middleware {
 			}
 
 			kctx := kratosx.MustContext(ctx)
+			clientIP := pkgtjwt.NormalizeClientIP(kctx.ClientIP())
+			if forwarded := strings.TrimSpace(kctx.GetMetadata(authorize.ClientIPKey)); forwarded != "" {
+				clientIP = pkgtjwt.NormalizeClientIP(forwarded)
+			}
+			userAgent := kctx.UserAgent().String
+			if forwarded := kctx.GetMetadata(authorize.UserAgentKey); forwarded != "" {
+				userAgent = forwarded
+			}
 
 			// 是否开启了唯一设备校验
 			if jwter.Config().UniqueDevice {
-				if !jwter.CompareUniqueToken(kctx.ClientIP(), token) {
+				if !jwter.CompareUniqueToken(clientIP, token) {
 					return nil, kratosJwt.ErrTokenInvalid
 				}
 			}
 
 			// 是否开启了唯一平台校验
 			if jwter.Config().UniquePlatform {
-				if !jwter.CompareUniqueToken(kctx.UserAgent().String, token) {
+				if !jwter.CompareUniqueToken(userAgent, token) {
 					return nil, kratosJwt.ErrTokenInvalid
 				}
 			}

@@ -11,7 +11,7 @@ type NoticeClassify struct {
 
 type Notice struct {
 	model.BaseModel
-	AppId       uint32          `gorm:"column:app_id" json:"appId"`
+	App         string          `gorm:"column:app" json:"app"`
 	ClassifyId  uint32          `gorm:"column:classify_id" json:"classifyId"`
 	Title       string          `gorm:"column:title" json:"title"`             // 通知标题
 	Description string          `gorm:"column:description" json:"description"` // 通知简介
@@ -19,7 +19,7 @@ type Notice struct {
 	Content     string          `gorm:"column:content" json:"content"`         // 通知内容
 	IsTop       *bool           `gorm:"column:is_top" json:"isTop"`            // 是否置顶
 	Status      *bool           `gorm:"column:status" json:"status"`           // 通知状态
-	App         *App            `gorm:"foreignKey:app_id;references:id" json:"app"`
+	AppInfo     *App            `gorm:"foreignKey:app;references:keyword" json:"appInfo"`
 	Classify    *NoticeClassify `gorm:"foreignKey:classify_id;references:id" json:"classify"`
 }
 

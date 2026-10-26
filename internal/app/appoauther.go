@@ -56,7 +56,7 @@ func (s *AppOAuther) ListAppOAuther(c context.Context, req *appoauther.ListAppOA
 		},
 		Keyword: req.Keyword,
 		Name:    req.Name,
-		AppId:   req.AppId,
+		App:     ctx.AppKey(req.App),
 	})
 	if err != nil {
 		return nil, err
@@ -75,8 +75,9 @@ func (s *AppOAuther) ListAppOAuther(c context.Context, req *appoauther.ListAppOA
 // CreateAppOAuther 创建应用渠道信息
 func (s *AppOAuther) CreateAppOAuther(c context.Context, req *appoauther.CreateAppOAutherRequest) (*appoauther.CreateAppOAutherReply, error) {
 	// 调用服务
-	id, err := s.srv.CreateAppOAuther(core.MustContext(c), &entity.AppOAuther{
-		AppId:     req.AppId,
+	ctx := core.MustContext(c)
+	id, err := s.srv.CreateAppOAuther(ctx, &entity.AppOAuther{
+		App:       ctx.AppKey(req.App),
 		OAutherId: req.OautherId,
 	})
 	if err != nil {

@@ -30,7 +30,7 @@ const (
 )
 
 type registerMenuState struct {
-	AppId   uint32
+	App     string
 	SeenKey map[string]struct{}
 	SeenApi map[string]struct{}
 	Reply   *types.RegisterMenuReply
@@ -58,7 +58,7 @@ func (u *Menu) ListCurrentMenu(ctx core.Context, req *types.ListMenuRequest) ([]
 	// 超级管理员直接查全量菜单，不经过角色过滤
 	if !info.IsAdmin {
 		rids := u.scope.RoleIds(ctx)
-		mids := u.rm.GetMenuIdsByRoleIds(rids)
+		mids := u.rm.GetMenuIdsByRoleIds(ctx, ctx.AppKey(), rids)
 		req.InIds = lo.Intersect(mids, req.InIds)
 	}
 
@@ -76,30 +76,26 @@ func (u *Menu) ListCurrentMenu(ctx core.Context, req *types.ListMenuRequest) ([]
 
 	// 获取应用，设置为顶级菜单
 	var (
-		appIds []uint32
-		mb     = map[uint32][]*entity.Menu{}
+		mb     = map[string][]*entity.Menu{}
 		nm     []*entity.Menu
 	)
 	for _, menu := range list {
-		appIds = append(appIds, menu.AppId)
-		mb[menu.AppId] = append(mb[menu.AppId], menu)
+		mb[menu.App] = append(mb[menu.App], menu)
 	}
-	apps, _, err := u.app.ListApp(ctx, &types.ListAppRequest{
-		InIds: lo.Uniq(appIds),
-	})
+	listApps, _, err := u.app.ListApp(ctx, &types.ListAppRequest{})
 	if err != nil {
 		ctx.Logger().Warnw("msg", "list app error", "err", err.Error())
 		return nil, errors.ListError()
 	}
 
-	for _, app := range apps {
+	for _, app := range listApps {
 		menu := entity.Menu{
 			Title:     app.Name,
 			Icon:      &app.Logo,
 			Keyword:   &app.Keyword,
 			Type:      entity.MenuTypeRoot,
-			AppId:     app.Id,
-			Children:  mb[app.Id],
+			App:       app.Keyword,
+			Children:  mb[app.Keyword],
 			Component: value.Pointer("Layout"),
 			Path:      value.Pointer("/" + app.Keyword),
 		}
@@ -131,10 +127,23 @@ func (u *Menu) ListMenu(ctx core.Context, req *types.ListMenuRequest) ([]*entity
 	}
 
 	// 如果是G，但是没有子节点，则去除G
+	// 注：必须按 ID 收集后统一重建，或倒序删除；直接用 range gms 的索引边遍历边删
+	// 会在存在≥2个孤立G时 slice 越界（[ind:len] 超过收缩后的长度）
+	var orphanG []uint32
 	for id, ind := range gms {
 		if len(mb[id]) == 0 {
-			list = append(list[:ind], list[ind+1:]...)
+			id := list[ind].Id
+			orphanG = append(orphanG, id)
 		}
+	}
+	if len(orphanG) > 0 {
+		filtered := make([]*entity.Menu, 0, len(list)-len(orphanG))
+		for _, item := range list {
+			if !value.InList(orphanG, item.Id) {
+				filtered = append(filtered, item)
+			}
+		}
+		list = filtered
 	}
 
 	return tree.BuildArrayTree(list), nil
@@ -196,7 +205,7 @@ func (u *Menu) DeleteMenu(ctx core.Context, id uint32) error {
 			return err
 		}
 		// 删除权限
-		return u.rm.DeleteMenus(ctx, mids)
+		return u.rm.DeleteMenus(ctx, ctx.AppKey(), mids)
 	})
 }
 
@@ -217,7 +226,7 @@ func (u *Menu) RegisterMenu(ctx core.Context, req *types.RegisterMenuRequest) (*
 	}
 
 	state := &registerMenuState{
-		AppId:   app.Id,
+		App:     app.Keyword,
 		SeenKey: map[string]struct{}{},
 		SeenApi: map[string]struct{}{},
 		Reply:   &types.RegisterMenuReply{},
@@ -251,7 +260,7 @@ func (u *Menu) registerMenuNode(
 		return nil
 	}
 
-	menu, err := u.toRegisterMenu(state.AppId, parentId, node)
+	menu, err := u.toRegisterMenu(state.App, parentId, node)
 	if err != nil {
 		return err
 	}
@@ -283,14 +292,14 @@ func (u *Menu) matchRegisterMenu(ctx core.Context, state *registerMenuState, men
 			return nil, fmt.Errorf("菜单key重复: %s", key)
 		}
 		state.SeenKey[key] = struct{}{}
-		old, err = u.repo.GetMenuByKeyword(ctx, state.AppId, key)
+		old, err = u.repo.GetMenuByKeyword(ctx, state.App, key)
 	} else if u.isApiMenu(menu.Type) {
 		apiKey := u.getRegisterApiKey(menu)
 		if _, ok := state.SeenApi[apiKey]; ok {
 			return nil, fmt.Errorf("接口菜单重复: %s", apiKey)
 		}
 		state.SeenApi[apiKey] = struct{}{}
-		old, err = u.repo.GetMenuByApi(ctx, state.AppId, menu.GetApi(), menu.GetMethod())
+		old, err = u.repo.GetMenuByApi(ctx, state.App, menu.GetApi(), menu.GetMethod())
 	} else {
 		return nil, nil
 	}
@@ -325,7 +334,7 @@ func (u *Menu) saveRegisterMenu(
 	return nil
 }
 
-func (u *Menu) toRegisterMenu(appId uint32, parentId uint32, node *types.RegisterMenuNode) (*entity.Menu, error) {
+func (u *Menu) toRegisterMenu(app string, parentId uint32, node *types.RegisterMenuNode) (*entity.Menu, error) {
 	var key *string
 	if node.Key != nil {
 		trimKey := strings.TrimSpace(*node.Key)
@@ -335,7 +344,7 @@ func (u *Menu) toRegisterMenu(appId uint32, parentId uint32, node *types.Registe
 	}
 
 	menu := &entity.Menu{
-		AppId:      appId,
+		App:        app,
 		ParentId:   value.Pointer(parentId),
 		Title:      node.Title,
 		Type:       node.Type,
@@ -371,7 +380,7 @@ func (u *Menu) deleteUnregisteredMenus(
 	ctx core.Context,
 	state *registerMenuState,
 ) error {
-	list, err := u.repo.ListMenu(ctx, &types.ListMenuRequest{AppId: value.Pointer(state.AppId)})
+	list, err := u.repo.ListMenu(ctx, &types.ListMenuRequest{App: value.Pointer(state.App)})
 	if err != nil {
 		return err
 	}
@@ -399,7 +408,7 @@ func (u *Menu) deleteUnregisteredMenus(
 	if err := u.repo.DeleteMenus(ctx, ids); err != nil {
 		return err
 	}
-	if err := u.rm.DeleteMenus(ctx, ids); err != nil {
+	if err := u.rm.DeleteMenus(ctx, state.App, ids); err != nil {
 		return err
 	}
 	state.Reply.Deleted = uint32(len(ids))

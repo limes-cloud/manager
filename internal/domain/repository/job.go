@@ -8,7 +8,7 @@ import (
 
 type Job interface {
 	// ListJob 获取职位列表
-	ListJob(ctx core.Context, req *types.ListJobRequest) ([]*entity.Job, uint32, error)
+	ListJob(ctx core.Context, app string, req *types.ListJobRequest) ([]*entity.Job, uint32, error)
 
 	// CreateJob 创建职位
 	CreateJob(ctx core.Context, req *entity.Job) (uint32, error)
@@ -17,5 +17,5 @@ type Job interface {
 	UpdateJob(ctx core.Context, req *entity.Job) error
 
 	// DeleteJob 删除职位
-	DeleteJob(ctx core.Context, id uint32) error
+	DeleteJob(ctx core.Context, app string, id uint32) error
 }

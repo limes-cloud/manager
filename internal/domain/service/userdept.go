@@ -29,7 +29,7 @@ func NewUserDept(
 // ListUserDept 获取指定的部门角色列表
 func (rm *UserDept) ListUserDept(ctx core.Context, req *types.ListUserDeptRequest) ([]*entity.UserDept, uint32, error) {
 	// 获取当前角色有权限的菜单ID
-	list, total, err := rm.repo.ListUserDept(ctx, req)
+	list, total, err := rm.repo.ListUserDept(ctx, ctx.AppKey(req.App), req)
 	if err != nil {
 		ctx.Logger().Warnw("msg", "get menu ids error", "err", err.Error())
 		return nil, 0, errors.ListError(err.Error())
@@ -40,7 +40,7 @@ func (rm *UserDept) ListUserDept(ctx core.Context, req *types.ListUserDeptReques
 
 // ListDeptUser 获取指定角色的所有部门列表
 func (rm *UserDept) ListDeptUser(ctx core.Context, req *types.ListDeptUserRequest) ([]*entity.User, uint32, error) {
-	list, total, err := rm.repo.ListDeptUser(ctx, req)
+	list, total, err := rm.repo.ListDeptUser(ctx, ctx.AppKey(req.App), req)
 	if err != nil {
 		return nil, 0, errors.ListError(err.Error())
 	}
@@ -49,6 +49,7 @@ func (rm *UserDept) ListDeptUser(ctx core.Context, req *types.ListDeptUserReques
 
 // CreateUserDept 创建指定部门的角色
 func (rm *UserDept) CreateUserDept(ctx core.Context, req *entity.UserDept) error {
+	req.App = ctx.AppKey(req.App)
 	if err := rm.repo.CreateUserDept(ctx, req); err != nil {
 		return errors.CreateError(err.Error())
 	}
@@ -57,14 +58,15 @@ func (rm *UserDept) CreateUserDept(ctx core.Context, req *entity.UserDept) error
 
 // UpdateUserDept 修改指定部门的角色
 func (rm *UserDept) UpdateUserDept(ctx core.Context, req *entity.UserDept) error {
+	req.App = ctx.AppKey(req.App)
 	if err := rm.repo.UpdateUserDept(ctx, req); err != nil {
 		return errors.UpdateError(err.Error())
 	}
 	return nil
 }
 
-func (rm *UserDept) DeleteUserDept(ctx core.Context, id uint32) error {
-	if err := rm.repo.DeleteUserDept(ctx, id); err != nil {
+func (rm *UserDept) DeleteUserDept(ctx core.Context, app string, id uint32) error {
+	if err := rm.repo.DeleteUserDept(ctx, ctx.AppKey(app), id); err != nil {
 		return errors.DeleteError(err.Error())
 	}
 	return nil

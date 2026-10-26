@@ -15,7 +15,7 @@ message ListEntityRequest {
     gte: 1
     lte: 50
   }];
-  uint32 appId = 3 [(validate.rules).uint32 = {gte: 1}];
+  string app = 3 [(validate.rules).string = {min_len: 1, max_len: 64}];
   optional string order = 4 [(validate.rules).string = {
     in: [
       "asc",
@@ -36,7 +36,7 @@ message ListEntityRequest {
 message ListEntityReply {
   message Entity {
     uint32 id = 1;
-    uint32 appId = 2;
+    string app = 2;
     string database = 3;
     string name = 4;
     string comment = 5;
@@ -47,38 +47,8 @@ message ListEntityReply {
   repeated Entity list = 2;
 }
 
-message LoadEntityReply {
-  message EntityField {
-    string name = 1;
-    string comment = 2;
-  }
-  message Entity {
-    string database = 1;
-    string name = 2;
-    string comment = 3;
-    repeated EntityField fields = 4;
-  }
-  uint32 total = 1;
-  repeated Entity list = 2;
-}
-
-message ImportEntityRequest {
-  message EntityField {
-    string name = 1;
-    string comment = 2;
-  }
-  message Entity {
-    string database = 1;
-    string name = 2;
-    string comment = 3;
-    repeated EntityField fields = 4;
-  }
-  uint32 appId = 1;
-  repeated Entity list = 2;
-}
-
 message CreateEntityRequest {
-  uint32 appId = 1 [(validate.rules).uint32 = {gte: 1}];
+  string app = 1 [(validate.rules).string = {min_len: 1, max_len: 64}];
   string database = 2 [(validate.rules).string = {
     min_len: 1
     max_len: 64
@@ -175,7 +145,7 @@ message UpdateEntityFieldRequest {
 message UpdateEntityFieldReply {}
 
 message DeleteEntityFieldRequest {
-  uint32 id = 1 [(validate.rules).uint32 = {gte: 0}];
+  uint32 id = 1 [(validate.rules).uint32 = {gte: 1}];
 }
 
 message DeleteEntityFieldReply {}
@@ -281,7 +251,38 @@ message UpdateEntityRuleRequest {
 message UpdateEntityRuleReply {}
 
 message DeleteEntityRuleRequest {
-  uint32 id = 1 [(validate.rules).uint32 = {gte: 0}];
+  uint32 id = 1 [(validate.rules).uint32 = {gte: 1}];
 }
 
 message DeleteEntityRuleReply {}
+
+// ---- RegisterEntity ----
+// 应用启动自注册：按 app_keyword 归属，注册/更新实体与其字段；mode: append|sync（sync 会清理未注册项）
+message RegisterEntityRequest {
+  string app_keyword = 1 [(validate.rules).string = {min_len: 1}];
+  string mode = 2 [(validate.rules).string = {in: ["append", "sync"]}];
+  repeated RegisterEntityNode entities = 3;
+}
+message RegisterEntityNode {
+  string database = 1;
+  string name = 2 [(validate.rules).string = {min_len: 1}];
+  string comment = 3;
+  repeated RegisterEntityField fields = 4;
+  repeated RegisterEntityRule rules = 5;
+}
+message RegisterEntityField {
+  string name = 1 [(validate.rules).string = {min_len: 1}];
+  string comment = 2;
+  uint32 index = 3;
+}
+message RegisterEntityRule {
+  string name = 1 [(validate.rules).string = {min_len: 1}];
+  optional bool status = 2;
+  string expression = 3;
+  string description = 4;
+}
+message RegisterEntityReply {
+  uint32 created = 1;
+  uint32 updated = 2;
+  uint32 deleted = 3;
+}

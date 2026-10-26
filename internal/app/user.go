@@ -3,7 +3,6 @@ package app
 import (
 	"context"
 
-
 	"github.com/limes-cloud/kratosx/model"
 
 	"github.com/go-kratos/kratos/v2/transport/grpc"
@@ -67,10 +66,10 @@ func (app *User) GetCurrentUser(c context.Context, req *user.GetCurrentUserReque
 
 	reply := user.UserObject{
 		Id:        result.Id,
-		Nickname:  result.Nickname,
+		Nickname:  value.Value(result.Nickname),
 		Username:  result.Username,
 		Signature: result.Signature,
-		Avatar:    result.Avatar,
+		Avatar:    value.Value(result.Avatar),
 		Status:    result.Status,
 		LoggedAt:  uint32(result.LoggedAt),
 		CreatedAt: uint32(result.CreatedAt),
@@ -117,8 +116,8 @@ func (app *User) UpdateCurrentUserSetting(c context.Context, req *user.UpdateCur
 func (app *User) UpdateCurrentUser(c context.Context, req *user.UpdateCurrentUserRequest) (*emptypb.Empty, error) {
 	ctx := core.MustContext(c)
 	err := app.srv.UpdateCurrentUser(ctx, &types.UpdateCurrentUserRequest{
-		Avatar:    req.GetAvatar(),
-		Nickname:  req.GetNickname(),
+		Avatar:    req.Avatar,
+		Nickname:  req.Nickname,
 		Signature: req.Signature,
 		Infos:     req.Infos,
 	})
@@ -157,10 +156,10 @@ func (app *User) GetUser(c context.Context, req *user.GetUserRequest) (*user.Use
 	// 处理返回数据
 	reply := user.UserObject{
 		Id:        result.Id,
-		Nickname:  result.Nickname,
+		Nickname:  value.Value(result.Nickname),
 		Username:  result.Username,
 		Signature: result.Signature,
-		Avatar:    result.Avatar,
+		Avatar:    value.Value(result.Avatar),
 		Status:    result.Status,
 		LoggedAt:  uint32(result.LoggedAt),
 		CreatedAt: uint32(result.CreatedAt),
@@ -207,8 +206,8 @@ func (app *User) CreateUser(c context.Context, req *user.CreateUserRequest) (*us
 	ctx := core.MustContext(c)
 
 	info := &entity.User{
-		Avatar:    req.Avatar,
-		Nickname:  req.Nickname,
+		Avatar:    value.Pointer(req.Avatar),
+		Nickname:  value.Pointer(req.Nickname),
 		Username:  req.Username,
 		Signature: req.Signature,
 	}
@@ -246,11 +245,11 @@ func (app *User) UpdateUser(c context.Context, req *user.UpdateUserRequest) (*us
 
 	info := &entity.User{
 		BaseModel: model.BaseModel{Id: req.Id},
-		Avatar:          value.Value(req.Avatar),
-		Nickname:        value.Value(req.Nickname),
-		Signature:       req.Signature,
-		Status:          req.Status,
-		Reason:          req.Reason,
+		Avatar:    req.Avatar,
+		Nickname:  req.Nickname,
+		Signature: req.Signature,
+		Status:    req.Status,
+		Reason:    req.Reason,
 	}
 	for key, val := range req.Infos {
 		info.Infos = append(info.Infos, &entity.Userinfo{
@@ -301,7 +300,7 @@ func (app *User) OfflineUser(c context.Context, req *user.OfflineUserRequest) (*
 	// 调用服务
 	if err := app.srv.OfflineUser(ctx, &types.OfflineUserRequest{
 		UserId: req.UserId,
-		AppIds: req.AppIds,
+		Apps:   req.Apps,
 	}); err != nil {
 		return nil, err
 	}

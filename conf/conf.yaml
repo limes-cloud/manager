@@ -1,14 +1,14 @@
 test: 11
-env: TEST
+env: "${PLATFORM_ENV:TEST}"
 server:
   http:
-    host: 127.0.0.1
-    port: 7010
+    host: "${PLATFORM_MANAGER_HTTP_HOST:127.0.0.1}"
+    port: 7202
     formatResponse: true
     pprof:
-      enable: true
+      enable: "${PLATFORM_MANAGER_PPROF_ENABLE:true}"
       query: secret
-      secret: 123
+      secret: "${PLATFORM_MANAGER_PPROF_SECRET:123}"
     timeout: 10s
     marshal:
       emitUnpopulated: true
@@ -17,11 +17,11 @@ server:
       allowCredentials: true
       allowOrigins: [ "*" ]
       allowMethods: [ "GET","POST","PUT","DELETE","OPTIONS" ]
-      allowHeaders: [ "Content-Type", "Content-Length", "Authorization" ]
+      allowHeaders: [ "Content-Type", "Content-Length", "Authorization", "X-App-Key" ]
       exposeHeaders: [ "Content-Length", "Access-Control-Allow-Headers" ]
   grpc:
     host: 127.0.0.1
-    port: 8010
+    port: 8202
     timeout: 10s
 log:
   level: 0
@@ -39,13 +39,13 @@ database:
   - enable: true #是否启用数据库
     name: system
     drive: mysql #数据库类型
-    autoCreate: true #是否自动创建数据库
+    autoCreate: "${PLATFORM_DB_AUTO_CREATE:true}" #是否自动创建数据库
     connect:
-      username: root
-      password: root
-      host: 127.0.0.1
-      port: 3306
-      dbName: ns_manager_v2
+      username: "${PLATFORM_MANAGER_DB_USER:root}"
+      password: "${PLATFORM_MANAGER_DB_PASSWORD:root}"
+      host: "${PLATFORM_DB_HOST:127.0.0.1}"
+      port: "${PLATFORM_DB_PORT:3306}"
+      dbName: "${PLATFORM_MANAGER_DB_NAME:ns_manager_v2}"
       option: ?charset=utf8mb4&parseTime=True&loc=Local
     config:
       transformError:
@@ -72,10 +72,13 @@ signature:
   onlyList:
     /manager/api/menu/register:POST: true
     /manager.api.menu.Menu/RegisterMenu: true
+    /manager/api/entity/register:POST: true
+    /manager.api.entity.Entity/RegisterEntity: true
 redis:
   - enable: true
     name: cache
-    host: 127.0.0.1:6379
+    host: "${PLATFORM_REDIS_ADDR:127.0.0.1:6379}"
+    password: "${PLATFORM_REDIS_PASSWORD:}"
 captcha:
   login:
     length: 6
@@ -110,6 +113,7 @@ business:
       /manager/api/authorize/login:POST: true
       /manager/api/authorize/register:POST: true
       /manager/api/sample/app:GET: true
+      /manager/api/fields:GET: true
       /manager/api/authorize/token/refresh:POST: true
       /manager/api/authorize/oauther/handler:POST: true
       /manager/api/authorize/oauther/login:POST: true
@@ -120,3 +124,5 @@ business:
       /manager/api/authorize/logout:POST: true
       /manager/api/menu/register:POST: true
       /manager.api.menu.Menu/RegisterMenu:GRPC: true
+      /manager/api/entity/register:POST: true
+      /manager.api.entity.Entity/RegisterEntity:GRPC: true

@@ -3,17 +3,13 @@ package main
 import (
 	"context"
 
-	"github.com/limes-cloud/manager/internal/infra/dbs"
-
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/limes-cloud/kratosx"
-	"github.com/limes-cloud/kratosx/library"
-	"github.com/limes-cloud/kratosx/library/db"
 
 	"github.com/limes-cloud/manager/api/errors"
 	"github.com/limes-cloud/manager/internal/app"
 	"github.com/limes-cloud/manager/internal/core"
-	"github.com/limes-cloud/manager/internal/domain/service"
+	initentity "github.com/limes-cloud/manager/internal/initiator/entity"
 	initmenu "github.com/limes-cloud/manager/internal/initiator/menu"
 	"github.com/limes-cloud/manager/internal/middleware"
 )
@@ -27,14 +23,15 @@ func main() {
 			return errors.ParamsError()
 		}),
 		kratosx.WithLibraryOptions(
-			library.WithDBOptions(db.WithHookScope(service.NewScope(
-				dbs.NewScope(),
-				dbs.NewUserDept(),
-			).Hook)),
+		// library.WithDBOptions(db.WithHookScope(service.NewScope(
+		// 	dbs.NewScope(),
+		// 	dbs.NewUserDept(),
+		// ).Hook)),
 		),
 		kratosx.WithMiddleware(middleware.Middleware()...),
 	)
 
+	initentity.Register(core.MustContext(context.Background()))
 	initmenu.Register(core.MustContext(context.Background()))
 
 	if err := srv.App().Run(); err != nil {

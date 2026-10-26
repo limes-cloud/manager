@@ -41,7 +41,7 @@ service Menu {
     option (google.api.http) = {delete: "/manager/api/menu"};
   }
 
-  // RegisterMenu 注册应用菜单
+  // RegisterMenu 注册应用菜单（供各服务启动时自注册菜单/接口权限）
   rpc RegisterMenu(RegisterMenuRequest) returns (RegisterMenuReply) {
     option (google.api.http) = {
       post: "/manager/api/menu/register"

@@ -20,7 +20,7 @@ func NewJob(repo repository.Job) *Job {
 
 // ListJob 获取租户列表
 func (u *Job) ListJob(ctx core.Context, req *types.ListJobRequest) ([]*entity.Job, uint32, error) {
-	list, total, err := u.repo.ListJob(ctx, req)
+	list, total, err := u.repo.ListJob(ctx, req.App, req)
 	if err != nil {
 		ctx.Logger().Warnw("msg", "list job error", "err", err.Error())
 		return nil, 0, errors.ListError()
@@ -49,8 +49,8 @@ func (u *Job) UpdateJob(ctx core.Context, req *entity.Job) error {
 }
 
 // DeleteJob 删除租户
-func (u *Job) DeleteJob(ctx core.Context, id uint32) error {
-	if err := u.repo.DeleteJob(ctx, id); err != nil {
+func (u *Job) DeleteJob(ctx core.Context, app string, id uint32) error {
+	if err := u.repo.DeleteJob(ctx, app, id); err != nil {
 		ctx.Logger().Warnw("msg", "delete job error", "err", err.Error())
 		return errors.DeleteError()
 	}

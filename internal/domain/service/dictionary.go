@@ -3,6 +3,7 @@ package service
 import (
 	"github.com/limes-cloud/kratosx"
 	"github.com/limes-cloud/kratosx/pkg/tree"
+	"github.com/limes-cloud/kratosx/pkg/value"
 	"google.golang.org/protobuf/proto"
 
 	"github.com/limes-cloud/manager/api/errors"
@@ -111,7 +112,7 @@ func (u *Dictionary) UpdateDictionaryValue(ctx kratosx.Context, dictValue *entit
 	}
 
 	// 是数的情况下，不能选择自己作为父节点
-	if dictionary.Type == "tree" && dictValue.Id == dictValue.ParentId {
+	if dictionary.Type == "tree" && dictValue.Id == value.Value(dictValue.ParentId) {
 		return errors.UpdateError("不能选择自己作为父节点")
 	}
 

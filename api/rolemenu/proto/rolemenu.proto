@@ -10,7 +10,7 @@ option java_package = "manager.api.rolemenu";
 
 message GetRoleMenuIdsRequest {
   uint32 roleId = 1 [(validate.rules).uint32 = {gte: 1}];
-  optional uint32 appId = 2 [(validate.rules).uint32 = {gte: 1}];
+  optional string app = 2 [(validate.rules).string = {max_len: 64}];
 }
 
 message GetRoleMenuIdsReply {
@@ -40,7 +40,7 @@ message DeleteMenuRolesRequest {
 message DeleteMenuRolesReply {}
 
 message CreateRoleMenusRequest {
-  uint32 appId = 1 [(validate.rules).uint32 = {gte: 1}];
+  string app = 1 [(validate.rules).string = {min_len: 1, max_len: 64}];
   uint32 roleId = 2 [(validate.rules).uint32 = {gte: 1}];
   repeated uint32 menuIds = 3 [(validate.rules).repeated = {min_items: 1}];
 }

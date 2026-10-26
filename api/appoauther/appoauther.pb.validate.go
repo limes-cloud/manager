@@ -187,10 +187,10 @@ func (m *ListAppOAutherRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	if m.GetAppId() < 1 {
+	if l := utf8.RuneCountInString(m.GetApp()); l < 1 || l > 64 {
 		err := ListAppOAutherRequestValidationError{
-			field:  "AppId",
-			reason: "value must be greater than or equal to 1",
+			field:  "App",
+			reason: "value length must be between 1 and 64 runes, inclusive",
 		}
 		if !all {
 			return err
@@ -487,10 +487,10 @@ func (m *CreateAppOAutherRequest) validate(all bool) error {
 
 	var errors []error
 
-	if m.GetAppId() < 1 {
+	if l := utf8.RuneCountInString(m.GetApp()); l < 1 || l > 64 {
 		err := CreateAppOAutherRequestValidationError{
-			field:  "AppId",
-			reason: "value must be greater than or equal to 1",
+			field:  "App",
+			reason: "value length must be between 1 and 64 runes, inclusive",
 		}
 		if !all {
 			return err
@@ -932,7 +932,7 @@ func (m *ListAppOAutherReply_Data) validate(all bool) error {
 
 	// no validation rules for Id
 
-	// no validation rules for AppId
+	// no validation rules for App
 
 	// no validation rules for OautherId
 

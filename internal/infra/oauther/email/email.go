@@ -51,8 +51,8 @@ func (e *Email) Visible(_ core.Context, _ *types.OAutherVisibleRequest) (*types.
 	}, nil
 }
 
-// Handler 前置处理
-func (e *Email) Handler(ctx core.Context, req *types.OAutherHandleRequest) (*types.OAutherHandleReply, error) {
+// Start 前置处理
+func (e *Email) Start(ctx core.Context, req *types.OAutherStartRequest) (*types.OAutherStartReply, error) {
 	// 判断是否为邮箱账号
 	if !value.IsEmail(req.Account) {
 		return nil, errors.New("邮箱输入错误")
@@ -85,7 +85,7 @@ func (e *Email) Handler(ctx core.Context, req *types.OAutherHandleRequest) (*typ
 	}
 
 	// 返回数据
-	return &types.OAutherHandleReply{
+	return &types.OAutherStartReply{
 		UUID:   cptReply.UUID,
 		Action: types.OAutherWayActionCaptcha,
 		Tip:    "验证码登陆",
@@ -93,7 +93,7 @@ func (e *Email) Handler(ctx core.Context, req *types.OAutherHandleRequest) (*typ
 	}, nil
 }
 
-func (e *Email) GetToken(ctx core.Context, req *types.OAutherTokenRequest) (*types.OAutherTokenReply, error) {
+func (e *Email) Complete(ctx core.Context, req *types.OAutherCompleteRequest) (*types.OAutherIdentity, error) {
 	// 获取验证器
 	cpt, err := ctx.Captcha().Get(ctx, email)
 	if err != nil {
@@ -112,13 +112,9 @@ func (e *Email) GetToken(ctx core.Context, req *types.OAutherTokenRequest) (*typ
 		return nil, err
 	}
 
-	return &types.OAutherTokenReply{
+	return &types.OAutherIdentity{
 		OID: req.Account,
 	}, nil
-}
-
-func (e *Email) GetInfo(_ core.Context, req *types.OAutherInfoRequest) (*types.OAutherInfoReply, error) {
-	return &types.OAutherInfoReply{OID: req.OID}, nil
 }
 
 func (e *Email) Send(email string, req *captcha.GetCaptchaResponse) error {

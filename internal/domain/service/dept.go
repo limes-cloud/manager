@@ -27,7 +27,7 @@ func NewDept(
 
 // ListDeptClassify 获取租户列表
 func (u *Dept) ListDeptClassify(ctx core.Context, req *types.ListDeptClassifyRequest) ([]*entity.DeptClassify, uint32, error) {
-	list, total, err := u.repo.ListDeptClassify(ctx, req)
+	list, total, err := u.repo.ListDeptClassify(ctx, req.App, req)
 	if err != nil {
 		ctx.Logger().Warnw("msg", "list dept classify error", "err", err.Error())
 		return nil, 0, errors.ListError(err.Error())
@@ -55,8 +55,8 @@ func (u *Dept) UpdateDeptClassify(ctx core.Context, req *entity.DeptClassify) er
 }
 
 // DeleteDeptClassify 删除租户
-func (u *Dept) DeleteDeptClassify(ctx core.Context, id uint32) error {
-	if err := u.repo.DeleteDeptClassify(ctx, id); err != nil {
+func (u *Dept) DeleteDeptClassify(ctx core.Context, app string, id uint32) error {
+	if err := u.repo.DeleteDeptClassify(ctx, app, id); err != nil {
 		ctx.Logger().Warnw("msg", "delete dept classify error", "err", err.Error())
 		return errors.DeleteError(err.Error())
 	}
@@ -64,8 +64,8 @@ func (u *Dept) DeleteDeptClassify(ctx core.Context, id uint32) error {
 }
 
 // GetDept 获取租户列表
-func (u *Dept) GetDept(ctx core.Context, id uint32) (*entity.Dept, error) {
-	res, err := u.repo.GetDept(ctx, id)
+func (u *Dept) GetDept(ctx core.Context, app string, id uint32) (*entity.Dept, error) {
+	res, err := u.repo.GetDept(ctx, app, id)
 	if err != nil {
 		ctx.Logger().Warnw("msg", "get app error", "err", err.Error())
 		return nil, errors.GetError(err.Error())
@@ -75,7 +75,7 @@ func (u *Dept) GetDept(ctx core.Context, id uint32) (*entity.Dept, error) {
 
 // ListDept 获取租户列表
 func (u *Dept) ListDept(ctx core.Context, req *types.ListDeptRequest) ([]*entity.Dept, error) {
-	list, err := u.repo.ListDept(ctx, req)
+	list, err := u.repo.ListDept(ctx, req.App, req)
 	if err != nil {
 		ctx.Logger().Warnw("msg", "list dept error", "err", err.Error())
 		return nil, errors.ListError(err.Error())
@@ -109,8 +109,8 @@ func (u *Dept) UpdateDept(ctx core.Context, req *entity.Dept) error {
 }
 
 // DeleteDept 删除租户
-func (u *Dept) DeleteDept(ctx core.Context, id uint32) error {
-	if err := u.repo.DeleteDept(ctx, id); err != nil {
+func (u *Dept) DeleteDept(ctx core.Context, app string, id uint32) error {
+	if err := u.repo.DeleteDept(ctx, app, id); err != nil {
 		ctx.Logger().Warnw("msg", "delete dept error", "err", err.Error())
 		return errors.DeleteError(err.Error())
 	}

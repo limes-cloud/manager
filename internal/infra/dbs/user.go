@@ -40,7 +40,6 @@ func (u *User) GetUserByUsername(ctx core.Context, keyword string) (*entity.User
 		First(&m).Error
 }
 
-
 // ListUser 获取列表
 func (u *User) ListUser(ctx core.Context, req *types.ListUserRequest) ([]*entity.User, uint32, error) {
 	var (
@@ -83,9 +82,9 @@ func (u *User) ListUser(ctx core.Context, req *types.ListUserRequest) ([]*entity
 	if len(req.CreatedAts) == 2 {
 		db = db.Where("createdAt between ?", req.CreatedAts)
 	}
-	if req.AppId != nil {
-		db = db.Joins("Authorize", ctx.DB().Where("Authorize.app_id = ?", *req.AppId)).
-			Where("Authorize.app_id is not null")
+	if req.App != nil {
+		db = db.Joins("Authorize", ctx.DB().Where("Authorize.app = ?", *req.App)).
+			Where("Authorize.app is not null")
 	}
 
 	// 查询条件下数据总数

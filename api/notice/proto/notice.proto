@@ -65,7 +65,7 @@ message GetNoticeReply {
     string logo = 3;
   }
   uint32 id = 1;
-  uint32 appId = 2;
+  string app = 2;
   uint32 classifyId = 3;
   string title = 4;
   string description = 5;
@@ -75,7 +75,7 @@ message GetNoticeReply {
   optional bool status = 9;
   uint32 createdAt = 10;
   uint32 updatedAt = 11;
-  App app = 12;
+  App appInfo = 12;
   Classify classify = 13;
 }
 
@@ -85,7 +85,7 @@ message ListNoticeRequest {
     gte: 1
     lte: 50
   }];
-  optional uint32 appId = 3 [(validate.rules).uint32 = {gte: 1}];
+  optional string app = 3 [(validate.rules).string = {max_len: 64}];
   optional uint32 classifyId = 4 [(validate.rules).uint32 = {gte: 1}];
   optional string title = 5 [(validate.rules).string = {
     min_len: 1
@@ -102,7 +102,7 @@ message ListVisibleNoticeRequest {
     gte: 1
     lte: 50
   }];
-  optional uint32 appId = 3 [(validate.rules).uint32 = {gte: 1}];
+  optional string app = 3 [(validate.rules).string = {max_len: 64}];
   optional uint32 classifyId = 4 [(validate.rules).uint32 = {gte: 1}];
   optional string title = 5 [(validate.rules).string = {
     min_len: 1
@@ -125,7 +125,7 @@ message ListNoticeReply {
 
   message Notice {
     uint32 id = 1;
-    uint32 appId = 2;
+    string app = 2;
     uint32 classifyId = 3;
     string title = 4;
     string description = 5;
@@ -134,7 +134,7 @@ message ListNoticeReply {
     optional bool status = 8;
     uint32 createdAt = 9;
     uint32 updatedAt = 10;
-    App app = 11;
+    App appInfo = 11;
     Classify classify = 12;
   }
   uint32 total = 1;
@@ -142,7 +142,7 @@ message ListNoticeReply {
 }
 
 message CreateNoticeRequest {
-  uint32 appId = 1 [(validate.rules).uint32 = {gte: 1}];
+  string app = 1 [(validate.rules).string = {min_len: 1, max_len: 64}];
   uint32 classifyId = 2 [(validate.rules).uint32 = {gte: 1}];
   string title = 3 [(validate.rules).string = {
     min_len: 1
@@ -161,7 +161,7 @@ message CreateNoticeReply {
 
 message UpdateNoticeRequest {
   uint32 id = 1;
-  optional uint32 appId = 2 [(validate.rules).uint32 = {gte: 1}];
+  optional string app = 2 [(validate.rules).string = {max_len: 64}];
   optional uint32 classifyId = 3 [(validate.rules).uint32 = {gte: 1}];
   optional string title = 4 [(validate.rules).string = {
     min_len: 1

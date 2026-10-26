@@ -6,6 +6,7 @@ type ListDeptUserRequest struct {
 	page.Search
 	DeptId uint32  `json:"deptId"`
 	Name   *string `json:"name"`
+	App    string  `json:"app"`
 }
 
 type ListUserDeptRequest struct {
@@ -14,6 +15,7 @@ type ListUserDeptRequest struct {
 	UserId    uint32   `json:"userId"`
 	Dept      *string  `json:"dept"`
 	Job       *string  `json:"job"`
+	App       string   `json:"app"`
 }
 
 type DeleteDeptUsersRequest struct {

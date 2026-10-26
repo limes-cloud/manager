@@ -5,7 +5,7 @@ import (
 )
 
 type Feedback struct {
-	AppId           uint32            `json:"appId" gorm:"column:app_id"`
+	App             string            `json:"app" gorm:"column:app"`
 	UserId          uint32            `json:"userId" gorm:"column:user_id"`
 	ClassifyId      uint32            `json:"classifyId" gorm:"column:classify_id"`
 	Title           string            `json:"title" gorm:"column:title"`
@@ -19,9 +19,9 @@ type Feedback struct {
 	Md5             string            `json:"md5" gorm:"column:md5"`
 	ProcessedBy     *uint32           `json:"processedBy" gorm:"column:processed_by"`
 	ProcessedResult *string           `json:"processedResult" gorm:"column:processed_result"`
-	App             *App              `json:"app"`
-	User            *User             `json:"user"`
-	Classify        *FeedbackClassify `json:"classify" gorm:"foreignKey:classify_id;references:id"`
+	AppInfo         *App              `json:"appInfo" gorm:"foreignKey:app;references:keyword"`        // 所属应用（app 关联 app.keyword）
+	User            *User             `json:"user" gorm:"foreignKey:user_id;references:id"`            // 反馈用户
+	Classify        *FeedbackClassify `json:"classify" gorm:"foreignKey:classify_id;references:id"`    // 反馈分类
 	ImageUrls       []string          `json:"imageUrls" gorm:"-"`
 	model.BaseModel
 }

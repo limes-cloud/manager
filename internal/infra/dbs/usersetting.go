@@ -28,7 +28,7 @@ func NewUserSetting() *UserSetting {
 func (u *UserSetting) GetUserSetting(ctx core.Context, req *types.GetUserSettingRequest) (*entity.UserSetting, error) {
 	ms := entity.UserSetting{}
 	db := ctx.DB().Model(&entity.UserSetting{UserId: req.UserId}).
-		Where("app_id = ?", req.AppId).
+		Where("app = ?", req.App).
 		Where("user_id = ?", req.UserId)
 	return &ms, db.First(&ms).Error
 }

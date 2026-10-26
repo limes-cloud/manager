@@ -55,6 +55,7 @@ func (app *Job) ListJob(c context.Context, req *job.ListJobRequest) (*job.ListJo
 		ctx.Logger().Errorw("msg", "list job req transform error", "err", err)
 		return nil, errors.TransformError()
 	}
+	in.App = ctx.AppKey(in.App)
 
 	// 调用服务
 	list, total, err := app.srv.ListJob(ctx, &in)
@@ -83,6 +84,7 @@ func (app *Job) CreateJob(c context.Context, req *job.CreateJobRequest) (*job.Cr
 		ctx.Logger().Errorw("msg", "create job req transform error", "err", err)
 		return nil, errors.TransformError()
 	}
+	in.App = ctx.AppKey(in.App)
 
 	// 调用服务
 	id, err := app.srv.CreateJob(ctx, &in)
@@ -105,6 +107,7 @@ func (app *Job) UpdateJob(c context.Context, req *job.UpdateJobRequest) (*job.Up
 		ctx.Logger().Errorw("msg", "create job req transform error", "err", err)
 		return nil, errors.TransformError()
 	}
+	in.App = ctx.AppKey(in.App)
 
 	// 调用服务
 	if err := app.srv.UpdateJob(ctx, &in); err != nil {
@@ -116,5 +119,6 @@ func (app *Job) UpdateJob(c context.Context, req *job.UpdateJobRequest) (*job.Up
 
 // DeleteJob 删除租户信息
 func (app *Job) DeleteJob(c context.Context, req *job.DeleteJobRequest) (*job.DeleteJobReply, error) {
-	return &job.DeleteJobReply{}, app.srv.DeleteJob(core.MustContext(c), req.Id)
+	ctx := core.MustContext(c)
+	return &job.DeleteJobReply{}, app.srv.DeleteJob(ctx, ctx.AppKey(), req.Id)
 }

@@ -10,7 +10,6 @@ import (
 	context "context"
 	http "github.com/go-kratos/kratos/v2/transport/http"
 	binding "github.com/go-kratos/kratos/v2/transport/http/binding"
-	emptypb "google.golang.org/protobuf/types/known/emptypb"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -26,11 +25,10 @@ const OperationEntityCreateEntityRule = "/manager.api.entity.Entity/CreateEntity
 const OperationEntityDeleteEntity = "/manager.api.entity.Entity/DeleteEntity"
 const OperationEntityDeleteEntityField = "/manager.api.entity.Entity/DeleteEntityField"
 const OperationEntityDeleteEntityRule = "/manager.api.entity.Entity/DeleteEntityRule"
-const OperationEntityImportEntity = "/manager.api.entity.Entity/ImportEntity"
 const OperationEntityListEntity = "/manager.api.entity.Entity/ListEntity"
 const OperationEntityListEntityField = "/manager.api.entity.Entity/ListEntityField"
 const OperationEntityListEntityRule = "/manager.api.entity.Entity/ListEntityRule"
-const OperationEntityLoadEntity = "/manager.api.entity.Entity/LoadEntity"
+const OperationEntityRegisterEntity = "/manager.api.entity.Entity/RegisterEntity"
 const OperationEntityUpdateEntity = "/manager.api.entity.Entity/UpdateEntity"
 const OperationEntityUpdateEntityField = "/manager.api.entity.Entity/UpdateEntityField"
 const OperationEntityUpdateEntityRule = "/manager.api.entity.Entity/UpdateEntityRule"
@@ -48,16 +46,14 @@ type EntityHTTPServer interface {
 	DeleteEntityField(context.Context, *DeleteEntityFieldRequest) (*DeleteEntityFieldReply, error)
 	// DeleteEntityRule DeleteEntityRule 删除实体规则
 	DeleteEntityRule(context.Context, *DeleteEntityRuleRequest) (*DeleteEntityRuleReply, error)
-	// ImportEntity ImportEntity 载入全部系统的实体
-	ImportEntity(context.Context, *ImportEntityRequest) (*emptypb.Empty, error)
 	// ListEntity ListEntity 获取实体列表
 	ListEntity(context.Context, *ListEntityRequest) (*ListEntityReply, error)
 	// ListEntityField ListEntityField 获取实体字段列表
 	ListEntityField(context.Context, *ListEntityFieldRequest) (*ListEntityFieldReply, error)
 	// ListEntityRule ListEntityRule 获取实体规则列表
 	ListEntityRule(context.Context, *ListEntityRuleRequest) (*ListEntityRuleReply, error)
-	// LoadEntity LoadEntity 载入全部系统的实体
-	LoadEntity(context.Context, *emptypb.Empty) (*LoadEntityReply, error)
+	// RegisterEntity RegisterEntity 应用启动自注册实体与字段（供各服务启动时调用）
+	RegisterEntity(context.Context, *RegisterEntityRequest) (*RegisterEntityReply, error)
 	// UpdateEntity UpdateEntity 更新实体
 	UpdateEntity(context.Context, *UpdateEntityRequest) (*UpdateEntityReply, error)
 	// UpdateEntityField UpdateEntityField 更新实体字段
@@ -68,8 +64,6 @@ type EntityHTTPServer interface {
 
 func RegisterEntityHTTPServer(s *http.Server, srv EntityHTTPServer) {
 	r := s.Route("/")
-	r.GET("/manager/api/entity/load", _Entity_LoadEntity0_HTTP_Handler(srv))
-	r.POST("/manager/api/entity/import", _Entity_ImportEntity0_HTTP_Handler(srv))
 	r.GET("/manager/api/entities", _Entity_ListEntity0_HTTP_Handler(srv))
 	r.POST("/manager/api/entity", _Entity_CreateEntity0_HTTP_Handler(srv))
 	r.PUT("/manager/api/entity", _Entity_UpdateEntity0_HTTP_Handler(srv))
@@ -82,47 +76,7 @@ func RegisterEntityHTTPServer(s *http.Server, srv EntityHTTPServer) {
 	r.POST("/manager/api/entity/rule", _Entity_CreateEntityRule0_HTTP_Handler(srv))
 	r.PUT("/manager/api/entity/rule", _Entity_UpdateEntityRule0_HTTP_Handler(srv))
 	r.DELETE("/manager/api/entity/rule", _Entity_DeleteEntityRule0_HTTP_Handler(srv))
-}
-
-func _Entity_LoadEntity0_HTTP_Handler(srv EntityHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in emptypb.Empty
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationEntityLoadEntity)
-		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
-			return srv.LoadEntity(ctx, req.(*emptypb.Empty))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*LoadEntityReply)
-		return ctx.Result(200, reply)
-	}
-}
-
-func _Entity_ImportEntity0_HTTP_Handler(srv EntityHTTPServer) func(ctx http.Context) error {
-	return func(ctx http.Context) error {
-		var in ImportEntityRequest
-		if err := ctx.Bind(&in); err != nil {
-			return err
-		}
-		if err := ctx.BindQuery(&in); err != nil {
-			return err
-		}
-		http.SetOperation(ctx, OperationEntityImportEntity)
-		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
-			return srv.ImportEntity(ctx, req.(*ImportEntityRequest))
-		})
-		out, err := h(ctx, &in)
-		if err != nil {
-			return err
-		}
-		reply := out.(*emptypb.Empty)
-		return ctx.Result(200, reply)
-	}
+	r.POST("/manager/api/entity/register", _Entity_RegisterEntity0_HTTP_Handler(srv))
 }
 
 func _Entity_ListEntity0_HTTP_Handler(srv EntityHTTPServer) func(ctx http.Context) error {
@@ -371,6 +325,28 @@ func _Entity_DeleteEntityRule0_HTTP_Handler(srv EntityHTTPServer) func(ctx http.
 	}
 }
 
+func _Entity_RegisterEntity0_HTTP_Handler(srv EntityHTTPServer) func(ctx http.Context) error {
+	return func(ctx http.Context) error {
+		var in RegisterEntityRequest
+		if err := ctx.Bind(&in); err != nil {
+			return err
+		}
+		if err := ctx.BindQuery(&in); err != nil {
+			return err
+		}
+		http.SetOperation(ctx, OperationEntityRegisterEntity)
+		h := ctx.Middleware(func(ctx context.Context, req any) (any, error) {
+			return srv.RegisterEntity(ctx, req.(*RegisterEntityRequest))
+		})
+		out, err := h(ctx, &in)
+		if err != nil {
+			return err
+		}
+		reply := out.(*RegisterEntityReply)
+		return ctx.Result(200, reply)
+	}
+}
+
 type EntityHTTPClient interface {
 	CreateEntity(ctx context.Context, req *CreateEntityRequest, opts ...http.CallOption) (rsp *CreateEntityReply, err error)
 	CreateEntityField(ctx context.Context, req *CreateEntityFieldRequest, opts ...http.CallOption) (rsp *CreateEntityFieldReply, err error)
@@ -378,11 +354,10 @@ type EntityHTTPClient interface {
 	DeleteEntity(ctx context.Context, req *DeleteEntityRequest, opts ...http.CallOption) (rsp *DeleteEntityReply, err error)
 	DeleteEntityField(ctx context.Context, req *DeleteEntityFieldRequest, opts ...http.CallOption) (rsp *DeleteEntityFieldReply, err error)
 	DeleteEntityRule(ctx context.Context, req *DeleteEntityRuleRequest, opts ...http.CallOption) (rsp *DeleteEntityRuleReply, err error)
-	ImportEntity(ctx context.Context, req *ImportEntityRequest, opts ...http.CallOption) (rsp *emptypb.Empty, err error)
 	ListEntity(ctx context.Context, req *ListEntityRequest, opts ...http.CallOption) (rsp *ListEntityReply, err error)
 	ListEntityField(ctx context.Context, req *ListEntityFieldRequest, opts ...http.CallOption) (rsp *ListEntityFieldReply, err error)
 	ListEntityRule(ctx context.Context, req *ListEntityRuleRequest, opts ...http.CallOption) (rsp *ListEntityRuleReply, err error)
-	LoadEntity(ctx context.Context, req *emptypb.Empty, opts ...http.CallOption) (rsp *LoadEntityReply, err error)
+	RegisterEntity(ctx context.Context, req *RegisterEntityRequest, opts ...http.CallOption) (rsp *RegisterEntityReply, err error)
 	UpdateEntity(ctx context.Context, req *UpdateEntityRequest, opts ...http.CallOption) (rsp *UpdateEntityReply, err error)
 	UpdateEntityField(ctx context.Context, req *UpdateEntityFieldRequest, opts ...http.CallOption) (rsp *UpdateEntityFieldReply, err error)
 	UpdateEntityRule(ctx context.Context, req *UpdateEntityRuleRequest, opts ...http.CallOption) (rsp *UpdateEntityRuleReply, err error)
@@ -474,19 +449,6 @@ func (c *EntityHTTPClientImpl) DeleteEntityRule(ctx context.Context, in *DeleteE
 	return &out, err
 }
 
-func (c *EntityHTTPClientImpl) ImportEntity(ctx context.Context, in *ImportEntityRequest, opts ...http.CallOption) (*emptypb.Empty, error) {
-	var out emptypb.Empty
-	pattern := "/manager/api/entity/import"
-	path := binding.EncodeURL(pattern, in, false)
-	opts = append(opts, http.Operation(OperationEntityImportEntity))
-	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return &out, err
-}
-
 func (c *EntityHTTPClientImpl) ListEntity(ctx context.Context, in *ListEntityRequest, opts ...http.CallOption) (*ListEntityReply, error) {
 	var out ListEntityReply
 	pattern := "/manager/api/entities"
@@ -526,13 +488,13 @@ func (c *EntityHTTPClientImpl) ListEntityRule(ctx context.Context, in *ListEntit
 	return &out, err
 }
 
-func (c *EntityHTTPClientImpl) LoadEntity(ctx context.Context, in *emptypb.Empty, opts ...http.CallOption) (*LoadEntityReply, error) {
-	var out LoadEntityReply
-	pattern := "/manager/api/entity/load"
-	path := binding.EncodeURL(pattern, in, true)
-	opts = append(opts, http.Operation(OperationEntityLoadEntity))
+func (c *EntityHTTPClientImpl) RegisterEntity(ctx context.Context, in *RegisterEntityRequest, opts ...http.CallOption) (*RegisterEntityReply, error) {
+	var out RegisterEntityReply
+	pattern := "/manager/api/entity/register"
+	path := binding.EncodeURL(pattern, in, false)
+	opts = append(opts, http.Operation(OperationEntityRegisterEntity))
 	opts = append(opts, http.PathTemplate(pattern))
-	err := c.cc.Invoke(ctx, "GET", path, nil, &out, opts...)
+	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)
 	if err != nil {
 		return nil, err
 	}

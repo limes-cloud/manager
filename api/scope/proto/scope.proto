@@ -9,22 +9,21 @@ option java_multiple_files = true;
 option java_package = "manager.api.scope.proto";
 
 message GetScopeRequest {
-  string database = 1;
-  string model = 2;
-  string method = 3;
+  string database = 1 [(validate.rules).string = {min_len: 1, max_len: 64}];
+  string model = 2 [(validate.rules).string = {min_len: 1, max_len: 64}];
+  string method = 3 [(validate.rules).string = {min_len: 1, max_len: 64}];
 }
 
 message GetScopeReply {
   bool allDept = 1;
   repeated uint32 deptScopes = 2;
   string rule = 3;
-  repeated string fields = 4;
   uint32 userId = 5;
   uint32 deptId = 6;
 }
 
 message GetUserDeptIdRequest {
-  uint32 userId = 1;
+  uint32 userId = 1 [(validate.rules).uint32 = {gte: 1}];
 }
 message GetUserDeptIdReply {
   uint32 deptId = 1;

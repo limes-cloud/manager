@@ -11,19 +11,6 @@ option java_multiple_files = true;
 option java_package = "manager.api.entity";
 
 service Entity {
-  // LoadEntity 载入全部系统的实体
-  rpc LoadEntity(google.protobuf.Empty) returns (LoadEntityReply) {
-    option (google.api.http) = {get: "/manager/api/entity/load"};
-  }
-
-  // ImportEntity 载入全部系统的实体
-  rpc ImportEntity(ImportEntityRequest) returns (google.protobuf.Empty) {
-    option (google.api.http) = {
-      post: "/manager/api/entity/import"
-      body: "*"
-    };
-  }
-
   // ListEntity 获取实体列表
   rpc ListEntity(ListEntityRequest) returns (ListEntityReply) {
     option (google.api.http) = {get: "/manager/api/entities"};
@@ -100,5 +87,13 @@ service Entity {
   // DeleteEntityRule 删除实体规则
   rpc DeleteEntityRule(DeleteEntityRuleRequest) returns (DeleteEntityRuleReply) {
     option (google.api.http) = {delete: "/manager/api/entity/rule"};
+  }
+
+  // RegisterEntity 应用启动自注册实体与字段（供各服务启动时调用）
+  rpc RegisterEntity(RegisterEntityRequest) returns (RegisterEntityReply) {
+    option (google.api.http) = {
+      post: "/manager/api/entity/register"
+      body: "*"
+    };
   }
 }

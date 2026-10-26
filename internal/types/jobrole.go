@@ -8,14 +8,17 @@ type ListJobRoleRequest struct {
 
 	JobId uint32  `json:"jobId"`
 	Name  *string `json:"name"`
+	App   string  `json:"app"`
 }
 
 type CreateJobRoleRequest struct {
 	RoleId uint32 `json:"roleId"`
 	JobId  uint32 `json:"jobId"`
+	App    string `json:"app"`
 }
 
 type DeleteJobRoleRequest struct {
 	JobId  uint32 `json:"jobId"`
 	RoleId uint32 `json:"roleId"`
+	App    string `json:"app"`
 }

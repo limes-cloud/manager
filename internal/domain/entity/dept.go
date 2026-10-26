@@ -6,6 +6,7 @@ import (
 )
 
 type DeptClassify struct {
+	App         string  `json:"app" gorm:"column:app"`
 	Keyword     string  `json:"keyword" gorm:"column:keyword"`
 	Name        string  `json:"name" gorm:"column:name"`
 	Description *string `json:"description" gorm:"column:description"`
@@ -15,6 +16,7 @@ type DeptClassify struct {
 
 type Dept struct {
 	Id          uint32        `json:"id" gorm:"column:id;hook:dept[rud:w]"`
+	App         string        `json:"app" gorm:"column:app"`
 	ParentId    *uint32       `json:"parentId" gorm:"column:parent_id;hook:dept[cu:c]"`
 	ClassifyId  uint32        `json:"classifyId"  gorm:"column:classify_id"`
 	Logo        string        `json:"logo" gorm:"column:logo"`
@@ -24,7 +26,7 @@ type Dept struct {
 	Description *string       `json:"description" gorm:"column:description"`
 	CreatedAt   int64         `json:"createdAt,omitempty" gorm:"column:created_at;"`
 	UpdatedAt   int64         `json:"updatedAt,omitempty" gorm:"column:updated_at;"`
-	Classify    *DeptClassify `json:"classify"`
+	Classify    *DeptClassify `json:"classify" gorm:"foreignKey:classify_id;references:id"`
 	Children    []*Dept       `json:"children" gorm:"-"`
 }
 

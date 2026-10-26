@@ -29,9 +29,9 @@ func (woa ServiceAccount) Visible(_ core.Context, req *types.OAutherVisibleReque
 	}, nil
 }
 
-func (woa ServiceAccount) Handler(_ core.Context, req *types.OAutherHandleRequest) (*types.OAutherHandleReply, error) {
+func (woa ServiceAccount) Start(_ core.Context, req *types.OAutherStartRequest) (*types.OAutherStartReply, error) {
 	uid := crypto.MD5([]byte(uuid.NewString()))
-	resp := types.OAutherHandleReply{
+	resp := types.OAutherStartReply{
 		UUID:   uid,
 		Action: types.OAutherWayActionJump,
 		Tip:    "点击跳转授权",
@@ -57,7 +57,15 @@ func (woa ServiceAccount) Handler(_ core.Context, req *types.OAutherHandleReques
 	return &resp, nil
 }
 
-func (woa ServiceAccount) GetToken(ctx core.Context, req *types.OAutherTokenRequest) (*types.OAutherTokenReply, error) {
+func (woa ServiceAccount) Complete(ctx core.Context, req *types.OAutherCompleteRequest) (*types.OAutherIdentity, error) {
+	token, oid, expire, err := woa.getToken(ctx, req.Code)
+	if err != nil {
+		return nil, err
+	}
+	return woa.getInfo(ctx, oid, token, expire)
+}
+
+func (woa ServiceAccount) getToken(ctx core.Context, code string) (string, string, int64, error) {
 	res := struct {
 		AccessToken string `json:"access_token"`
 		ExpiresIn   int    `json:"expires_in"`
@@ -68,24 +76,20 @@ func (woa ServiceAccount) GetToken(ctx core.Context, req *types.OAutherTokenRequ
 		request.SetQueryParam("appid", woa.conf.Ak).
 			SetQueryParam("secret", woa.conf.Sk).
 			SetQueryParam("grant_type", "authorization_code").
-			SetQueryParam("code", req.Code)
+			SetQueryParam("code", code)
 	}).Post("https://api.weixin.qq.com/sns/oauth2/access_token", nil)
 	if err != nil {
-		return nil, err
+		return "", "", 0, err
 	}
 
 	if err = response.Result(&res); err != nil {
-		return nil, err
+		return "", "", 0, err
 	}
 
-	return &types.OAutherTokenReply{
-		OID:    res.OpenId,
-		Token:  res.AccessToken,
-		Expire: time.Now().Unix() + int64(res.ExpiresIn),
-	}, nil
+	return res.AccessToken, res.OpenId, time.Now().Unix() + int64(res.ExpiresIn), nil
 }
 
-func (woa ServiceAccount) GetInfo(ctx core.Context, req *types.OAutherInfoRequest) (*types.OAutherInfoReply, error) {
+func (woa ServiceAccount) getInfo(ctx core.Context, oid string, token string, expire int64) (*types.OAutherIdentity, error) {
 	res := struct {
 		Openid     string `json:"openid"`
 		Nickname   string `json:"nickname"`
@@ -98,8 +102,8 @@ func (woa ServiceAccount) GetInfo(ctx core.Context, req *types.OAutherInfoReques
 	}{}
 
 	response, err := ctx.Request().Option(func(request *resty.Request) {
-		request.SetQueryParam("access_token", req.Token).
-			SetQueryParam("openid", req.OID).
+		request.SetQueryParam("access_token", token).
+			SetQueryParam("openid", oid).
 			SetQueryParam("lang", "zh_CN")
 	}).Post("https://api.weixin.qq.com/sns/userinfo", nil)
 	if err != nil {
@@ -120,7 +124,7 @@ func (woa ServiceAccount) GetInfo(ctx core.Context, req *types.OAutherInfoReques
 		}
 	}
 
-	return &types.OAutherInfoReply{
+	return &types.OAutherIdentity{
 		OID:      res.Openid,
 		NickName: res.Nickname,
 		Gender:   transSex(res.Sex),
@@ -129,5 +133,7 @@ func (woa ServiceAccount) GetInfo(ctx core.Context, req *types.OAutherInfoReques
 		Country:  res.Country,
 		Avatar:   res.Headimgurl,
 		UnionId:  res.Unionid,
+		Token:    token,
+		Expire:   expire,
 	}, nil
 }

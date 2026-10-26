@@ -57,11 +57,38 @@ func (m *GetScopeRequest) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for Database
+	if l := utf8.RuneCountInString(m.GetDatabase()); l < 1 || l > 64 {
+		err := GetScopeRequestValidationError{
+			field:  "Database",
+			reason: "value length must be between 1 and 64 runes, inclusive",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
 
-	// no validation rules for Model
+	if l := utf8.RuneCountInString(m.GetModel()); l < 1 || l > 64 {
+		err := GetScopeRequestValidationError{
+			field:  "Model",
+			reason: "value length must be between 1 and 64 runes, inclusive",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
 
-	// no validation rules for Method
+	if l := utf8.RuneCountInString(m.GetMethod()); l < 1 || l > 64 {
+		err := GetScopeRequestValidationError{
+			field:  "Method",
+			reason: "value length must be between 1 and 64 runes, inclusive",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
 
 	if len(errors) > 0 {
 		return GetScopeRequestMultiError(errors)
@@ -271,7 +298,16 @@ func (m *GetUserDeptIdRequest) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for UserId
+	if m.GetUserId() < 1 {
+		err := GetUserDeptIdRequestValidationError{
+			field:  "UserId",
+			reason: "value must be greater than or equal to 1",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
 
 	if len(errors) > 0 {
 		return GetUserDeptIdRequestMultiError(errors)

@@ -57,7 +57,7 @@ func (s *AppField) ListAppField(c context.Context, req *appfield.ListAppFieldReq
 		},
 		Keyword: req.Keyword,
 		Name:    req.Name,
-		AppId:   req.AppId,
+		App:     ctx.AppKey(req.App),
 	})
 	if err != nil {
 		return nil, err
@@ -76,10 +76,13 @@ func (s *AppField) ListAppField(c context.Context, req *appfield.ListAppFieldReq
 // CreateAppField 创建应用渠道信息
 func (s *AppField) CreateAppField(c context.Context, req *appfield.CreateAppFieldRequest) (*appfield.CreateAppFieldReply, error) {
 	// 调用服务
-	id, err := s.srv.CreateAppField(core.MustContext(c), &entity.AppField{
-		AppId:    req.AppId,
+	ctx := core.MustContext(c)
+	id, err := s.srv.CreateAppField(ctx, &entity.AppField{
+		App:      ctx.AppKey(req.App),
 		FieldId:  req.FieldId,
 		Required: &req.Required,
+		Unique:   &req.Unique,
+		Sort:     req.Sort,
 	})
 	if err != nil {
 		return nil, err
@@ -92,8 +95,10 @@ func (s *AppField) CreateAppField(c context.Context, req *appfield.CreateAppFiel
 func (s *AppField) UpdateAppField(c context.Context, req *appfield.UpdateAppFieldRequest) (*appfield.UpdateAppFieldReply, error) {
 	// 调用服务
 	err := s.srv.UpdateAppField(core.MustContext(c), &entity.AppField{
-		CreateModel: model.CreateModel{Id: req.Id},
-		Required:          &req.Required,
+		BaseModel: model.BaseModel{Id: req.Id},
+		Required:  &req.Required,
+		Unique:    &req.Unique,
+		Sort:      req.Sort,
 	})
 	if err != nil {
 		return nil, err

@@ -89,6 +89,9 @@ func (app *Notice) ListNotice(c context.Context, req *notice.ListNoticeRequest) 
 		return nil, errors.TransformError()
 	}
 
+	// 解析应用范围：显式 app 优先，否则回退到当前请求 app，避免跨应用返回全部通知
+	in.App = value.Pointer(ctx.AppKey(req.GetApp()))
+
 	// 调用服务
 	list, total, err := app.srv.ListNotice(ctx, &in)
 	if err != nil {
@@ -116,6 +119,9 @@ func (app *Notice) ListVisibleNotice(c context.Context, req *notice.ListVisibleN
 		ctx.Logger().Errorw("msg", "list notice req transform error", "err", err)
 		return nil, errors.TransformError()
 	}
+
+	// 解析应用范围：显式 app 优先，否则回退到当前请求 app
+	in.App = value.Pointer(ctx.AppKey(req.GetApp()))
 
 	// 设置默认参数
 	in.Status = value.Bool(true)

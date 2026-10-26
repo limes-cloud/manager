@@ -8,10 +8,13 @@ import (
 
 type Entity interface {
 	// GetEntityIdByName 查询部门信息
-	GetEntityIdByName(db string, name string) (uint32, bool)
+	GetEntityIdByName(ctx core.Context, app string, db string, name string) (uint32, bool)
 
 	// GetEntity 查询部门信息
 	GetEntity(ctx core.Context, id uint32) (*entity.Entity, error)
+
+	// GetEntityByName 查询指定应用下的实体
+	GetEntityByName(ctx core.Context, app string, db string, name string) (*entity.Entity, error)
 
 	// ListEntity 获取部门信息列表
 	ListEntity(ctx core.Context, req *types.ListEntityRequest) ([]*entity.Entity, error)
@@ -22,8 +25,14 @@ type Entity interface {
 	// UpdateEntity 更新部门信息
 	UpdateEntity(ctx core.Context, req *entity.Entity) error
 
+	// UpdateRegisteredEntity 更新注册实体
+	UpdateRegisteredEntity(ctx core.Context, req *entity.Entity) error
+
 	// DeleteEntity 删除部门信息
 	DeleteEntity(ctx core.Context, id uint32) error
+
+	// DeleteEntities 删除多个实体
+	DeleteEntities(ctx core.Context, ids []uint32) error
 
 	// ListEntityField 获取部门分类列表
 	ListEntityField(ctx core.Context, req *types.ListEntityFieldRequest) ([]*entity.EntityField, uint32, error)
@@ -34,8 +43,14 @@ type Entity interface {
 	// UpdateEntityField 更新部门分类
 	UpdateEntityField(ctx core.Context, req *entity.EntityField) error
 
+	// UpdateRegisteredEntityField 更新注册实体字段
+	UpdateRegisteredEntityField(ctx core.Context, req *entity.EntityField) error
+
 	// DeleteEntityField 删除部门分类
 	DeleteEntityField(ctx core.Context, id uint32) error
+
+	// DeleteEntityFields 删除多个实体字段
+	DeleteEntityFields(ctx core.Context, ids []uint32) error
 
 	GetEntityField(ctx core.Context, id uint32, name string) (*entity.EntityField, error)
 
@@ -48,8 +63,14 @@ type Entity interface {
 	// UpdateEntityRule 更新实体规则
 	UpdateEntityRule(ctx core.Context, req *entity.EntityRule) error
 
+	// UpdateRegisteredEntityRule 更新注册实体规则
+	UpdateRegisteredEntityRule(ctx core.Context, req *entity.EntityRule) error
+
 	// DeleteEntityRule 删除实体规则
 	DeleteEntityRule(ctx core.Context, id uint32) error
+
+	// DeleteEntityRules 删除多个实体规则
+	DeleteEntityRules(ctx core.Context, ids []uint32) error
 
 	GetEntityRule(ctx core.Context, id uint32, name string) (*entity.EntityRule, error)
 }

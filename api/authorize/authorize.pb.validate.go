@@ -57,7 +57,16 @@ func (m *GetImageCaptchaRequest) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for Scene
+	if l := utf8.RuneCountInString(m.GetScene()); l < 1 || l > 32 {
+		err := GetImageCaptchaRequestValidationError{
+			field:  "Scene",
+			reason: "value length must be between 1 and 32 runes, inclusive",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
 
 	if len(errors) > 0 {
 		return GetImageCaptchaRequestMultiError(errors)
@@ -1378,9 +1387,27 @@ func (m *OAutherLoginRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	// no validation rules for Account
+	if utf8.RuneCountInString(m.GetAccount()) > 64 {
+		err := OAutherLoginRequestValidationError{
+			field:  "Account",
+			reason: "value length must be at most 64 runes",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
 
-	// no validation rules for Code
+	if utf8.RuneCountInString(m.GetCode()) > 64 {
+		err := OAutherLoginRequestValidationError{
+			field:  "Code",
+			reason: "value length must be at most 64 runes",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
 
 	if len(errors) > 0 {
 		return OAutherLoginRequestMultiError(errors)

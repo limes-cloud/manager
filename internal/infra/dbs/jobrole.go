@@ -50,7 +50,7 @@ func NewJobRole() *JobRole {
 }
 
 // ListJobRole 获取指定部门的角色列表
-func (jr *JobRole) ListJobRole(ctx core.Context, req *types.ListJobRoleRequest) ([]*entity.Role, uint32, error) {
+func (jr *JobRole) ListJobRole(ctx core.Context, app string, req *types.ListJobRoleRequest) ([]*entity.Role, uint32, error) {
 	var (
 		total int64
 		list  []*entity.Role
@@ -61,6 +61,7 @@ func (jr *JobRole) ListJobRole(ctx core.Context, req *types.ListJobRoleRequest) 
 		Where("job_role.role_id is not null").
 		Where("role.status = 1").
 		Where("job_id = ?", req.JobId)
+	db = db.Where("job_role.app = ?", app).Where("role.app = ?", app)
 	if req.Name != nil {
 		db = db.Where("role.name like ?", *req.Name+"%")
 	}
@@ -77,8 +78,12 @@ func (jr *JobRole) ListJobRole(ctx core.Context, req *types.ListJobRoleRequest) 
 }
 
 // CreateJobRole 批量绑定职位角色关系
-func (jr *JobRole) CreateJobRole(ctx core.Context, jobId, roleId uint32) error {
+func (jr *JobRole) CreateJobRole(ctx core.Context, app string, jobId, roleId uint32) error {
+	if err := jr.validate(ctx, app, jobId, roleId); err != nil {
+		return err
+	}
 	ent := &entity.JobRole{
+		App:    app,
 		JobId:  jobId,
 		RoleId: roleId,
 	}
@@ -92,14 +97,16 @@ func (jr *JobRole) CreateJobRole(ctx core.Context, jobId, roleId uint32) error {
 }
 
 // DeleteJobRole 获取指定菜单的角色列表
-func (jr *JobRole) DeleteJobRole(ctx core.Context, jobId, roleId uint32) error {
+func (jr *JobRole) DeleteJobRole(ctx core.Context, app string, jobId, roleId uint32) error {
 	ent := &entity.JobRole{
+		App:    app,
 		JobId:  jobId,
 		RoleId: roleId,
 	}
 	op := jr.cache.OP(ctx)
 	return ctx.Transaction(func(ctx core.Context) error {
 		if err := ctx.DB().
+			Where("app = ?", app).
 			Where("job_id=?", jobId).
 			Where("role_id=?", roleId).
 			Delete(&ent).Error; err != nil {
@@ -112,15 +119,15 @@ func (jr *JobRole) DeleteJobRole(ctx core.Context, jobId, roleId uint32) error {
 }
 
 // GetRoleIdsByJobIds 获取指定部门绑定的所有角色ID
-func (jr *JobRole) GetRoleIdsByJobIds(jobIds []uint32) []uint32 {
+func (jr *JobRole) GetRoleIdsByJobIds(ctx core.Context, app string, jobIds []uint32) []uint32 {
 	var (
 		ids  = make([]uint32, 0)
 		keys = jr.cache.Keys()
 	)
 
 	for _, key := range keys {
-		did, rid := jr.splitCacheKey(key)
-		if rid != 0 && value.InList(jobIds, did) {
+		itemApp, did, rid := jr.splitCacheKey(key)
+		if itemApp == app && rid != 0 && value.InList(jobIds, did) {
 			ids = append(ids, rid)
 		}
 	}
@@ -128,15 +135,15 @@ func (jr *JobRole) GetRoleIdsByJobIds(jobIds []uint32) []uint32 {
 }
 
 // GetJobIdsByRoleIds 获取指定角色绑定的所有部门ID
-func (jr *JobRole) GetJobIdsByRoleIds(roleIds []uint32) []uint32 {
+func (jr *JobRole) GetJobIdsByRoleIds(ctx core.Context, app string, roleIds []uint32) []uint32 {
 	var (
 		ids  = make([]uint32, 0)
 		keys = jr.cache.Keys()
 	)
 
 	for _, key := range keys {
-		did, rid := jr.splitCacheKey(key)
-		if did != 0 && value.InList(roleIds, rid) {
+		itemApp, did, rid := jr.splitCacheKey(key)
+		if itemApp == app && did != 0 && value.InList(roleIds, rid) {
 			ids = append(ids, did)
 		}
 	}
@@ -144,16 +151,17 @@ func (jr *JobRole) GetJobIdsByRoleIds(roleIds []uint32) []uint32 {
 }
 
 // GetJobRolesByJobIds 获取指定角色绑定的所有部门ID
-func (jr *JobRole) GetJobRolesByJobIds(jobIds []uint32) []*entity.JobRole {
+func (jr *JobRole) GetJobRolesByJobIds(ctx core.Context, app string, jobIds []uint32) []*entity.JobRole {
 	var (
 		list []*entity.JobRole
 		keys = jr.cache.Keys()
 	)
 
 	for _, key := range keys {
-		did, rid := jr.splitCacheKey(key)
-		if did != 0 && value.InList(jobIds, rid) {
+		itemApp, did, rid := jr.splitCacheKey(key)
+		if itemApp == app && did != 0 && value.InList(jobIds, did) {
 			list = append(list, &entity.JobRole{
+				App:    itemApp,
 				JobId:  did,
 				RoleId: rid,
 			})
@@ -165,7 +173,7 @@ func (jr *JobRole) GetJobRolesByJobIds(jobIds []uint32) []*entity.JobRole {
 func (jr *JobRole) transvals(jrs []*entity.JobRole) map[string]struct{} {
 	kvs := map[string]struct{}{}
 	for _, item := range jrs {
-		kvs[jr.getCacheKey(item.JobId, item.RoleId)] = struct{}{}
+		kvs[jr.getCacheKey(item.App, item.JobId, item.RoleId)] = struct{}{}
 	}
 	return kvs
 }
@@ -173,7 +181,7 @@ func (jr *JobRole) transvals(jrs []*entity.JobRole) map[string]struct{} {
 func (jr *JobRole) transkeys(jrs []*entity.JobRole) []string {
 	var keys []string
 	for _, item := range jrs {
-		keys = append(keys, jr.getCacheKey(item.JobId, item.RoleId))
+		keys = append(keys, jr.getCacheKey(item.App, item.JobId, item.RoleId))
 	}
 	return keys
 }
@@ -187,24 +195,33 @@ func (jr *JobRole) load(ctx core.Context) (map[string]struct{}, error) {
 
 	bucket := map[string]struct{}{}
 	for _, item := range list {
-		bucket[jr.getCacheKey(item.JobId, item.RoleId)] = struct{}{}
+		bucket[jr.getCacheKey(item.App, item.JobId, item.RoleId)] = struct{}{}
 	}
 
 	return bucket, nil
 }
 
 // getCacheKey 获取缓存的key
-func (jr *JobRole) getCacheKey(jobId uint32, roleId uint32) string {
-	return fmt.Sprintf("%d:%d", jobId, roleId)
+func (jr *JobRole) getCacheKey(app string, jobId uint32, roleId uint32) string {
+	return fmt.Sprintf("%s:%d:%d", app, jobId, roleId)
 }
 
 // splitCacheKey 通过key获取id
-func (jr *JobRole) splitCacheKey(key string) (uint32, uint32) {
+func (jr *JobRole) splitCacheKey(key string) (string, uint32, uint32) {
 	arr := strings.Split(key, ":")
-	if len(arr) != 2 {
-		return 0, 0
+	if len(arr) != 3 {
+		return "", 0, 0
 	}
-	jobId, _ := strconv.Atoi(arr[0])
-	roleId, _ := strconv.Atoi(arr[1])
-	return uint32(jobId), uint32(roleId)
+	jobId, _ := strconv.Atoi(arr[1])
+	roleId, _ := strconv.Atoi(arr[2])
+	return arr[0], uint32(jobId), uint32(roleId)
+}
+
+func (jr *JobRole) validate(ctx core.Context, app string, jobId, roleId uint32) error {
+	var job entity.Job
+	if err := ctx.DB().Where("app = ? AND id = ?", app, jobId).First(&job).Error; err != nil {
+		return err
+	}
+	var role entity.Role
+	return ctx.DB().Where("app = ? AND id = ?", app, roleId).First(&role).Error
 }

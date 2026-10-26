@@ -2,6 +2,7 @@ package entity
 
 import (
 	"github.com/limes-cloud/kratosx/model"
+	"github.com/limes-cloud/kratosx/pkg/value"
 )
 
 type Dictionary struct {
@@ -14,7 +15,7 @@ type Dictionary struct {
 
 type DictionaryValue struct {
 	DictionaryId uint32             `json:"dictionaryId" gorm:"column:dictionary_id"`
-	ParentId     uint32             `json:"parentId" gorm:"column:parent_id"`
+	ParentId     *uint32            `json:"parentId" gorm:"column:parent_id"`
 	Label        string             `json:"label" gorm:"column:label"`
 	Value        string             `json:"value" gorm:"column:value"`
 	Status       *bool              `json:"status" gorm:"column:status"`
@@ -22,7 +23,7 @@ type DictionaryValue struct {
 	Type         *string            `json:"type" gorm:"column:type"`
 	Extra        *string            `json:"extra" gorm:"column:extra"`
 	Description  *string            `json:"description" gorm:"column:description"`
-	Dictionary   *Dictionary        `json:"dictionary"`
+	Dictionary   *Dictionary        `json:"dictionary" gorm:"foreignKey:dictionary_id;references:id"`
 	Children     []*DictionaryValue `json:"children" gorm:"-"`
 	model.BaseModel
 }
@@ -34,7 +35,7 @@ func (m *DictionaryValue) ID() uint32 {
 
 // Parent 获取父ID
 func (m *DictionaryValue) Parent() uint32 {
-	return m.ParentId
+	return value.Value(m.ParentId)
 }
 
 // AppendChildren 添加子节点

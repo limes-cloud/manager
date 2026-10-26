@@ -14,8 +14,9 @@ message ListLoginLogRequest {
     gte: 1
     lte: 50
   }];
-  optional string username = 3;
+  optional string username = 3 [(validate.rules).string = {max_len: 64}];
   repeated int64 createdAts = 4;
+  optional string app = 5 [(validate.rules).string = {max_len: 64}];
 }
 
 message ListLoginLogReply {
@@ -32,7 +33,7 @@ message ListLoginLogReply {
     string logo = 4;
   }
   message Log {
-    uint32 appId = 1;
+    string app = 1;
     string type = 2;
     string ip = 3;
     string address = 4;
@@ -42,7 +43,7 @@ message ListLoginLogReply {
     string description = 8;
     uint32 createdAt = 9;
     User user = 10;
-    App app = 11;
+    App appInfo = 11;
   }
 
   uint32 total = 1;
@@ -55,8 +56,9 @@ message ListAuthLogRequest {
     gte: 1
     lte: 50
   }];
-  optional string username = 3;
+  optional string username = 3 [(validate.rules).string = {max_len: 64}];
   repeated int64 createdAts = 4;
+  optional string app = 5 [(validate.rules).string = {max_len: 64}];
 }
 
 message ListAuthLogReply { // fixed code

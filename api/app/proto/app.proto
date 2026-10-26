@@ -26,6 +26,16 @@ message AppSettingJWT {
 message AppSetting {
   AppSettingJWT jwt = 1;
   AppSettingWeb web = 3;
+  // 订阅的基础设施应用 keyword 列表，取值必须是 type=base 的应用
+  repeated string modules = 4 [(validate.rules).repeated = {
+    max_items: 64
+    items: {
+      string: {
+        min_len: 1
+        max_len: 32
+      }
+    }
+  }];
 }
 
 message GetAppRequest {
@@ -38,7 +48,6 @@ message GetAppReply {
   string logo = 3;
   string favicon = 4;
   string keyword = 5;
-  string secret = 6;
   string name = 7;
   string showName = 8;
   optional string comment = 9;
@@ -49,6 +58,7 @@ message GetAppReply {
   uint32 createdAt = 14;
   uint32 updatedAt = 15;
   AppSetting setting = 16;
+  bool loginable = 17;
 }
 
 message GetSampleAppRequest {
@@ -98,6 +108,7 @@ message ListAppRequest {
   optional string keyword = 5;
   optional string name = 6;
   optional bool status = 7;
+  optional string type = 8 [(validate.rules).string = {in: ["base", "app"]}];
 }
 
 message ListAppReply {
@@ -116,6 +127,7 @@ message ListAppReply {
     uint32 createdAt = 12;
     uint32 updatedAt = 13;
     string type = 14;
+    bool loginable = 15;
   }
 
   uint32 total = 1;
@@ -123,10 +135,7 @@ message ListAppReply {
 }
 
 message CreateAppRequest {
-  string type = 1 [(validate.rules).string = {
-    min_len: 1
-    max_len: 128
-  }];
+  string type = 1 [(validate.rules).string = {in: ["base", "app"]}];
   string logo = 2 [(validate.rules).string = {
     min_len: 1
     max_len: 128
@@ -144,11 +153,11 @@ message CreateAppRequest {
     max_len: 32
   }];
   string favicon = 6;
-  string secret = 7;
   bool private = 8;
   optional string description = 9;
   optional string comment = 10;
   AppSetting setting = 11;
+  bool loginable = 12;
 }
 
 message CreateAppReply {
@@ -157,10 +166,9 @@ message CreateAppReply {
 
 message UpdateAppRequest {
   uint32 id = 1 [(validate.rules).uint32 = {gte: 1}];
-  optional string type = 2 [(validate.rules).string = {max_len: 128}];
+  optional string type = 2 [(validate.rules).string = {in: ["", "base", "app"]}];
   optional string logo = 3 [(validate.rules).string = {max_len: 128}];
   optional string favicon = 4 [(validate.rules).string = {max_len: 128}];
-  optional string secret = 5 [(validate.rules).string = {max_len: 128}];
   optional string name = 6 [(validate.rules).string = {max_len: 64}];
   optional string showName = 7 [(validate.rules).string = {max_len: 64}];
   optional bool private = 8;
@@ -169,6 +177,7 @@ message UpdateAppRequest {
   optional string description = 11;
   optional string comment = 12;
   optional AppSetting setting = 13;
+  optional bool loginable = 14;
 }
 
 message UpdateAppReply {}

@@ -1079,8 +1079,8 @@ func (m *ListFeedbackRequest) validate(all bool) error {
 
 	}
 
-	if m.AppId != nil {
-		// no validation rules for AppId
+	if m.App != nil {
+		// no validation rules for App
 	}
 
 	if m.ClassifyId != nil {
@@ -1345,10 +1345,10 @@ func (m *CreateFeedbackRequest) validate(all bool) error {
 
 	var errors []error
 
-	if m.GetAppId() < 1 {
+	if l := utf8.RuneCountInString(m.GetApp()); l < 1 || l > 64 {
 		err := CreateFeedbackRequestValidationError{
-			field:  "AppId",
-			reason: "value must be greater than or equal to 1",
+			field:  "App",
+			reason: "value length must be between 1 and 64 runes, inclusive",
 		}
 		if !all {
 			return err
@@ -2197,7 +2197,7 @@ func (m *ListFeedbackReply_Feedback) validate(all bool) error {
 
 	// no validation rules for Id
 
-	// no validation rules for AppId
+	// no validation rules for App
 
 	// no validation rules for UserId
 
@@ -2235,14 +2235,14 @@ func (m *ListFeedbackReply_Feedback) validate(all bool) error {
 		// no validation rules for ProcessedResult
 	}
 
-	if m.App != nil {
+	if m.AppInfo != nil {
 
 		if all {
-			switch v := interface{}(m.GetApp()).(type) {
+			switch v := interface{}(m.GetAppInfo()).(type) {
 			case interface{ ValidateAll() error }:
 				if err := v.ValidateAll(); err != nil {
 					errors = append(errors, ListFeedbackReply_FeedbackValidationError{
-						field:  "App",
+						field:  "AppInfo",
 						reason: "embedded message failed validation",
 						cause:  err,
 					})
@@ -2250,16 +2250,16 @@ func (m *ListFeedbackReply_Feedback) validate(all bool) error {
 			case interface{ Validate() error }:
 				if err := v.Validate(); err != nil {
 					errors = append(errors, ListFeedbackReply_FeedbackValidationError{
-						field:  "App",
+						field:  "AppInfo",
 						reason: "embedded message failed validation",
 						cause:  err,
 					})
 				}
 			}
-		} else if v, ok := interface{}(m.GetApp()).(interface{ Validate() error }); ok {
+		} else if v, ok := interface{}(m.GetAppInfo()).(interface{ Validate() error }); ok {
 			if err := v.Validate(); err != nil {
 				return ListFeedbackReply_FeedbackValidationError{
-					field:  "App",
+					field:  "AppInfo",
 					reason: "embedded message failed validation",
 					cause:  err,
 				}

@@ -6,6 +6,7 @@ type ListLoginLogRequest struct {
 	page.Search
 	Username   *string `json:"username"`
 	CreatedAts []int64 `json:"createdAts"`
+	App        *string `json:"app"`
 }
 
 type ListAuthLogRequest struct {
@@ -13,4 +14,5 @@ type ListAuthLogRequest struct {
 	Username   string  `json:"username"`
 	UserId     *uint32 `json:"userId"`
 	CreatedAts []int64 `json:"createdAts"`
+	App        *string `json:"app"`
 }

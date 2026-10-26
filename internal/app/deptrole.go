@@ -51,6 +51,7 @@ func (s *DeptRole) ListDeptRole(c context.Context, req *deptrole.ListDeptRoleReq
 		},
 		DeptId: req.DeptId,
 		Name:   req.Name,
+		App:    req.GetApp(),
 	})
 	if err != nil {
 		return nil, err
@@ -71,6 +72,7 @@ func (s *DeptRole) CreateDeptRole(c context.Context, req *deptrole.CreateDeptRol
 	err := s.srv.CreateDeptRole(ctx, &types.CreateDeptRoleRequest{
 		DeptId: req.DeptId,
 		RoleId: req.RoleId,
+		App:    req.GetApp(),
 	})
 	if err != nil {
 		return nil, err
@@ -83,6 +85,7 @@ func (s *DeptRole) DeleteDeptRole(c context.Context, req *deptrole.DeleteDeptRol
 	err := s.srv.DeleteDeptRole(ctx, &types.DeleteDeptRoleRequest{
 		DeptId: req.DeptId,
 		RoleId: req.RoleId,
+		App:    req.GetApp(),
 	})
 	if err != nil {
 		return nil, err

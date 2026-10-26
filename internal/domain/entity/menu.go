@@ -23,7 +23,7 @@ const (
 //}
 
 type Menu struct {
-	AppId      uint32      `json:"appId" gorm:"column:app_id"`          // 应用ID
+	App        string      `json:"app" gorm:"column:app"`               // 应用标识
 	ParentId   *uint32     `json:"parentId" gorm:"column:parent_id"`    // 父节点ID
 	Title      string      `json:"title" gorm:"column:title"`           // 菜单标题
 	Type       string      `json:"type" gorm:"column:type"`             // 菜单类型

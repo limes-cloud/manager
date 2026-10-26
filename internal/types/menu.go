@@ -1,7 +1,7 @@
 package types
 
 type ListMenuRequest struct {
-	AppId      *uint32  `json:"appId"`
+	App        *string  `json:"app"`
 	InIds      []uint32 `json:"inIds"`
 	InTypes    []string `json:"inTypes"`
 	NotInTypes []string `json:"notInTypes"`
@@ -11,10 +11,10 @@ type ListMenuRequest struct {
 }
 
 type CacheMenu struct {
-	Id    uint32 `json:"id"`
-	Type  string `json:"type"`
-	AppId uint32 `json:"appId"`
-	Name  string `json:"name"`
+	Id   uint32 `json:"id"`
+	Type string `json:"type"`
+	App  string `json:"app"`
+	Name string `json:"name"`
 }
 
 type RegisterMenuRequest struct {

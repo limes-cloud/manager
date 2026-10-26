@@ -29,7 +29,7 @@ func NewDeptRole(
 func (rm *DeptRole) ListDeptRole(ctx core.Context, req *types.ListDeptRoleRequest) ([]*entity.Role, uint32, error) {
 
 	// 获取当前角色有权限的菜单ID
-	list, total, err := rm.repo.ListDeptRole(ctx, req)
+	list, total, err := rm.repo.ListDeptRole(ctx, ctx.AppKey(req.App), req)
 	if err != nil {
 		ctx.Logger().Warnw("msg", "get menu ids error", "err", err.Error())
 		return nil, 0, errors.ListError()
@@ -44,7 +44,7 @@ func (rm *DeptRole) CreateDeptRole(ctx core.Context, req *types.CreateDeptRoleRe
 	if !lo.Contains(rids, req.RoleId) {
 		return errors.RoleScopeError()
 	}
-	if err := rm.repo.CreateDeptRole(ctx, req.DeptId, req.RoleId); err != nil {
+	if err := rm.repo.CreateDeptRole(ctx, ctx.AppKey(req.App), req.DeptId, req.RoleId); err != nil {
 		return errors.CreateError()
 	}
 	return nil
@@ -58,7 +58,7 @@ func (rm *DeptRole) DeleteDeptRole(ctx core.Context, req *types.DeleteDeptRoleRe
 	if ctx.Auth().DeptId == req.DeptId {
 		return errors.DeptScopeError()
 	}
-	if err := rm.repo.DeleteDeptRole(ctx, req.DeptId, req.RoleId); err != nil {
+	if err := rm.repo.DeleteDeptRole(ctx, ctx.AppKey(req.App), req.DeptId, req.RoleId); err != nil {
 		return errors.DeleteError()
 	}
 	return nil

@@ -48,6 +48,9 @@ func (s *Log) ListLoginLog(c context.Context, req *log.ListLoginLogRequest) (*lo
 		return nil, errors.TransformError()
 	}
 
+	// 解析应用范围：显式 app 优先，否则回退到当前请求 app
+	in.App = value.Pointer(ctx.AppKey(req.GetApp()))
+
 	list, total, err := s.srv.ListLoginLog(ctx, in)
 	if err != nil {
 		return nil, err
@@ -76,6 +79,9 @@ func (s *Log) ListAuthLog(c context.Context, req *log.ListAuthLogRequest) (*log.
 		return nil, errors.TransformError()
 	}
 
+	// 解析应用范围：显式 app 优先，否则回退到当前请求 app
+	in.App = value.Pointer(ctx.AppKey(req.GetApp()))
+
 	list, total, err := s.srv.ListAuthLog(ctx, in)
 	if err != nil {
 		return nil, err
@@ -85,10 +91,35 @@ func (s *Log) ListAuthLog(c context.Context, req *log.ListAuthLogRequest) (*log.
 	reply := log.ListAuthLogReply{
 		Total: total,
 	}
-
-	if err := value.Transform(list, &reply.List); err != nil {
-		ctx.Logger().Errorw("msg", "list log resp transform error", "err", err)
-		return nil, errors.TransformError()
+	for _, v := range list {
+		item := &log.ListAuthLogReply_Log{
+			CreatedAt: uint32(v.CreatedAt),
+		}
+		// 实体 App 为字符串（应用标识），AppInfo 才是应用对象，逐字段映射避免 JSON 键名冲突
+		if v.AppInfo != nil {
+			item.App = &log.ListAuthLogReply_Log_App{
+				Id:      v.AppInfo.Id,
+				Name:    v.AppInfo.Name,
+				Keyword: v.AppInfo.Keyword,
+				Logo:    v.AppInfo.Logo,
+			}
+		}
+		if v.User != nil {
+			item.User = &log.ListAuthLogReply_Log_User{
+				Id:       v.User.Id,
+				Username: v.User.Username,
+				Nickname: value.Value(v.User.Nickname),
+				Avatar:   value.Value(v.User.Avatar),
+			}
+		}
+		if v.Menu != nil {
+			item.Menu = &log.ListAuthLogReply_Log_Menu{
+				Api:    value.Value(v.Menu.Api),
+				Method: value.Value(v.Menu.Method),
+				Title:  v.Menu.Title,
+			}
+		}
+		reply.List = append(reply.List, item)
 	}
 
 	return &reply, nil

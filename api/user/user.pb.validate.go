@@ -58,7 +58,18 @@ func (m *GetCurrentUserRequest) validate(all bool) error {
 	var errors []error
 
 	if m.App != nil {
-		// no validation rules for App
+
+		if utf8.RuneCountInString(m.GetApp()) > 64 {
+			err := GetCurrentUserRequestValidationError{
+				field:  "App",
+				reason: "value length must be at most 64 runes",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
 	}
 
 	if len(errors) > 0 {
@@ -164,15 +175,48 @@ func (m *GetUserRequest) validate(all bool) error {
 	var errors []error
 
 	if m.Id != nil {
-		// no validation rules for Id
+
+		if m.GetId() < 1 {
+			err := GetUserRequestValidationError{
+				field:  "Id",
+				reason: "value must be greater than or equal to 1",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
 	}
 
 	if m.Username != nil {
-		// no validation rules for Username
+
+		if l := utf8.RuneCountInString(m.GetUsername()); l < 1 || l > 64 {
+			err := GetUserRequestValidationError{
+				field:  "Username",
+				reason: "value length must be between 1 and 64 runes, inclusive",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
 	}
 
 	if m.App != nil {
-		// no validation rules for App
+
+		if utf8.RuneCountInString(m.GetApp()) > 64 {
+			err := GetUserRequestValidationError{
+				field:  "App",
+				reason: "value length must be at most 64 runes",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
 	}
 
 	if len(errors) > 0 {
@@ -460,8 +504,8 @@ func (m *ListUserRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	if m.AppId != nil {
-		// no validation rules for AppId
+	if m.App != nil {
+		// no validation rules for App
 	}
 
 	if m.DeptId != nil {
@@ -716,7 +760,16 @@ func (m *CreateUserRequest) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for Avatar
+	if utf8.RuneCountInString(m.GetAvatar()) > 255 {
+		err := CreateUserRequestValidationError{
+			field:  "Avatar",
+			reason: "value length must be at most 255 runes",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
 
 	if l := utf8.RuneCountInString(m.GetNickname()); l < 1 || l > 64 {
 		err := CreateUserRequestValidationError{
@@ -1409,7 +1462,16 @@ func (m *ResetPasswordRequest) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for Id
+	if m.GetId() < 1 {
+		err := ResetPasswordRequestValidationError{
+			field:  "Id",
+			reason: "value must be greater than or equal to 1",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
 
 	if len(errors) > 0 {
 		return ResetPasswordRequestMultiError(errors)

@@ -37,13 +37,13 @@ message ListAppOAutherRequest {
   }];
   optional string keyword = 5;
   optional string name = 6;
-  uint32 appId = 7 [(validate.rules).uint32 = {gte: 1}];
+  string app = 7 [(validate.rules).string = {min_len: 1, max_len: 64}];
 }
 
 message ListAppOAutherReply {
   message Data {
     uint32 id = 1;
-    uint32 appId = 2;
+    string app = 2;
     uint32 oautherId = 3;
     uint32 createdAt = 4;
     uint32 updatedAt = 5;
@@ -55,7 +55,7 @@ message ListAppOAutherReply {
 }
 
 message CreateAppOAutherRequest {
-  uint32 appId = 1 [(validate.rules).uint32 = {gte: 1}];
+  string app = 1 [(validate.rules).string = {min_len: 1, max_len: 64}];
   uint32 oautherId = 2 [(validate.rules).uint32 = {gte: 1}];
 }
 

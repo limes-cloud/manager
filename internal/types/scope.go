@@ -6,5 +6,4 @@ type GetScopeResponse struct {
 	AllDept    bool
 	DeptScopes []uint32
 	Rule       *hook.ConditionGroup
-	Fields     []string
 }

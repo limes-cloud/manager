@@ -53,7 +53,7 @@ type AuthorizeBase struct {
 
 type AuthorizeInfo struct {
 	*AuthorizeBase
-	AppId   uint32 `json:"appId"`
+	AppKey  string `json:"appKey"`
 	UserId  uint32 `json:"userId"`
 	DeptId  uint32 `json:"deptId"`
 	JobId   uint32 `json:"jobId"`
@@ -62,10 +62,7 @@ type AuthorizeInfo struct {
 
 func (az AuthorizeInfo) ToMap() map[string]any {
 	return map[string]any{
-		"appId":   az.AppId,
 		"userId":  az.UserId,
-		"deptId":  az.DeptId,
-		"jobId":   az.JobId,
 		"isAdmin": az.IsAdmin,
 	}
 }
@@ -120,8 +117,8 @@ type OAutherVisibleReply struct {
 }
 
 type GetAuthorizeRequest struct {
-	AppId    uint32 `json:"appId"`
-	UserId   uint32 `json:"userId"`
+	AppId  uint32 `json:"appId"`
+	UserId uint32 `json:"userId"`
 }
 
 type OAutherHandleRequest struct {
@@ -163,9 +160,9 @@ type OAutherBindRequest struct {
 }
 
 type OAutherBindReply struct {
-	NeedRegister bool
-	NeedInfo     bool
-	Token        string
+	NeedRegister bool   `json:"needRegister"`
+	NeedInfo     bool   `json:"needInfo"`
+	Token        string `json:"token"`
 }
 
 type OAutherReportRequest struct {

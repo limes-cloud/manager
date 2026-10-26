@@ -12,15 +12,15 @@ type RoleMenu interface {
 	// DeleteRoleMenus 删除角色菜单关联信息
 	DeleteRoleMenus(ctx core.Context, rms []*entity.RoleMenu) error
 
-	// GetMenuIdsByRoleIds 获取角色id
-	GetMenuIdsByRoleIds(mids []uint32) []uint32
+	// GetMenuIdsByRoleIds 通过角色id获取菜单id列表
+	GetMenuIdsByRoleIds(ctx core.Context, app string, rids []uint32) []uint32
 
-	// GetRoleIdsByMenuIds 获取菜单id
-	GetRoleIdsByMenuIds(rids []uint32) []uint32
+	// GetRoleIdsByMenuIds 通过菜单id获取角色id列表
+	GetRoleIdsByMenuIds(ctx core.Context, app string, mids []uint32) []uint32
 
-	// DeleteRoles 批量删除角色
-	DeleteRoles(ctx core.Context, rids []uint32) error
+	// DeleteRoles 批量删除角色关联的菜单
+	DeleteRoles(ctx core.Context, app string, rids []uint32) error
 
-	// DeleteMenus 批量删除菜单
-	DeleteMenus(ctx core.Context, rids []uint32) error
+	// DeleteMenus 批量删除菜单关联的角色
+	DeleteMenus(ctx core.Context, app string, mids []uint32) error
 }

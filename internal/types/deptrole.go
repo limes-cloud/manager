@@ -7,14 +7,17 @@ type ListDeptRoleRequest struct {
 	InRoleIds []uint32 `json:"inRoleIds"`
 	DeptId    uint32   `json:"deptId"`
 	Name      *string  `json:"name"`
+	App       string   `json:"app"`
 }
 
 type CreateDeptRoleRequest struct {
 	RoleId uint32 `json:"roleId"`
 	DeptId uint32 `json:"deptId"`
+	App    string `json:"app"`
 }
 
 type DeleteDeptRoleRequest struct {
 	DeptId uint32 `json:"deptId"`
 	RoleId uint32 `json:"roleId"`
+	App    string `json:"app"`
 }

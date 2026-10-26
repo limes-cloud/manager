@@ -239,4 +239,19 @@ enum ErrorReason {
     (errors.code) = 500,
     (errors.message) = "登陆信息不存在"
   ];
+
+  AppNotLoginableError = 56 [
+    (errors.code) = 403,
+    (errors.message) = "该应用不支持登录"
+  ];
+
+  AppModuleScopeError = 57 [
+    (errors.code) = 403,
+    (errors.message) = "当前应用未订阅该模块"
+  ];
+
+  AppTypeError = 58 [
+    (errors.code) = 400,
+    (errors.message) = "应用类型不合法"
+  ];
 }

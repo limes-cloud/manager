@@ -1,9 +1,13 @@
 package entity
 
-import "github.com/limes-cloud/kratosx/model"
+import (
+	"github.com/limes-cloud/kratosx/model"
+	"github.com/limes-cloud/kratosx/pkg/value"
+)
 
 type Role struct {
-	ParentId    uint32      `json:"parentId" gorm:"column:parent_id"`
+	App         string      `json:"app" gorm:"column:app"`
+	ParentId    *uint32     `json:"parentId" gorm:"column:parent_id"`
 	Keyword     string      `json:"keyword"  gorm:"column:keyword"`
 	Name        string      `json:"name" gorm:"column:name"`
 	Status      *bool       `json:"status" gorm:"column:status"`
@@ -27,7 +31,7 @@ func (m *Role) ID() uint32 {
 
 // Parent 获取父ID
 func (m *Role) Parent() uint32 {
-	return m.ParentId
+	return value.Value(m.ParentId)
 }
 
 // AppendChildren 添加子节点

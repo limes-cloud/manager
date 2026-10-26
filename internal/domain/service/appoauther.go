@@ -46,7 +46,7 @@ func (u *AppOAuther) CreateAppOAuther(ctx core.Context, app *entity.AppOAuther) 
 	app.Type = oauther.Type
 
 	// 查询是否存在类型相同的渠道
-	_, err = u.repo.GetAppOAutherByAT(ctx, app.AppId, app.Type)
+	_, err = u.repo.GetAppOAutherByAT(ctx, app.App, app.Type)
 	if err == nil {
 		return 0, errors.CreateError("已存在相同类型的授权渠道")
 	}

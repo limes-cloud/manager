@@ -17,7 +17,7 @@ func Register(ctx core.Context) {
 		)
 		reply, err := srv.RegisterMenu(ctx, &types.RegisterMenuRequest{
 			AppKeyword: managerAppKeyword,
-			Mode:       service.RegisterMenuModeAppend,
+			Mode:       service.RegisterMenuModeSync,
 			Menus:      managerMenus,
 		})
 		if err != nil {

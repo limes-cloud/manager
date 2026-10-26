@@ -10,7 +10,7 @@ option java_multiple_files = true;
 option java_package = "manager.api.authorize";
 
 message GetImageCaptchaRequest {
-  string scene = 2;
+  string scene = 2 [(validate.rules).string = {min_len: 1, max_len: 32}];
 }
 
 message GetImageCaptchaReply {
@@ -78,8 +78,8 @@ message OAutherReportReply {}
 
 message OAutherLoginRequest {
   string uuid = 1 [(validate.rules).string = {min_len: 1}];
-  string account = 2;
-  string code = 3;
+  string account = 2 [(validate.rules).string = {max_len: 64}];
+  string code = 3 [(validate.rules).string = {max_len: 64}];
 }
 
 message OAutherLoginReply {

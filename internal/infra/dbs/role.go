@@ -4,6 +4,8 @@ import (
 	"errors"
 	"sync"
 
+	"github.com/limes-cloud/kratosx/pkg/value"
+
 	"github.com/limes-cloud/manager/internal/core"
 
 	"github.com/limes-cloud/manager/internal/domain/entity"
@@ -25,31 +27,32 @@ func NewRole() *Role {
 }
 
 // GetRole 获取指定的数据
-func (infra *Role) GetRole(ctx core.Context, id uint32) (*entity.Role, error) {
+func (infra *Role) GetRole(ctx core.Context, app string, id uint32) (*entity.Role, error) {
 	var (
 		ent = entity.Role{}
 		fs  = []string{"*"}
 	)
-	return &ent, ctx.DB().Select(fs).First(&ent, id).Error
+	return &ent, ctx.DB().Select(fs).Where("app = ?", app).First(&ent, id).Error
 }
 
 // GetRoleByKeyword 获取指定数据
-func (infra *Role) GetRoleByKeyword(ctx core.Context, keyword string) (*entity.Role, error) {
+func (infra *Role) GetRoleByKeyword(ctx core.Context, app string, keyword string) (*entity.Role, error) {
 	var (
 		m  = entity.Role{}
 		fs = []string{"*"}
 	)
-	return &m, ctx.DB().Select(fs).Where("keyword = ?", keyword).First(&m).Error
+	return &m, ctx.DB().Select(fs).Where("app = ? AND keyword = ?", app, keyword).First(&m).Error
 }
 
 // ListRole 获取列表 fixed code
-func (infra *Role) ListRole(ctx core.Context, req *types.ListRoleRequest) ([]*entity.Role, error) {
+func (infra *Role) ListRole(ctx core.Context, app string, req *types.ListRoleRequest) ([]*entity.Role, error) {
 	var (
 		ms []*entity.Role
 		fs = []string{"*"}
 	)
 
 	db := ctx.DB().Model(entity.Role{}).Select(fs)
+	db = db.Where("app = ?", app)
 
 	if req.Name != nil {
 		db = db.Where("name LIKE ?", *req.Name+"%")
@@ -69,12 +72,20 @@ func (infra *Role) ListRole(ctx core.Context, req *types.ListRoleRequest) ([]*en
 
 // CreateRole 创建数据
 func (infra *Role) CreateRole(ctx core.Context, req *entity.Role) (uint32, error) {
+	if req.App == "" {
+		return 0, errors.New("app is required")
+	}
+	if value.Value(req.ParentId) != 0 {
+		if _, err := infra.GetRole(ctx, req.App, value.Value(req.ParentId)); err != nil {
+			return 0, err
+		}
+	}
 	return req.Id, ctx.Transaction(func(ctx core.Context) error {
 		if err := ctx.DB().Create(req).Error; err != nil {
 			return err
 		}
-		if req.ParentId != 0 {
-			return infra.appendRoleChildren(ctx, req.ParentId, req.Id)
+		if value.Value(req.ParentId) != 0 {
+			return infra.appendRoleChildren(ctx, value.Value(req.ParentId), req.Id)
 		}
 		return nil
 	})
@@ -82,21 +93,29 @@ func (infra *Role) CreateRole(ctx core.Context, req *entity.Role) (uint32, error
 
 // UpdateRole 更新数据
 func (infra *Role) UpdateRole(ctx core.Context, req *entity.Role) error {
-	if req.Id == req.ParentId {
+	if req.Id == value.Value(req.ParentId) {
 		return errors.New("父级不能为自己")
 	}
-	old, err := infra.GetRole(ctx, req.Id)
+	old, err := infra.GetRole(ctx, req.App, req.Id)
 	if err != nil {
 		return err
 	}
+	req.App = old.App
+	if value.Value(req.ParentId) != 0 {
+		if _, err := infra.GetRole(ctx, req.App, value.Value(req.ParentId)); err != nil {
+			return err
+		}
+	}
 
 	return ctx.Transaction(func(ctx core.Context) error {
-		if old.ParentId != req.ParentId {
+		if value.Value(old.ParentId) != value.Value(req.ParentId) {
 			if err := infra.removeRoleParent(ctx, req.Id); err != nil {
 				return err
 			}
-			if err := infra.appendRoleChildren(ctx, req.ParentId, req.Id); err != nil {
-				return err
+			if value.Value(req.ParentId) != 0 {
+				if err := infra.appendRoleChildren(ctx, value.Value(req.ParentId), req.Id); err != nil {
+					return err
+				}
 			}
 		}
 		return ctx.DB().Updates(req).Error
@@ -104,13 +123,13 @@ func (infra *Role) UpdateRole(ctx core.Context, req *entity.Role) error {
 }
 
 // DeleteRole 删除数据
-func (infra *Role) DeleteRole(ctx core.Context, id uint32) error {
+func (infra *Role) DeleteRole(ctx core.Context, app string, id uint32) error {
 	ids, err := infra.GetRoleChildrenIds(ctx, []uint32{id})
 	if err != nil {
 		return err
 	}
 	ids = append(ids, id)
-	return ctx.DB().Where("id in ?", ids).Delete(&entity.Role{}).Error
+	return ctx.DB().Where("app = ?", app).Where("id in ?", ids).Delete(&entity.Role{}).Error
 }
 
 // GetRoleChildrenIds 获取指定id的所有子id
@@ -132,7 +151,7 @@ func (infra *Role) GetRoleParentIds(ctx core.Context, rids []uint32) ([]uint32, 
 }
 
 // GetRoleChildrenKeywords 获取指定id的所有子keyword
-func (infra *Role) GetRoleChildrenKeywords(ctx core.Context, id uint32) ([]string, error) {
+func (infra *Role) GetRoleChildrenKeywords(ctx core.Context, app string, id uint32) ([]string, error) {
 	ids, err := infra.GetRoleChildrenIds(ctx, []uint32{id})
 	if err != nil {
 		return nil, err
@@ -143,6 +162,7 @@ func (infra *Role) GetRoleChildrenKeywords(ctx core.Context, id uint32) ([]strin
 	var keywords []string
 	return keywords, ctx.DB().Model(entity.Role{}).
 		Select("keyword").
+		Where("app = ?", app).
 		Where("id in ?", ids).
 		Scan(&keywords).Error
 }

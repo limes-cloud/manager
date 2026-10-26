@@ -11,6 +11,7 @@ option java_package = "manager.api.deptrole.proto";
 message CreateDeptRoleRequest {
   uint32 deptId = 1 [(validate.rules).uint32 = {gte: 1}];
   uint32 roleId = 2 [(validate.rules).uint32 = {gte: 1}];
+  optional string app = 3 [(validate.rules).string = {max_len: 64}];
 }
 
 message CreateDeptRoleReply {}
@@ -23,6 +24,7 @@ message ListDeptRoleRequest {
   }];
   uint32 deptId = 3 [(validate.rules).uint32 = {gte: 1}];
   optional string name = 4;
+  optional string app = 5 [(validate.rules).string = {max_len: 64}];
 }
 
 message ListDeptRoleReply {
@@ -39,5 +41,6 @@ message ListDeptRoleReply {
 message DeleteDeptRoleRequest {
   uint32 deptId = 1 [(validate.rules).uint32 = {gte: 1}];
   uint32 roleId = 2 [(validate.rules).uint32 = {gte: 1}];
+  optional string app = 3 [(validate.rules).string = {max_len: 64}];
 }
 message DeleteDeptRoleReply {}

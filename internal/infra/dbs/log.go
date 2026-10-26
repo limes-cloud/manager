@@ -34,8 +34,11 @@ func (log *Log) ListLoginLog(ctx core.Context, req *types.ListLoginLogRequest) (
 		list  []*entity.LoginLog
 	)
 
-	db := ctx.DB().Model(entity.LoginLog{}).Preload("User").Preload("App")
+	db := ctx.DB().Model(entity.LoginLog{}).Preload("User").Preload("AppInfo")
 
+	if req.App != nil {
+		db = db.Where("app = ?", *req.App)
+	}
 	if req.Username != nil {
 		db = db.Where("username = ?", *req.Username)
 	}
@@ -66,8 +69,11 @@ func (log *Log) ListAuthLog(ctx core.Context, req *types.ListAuthLogRequest) ([]
 	db := ctx.DB().Model(entity.AuthLog{}).
 		Preload("User").
 		Preload("Menu").
-		Preload("App")
+		Preload("AppInfo")
 
+	if req.App != nil {
+		db = db.Where("app = ?", *req.App)
+	}
 	if req.UserId != nil {
 		db = db.Where("user_id = ?", *req.UserId)
 	}

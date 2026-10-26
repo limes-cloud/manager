@@ -104,11 +104,11 @@ func (s *Dictionary) CreateDictionary(c context.Context, req *dictionary.CreateD
 // UpdateDictionary 更新字典目录
 func (s *Dictionary) UpdateDictionary(c context.Context, req *dictionary.UpdateDictionaryRequest) (*dictionary.UpdateDictionaryReply, error) {
 	if err := s.srv.UpdateDictionary(kratosx.MustContext(c), &entity.Dictionary{
-		BaseModel: model.BaseModel{Id: req.Id},
-		Keyword:         req.Keyword,
-		Name:            req.Name,
-		Type:            req.Type,
-		Description:     req.Description,
+		BaseModel:   model.BaseModel{Id: req.Id},
+		Keyword:     req.Keyword,
+		Name:        req.Name,
+		Type:        req.Type,
+		Description: req.Description,
 	}); err != nil {
 		return nil, err
 	}
@@ -147,7 +147,7 @@ func (s *Dictionary) ListDictionaryValue(c context.Context, req *dictionary.List
 func (s *Dictionary) CreateDictionaryValue(c context.Context, req *dictionary.CreateDictionaryValueRequest) (*dictionary.CreateDictionaryValueReply, error) {
 	id, err := s.srv.CreateDictionaryValue(kratosx.MustContext(c), &entity.DictionaryValue{
 		DictionaryId: req.DictionaryId,
-		ParentId:     req.ParentId,
+		ParentId:     value.Pointer(req.ParentId),
 		Label:        req.Label,
 		Value:        req.Value,
 		Status:       req.Status,
@@ -167,7 +167,7 @@ func (s *Dictionary) UpdateDictionaryValue(c context.Context, req *dictionary.Up
 	if err := s.srv.UpdateDictionaryValue(kratosx.MustContext(c), &entity.DictionaryValue{
 		BaseModel:    model.BaseModel{Id: req.Id},
 		DictionaryId: req.DictionaryId,
-		ParentId:     req.ParentId,
+		ParentId:     value.Pointer(req.ParentId),
 		Label:        req.Label,
 		Value:        req.Value,
 		Weight:       req.Weight,

@@ -6,6 +6,7 @@ import (
 	"sync"
 
 	"github.com/limes-cloud/kratosx/model/page"
+	"github.com/samber/lo"
 
 	"dario.cat/mergo"
 
@@ -152,6 +153,41 @@ func (infra *Entity) DeleteEntityRule(ctx core.Context, id uint32) error {
 	})
 }
 
+// DeleteEntityRules 删除多条实体规则
+func (infra *Entity) DeleteEntityRules(ctx core.Context, ids []uint32) error {
+	ids = lo.Uniq(ids)
+	if len(ids) == 0 {
+		return nil
+	}
+	op := infra.ruleCache.OP(ctx)
+	return ctx.Transaction(func(ctx core.Context) error {
+		if err := ctx.DB().Where("id in ?", ids).Delete(&entity.EntityRule{}).Error; err != nil {
+			return err
+		}
+		for _, id := range ids {
+			op = op.Delete(id)
+		}
+		return op.Do()
+	})
+}
+
+// UpdateRegisteredEntityRule 更新注册实体规则
+func (infra *Entity) UpdateRegisteredEntityRule(ctx core.Context, tg *entity.EntityRule) error {
+	op := infra.ruleCache.OP(ctx)
+	return ctx.Transaction(func(ctx core.Context) error {
+		if err := ctx.DB().Model(&entity.EntityRule{}).
+			Where("id = ?", tg.Id).
+			Omit("name").
+			Updates(tg).Error; err != nil {
+			return err
+		}
+		if tg.Expression != "" {
+			return op.Put(tg.Id, tg.Expression).Do()
+		}
+		return nil
+	})
+}
+
 func (infra *Entity) loadEntityRule(ctx core.Context) (map[uint32]string, error) {
 	var list []*entity.EntityRule
 	if err := ctx.DB().Find(&list).Error; err != nil {
@@ -162,10 +198,6 @@ func (infra *Entity) loadEntityRule(ctx core.Context) (map[uint32]string, error)
 		bucket[item.Id] = item.Expression
 	}
 	return bucket, nil
-}
-
-func (infra *Entity) GetEntityFieldName(id uint32) (string, bool) {
-	return infra.fieldCache.Get(id)
 }
 
 func (infra *Entity) GetEntityField(ctx core.Context, id uint32, name string) (*entity.EntityField, error) {
@@ -235,6 +267,32 @@ func (infra *Entity) DeleteEntityField(ctx core.Context, id uint32) error {
 	})
 }
 
+// DeleteEntityFields 删除多条实体字段
+func (infra *Entity) DeleteEntityFields(ctx core.Context, ids []uint32) error {
+	ids = lo.Uniq(ids)
+	if len(ids) == 0 {
+		return nil
+	}
+	op := infra.fieldCache.OP(ctx)
+	return ctx.Transaction(func(ctx core.Context) error {
+		if err := ctx.DB().Where("id in ?", ids).Delete(&entity.EntityField{}).Error; err != nil {
+			return err
+		}
+		for _, id := range ids {
+			op = op.Delete(id)
+		}
+		return op.Do()
+	})
+}
+
+// UpdateRegisteredEntityField 更新注册实体字段
+func (infra *Entity) UpdateRegisteredEntityField(ctx core.Context, tg *entity.EntityField) error {
+	return ctx.DB().Model(&entity.EntityField{}).
+		Where("id = ?", tg.Id).
+		Select("comment", "index").
+		Updates(tg).Error
+}
+
 func (infra *Entity) loadEntityField(ctx core.Context) (map[uint32]string, error) {
 	var list []*entity.EntityField
 	if err := ctx.DB().Find(&list).Error; err != nil {
@@ -256,11 +314,19 @@ func (infra *Entity) GetEntity(ctx core.Context, id uint32) (*entity.Entity, err
 	return &ent, ctx.DB().Select(fs).First(&ent, id).Error
 }
 
+// GetEntityByName 获取指定应用下的实体
+func (infra *Entity) GetEntityByName(ctx core.Context, app string, db string, name string) (*entity.Entity, error) {
+	ent := entity.Entity{}
+	return &ent, ctx.DB().
+		Where("app = ? AND `database` = ? AND name = ?", app, db, name).
+		First(&ent).Error
+}
+
 // ListEntity 获取列表 fixed code
 func (infra *Entity) ListEntity(ctx core.Context, req *types.ListEntityRequest) ([]*entity.Entity, error) {
 	var ms []*entity.Entity
 
-	db := ctx.DB().Model(&entity.Entity{}).Where("app_id = ?", req.AppId)
+	db := ctx.DB().Model(&entity.Entity{}).Where("app = ?", req.App)
 
 	if req.Name != nil {
 		db = db.Where("name LIKE ?", "%"+*req.Name+"%")
@@ -278,7 +344,7 @@ func (infra *Entity) CreateEntity(ctx core.Context, req *entity.Entity) (uint32,
 		if err := ctx.DB().Create(req).Error; err != nil {
 			return err
 		}
-		return op.Put(infra.getEntityCacheKey(req.Database, req.Name), req.Id).Do()
+		return op.Put(infra.getEntityCacheKey(req.App, req.Database, req.Name), req.Id).Do()
 	})
 	if err != nil {
 		return 0, err
@@ -303,11 +369,19 @@ func (infra *Entity) UpdateEntity(ctx core.Context, req *entity.Entity) error {
 			return err
 		}
 		if newReq.Database != ent.Database || newReq.Name != ent.Name {
-			return op.Delete(infra.getEntityCacheKey(ent.Database, ent.Name)).
-				Put(infra.getEntityCacheKey(newReq.Database, newReq.Name), newReq.Id).Do()
+			return op.Delete(infra.getEntityCacheKey(ent.App, ent.Database, ent.Name)).
+				Put(infra.getEntityCacheKey(newReq.App, newReq.Database, newReq.Name), newReq.Id).Do()
 		}
 		return nil
 	})
+}
+
+// UpdateRegisteredEntity 更新注册实体
+func (infra *Entity) UpdateRegisteredEntity(ctx core.Context, req *entity.Entity) error {
+	return ctx.DB().Model(&entity.Entity{}).
+		Where("id = ?", req.Id).
+		Omit("app", "database", "name").
+		Updates(req).Error
 }
 
 // DeleteEntity 删除数据
@@ -324,12 +398,58 @@ func (infra *Entity) DeleteEntity(ctx core.Context, id uint32) error {
 		if err := ctx.DB().Where("id = ?", id).Delete(&entity.Entity{}).Error; err != nil {
 			return err
 		}
-		return op.Delete(infra.getEntityCacheKey(ent.Database, ent.Name)).Do()
+		return op.Delete(infra.getEntityCacheKey(ent.App, ent.Database, ent.Name)).Do()
 	})
 }
 
-func (infra *Entity) GetEntityIdByName(db string, name string) (uint32, bool) {
-	return infra.entCache.Get(infra.getEntityCacheKey(db, name))
+// DeleteEntities 删除多条实体数据
+func (infra *Entity) DeleteEntities(ctx core.Context, ids []uint32) error {
+	ids = lo.Uniq(ids)
+	if len(ids) == 0 {
+		return nil
+	}
+
+	var ents []*entity.Entity
+	if err := ctx.DB().Where("id in ?", ids).Find(&ents).Error; err != nil {
+		return err
+	}
+	var fields []*entity.EntityField
+	if err := ctx.DB().Where("entity_id in ?", ids).Find(&fields).Error; err != nil {
+		return err
+	}
+	var rules []*entity.EntityRule
+	if err := ctx.DB().Where("entity_id in ?", ids).Find(&rules).Error; err != nil {
+		return err
+	}
+
+	op := infra.entCache.OP(ctx)
+	fieldOp := infra.fieldCache.OP(ctx)
+	ruleOp := infra.ruleCache.OP(ctx)
+	return ctx.Transaction(func(ctx core.Context) error {
+		if err := ctx.DB().Where("id in ?", ids).Delete(&entity.Entity{}).Error; err != nil {
+			return err
+		}
+		for _, item := range ents {
+			op = op.Delete(infra.getEntityCacheKey(item.App, item.Database, item.Name))
+		}
+		for _, item := range fields {
+			fieldOp = fieldOp.Delete(item.Id)
+		}
+		for _, item := range rules {
+			ruleOp = ruleOp.Delete(item.Id)
+		}
+		if err := op.Do(); err != nil {
+			return err
+		}
+		if err := fieldOp.Do(); err != nil {
+			return err
+		}
+		return ruleOp.Do()
+	})
+}
+
+func (infra *Entity) GetEntityIdByName(ctx core.Context, app string, db string, name string) (uint32, bool) {
+	return infra.entCache.Get(infra.getEntityCacheKey(app, db, name))
 }
 
 // load 加载全量的数据
@@ -340,12 +460,12 @@ func (infra *Entity) loadEntity(ctx core.Context) (map[string]uint32, error) {
 	}
 	bucket := map[string]uint32{}
 	for _, item := range list {
-		bucket[infra.getEntityCacheKey(item.Database, item.Name)] = item.Id
+		bucket[infra.getEntityCacheKey(item.App, item.Database, item.Name)] = item.Id
 	}
 	return bucket, nil
 }
 
 // getCacheKey 获取缓存的key
-func (infra *Entity) getEntityCacheKey(db string, mid string) string {
-	return fmt.Sprintf("%s:%s", db, mid)
+func (infra *Entity) getEntityCacheKey(app string, db string, mid string) string {
+	return fmt.Sprintf("%s:%s:%s", app, db, mid)
 }

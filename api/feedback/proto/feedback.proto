@@ -77,7 +77,7 @@ message ListFeedbackRequest {
       "created_at"
     ]
   }];
-  optional uint32 appId = 5;
+  optional string app = 5;
   optional uint32 classifyId = 6;
   optional string status = 7;
   optional string platform = 8;
@@ -99,7 +99,7 @@ message ListFeedbackReply {
       string name = 2;
     }
     uint32 id = 1;
-    uint32 appId = 2;
+    string app = 2;
     uint32 userId = 3;
     uint32 classifyId = 4;
     string title = 5;
@@ -114,7 +114,7 @@ message ListFeedbackReply {
     optional string processedResult = 14;
     uint32 createdAt = 15;
     uint32 updatedAt = 16;
-    optional App app = 17;
+    optional App appInfo = 17;
     optional User user = 18;
     optional Classify classify = 19;
     repeated string imageUrls = 20;
@@ -125,7 +125,7 @@ message ListFeedbackReply {
 }
 
 message CreateFeedbackRequest {
-  uint32 appId = 1 [(validate.rules).uint32 = {gte: 1}];
+  string app = 1 [(validate.rules).string = {min_len: 1, max_len: 64}];
   uint32 classifyId = 2 [(validate.rules).uint32 = {gte: 1}];
   string title = 3 [(validate.rules).string = {min_len: 1}];
   string content = 4 [(validate.rules).string = {min_len: 1}];

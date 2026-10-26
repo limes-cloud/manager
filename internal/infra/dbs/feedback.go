@@ -83,16 +83,16 @@ func (r Feedback) ListFeedback(ctx core.Context, req *types.ListFeedbackRequest)
 	)
 
 	db := ctx.DB().Model(entity.Feedback{})
-	db = db.Preload("App").Preload("User").Preload("Classify")
+	db = db.Preload("AppInfo").Preload("User").Preload("Classify")
 
-	if req.AppId != nil {
-		db = db.Where("app_id = ?", *req.AppId)
+	if req.App != nil {
+		db = db.Where("app = ?", *req.App)
 	}
-	if req.AppId == nil && req.AppIds != nil {
-		db = db.Where("app_id in ?", req.AppIds)
+	if req.App == nil && req.Apps != nil {
+		db = db.Where("app in ?", req.Apps)
 	}
 	if req.ClassifyId != nil {
-		db = db.Where("category_id = ?", *req.ClassifyId)
+		db = db.Where("classify_id = ?", *req.ClassifyId)
 	}
 	if req.Status != nil {
 		db = db.Where("status = ?", *req.Status)

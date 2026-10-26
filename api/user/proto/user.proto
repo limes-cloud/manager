@@ -9,13 +9,13 @@ option java_multiple_files = true;
 option java_package = "manager.api.user";
 
 message GetCurrentUserRequest {
-  optional string app = 1;
+  optional string app = 1 [(validate.rules).string = {max_len: 64}];
 }
 
 message GetUserRequest {
-  optional uint32 id = 1;
-  optional string username = 2;
-  optional string app = 3;
+  optional uint32 id = 1 [(validate.rules).uint32 = {gte: 1}];
+  optional string username = 2 [(validate.rules).string = {min_len: 1, max_len: 64}];
+  optional string app = 3 [(validate.rules).string = {max_len: 64}];
 }
 
 message UserObject {
@@ -60,7 +60,7 @@ message ListUserRequest {
     gte: 1
     lte: 50
   }];
-  optional uint32 appId = 3;
+  optional string app = 3;
   optional uint32 deptId = 4;
   optional uint32 jobId = 5;
   optional string username = 6;
@@ -77,7 +77,7 @@ message ListUserReply {
 }
 
 message CreateUserRequest {
-  string avatar = 1;
+  string avatar = 1 [(validate.rules).string = {max_len: 255}];
   string nickname = 2 [(validate.rules).string = {
     min_len: 1
     max_len: 64
@@ -116,7 +116,7 @@ message DeleteUserRequest {
 message DeleteUserReply {}
 
 message ResetPasswordRequest {
-  uint32 id = 1;
+  uint32 id = 1 [(validate.rules).uint32 = {gte: 1}];
 }
 
 message UpdateCurrentUserSettingRequest {
@@ -177,5 +177,5 @@ message ResetUserPasswordRequest {
 
 message OfflineUserRequest {
   uint32 userId = 1 [(validate.rules).uint32 = {gte: 1}];
-  repeated uint32 appIds = 2;
+  repeated string apps = 2;
 }

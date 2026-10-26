@@ -79,6 +79,21 @@ func (m *CreateJobRoleRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
+	if m.App != nil {
+
+		if utf8.RuneCountInString(m.GetApp()) > 64 {
+			err := CreateJobRoleRequestValidationError{
+				field:  "App",
+				reason: "value length must be at most 64 runes",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+	}
+
 	if len(errors) > 0 {
 		return CreateJobRoleRequestMultiError(errors)
 	}
@@ -318,6 +333,21 @@ func (m *ListJobRoleRequest) validate(all bool) error {
 
 	if m.Name != nil {
 		// no validation rules for Name
+	}
+
+	if m.App != nil {
+
+		if utf8.RuneCountInString(m.GetApp()) > 64 {
+			err := ListJobRoleRequestValidationError{
+				field:  "App",
+				reason: "value length must be at most 64 runes",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
 	}
 
 	if len(errors) > 0 {
@@ -578,6 +608,21 @@ func (m *DeleteJobRoleRequest) validate(all bool) error {
 			return err
 		}
 		errors = append(errors, err)
+	}
+
+	if m.App != nil {
+
+		if utf8.RuneCountInString(m.GetApp()) > 64 {
+			err := DeleteJobRoleRequestValidationError{
+				field:  "App",
+				reason: "value length must be at most 64 runes",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
 	}
 
 	if len(errors) > 0 {

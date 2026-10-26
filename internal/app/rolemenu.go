@@ -47,7 +47,7 @@ func (s *RoleMenu) GetRoleMenuIds(c context.Context, req *rolemenu.GetRoleMenuId
 
 	// 调用服务
 	list, err := s.srv.GetRoleMenuIds(ctx, &types.GetRoleMenuIdsRequest{
-		AppId:  req.AppId,
+		App:    req.App,
 		RoleId: req.RoleId,
 	})
 	if err != nil {
@@ -89,7 +89,7 @@ func (s *RoleMenu) CreateRoleMenus(c context.Context, req *rolemenu.CreateRoleMe
 	err := s.srv.CreateRoleMenus(ctx, &types.CreateRoleMenusRequest{
 		MenuIds: req.MenuIds,
 		RoleId:  req.RoleId,
-		AppId:   req.AppId,
+		App:     req.App,
 	})
 	if err != nil {
 		return nil, err

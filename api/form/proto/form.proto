@@ -1,0 +1,188 @@
+syntax = "proto3";
+
+package manager.api.form;
+
+import "validate/validate.proto";
+
+option go_package = "manager/api/form;form";
+
+// ==================== FormScene ====================
+
+message FormSceneItem {
+  uint32 id = 1;
+  string keyword = 2;
+  string name = 3;
+  optional string description = 4;
+  uint32 created_at = 5;
+  uint32 updated_at = 6;
+}
+
+message ListFormSceneRequest {
+  uint32 page = 1 [(validate.rules).uint32 = {gte: 1}];
+  uint32 page_size = 2 [(validate.rules).uint32 = {gte: 1, lte: 100}];
+  optional string keyword = 3;
+  optional string name = 4;
+}
+
+message ListFormSceneResponse {
+  uint32 total = 1;
+  repeated FormSceneItem list = 2;
+}
+
+message CreateFormSceneRequest {
+  string keyword = 1 [(validate.rules).string = {min_len: 1, max_len: 64}];
+  string name = 2 [(validate.rules).string = {min_len: 1, max_len: 128}];
+  optional string description = 3;
+}
+
+message CreateFormSceneResponse {
+  uint32 id = 1;
+}
+
+message UpdateFormSceneRequest {
+  uint32 id = 1 [(validate.rules).uint32 = {gte: 1}];
+  optional string keyword = 2;
+  optional string name = 3;
+  optional string description = 4;
+}
+
+message UpdateFormSceneResponse {}
+
+message DeleteFormSceneRequest {
+  uint32 id = 1 [(validate.rules).uint32 = {gte: 1}];
+}
+
+message DeleteFormSceneResponse {}
+
+// ==================== UserForm ====================
+
+message UserFormItem {
+  uint32 id = 1;
+  string scene = 2;             // 场景标识（关联 form_scene.keyword）
+  string name = 3;
+  optional string description = 4;
+  string schema = 5;            // 设计器导出的完整 JSON
+  uint32 version = 6;
+  bool status = 7;              // false=草稿 true=已发布
+  uint32 created_at = 8;
+  uint32 updated_at = 9;
+}
+
+message ListUserFormRequest {
+  uint32 page = 1 [(validate.rules).uint32 = {gte: 1}];
+  uint32 page_size = 2 [(validate.rules).uint32 = {gte: 1, lte: 100}];
+  optional string scene = 3;
+  optional string name = 4;
+  optional bool status = 5;
+}
+
+message ListUserFormResponse {
+  uint32 total = 1;
+  repeated UserFormItem list = 2;
+}
+
+message GetUserFormRequest {
+  optional uint32 id = 1 [(validate.rules).uint32 = {gte: 1}];
+  optional string scene = 2 [(validate.rules).string = {min_len: 1, max_len: 64}];
+}
+
+message GetUserFormResponse {
+  UserFormItem data = 1;
+}
+
+message CreateUserFormRequest {
+  string scene = 1 [(validate.rules).string = {min_len: 1, max_len: 64}];
+  string name = 2 [(validate.rules).string = {min_len: 1, max_len: 128}];
+  optional string description = 3;
+  string schema = 4 [(validate.rules).string = {min_len: 2}];
+}
+
+message CreateUserFormResponse {
+  uint32 id = 1;
+}
+
+message UpdateUserFormRequest {
+  uint32 id = 1 [(validate.rules).uint32 = {gte: 1}];
+  optional string scene = 2;
+  optional string name = 3;
+  optional string description = 4;
+  optional string schema = 5;
+}
+
+message UpdateUserFormResponse {}
+
+message PublishUserFormRequest {
+  uint32 id = 1 [(validate.rules).uint32 = {gte: 1}];
+}
+
+message PublishUserFormResponse {}
+
+message DeleteUserFormRequest {
+  uint32 id = 1 [(validate.rules).uint32 = {gte: 1}];
+}
+
+message DeleteUserFormResponse {}
+
+// ==================== AppForm ====================
+
+message AppFormItem {
+  uint32 id = 1;
+  string app_keyword = 2;
+  uint32 form_id = 3;
+  string scene = 4;
+  uint32 created_at = 5;
+}
+
+message ListAppFormRequest {
+  string app_keyword = 1 [(validate.rules).string = {min_len: 1, max_len: 64}];
+}
+
+message ListAppFormResponse {
+  repeated AppFormItem list = 1;
+}
+
+message CreateAppFormRequest {
+  string app_keyword = 1 [(validate.rules).string = {min_len: 1, max_len: 64}];
+  uint32 form_id = 2 [(validate.rules).uint32 = {gte: 1}];
+}
+
+message CreateAppFormResponse {
+  uint32 id = 1;
+}
+
+message DeleteAppFormRequest {
+  uint32 id = 1 [(validate.rules).uint32 = {gte: 1}];
+}
+
+message DeleteAppFormResponse {}
+
+message GetUserFormByAppRequest {
+  string app_keyword = 1 [(validate.rules).string = {min_len: 1, max_len: 64}];
+  string scene = 2 [(validate.rules).string = {min_len: 1, max_len: 64}];
+}
+
+message GetUserFormByAppResponse {
+  UserFormItem data = 1;
+}
+
+// ==================== RemoteOptions ====================
+
+message RemoteOptionItem {
+  string label = 1;
+  string value = 2;
+}
+
+message FetchRemoteOptionsRequest {
+  string url = 1 [(validate.rules).string = {min_len: 1, max_len: 2048}];
+  string method = 2 [(validate.rules).string = {in: ["GET", "POST"]}];
+  string data_path = 3;
+  string label_field = 4;
+  string value_field = 5;
+  map<string, string> headers = 6;
+  string params = 7;
+  string body = 8;
+}
+
+message FetchRemoteOptionsResponse {
+  repeated RemoteOptionItem items = 1;
+}

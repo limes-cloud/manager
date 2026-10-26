@@ -4,7 +4,7 @@ import "github.com/limes-cloud/kratosx/model"
 
 type AppOAuther struct {
 	model.CreateModel
-	AppId     uint32   `json:"appId" gorm:"column:app_id"`
+	App       string   `json:"app" gorm:"column:app"`
 	OAutherId uint32   `json:"oautherId" gorm:"column:oauther_id"`
 	Type      string   `json:"type"  gorm:"column:type"`
 	OAuther   *OAuther `json:"oauther" gorm:"foreignKey:oauther_id;references:id"`

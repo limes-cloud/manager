@@ -930,3 +930,63 @@ func LoginInfoNotFound(args ...any) *errors.Error {
 		return errors.New(500, ErrorReason_LoginInfoNotFound.String(), "登陆信息不存在:"+msg)
 	}
 }
+
+func IsAppNotLoginableError(err error) bool {
+	if err == nil {
+		return false
+	}
+	e := errors.FromError(err)
+	return e.Reason == ErrorReason_AppNotLoginableError.String() && e.Code == 403
+}
+
+func AppNotLoginableError(args ...any) *errors.Error {
+	switch len(args) {
+	case 0:
+		return errors.New(403, ErrorReason_AppNotLoginableError.String(), "该应用不支持登录")
+	case 1:
+		return errors.New(403, ErrorReason_AppNotLoginableError.String(), "该应用不支持登录:"+fmt.Sprint(args[0]))
+	default:
+		msg := fmt.Sprintf(fmt.Sprint(args[0]), args[1:]...)
+		return errors.New(403, ErrorReason_AppNotLoginableError.String(), "该应用不支持登录:"+msg)
+	}
+}
+
+func IsAppModuleScopeError(err error) bool {
+	if err == nil {
+		return false
+	}
+	e := errors.FromError(err)
+	return e.Reason == ErrorReason_AppModuleScopeError.String() && e.Code == 403
+}
+
+func AppModuleScopeError(args ...any) *errors.Error {
+	switch len(args) {
+	case 0:
+		return errors.New(403, ErrorReason_AppModuleScopeError.String(), "当前应用未订阅该模块")
+	case 1:
+		return errors.New(403, ErrorReason_AppModuleScopeError.String(), "当前应用未订阅该模块:"+fmt.Sprint(args[0]))
+	default:
+		msg := fmt.Sprintf(fmt.Sprint(args[0]), args[1:]...)
+		return errors.New(403, ErrorReason_AppModuleScopeError.String(), "当前应用未订阅该模块:"+msg)
+	}
+}
+
+func IsAppTypeError(err error) bool {
+	if err == nil {
+		return false
+	}
+	e := errors.FromError(err)
+	return e.Reason == ErrorReason_AppTypeError.String() && e.Code == 400
+}
+
+func AppTypeError(args ...any) *errors.Error {
+	switch len(args) {
+	case 0:
+		return errors.New(400, ErrorReason_AppTypeError.String(), "应用类型不合法")
+	case 1:
+		return errors.New(400, ErrorReason_AppTypeError.String(), "应用类型不合法:"+fmt.Sprint(args[0]))
+	default:
+		msg := fmt.Sprintf(fmt.Sprint(args[0]), args[1:]...)
+		return errors.New(400, ErrorReason_AppTypeError.String(), "应用类型不合法:"+msg)
+	}
+}

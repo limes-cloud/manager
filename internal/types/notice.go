@@ -5,7 +5,7 @@ import "github.com/limes-cloud/kratosx/model/page"
 type ListNoticeRequest struct {
 	*page.Search
 	ClassifyId *uint32 `json:"classifyId"`
-	AppId      *uint32 `json:"appId"`
+	App        *string `json:"app"`
 	Title      *string `json:"title"`
 	IsTop      *bool   `json:"isTop"`
 	Status     *bool   `json:"status"`

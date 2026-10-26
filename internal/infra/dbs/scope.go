@@ -11,7 +11,7 @@ import (
 
 	"github.com/samber/lo"
 
-	"github.com/limes-cloud/manager/internal/domain/entity"
+	entitypkg "github.com/limes-cloud/manager/internal/domain/entity"
 
 	"github.com/limes-cloud/manager/internal/core"
 )
@@ -70,23 +70,23 @@ func (s Scope) RoleScopes(ctx core.Context) []uint32 {
 // GetScope 获取的规则
 func (s Scope) GetScope(ctx core.Context, database string, entity string, action string) *types.GetScopeResponse {
 	reply := &types.GetScopeResponse{}
-	eid, has := s.ent.GetEntityIdByName(database, entity)
+	app := ctx.AppKey()
+	eid, has := s.ent.GetEntityIdByName(ctx, app, database, entity)
 	if !has {
 		return reply
 	}
 
 	// 获取当前的的角色id
-	rids, drm := s.getRoleDept(ctx)
+	rids, drm := s.getRoleDept(ctx, app)
 
 	var (
 		scopes []uint32
-		fields []string
 		rule   = &hook.ConditionGroup{
 			Logic: "OR",
 		}
 	)
 	for _, rid := range rids {
-		roleEntity, has := s.re.GetRoleEntityByRDA(rid, eid, action)
+		roleEntity, has := s.re.GetRoleEntityByRDA(ctx, &entitypkg.RoleEntity{App: app, RoleId: rid, EntityId: eid, Action: action})
 		if !has {
 			continue
 		}
@@ -96,17 +96,6 @@ func (s Scope) GetScope(ctx core.Context, database string, entity string, action
 			all, deptIds := s.deptScope(drm[rid], roleEntity)
 			scopes = append(scopes, deptIds...)
 			reply.AllDept = all
-		}
-
-		// 获取字段
-		var tfs []uint32
-		_ = json.Unmarshal([]byte(roleEntity.Fields), &tfs)
-		for _, tf := range tfs {
-			fn, ok := s.ent.GetEntityFieldName(tf)
-			if !ok {
-				continue
-			}
-			fields = append(fields, fn)
 		}
 
 		// 获取规则
@@ -124,7 +113,6 @@ func (s Scope) GetScope(ctx core.Context, database string, entity string, action
 	}
 
 	reply.DeptScopes = lo.Uniq(scopes)
-	reply.Fields = lo.Uniq(fields)
 	reply.Rule = rule
 	if reply.AllDept {
 		reply.DeptScopes = nil
@@ -136,18 +124,19 @@ func (s Scope) GetScope(ctx core.Context, database string, entity string, action
 // SystemDeptScopes 获取当前操
 func (s Scope) SystemDeptScopes(ctx core.Context, entity string, action string) (bool, []uint32) {
 	// 获取当前系统的数据库名称
-	eid, has := s.ent.GetEntityIdByName(s.database, entity)
+	app := ctx.AppKey()
+	eid, has := s.ent.GetEntityIdByName(ctx, app, s.database, entity)
 	if !has {
 		return false, nil
 	}
 
 	// 获取当前的角色id
-	rids, drm := s.getRoleDept(ctx)
+	rids, drm := s.getRoleDept(ctx, app)
 
 	// 获取这些角色-实体关系
 	var scopes []uint32
 	for _, rid := range rids {
-		roleEntity, has := s.re.GetRoleEntityByRDA(rid, eid, action)
+		roleEntity, has := s.re.GetRoleEntityByRDA(ctx, &entitypkg.RoleEntity{App: app, RoleId: rid, EntityId: eid, Action: action})
 		if !has {
 			continue
 		}
@@ -164,18 +153,19 @@ func (s Scope) SystemDeptScopes(ctx core.Context, entity string, action string) 
 
 // DeptScopes 获取当前操
 func (s Scope) DeptScopes(ctx core.Context, database string, entity string, action string) (bool, []uint32) {
-	eid, has := s.ent.GetEntityIdByName(database, entity)
+	app := ctx.AppKey()
+	eid, has := s.ent.GetEntityIdByName(ctx, app, database, entity)
 	if !has {
 		return false, nil
 	}
 
 	// 获取当前的角色id
-	rids, drm := s.getRoleDept(ctx)
+	rids, drm := s.getRoleDept(ctx, app)
 
 	// 获取这些角色-实体关系
 	var scopes []uint32
 	for _, rid := range rids {
-		roleEntity, has := s.re.GetRoleEntityByRDA(rid, eid, action)
+		roleEntity, has := s.re.GetRoleEntityByRDA(ctx, &entitypkg.RoleEntity{App: app, RoleId: rid, EntityId: eid, Action: action})
 		if !has {
 			continue
 		}
@@ -190,7 +180,7 @@ func (s Scope) DeptScopes(ctx core.Context, database string, entity string, acti
 	return false, scopes
 }
 
-func (s Scope) deptScope(deptIds []uint32, re *entity.RoleEntity) (bool, []uint32) {
+func (s Scope) deptScope(deptIds []uint32, re *entitypkg.RoleEntity) (bool, []uint32) {
 	switch re.Scope {
 	case "ALL": // 所有部门
 		return true, nil
@@ -213,13 +203,13 @@ func (s Scope) deptScope(deptIds []uint32, re *entity.RoleEntity) (bool, []uint3
 	}
 }
 
-func (s Scope) getRoleDept(ctx core.Context) ([]uint32, map[uint32][]uint32) {
+func (s Scope) getRoleDept(ctx core.Context, app string) ([]uint32, map[uint32][]uint32) {
 	var (
 		jdm  = map[uint32][]uint32{}
 		dids = []uint32{ctx.Auth().DeptId}
 		jids = []uint32{ctx.Auth().JobId}
 	)
-	uds := s.ud.ListUserDeptByUserId(ctx.Auth().UserId)
+	uds := s.ud.ListUserDeptByUserId(ctx, app, ctx.Auth().UserId)
 	for _, item := range uds {
 		jdm[item.JobId] = append(jdm[item.JobId], item.DeptId)
 		dids = append(dids, item.DeptId)
@@ -232,14 +222,14 @@ func (s Scope) getRoleDept(ctx core.Context) ([]uint32, map[uint32][]uint32) {
 	)
 
 	// 获取部门-角色
-	drs := s.dr.GetDeptRolesByDeptIds(dids)
+	drs := s.dr.GetDeptRolesByDeptIds(ctx, app, dids)
 	for _, item := range drs {
 		drm[item.RoleId] = append(drm[item.RoleId], item.DeptId)
 		rids = append(rids, item.RoleId)
 	}
 
 	// 获取职位-角色
-	jrs := s.jr.GetJobRolesByJobIds(jids)
+	jrs := s.jr.GetJobRolesByJobIds(ctx, app, jids)
 	for _, item := range jrs {
 		drm[item.RoleId] = append(drm[item.RoleId], jdm[item.JobId]...)
 		rids = append(rids, item.RoleId)
@@ -252,7 +242,8 @@ func (s Scope) getRoleDept(ctx core.Context) ([]uint32, map[uint32][]uint32) {
 func (s Scope) RoleIds(ctx core.Context) []uint32 {
 	// 获取当前的部门id
 	var dids, jids []uint32
-	list := s.ud.ListUserDeptByUserId(ctx.Auth().UserId)
+	app := ctx.AppKey()
+	list := s.ud.ListUserDeptByUserId(ctx, app, ctx.Auth().UserId)
 	for _, item := range list {
 		dids = append(dids, item.DeptId)
 		jids = append(jids, item.JobId)
@@ -262,24 +253,26 @@ func (s Scope) RoleIds(ctx core.Context) []uint32 {
 	jids = append(jids, ctx.Auth().JobId)
 
 	// 获取部门绑定的角色
-	rids := s.dr.GetRoleIdsByDeptIds(dids)
+	rids := s.dr.GetRoleIdsByDeptIds(ctx, app, dids)
 
 	// 获取当前的职位
-	rids = append(rids, s.jr.GetRoleIdsByJobIds(jids)...)
+	rids = append(rids, s.jr.GetRoleIdsByJobIds(ctx, app, jids)...)
 
 	return rids
 }
 
 // DeptIds 获取当前用户的部门id列表
 func (s Scope) DeptIds(ctx core.Context) []uint32 {
-	ids := s.ud.GetDeptIdsByUserId(ctx.Auth().UserId)
+	app := ctx.AppKey()
+	ids := s.ud.GetDeptIdsByUserId(ctx, app, ctx.Auth().UserId)
 	return append(ids, ctx.Auth().DeptId)
 }
 
 func (s Scope) HasMenuScope(ctx core.Context, menuId uint32) bool {
+	app := ctx.AppKey()
 	rids := s.RoleIds(ctx)
 	for _, rid := range rids {
-		if s.rm.hasRoleMenu(rid, menuId) {
+		if s.rm.hasRoleMenu(app, rid, menuId) {
 			return true
 		}
 	}

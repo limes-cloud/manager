@@ -10,14 +10,11 @@ type OAutherFunc interface {
 	// Visible 是否可见
 	Visible(ctx core.Context, req *types.OAutherVisibleRequest) (*types.OAutherVisibleReply, error)
 
-	// Handler 授权处理
-	Handler(core.Context, *types.OAutherHandleRequest) (*types.OAutherHandleReply, error)
+	// Start 开始授权流程
+	Start(core.Context, *types.OAutherStartRequest) (*types.OAutherStartReply, error)
 
-	// GetToken 获取授权token
-	GetToken(core.Context, *types.OAutherTokenRequest) (*types.OAutherTokenReply, error)
-
-	// GetInfo 获取授权信息
-	GetInfo(core.Context, *types.OAutherInfoRequest) (*types.OAutherInfoReply, error)
+	// Complete 完成授权流程并解析身份
+	Complete(core.Context, *types.OAutherCompleteRequest) (*types.OAutherIdentity, error)
 }
 
 type OAuthExecer interface {

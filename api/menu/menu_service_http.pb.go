@@ -35,7 +35,7 @@ type MenuHTTPServer interface {
 	ListCurrentMenu(context.Context, *ListCurrentMenuRequest) (*ListMenuReply, error)
 	// ListMenu ListMenu 获取菜单信息列表
 	ListMenu(context.Context, *ListMenuRequest) (*ListMenuReply, error)
-	// RegisterMenu RegisterMenu 注册应用菜单
+	// RegisterMenu RegisterMenu 注册应用菜单（供各服务启动时自注册菜单/接口权限）
 	RegisterMenu(context.Context, *RegisterMenuRequest) (*RegisterMenuReply, error)
 	// UpdateMenu UpdateMenu 更新菜单信息
 	UpdateMenu(context.Context, *UpdateMenuRequest) (*UpdateMenuReply, error)

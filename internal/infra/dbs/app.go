@@ -83,6 +83,9 @@ func (r App) ListApp(ctx core.Context, req *types.ListAppRequest) ([]*entity.App
 	if req.Status != nil {
 		db = db.Where("status = ?", *req.Status)
 	}
+	if req.Type != nil {
+		db = db.Where("type = ?", *req.Type)
+	}
 
 	if req.Search != nil {
 		// 查询条件下数据总数

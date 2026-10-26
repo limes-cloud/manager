@@ -13,6 +13,7 @@ message CreateUserDeptRequest {
   uint32 deptId = 2 [(validate.rules).uint32 = {gte: 1}];
   uint32 jobId = 3 [(validate.rules).uint32 = {gte: 1}];
   bool main = 4;
+  optional string app = 5 [(validate.rules).string = {max_len: 64}];
 }
 
 message CreateUserDeptReply {}
@@ -23,6 +24,7 @@ message UpdateUserDeptRequest {
   uint32 deptId = 3;
   uint32 jobId = 4;
   bool main = 5;
+  optional string app = 6 [(validate.rules).string = {max_len: 64}];
 }
 
 message UpdateUserDeptReply {}
@@ -36,6 +38,7 @@ message ListUserDeptRequest {
   uint32 userId = 3 [(validate.rules).uint32 = {gte: 1}];
   optional string job = 4;
   optional string dept = 5;
+  optional string app = 6 [(validate.rules).string = {max_len: 64}];
 }
 
 message ListUserDeptReply {
@@ -68,5 +71,6 @@ message ListUserDeptReply {
 
 message DeleteUserDeptRequest {
   uint32 id = 1 [(validate.rules).uint32 = {gte: 1}];
+  optional string app = 2 [(validate.rules).string = {max_len: 64}];
 }
 message DeleteUserDeptReply {}

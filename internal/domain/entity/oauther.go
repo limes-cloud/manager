@@ -7,15 +7,15 @@ import (
 )
 
 type OAuther struct {
-	Logo        string `json:"logo" gorm:"column:logo"`               // 渠道logo
-	Keyword     string `json:"keyword" gorm:"column:keyword"`         // 渠道标识
-	Type        string `json:"type"  gorm:"column:type"`              // 渠道类型
-	Name        string `json:"name" gorm:"column:name"`               // 渠道名称
-	Status      *bool  `json:"status" gorm:"column:status"`           // 启用状态
-	Ak          string `json:"ak" gorm:"column:ak"`                   // 渠道AK
-	Sk          string `json:"sk" gorm:"column:sk"`                   // 渠道SK
-	Setting     string `json:"extra" gorm:"column:setting"`           // 渠道设置
-	Description string `json:"description" gorm:"column:description"` // 描述信息
+	Logo        string  `json:"logo" gorm:"column:logo"`               // 渠道logo
+	Keyword     string  `json:"keyword" gorm:"column:keyword"`         // 渠道标识
+	Type        string  `json:"type"  gorm:"column:type"`              // 渠道类型
+	Name        string  `json:"name" gorm:"column:name"`               // 渠道名称
+	Status      *bool   `json:"status" gorm:"column:status"`           // 启用状态
+	Ak          string  `json:"ak" gorm:"column:ak"`                   // 渠道AK
+	Sk          string  `json:"sk" gorm:"column:sk"`                   // 渠道SK
+	Setting     string  `json:"extra" gorm:"column:setting"`           // 渠道设置
+	Description *string `json:"description" gorm:"column:description"` // 描述信息
 	model.BaseModel
 
 	// 首页登录使用

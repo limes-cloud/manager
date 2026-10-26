@@ -79,10 +79,10 @@ func (m *ListAppFieldRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	if m.GetAppId() < 1 {
+	if l := utf8.RuneCountInString(m.GetApp()); l < 1 || l > 64 {
 		err := ListAppFieldRequestValidationError{
-			field:  "AppId",
-			reason: "value must be greater than or equal to 1",
+			field:  "App",
+			reason: "value length must be between 1 and 64 runes, inclusive",
 		}
 		if !all {
 			return err
@@ -110,7 +110,7 @@ func (m *ListAppFieldRequest) validate(all bool) error {
 		if _, ok := _ListAppFieldRequest_OrderBy_InLookup[m.GetOrderBy()]; !ok {
 			err := ListAppFieldRequestValidationError{
 				field:  "OrderBy",
-				reason: "value must be in list [id created_at updated_at]",
+				reason: "value must be in list [id sort created_at]",
 			}
 			if !all {
 				return err
@@ -215,8 +215,8 @@ var _ListAppFieldRequest_Order_InLookup = map[string]struct{}{
 
 var _ListAppFieldRequest_OrderBy_InLookup = map[string]struct{}{
 	"id":         {},
+	"sort":       {},
 	"created_at": {},
-	"updated_at": {},
 }
 
 // Validate checks the field values on ListAppFieldReply with the rules defined
@@ -379,10 +379,10 @@ func (m *CreateAppFieldRequest) validate(all bool) error {
 
 	var errors []error
 
-	if m.GetAppId() < 1 {
+	if l := utf8.RuneCountInString(m.GetApp()); l < 1 || l > 64 {
 		err := CreateAppFieldRequestValidationError{
-			field:  "AppId",
-			reason: "value must be greater than or equal to 1",
+			field:  "App",
+			reason: "value length must be between 1 and 64 runes, inclusive",
 		}
 		if !all {
 			return err
@@ -402,6 +402,10 @@ func (m *CreateAppFieldRequest) validate(all bool) error {
 	}
 
 	// no validation rules for Required
+
+	// no validation rules for Unique
+
+	// no validation rules for Sort
 
 	if len(errors) > 0 {
 		return CreateAppFieldRequestMultiError(errors)
@@ -621,6 +625,10 @@ func (m *UpdateAppFieldRequest) validate(all bool) error {
 	}
 
 	// no validation rules for Required
+
+	// no validation rules for Unique
+
+	// no validation rules for Sort
 
 	if len(errors) > 0 {
 		return UpdateAppFieldRequestMultiError(errors)
@@ -1043,11 +1051,48 @@ func (m *ListAppFieldReply_Field) validate(all bool) error {
 
 	// no validation rules for Id
 
-	// no validation rules for Name
-
 	// no validation rules for Keyword
 
 	// no validation rules for Type
+
+	// no validation rules for Name
+
+	if m.Config != nil {
+
+		if all {
+			switch v := interface{}(m.GetConfig()).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, ListAppFieldReply_FieldValidationError{
+						field:  "Config",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, ListAppFieldReply_FieldValidationError{
+						field:  "Config",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(m.GetConfig()).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return ListAppFieldReply_FieldValidationError{
+					field:  "Config",
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	if m.Description != nil {
+		// no validation rules for Description
+	}
 
 	if len(errors) > 0 {
 		return ListAppFieldReply_FieldMultiError(errors)
@@ -1153,11 +1198,15 @@ func (m *ListAppFieldReply_Data) validate(all bool) error {
 
 	// no validation rules for Id
 
-	// no validation rules for AppId
+	// no validation rules for App
 
 	// no validation rules for FieldId
 
 	// no validation rules for Required
+
+	// no validation rules for Unique
+
+	// no validation rules for Sort
 
 	// no validation rules for CreatedAt
 

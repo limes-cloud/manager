@@ -101,14 +101,14 @@ func (u *User) UpdateCurrentUserPassword(ctx core.Context, req *types.UpdateCurr
 // UpdateCurrentUserSetting 更新租户
 func (u *User) UpdateCurrentUserSetting(ctx core.Context, req *types.UpdateCurrentUserSettingRequest) error {
 	// 获取应用信息
-	app, err := u.app.GetAppByKeyword(req.App)
+	app, err := u.app.GetAppByKeyword(ctx.AppKey(req.App))
 	if err != nil {
 		return errors.GetError("获取应用信息失败")
 	}
 
 	if err := u.setting.UpsertUserSetting(ctx, &entity.UserSetting{
 		UserId:  ctx.Auth().UserId,
-		AppId:   app.Id,
+		App:     app.Keyword,
 		Setting: req.Setting,
 	}); err != nil {
 		ctx.Logger().Warnw("msg", "update user error", "err", err.Error())
@@ -142,18 +142,18 @@ func (u *User) GetUser(ctx core.Context, req *types.GetUserRequest) (*entity.Use
 
 	// 不需要获取应用相关信息，则直接返回
 	if req.App != nil {
-		app, err := u.app.GetAppByKeyword(*req.App)
+		app, err := u.app.GetAppByKeyword(ctx.AppKey(*req.App))
 		if err != nil {
 			return nil, errors.GetError("获取应用信息失败")
 		}
 
 		// 获取用户的字段
-		fields, err := u.af.GetAppFields(ctx, app.Id)
+		fields, err := u.af.GetAppFields(ctx, app.Keyword)
 		getFieldReq.Fields = fields
 
 		// 获取用户应用设置
 		us, _ := u.setting.GetUserSetting(ctx, &types.GetUserSettingRequest{
-			AppId:  app.Id,
+			App:    app.Keyword,
 			UserId: res.Id,
 		})
 		if us != nil {
@@ -170,7 +170,7 @@ func (u *User) GetUser(ctx core.Context, req *types.GetUserRequest) (*entity.Use
 	}
 
 	// 获取用户部门信息
-	depts, _, _ := u.userdept.ListUserDept(ctx, &types.ListUserDeptRequest{
+	depts, _, _ := u.userdept.ListUserDept(ctx, ctx.AppKey(), &types.ListUserDeptRequest{
 		UserId: res.Id,
 	})
 	if depts != nil {
@@ -189,11 +189,11 @@ func (u *User) ListUser(ctx core.Context, req *types.ListUserRequest) ([]*entity
 		req.InJobIds = append(req.InJobIds, *req.JobId)
 	}
 	if req.App != nil {
-		app, err := u.app.GetAppByKeyword(*req.App)
+		app, err := u.app.GetAppByKeyword(ctx.AppKey(*req.App))
 		if err != nil {
 			return nil, 0, errors.GetError(err.Error())
 		}
-		req.AppId = &app.Id
+		_ = app // ListUser now filters via Authorize join, app keyword used directly
 	}
 
 	list, total, err := u.repo.ListUser(ctx, req)
@@ -281,10 +281,21 @@ func (u *User) ResetPassword(ctx core.Context, uid uint32) error {
 
 // OfflineUser 下线用户
 func (u *User) OfflineUser(ctx core.Context, req *types.OfflineUserRequest) error {
+	// 将 app keywords 转换为 appIds
+	var appIds []uint32
+	for _, appKeyword := range req.Apps {
+		app, err := u.app.GetAppByKeyword(appKeyword)
+		if err != nil {
+			ctx.Logger().Warnw("msg", "get app error", "keyword", appKeyword, "err", err.Error())
+			continue
+		}
+		appIds = append(appIds, app.Id)
+	}
+
 	// 获取当前用户的信息
 	list, _, err := u.az.ListAuthorize(ctx, &types.ListAuthorizeRequest{
 		UserId: value.Pointer(req.UserId),
-		AppIds: req.AppIds,
+		AppIds: appIds,
 	})
 	if err != nil {
 		ctx.Logger().Warnw("msg", "list authorize error", "err", err.Error())
@@ -299,9 +310,14 @@ func (u *User) OfflineUser(ctx core.Context, req *types.OfflineUserRequest) erro
 			continue
 		}
 
-		jwtconf := app.GetSetting().JWT
+		setting, err := app.ParseSetting()
+		if err != nil {
+			ctx.Logger().Warnw("msg", "parse app setting error", "err", err.Error(), "app", app.Keyword)
+			continue
+		}
+
+		jwtconf := setting.JWT
 		jwter := jwt.New(ctx.Context, &jwt.Config{
-			App:     app.Keyword,
 			Secret:  jwtconf.Secret,
 			Expire:  time.Duration(jwtconf.Expire) * time.Second,
 			Renewal: time.Duration(jwtconf.Renewal) * time.Second,

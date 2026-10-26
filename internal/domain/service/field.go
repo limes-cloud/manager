@@ -8,7 +8,6 @@ import (
 
 	"github.com/limes-cloud/manager/internal/domain/entity"
 	"github.com/limes-cloud/manager/internal/domain/repository"
-	"github.com/limes-cloud/manager/internal/pkg/field"
 	"github.com/limes-cloud/manager/internal/types"
 )
 
@@ -24,18 +23,35 @@ func NewField(
 	}
 }
 
-// ListFieldType 获取支持的全部字段类型
-func (srv *Field) ListFieldType() []*types.FieldType {
-	var list []*types.FieldType
-	tps := field.New().GetTypes()
-
-	for key, tp := range tps {
-		list = append(list, &types.FieldType{Type: key, Name: tp.Name()})
+// ListFieldOptions 获取组件类型和校验规则枚举
+func (srv *Field) ListFieldOptions() *types.FieldOptionsReply {
+	return &types.FieldOptionsReply{
+		Types: []types.FieldOptionItem{
+			{Value: "input", Name: "单行文本"},
+			{Value: "textarea", Name: "多行文本"},
+			{Value: "number", Name: "数字输入"},
+			{Value: "password", Name: "密码输入"},
+			{Value: "radio", Name: "单项选择"},
+			{Value: "checkbox", Name: "多项选择"},
+			{Value: "select", Name: "下拉选择"},
+			{Value: "time", Name: "时间选择"},
+			{Value: "date", Name: "日期选择"},
+			{Value: "datetime", Name: "日期时间"},
+			{Value: "upload", Name: "文件上传"},
+		},
+		Rules: []types.FieldOptionItem{
+			{Value: "phone", Name: "手机号"},
+			{Value: "email", Name: "邮箱"},
+			{Value: "idcard", Name: "身份证"},
+			{Value: "regex", Name: "正则表达式"},
+			{Value: "enum", Name: "枚举值"},
+			{Value: "range", Name: "数值范围"},
+			{Value: "length", Name: "字符长度"},
+		},
 	}
-	return list
 }
 
-// ListField 获取用户字段列表
+// ListField 获取字段列表
 func (srv *Field) ListField(ctx core.Context, req *types.ListFieldRequest) ([]*entity.Field, uint32, error) {
 	list, total, err := srv.repo.ListField(ctx, req)
 	if err != nil {
@@ -45,10 +61,10 @@ func (srv *Field) ListField(ctx core.Context, req *types.ListFieldRequest) ([]*e
 	return list, total, nil
 }
 
-// CreateField 创建用户字段
-func (srv *Field) CreateField(ctx core.Context, field *entity.Field) (uint32, error) {
-	field.Status = proto.Bool(false)
-	id, err := srv.repo.CreateField(ctx, field)
+// CreateField 创建字段
+func (srv *Field) CreateField(ctx core.Context, f *entity.Field) (uint32, error) {
+	f.Status = proto.Bool(false)
+	id, err := srv.repo.CreateField(ctx, f)
 	if err != nil {
 		ctx.Logger().Warnw("msg", "create field error", "err", err.Error())
 		return 0, errors.CreateError(err.Error())
@@ -56,16 +72,16 @@ func (srv *Field) CreateField(ctx core.Context, field *entity.Field) (uint32, er
 	return id, nil
 }
 
-// UpdateField 更新用户字段
-func (srv *Field) UpdateField(ctx core.Context, field *entity.Field) error {
-	if err := srv.repo.UpdateField(ctx, field); err != nil {
+// UpdateField 更新字段
+func (srv *Field) UpdateField(ctx core.Context, f *entity.Field) error {
+	if err := srv.repo.UpdateField(ctx, f); err != nil {
 		ctx.Logger().Warnw("msg", "update field error", "err", err.Error())
 		return errors.UpdateError(err.Error())
 	}
 	return nil
 }
 
-// DeleteField 删除用户字段
+// DeleteField 删除字段
 func (srv *Field) DeleteField(ctx core.Context, id uint32) error {
 	if err := srv.repo.DeleteField(ctx, id); err != nil {
 		ctx.Logger().Warnw("msg", "delete field error", "err", err.Error())

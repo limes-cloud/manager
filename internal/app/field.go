@@ -3,19 +3,15 @@ package app
 import (
 	"context"
 
-	"github.com/limes-cloud/kratosx/pkg/value"
-
 	"github.com/go-kratos/kratos/v2/transport/grpc"
 	"github.com/go-kratos/kratos/v2/transport/http"
-
-	"github.com/limes-cloud/manager/internal/core"
-
 	"github.com/limes-cloud/kratosx/model"
-
 	"github.com/limes-cloud/kratosx/model/page"
+	"github.com/limes-cloud/kratosx/pkg/value"
 
+	"github.com/limes-cloud/manager/api/errors"
 	"github.com/limes-cloud/manager/api/field"
-
+	"github.com/limes-cloud/manager/internal/core"
 	"github.com/limes-cloud/manager/internal/domain/entity"
 	"github.com/limes-cloud/manager/internal/domain/service"
 	"github.com/limes-cloud/manager/internal/infra/dbs"
@@ -43,41 +39,26 @@ func init() {
 	})
 }
 
-// ListFieldType 获取字段类型列表
-func (fd *Field) ListFieldType(c context.Context, req *field.ListFieldTypeRequest) (*field.ListFieldTypeReply, error) {
-	list := fd.srv.ListFieldType()
-	reply := field.ListFieldTypeReply{}
-	for _, item := range list {
-		reply.List = append(reply.List, &field.ListFieldTypeReply_Type{
-			Name: item.Name,
-			Type: item.Type,
+// ListFieldOptions 获取组件类型和校验规则枚举
+func (fd *Field) ListFieldOptions(c context.Context, _ *field.ListFieldOptionsRequest) (*field.ListFieldOptionsReply, error) {
+	options := fd.srv.ListFieldOptions()
+	reply := &field.ListFieldOptionsReply{}
+	for _, item := range options.Types {
+		reply.Types = append(reply.Types, &field.ListFieldOptionsReply_Option{
+			Value: item.Value,
+			Name:  item.Name,
 		})
 	}
-
-	return &reply, nil
-}
-
-// ListRequiredField 获取必填用户字段列表
-func (fd *Field) ListRequiredField(c context.Context, _ *field.ListRequiredFieldRequest) (*field.ListRequiredFieldReply, error) {
-	list, _, err := fd.srv.ListField(core.MustContext(c), &types.ListFieldRequest{
-		Status:   value.Pointer(true),
-		Required: value.Pointer(true),
-	})
-	if err != nil {
-		return nil, err
-	}
-	reply := field.ListRequiredFieldReply{}
-	for _, item := range list {
-		reply.List = append(reply.List, &field.ListRequiredFieldReply_Field{
-			Keyword: item.Keyword,
-			Type:    item.Type,
-			Name:    item.Name,
+	for _, item := range options.Rules {
+		reply.Rules = append(reply.Rules, &field.ListFieldOptionsReply_Option{
+			Value: item.Value,
+			Name:  item.Name,
 		})
 	}
-	return &reply, nil
+	return reply, nil
 }
 
-// ListField 获取用户字段列表
+// ListField 获取字段列表
 func (fd *Field) ListField(c context.Context, req *field.ListFieldRequest) (*field.ListFieldReply, error) {
 	list, total, err := fd.srv.ListField(core.MustContext(c), &types.ListFieldRequest{
 		Search: &page.Search{
@@ -88,11 +69,13 @@ func (fd *Field) ListField(c context.Context, req *field.ListFieldRequest) (*fie
 		},
 		Keyword: req.Keyword,
 		Name:    req.Name,
+		Type:    req.Type,
 		Status:  req.Status,
 	})
 	if err != nil {
 		return nil, err
 	}
+
 	reply := field.ListFieldReply{Total: total}
 	for _, item := range list {
 		reply.List = append(reply.List, &field.ListFieldReply_Field{
@@ -100,9 +83,8 @@ func (fd *Field) ListField(c context.Context, req *field.ListFieldRequest) (*fie
 			Keyword:     item.Keyword,
 			Type:        item.Type,
 			Name:        item.Name,
+			Config:      toProtoFieldConfig(item.Config),
 			Status:      item.Status,
-			Required:    item.Required,
-			Unique:      item.Unique,
 			Description: item.Description,
 			CreatedAt:   uint32(item.CreatedAt),
 			UpdatedAt:   uint32(item.UpdatedAt),
@@ -111,14 +93,13 @@ func (fd *Field) ListField(c context.Context, req *field.ListFieldRequest) (*fie
 	return &reply, nil
 }
 
-// CreateField 创建用户字段
+// CreateField 创建字段
 func (fd *Field) CreateField(c context.Context, req *field.CreateFieldRequest) (*field.CreateFieldReply, error) {
 	id, err := fd.srv.CreateField(core.MustContext(c), &entity.Field{
 		Keyword:     req.Keyword,
 		Type:        req.Type,
 		Name:        req.Name,
-		Required:    &req.Required,
-		Unique:      &req.Unique,
+		Config:      toEntityFieldConfig(req.Config),
 		Description: req.Description,
 	})
 	if err != nil {
@@ -127,27 +108,103 @@ func (fd *Field) CreateField(c context.Context, req *field.CreateFieldRequest) (
 	return &field.CreateFieldReply{Id: id}, nil
 }
 
-// UpdateField 更新用户字段
+// UpdateField 更新字段
 func (fd *Field) UpdateField(c context.Context, req *field.UpdateFieldRequest) (*field.UpdateFieldReply, error) {
 	if err := fd.srv.UpdateField(core.MustContext(c), &entity.Field{
-		BaseModel: model.BaseModel{Id: req.Id},
-		Keyword:         req.Keyword,
-		Type:            req.Type,
-		Name:            req.Name,
-		Status:          req.Status,
-		Required:        req.Required,
-		Unique:          req.Unique,
-		Description:     req.Description,
+		BaseModel:   model.BaseModel{Id: req.Id},
+		Keyword:     req.Keyword,
+		Type:        req.Type,
+		Name:        req.Name,
+		Config:      toEntityFieldConfig(req.Config),
+		Status:      req.Status,
+		Description: req.Description,
 	}); err != nil {
 		return nil, err
 	}
 	return &field.UpdateFieldReply{}, nil
 }
 
-// DeleteField 删除用户字段
+// DeleteField 删除字段
 func (fd *Field) DeleteField(c context.Context, req *field.DeleteFieldRequest) (*field.DeleteFieldReply, error) {
 	if err := fd.srv.DeleteField(core.MustContext(c), req.Id); err != nil {
 		return nil, err
 	}
 	return &field.DeleteFieldReply{}, nil
 }
+
+// toEntityFieldConfig proto FieldConfig → entity FieldConfig
+func toEntityFieldConfig(cfg *field.FieldConfig) *entity.FieldConfig {
+	if cfg == nil {
+		return nil
+	}
+	ec := &entity.FieldConfig{
+		Placeholder: value.Value(cfg.Placeholder),
+		MaxLength:   cfg.MaxLength,
+		Min:         cfg.Min,
+		Max:         cfg.Max,
+		Step:        cfg.Step,
+		Filetype:    value.Value(cfg.Filetype),
+		Limit:       cfg.Limit,
+	}
+	if cfg.DefaultValue != nil {
+		ec.DefaultValue = *cfg.DefaultValue
+	}
+	for _, opt := range cfg.Options {
+		ec.Options = append(ec.Options, entity.FieldOption{
+			Label: opt.Label,
+			Value: opt.Value,
+		})
+	}
+	if cfg.Rule != nil {
+		ec.Rule = &entity.FieldRule{
+			Type:    cfg.Rule.Type,
+			Message: value.Value(cfg.Rule.Message),
+			Pattern: value.Value(cfg.Rule.Pattern),
+			Values:  cfg.Rule.Values,
+			Min:     cfg.Rule.Min,
+			Max:     cfg.Rule.Max,
+		}
+	}
+	return ec
+}
+
+// toProtoFieldConfig entity FieldConfig → proto FieldConfig
+func toProtoFieldConfig(cfg *entity.FieldConfig) *field.FieldConfig {
+	if cfg == nil {
+		return nil
+	}
+	pc := &field.FieldConfig{
+		Placeholder: value.Pointer(cfg.Placeholder),
+		MaxLength:   cfg.MaxLength,
+		Min:         cfg.Min,
+		Max:         cfg.Max,
+		Step:        cfg.Step,
+		Filetype:    value.Pointer(cfg.Filetype),
+		Limit:       cfg.Limit,
+	}
+	if cfg.DefaultValue != nil {
+		if s, ok := cfg.DefaultValue.(string); ok {
+			pc.DefaultValue = &s
+		}
+	}
+	for _, opt := range cfg.Options {
+		pc.Options = append(pc.Options, &field.FieldOption{
+			Label: opt.Label,
+			Value: opt.Value,
+		})
+	}
+	if cfg.Rule != nil {
+		pc.Rule = &field.FieldRule{
+			Type:    cfg.Rule.Type,
+			Message: value.Pointer(cfg.Rule.Message),
+			Pattern: value.Pointer(cfg.Rule.Pattern),
+			Values:  cfg.Rule.Values,
+			Min:     cfg.Rule.Min,
+			Max:     cfg.Rule.Max,
+		}
+	}
+	return pc
+}
+
+// Ensure unused imports don't cause errors
+var _ = errors.TransformError

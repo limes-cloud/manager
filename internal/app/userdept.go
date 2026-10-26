@@ -57,6 +57,7 @@ func (s *UserDept) ListUserDept(c context.Context, req *userdept.ListUserDeptReq
 		UserId: req.UserId,
 		Dept:   req.Dept,
 		Job:    req.Job,
+		App:    req.GetApp(),
 	})
 	if err != nil {
 		return nil, err
@@ -79,6 +80,7 @@ func (s *UserDept) CreateUserDept(c context.Context, req *userdept.CreateUserDep
 		DeptId: req.DeptId,
 		JobId:  req.JobId,
 		Main:   value.Pointer(req.Main),
+		App:    req.GetApp(),
 	})
 	if err != nil {
 		return nil, err
@@ -94,6 +96,7 @@ func (s *UserDept) UpdateUserDept(c context.Context, req *userdept.UpdateUserDep
 		DeptId:    req.DeptId,
 		JobId:     req.JobId,
 		Main:      value.Pointer(req.Main),
+		App:       req.GetApp(),
 	})
 	if err != nil {
 		return nil, err
@@ -103,7 +106,7 @@ func (s *UserDept) UpdateUserDept(c context.Context, req *userdept.UpdateUserDep
 
 func (s *UserDept) DeleteUserDept(c context.Context, req *userdept.DeleteUserDeptRequest) (*userdept.DeleteUserDeptReply, error) {
 	ctx := core.MustContext(c)
-	err := s.srv.DeleteUserDept(ctx, req.Id)
+	err := s.srv.DeleteUserDept(ctx, req.GetApp(), req.Id)
 	if err != nil {
 		return nil, err
 	}

@@ -14,7 +14,7 @@ type UserOAuther struct {
 	LoggedAt  int64    `json:"loggedAt" gorm:"column:logged_at"`
 	ExpiredAt int64    `json:"expiredAt" gorm:"column:expired_at"`
 	Extra     string   `json:"extra" gorm:"column:extra"`
-	OAuther   *OAuther `json:"oauther"`
+	OAuther   *OAuther `json:"oauther" gorm:"foreignKey:oauther_id;references:id"`
 	model.BaseModel
 }
 

@@ -30,10 +30,10 @@ func (y YiBan) Visible(ctx core.Context, req *types.OAutherVisibleRequest) (*typ
 	}, nil
 }
 
-// Handler 获取鉴权方式
-func (y YiBan) Handler(_ core.Context, req *types.OAutherHandleRequest) (*types.OAutherHandleReply, error) {
+// Start 获取鉴权方式
+func (y YiBan) Start(_ core.Context, req *types.OAutherStartRequest) (*types.OAutherStartReply, error) {
 	uid := crypto.MD5([]byte(uuid.NewString()))
-	resp := types.OAutherHandleReply{
+	resp := types.OAutherStartReply{
 		UUID:   uid,
 		Action: types.OAutherWayActionJump,
 		Tip:    "点击跳转授权",
@@ -58,7 +58,15 @@ func (y YiBan) Handler(_ core.Context, req *types.OAutherHandleRequest) (*types.
 	return &resp, nil
 }
 
-func (y YiBan) GetToken(_ core.Context, req *types.OAutherTokenRequest) (*types.OAutherTokenReply, error) {
+func (y YiBan) Complete(ctx core.Context, req *types.OAutherCompleteRequest) (*types.OAutherIdentity, error) {
+	token, expire, err := y.getToken(req.Code)
+	if err != nil {
+		return nil, err
+	}
+	return y.getInfo(ctx, token, expire)
+}
+
+func (y YiBan) getToken(code string) (string, int64, error) {
 	res := struct {
 		VisitOauth struct {
 			AccessToken  string `json:"access_token"`
@@ -66,27 +74,24 @@ func (y YiBan) GetToken(_ core.Context, req *types.OAutherTokenRequest) (*types.
 		} `json:"visit_oauth"`
 	}{}
 
-	src := y.hexToByte(req.Code)
+	src := y.hexToByte(code)
 	iv := []byte(y.conf.Ak)
 	key := []byte(y.conf.Sk)
 
 	body, _ := openssl.AesCBCDecrypt(src, key, iv, openssl.PKCS7_PADDING)
 	if body == nil {
-		return nil, errors.New("decrypt error")
+		return "", 0, errors.New("decrypt error")
 	}
 
 	// 解析数据
 	if err := json.Unmarshal(body, &res); err != nil {
-		return nil, err
+		return "", 0, err
 	}
 
-	return &types.OAutherTokenReply{
-		Token:  res.VisitOauth.AccessToken,
-		Expire: y.toInt64(res.VisitOauth.TokenExpires),
-	}, nil
+	return res.VisitOauth.AccessToken, y.toInt64(res.VisitOauth.TokenExpires), nil
 }
 
-func (y YiBan) GetInfo(ctx core.Context, req *types.OAutherInfoRequest) (*types.OAutherInfoReply, error) {
+func (y YiBan) getInfo(ctx core.Context, token string, expire int64) (*types.OAutherIdentity, error) {
 	res := struct {
 		Status string `json:"status"`
 		Info   struct {
@@ -105,7 +110,7 @@ func (y YiBan) GetInfo(ctx core.Context, req *types.OAutherInfoRequest) (*types.
 		} `json:"info"`
 	}{}
 
-	url := "https://openapi.yiban.cn/user/me?access_token=" + req.Token
+	url := "https://openapi.yiban.cn/user/me?access_token=" + token
 	resp, err := ctx.Request().Get(url)
 	if err != nil {
 		return nil, err
@@ -119,13 +124,15 @@ func (y YiBan) GetInfo(ctx core.Context, req *types.OAutherInfoRequest) (*types.
 		return nil, errors.New(res.Info.MsgCN)
 	}
 
-	return &types.OAutherInfoReply{
+	return &types.OAutherIdentity{
 		OID:      res.Info.Userid,
 		RealName: res.Info.Username,
 		NickName: res.Info.Usernick,
 		Gender:   res.Info.Sex,
 		Birthday: res.Info.Birthday,
 		Avatar:   res.Info.Userhead,
+		Token:    token,
+		Expire:   expire,
 	}, nil
 }
 

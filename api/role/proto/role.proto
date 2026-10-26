@@ -9,8 +9,8 @@ option java_multiple_files = true;
 option java_package = "manager.api.role";
 
 message GetRoleRequest {
-  optional uint32 id = 1 [(validate.rules).uint32 = {gte: 1}];
-  optional string keyword = 2 [(validate.rules).string = {min_len: 1}];
+  string keyword = 1 [(validate.rules).string = {min_len: 1}];
+  optional string app = 2;
 }
 
 message GetRoleReply {

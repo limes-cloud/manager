@@ -7,8 +7,6 @@ import (
 
 	"google.golang.org/protobuf/types/known/structpb"
 
-	"github.com/limes-cloud/manager/internal/pkg/field"
-
 	"github.com/go-kratos/kratos/v2/transport"
 	"github.com/limes-cloud/kratosx/library/db/gormtranserror"
 	"github.com/limes-cloud/kratosx/pkg/ua"
@@ -111,7 +109,7 @@ func (s *Authorize) ListVisibleOAuther(ctx core.Context, req *types.ListVisibleO
 
 	// 获取授权列表
 	list, _, err := s.ao.ListAppOAuther(ctx, &types.ListAppOAutherRequest{
-		AppId: app.Id,
+		App: app.Keyword,
 	})
 	if err != nil {
 		return nil, errors.GetError(err.Error())
@@ -176,10 +174,13 @@ func (s *Authorize) OAutherHandle(ctx core.Context, req *types.OAutherHandleRequ
 		return nil, errors.SystemError()
 	}
 
-	reply, err := author.Handler(ctx, &types.OAutherHandleRequest{
+	reply, err := author.Start(ctx, &types.OAutherStartRequest{
+		App:       req.App,
+		Keyword:   req.Keyword,
 		Account:   req.Account,
 		UserAgent: header.RequestHeader().Get("User-Agent"),
 		IP:        ctx.ClientIP(),
+		Platform:  req.Platform,
 	})
 	if err != nil {
 		return nil, err
@@ -198,7 +199,12 @@ func (s *Authorize) OAutherHandle(ctx core.Context, req *types.OAutherHandleRequ
 		return nil, errors.SystemError()
 	}
 
-	return reply, nil
+	return &types.OAutherHandleReply{
+		UUID:   reply.UUID,
+		Action: reply.Action,
+		Value:  reply.Value,
+		Tip:    reply.Tip,
+	}, nil
 }
 
 func (s *Authorize) OAutherLogin(ctx core.Context, req *types.OAutherLoginRequest) (*types.OAutherLoginReply, error) {
@@ -229,14 +235,15 @@ func (s *Authorize) OAutherLogin(ctx core.Context, req *types.OAutherLoginReques
 		return nil, errors.SystemError()
 	}
 
-	// 获取token
+	// 获取授权身份
 	var (
 		token  = data.Token
 		oid    = data.OID
 		expire = data.Expire
+		ui     *types.OAutherIdentity
 	)
-	if token == "" && req.Code != "" {
-		ti, err := execer.GetToken(ctx, &types.OAutherTokenRequest{
+	if req.Code != "" {
+		ui, err = execer.Complete(ctx, &types.OAutherCompleteRequest{
 			IP:      ctx.ClientIP(),
 			UUID:    req.UUID,
 			Code:    req.Code,
@@ -249,23 +256,23 @@ func (s *Authorize) OAutherLogin(ctx core.Context, req *types.OAutherLoginReques
 			}
 			return nil, errors.OAuthLoginError(err.Error())
 		}
-		token = ti.Token
-		oid = ti.OID
-		expire = ti.Expire
+		token = ui.Token
+		oid = ui.OID
+		expire = ui.Expire
 	}
 
 	if token == "" && oid == "" {
 		return nil, errors.LoginInfoNotFound()
 	}
 
-	// 获取用户信息
-	ui, err := execer.GetInfo(ctx, &types.OAutherInfoRequest{
-		OID:   oid,
-		Token: token,
-	})
-	if err != nil {
-		return nil, errors.OAuthLoginError(err.Error())
+	if ui == nil {
+		ui = &types.OAutherIdentity{
+			OID:    oid,
+			Token:  token,
+			Expire: expire,
+		}
 	}
+	oid = ui.OID
 
 	// 判断是否绑定三方
 	if !s.uo.IsBindUserOAuther(ctx, oauter.Id, ui.OID) {
@@ -274,7 +281,7 @@ func (s *Authorize) OAutherLogin(ctx core.Context, req *types.OAutherLoginReques
 			AppId:     app.Id,
 			OAutherId: oauter.Id,
 			Token:     token,
-			OID:       oid,
+			OID:       ui.OID,
 			Expire:    expire,
 		}, nil); err != nil {
 			ctx.Logger().Errorw("set token error", "err", err.Error())
@@ -322,7 +329,7 @@ func (s *Authorize) OAutherLogin(ctx core.Context, req *types.OAutherLoginReques
 	if err := s.uo.UpdateUserOAuther(ctx, &entity.UserOAuther{
 		UserId:    user.Id,
 		OAutherId: oauter.Id,
-		OID:       oid,
+		OID:       ui.OID,
 		Token:     token,
 		ExpiredAt: expire,
 		LoggedAt:  time.Now().Unix(),
@@ -331,7 +338,7 @@ func (s *Authorize) OAutherLogin(ctx core.Context, req *types.OAutherLoginReques
 	}
 
 	// 判断是否需要补充资料信息
-	ni, err := s.needInfo(ctx, app.Id, user)
+	ni, err := s.needInfo(ctx, app.Keyword, user)
 	if err != nil {
 		return nil, err
 	}
@@ -348,7 +355,7 @@ func (s *Authorize) OAutherLogin(ctx core.Context, req *types.OAutherLoginReques
 
 	// 生成token
 	token, err = s.genToken(ctx, app, az, user)
-	go s.AddLoginLog(ctx.Clone(), oauter.Type, app.Id, user, err)
+	go s.AddLoginLog(ctx.Clone(), loginLogParams{tp: oauter.Type, app: app.Keyword, user: user, err: err})
 	if err != nil {
 		return nil, err
 	}
@@ -411,7 +418,7 @@ func (s *Authorize) OAutherBind(ctx core.Context, req *types.OAutherBindRequest)
 			user = &entity.User{
 				Username: req.Username,
 				Password: crypto.EncodePwd(req.Password),
-				Nickname: "用户",
+				Nickname: value.Pointer("用户"),
 				Status:   value.Pointer(true),
 			}
 			if _, err := s.user.CreateUser(ctx, user); err != nil {
@@ -456,7 +463,7 @@ func (s *Authorize) OAutherBind(ctx core.Context, req *types.OAutherBindRequest)
 	}
 
 	// 判断是否需要补充资料信息
-	ni, err := s.needInfo(ctx, app.Id, user)
+	ni, err := s.needInfo(ctx, app.Keyword, user)
 	if err != nil {
 		return nil, err
 	}
@@ -476,7 +483,7 @@ func (s *Authorize) OAutherBind(ctx core.Context, req *types.OAutherBindRequest)
 	if err := ctx.Transaction(func(ctx core.Context) error {
 		// 生成token
 		token, err := s.genToken(ctx, app, az, user)
-		go s.AddLoginLog(ctx.Clone(), oauter.Type, app.Id, user, err)
+		go s.AddLoginLog(ctx.Clone(), loginLogParams{tp: oauter.Type, app: app.Keyword, user: user, err: err})
 
 		if err != nil {
 			return err
@@ -572,9 +579,9 @@ func (s *Authorize) Login(ctx core.Context, req *types.LoginRequest) (reply *typ
 	if value.IsPhone(req.Username) || value.IsEmail(req.Username) {
 		var ao *entity.AppOAuther
 		if value.IsPhone(req.Username) {
-			ao, err = s.ao.GetAppOAutherByAT(ctx, app.Id, "email")
+			ao, err = s.ao.GetAppOAutherByAT(ctx, app.Keyword, "email")
 		} else {
-			ao, err = s.ao.GetAppOAutherByAT(ctx, app.Id, "phone")
+			ao, err = s.ao.GetAppOAutherByAT(ctx, app.Keyword, "phone")
 		}
 		if err != nil {
 			ctx.Logger().Errorw("msg", "get user info error", "err", err.Error())
@@ -637,7 +644,7 @@ func (s *Authorize) Login(ctx core.Context, req *types.LoginRequest) (reply *typ
 	}
 
 	// 判断是否需要补充资料信息
-	ni, err := s.needInfo(ctx, app.Id, user)
+	ni, err := s.needInfo(ctx, app.Keyword, user)
 	if err != nil {
 		return nil, err
 	}
@@ -654,7 +661,7 @@ func (s *Authorize) Login(ctx core.Context, req *types.LoginRequest) (reply *typ
 
 	// 生产token
 	token, err := s.genToken(ctx, app, az, user)
-	go s.AddLoginLog(ctx.Clone(), "username", app.Id, user, err)
+	go s.AddLoginLog(ctx.Clone(), loginLogParams{tp: "username", app: app.Keyword, user: user, err: err})
 
 	if err != nil {
 		return nil, err
@@ -706,7 +713,7 @@ func (s *Authorize) Register(ctx core.Context, req *types.RegisterRequest) (*typ
 		Username: req.Username,
 		Password: crypto.EncodePwd(req.Password),
 		Status:   value.Pointer(true),
-		Nickname: "用户",
+		Nickname: value.Pointer("用户"),
 		LoggedAt: time.Now().Unix(),
 	}
 	user.Id, err = s.user.CreateUser(ctx, user)
@@ -737,7 +744,7 @@ func (s *Authorize) Register(ctx core.Context, req *types.RegisterRequest) (*typ
 	}
 
 	// 判断是否需要补充资料信息
-	ni, err := s.needInfo(ctx, app.Id, user)
+	ni, err := s.needInfo(ctx, app.Keyword, user)
 	if err != nil {
 		return nil, err
 	}
@@ -754,7 +761,7 @@ func (s *Authorize) Register(ctx core.Context, req *types.RegisterRequest) (*typ
 
 	// 生产token
 	token, err := s.genToken(ctx, app, az, user)
-	go s.AddLoginLog(ctx.Clone(), "username", app.Id, user, err)
+	go s.AddLoginLog(ctx.Clone(), loginLogParams{tp: "username", app: app.Keyword, user: user, err: err})
 
 	if err != nil {
 		return nil, err
@@ -764,7 +771,7 @@ func (s *Authorize) Register(ctx core.Context, req *types.RegisterRequest) (*typ
 	}, nil
 }
 
-func (s *Authorize) needInfo(ctx core.Context, appid uint32, user *entity.User) (bool, error) {
+func (s *Authorize) needInfo(ctx core.Context, app string, user *entity.User) (bool, error) {
 	if user.Infos == nil {
 		// 获取用户应用信息
 		infos, _ := s.info.ListUserinfo(ctx, &types.ListUserinfoRequest{
@@ -780,23 +787,9 @@ func (s *Authorize) needInfo(ctx core.Context, appid uint32, user *entity.User) 
 		im[v.Field] = struct{}{}
 	}
 
-	// 获取租户层级下的必填字段
-	list, _, err := s.field.ListField(ctx, &types.ListFieldRequest{
-		Required: value.Pointer(true),
-	})
-	if err != nil {
-		return false, errors.SystemError(err.Error())
-	}
-	for _, v := range list {
-		_, ok := im[v.Keyword]
-		if !ok {
-			return true, nil
-		}
-	}
-
-	// 检查app必填写字段
+	// 检查app必填字段
 	afs, _, err := s.appfield.ListAppField(ctx, &types.ListAppFieldRequest{
-		AppId:    appid,
+		App:      app,
 		Required: value.Pointer(true),
 	})
 	if err != nil {
@@ -836,23 +829,34 @@ func (s *Authorize) getCacheData(ctx core.Context, uuid string) (*cacheData, err
 }
 
 func (s *Authorize) genToken(ctx core.Context, app *entity.App, az *entity.Authorize, user *entity.User) (token string, err error) {
+	// 只有可登录应用才能签发 token；基础设施类应用（如 configure/cron）只提供菜单与实体，不作为登录入口
+	// 放在此处是因为所有登录路径（账密/验证码/OAuth/注册/绑定）最终都汇聚到 genToken
+	if !app.IsLoginable() {
+		ctx.Logger().Warnw("msg", "app is not loginable", "app", app.Keyword)
+		err = errors.AppNotLoginableError()
+		return
+	}
+
 	if user.Status != nil && !*user.Status {
 		err = errors.UserDisableError()
 		return
 	}
 
-	jc := app.GetSetting().JWT
+	setting, perr := app.ParseSetting()
+	if perr != nil {
+		ctx.Logger().Errorw("msg", "parse app setting error", "err", perr.Error(), "app", app.Keyword)
+		err = errors.SystemError()
+		return
+	}
+	jc := setting.JWT
 	jwter := jwt.New(ctx.Context, &jwt.Config{
 		Secret:  jc.Secret,
 		Expire:  time.Duration(jc.Expire) * time.Second,
 		Renewal: time.Duration(jc.Renewal) * time.Second,
-		App:     app.Keyword,
 	})
 
 	info := types.AuthorizeInfo{
-		AppId:   app.Id,
 		UserId:  user.Id,
-		DeptId:  s.userdept.GetUserMainDeptId(user.Id),
 		IsAdmin: value.InList(ctx.Config().SuperAdminUsernames, user.Username),
 	}
 	token, err = jwter.NewToken(info.ToMap())
@@ -863,7 +867,7 @@ func (s *Authorize) genToken(ctx core.Context, app *entity.App, az *entity.Autho
 	}
 
 	// 开启唯一设备登陆
-	if err := jwter.SetUnique(ctx.ClientIP(), token); err != nil {
+	if err := jwter.SetUnique(jwt.NormalizeClientIP(ctx.ClientIP()), token); err != nil {
 		return "", errors.SystemError(err.Error())
 	}
 
@@ -904,10 +908,18 @@ func (s *Authorize) genToken(ctx core.Context, app *entity.App, az *entity.Autho
 	return token, nil
 }
 
-func (s *Authorize) AddLoginLog(ctx core.Context, tp string, appId uint32, user *entity.User, err error) {
-	if errors.IsUserDisableError(err) ||
-		errors.IsVerifyCaptchaError(err) ||
-		errors.IsPasswordError(err) {
+// loginLogParams 登录日志参数
+type loginLogParams struct {
+	tp   string // 登录方式
+	app  string // 应用标识
+	user *entity.User
+	err  error
+}
+
+func (s *Authorize) AddLoginLog(ctx core.Context, p loginLogParams) {
+	if errors.IsUserDisableError(p.err) ||
+		errors.IsVerifyCaptchaError(p.err) ||
+		errors.IsPasswordError(p.err) {
 		return
 	}
 
@@ -923,22 +935,22 @@ func (s *Authorize) AddLoginLog(ctx core.Context, tp string, appId uint32, user 
 		desc = "登陆成功"
 	)
 
-	if err != nil {
+	if p.err != nil {
 		var er *kerrors.Error
-		if ok := kerrors.As(err, &er); ok {
+		if ok := kerrors.As(p.err, &er); ok {
 			code = int(er.GetCode())
 			desc = er.Error()
 		} else {
 			code = 400
-			desc = err.Error()
+			desc = p.err.Error()
 		}
 	}
 
 	_, _ = s.log.CreateLoginLog(ctx, &entity.LoginLog{
-		AppId:       appId,
-		UserId:      user.Id,
-		DeptId:      s.userdept.GetUserMainDeptId(user.Id),
-		Type:        tp,
+		App:         p.app,
+		UserId:      p.user.Id,
+		DeptId:      s.userdept.GetUserMainDeptId(ctx, ctx.AppKey(), p.user.Id),
+		Type:        p.tp,
 		IP:          ctx.ClientIP(),
 		Address:     s.address.GetAddressByIP(ip),
 		Browser:     ug.Name + " " + ug.Version,
@@ -948,22 +960,22 @@ func (s *Authorize) AddLoginLog(ctx core.Context, tp string, appId uint32, user 
 	})
 }
 
-func (s *Authorize) AddAuthLog(ctx core.Context, appId uint32, menuId uint32) {
+func (s *Authorize) AddAuthLog(ctx core.Context, app string, menuId uint32) {
 	_, _ = s.log.CreateAuthLog(ctx, &entity.AuthLog{
-		AppId:  appId,
+		App:    app,
 		UserId: ctx.Auth().UserId,
 		DeptId: ctx.Auth().DeptId,
 		MenuId: menuId,
 	})
 }
 
-func (u *Authorize) GetUserinfo(ctx core.Context, appId uint32, userId uint32) (map[string]any, error) {
+func (u *Authorize) GetUserinfo(ctx core.Context, app string, userId uint32) (map[string]any, error) {
 	getFieldReq := &types.ListUserinfoRequest{
 		UserId: userId,
 	}
 
 	// 获取用户的字段
-	fields, _ := u.appfield.GetAppFields(ctx, appId)
+	fields, _ := u.appfield.GetAppFields(ctx, app)
 	getFieldReq.Fields = fields
 
 	// 获取用户应用信息
@@ -981,7 +993,7 @@ func (u *Authorize) GetUserinfo(ctx core.Context, appId uint32, userId uint32) (
 
 func (u *Authorize) GetUserDepts(ctx core.Context, userId uint32) ([]*entity.UserDept, error) {
 	// 获取用户部门信息
-	depts, _, err := u.userdept.ListUserDept(ctx, &types.ListUserDeptRequest{
+	depts, _, err := u.userdept.ListUserDept(ctx, ctx.AppKey(), &types.ListUserDeptRequest{
 		UserId: userId,
 	})
 	return depts, err
@@ -989,15 +1001,34 @@ func (u *Authorize) GetUserDepts(ctx core.Context, userId uint32) ([]*entity.Use
 
 // CheckAuth api鉴权
 func (u *Authorize) CheckAuth(ctx core.Context, req *types.CheckAuthRequest) (*types.AuthorizeInfo, error) {
-	validate := func(method string, path string) error {
+	validate := func(checkPermission bool) error {
 		// 获取鉴权器，判断是否为白名单
 		menu, has := u.menu.GetCacheMenu(req.Path, req.Method)
 		if !has {
 			return errors.ForbiddenError()
 		}
 
+		app, err := u.app.GetAppByKeyword(ctx.AppKey())
+		if err != nil {
+			ctx.Logger().Warnw("msg", "get current app error", "err", err.Error(), "app", ctx.AppKey())
+			return errors.ForbiddenError()
+		}
+
+		// 菜单所属模块必须在当前应用的可触达范围内（自身 + setting.modules 订阅的基础设施）
+		// 跨模块访问由订阅关系授权，而非要求菜单与当前应用完全相同
+		// 例外：manager 模块对所有应用默认开放（无需订阅），业务应用可直接访问管理端接口
+		if menu.App != "manager" && !app.HasModule(menu.App) {
+			ctx.Logger().Warnw("msg", "menu module not subscribed", "app", app.Keyword, "module", menu.App, "path", req.Path)
+			return errors.AppModuleScopeError()
+		}
+
 		// 如果是基础api，则放行
 		if menu.Type == entity.MenuTypeBasic {
+			return nil
+		}
+
+		if !checkPermission {
+			go u.AddAuthLog(ctx, app.Keyword, menu.Id)
 			return nil
 		}
 
@@ -1006,7 +1037,7 @@ func (u *Authorize) CheckAuth(ctx core.Context, req *types.CheckAuthRequest) (*t
 			return errors.ForbiddenError(menu.Name)
 		}
 
-		go u.AddAuthLog(ctx, menu.AppId, menu.Id)
+		go u.AddAuthLog(ctx, app.Keyword, menu.Id)
 
 		return nil
 	}
@@ -1018,6 +1049,7 @@ func (u *Authorize) CheckAuth(ctx core.Context, req *types.CheckAuthRequest) (*t
 			return nil, nil
 		}
 		return &types.AuthorizeInfo{
+			AppKey: ctx.AppKey(),
 			UserId: ctx.Auth().UserId,
 			DeptId: ctx.Auth().DeptId,
 		}, nil
@@ -1025,7 +1057,11 @@ func (u *Authorize) CheckAuth(ctx core.Context, req *types.CheckAuthRequest) (*t
 
 	// 超级管理员绕过所有API权限检查
 	if ctx.Auth().IsAdmin {
+		if err := validate(false); err != nil {
+			return nil, err
+		}
 		return &types.AuthorizeInfo{
+			AppKey:  ctx.AppKey(),
 			UserId:  ctx.Auth().UserId,
 			DeptId:  ctx.Auth().DeptId,
 			IsAdmin: true,
@@ -1033,12 +1069,13 @@ func (u *Authorize) CheckAuth(ctx core.Context, req *types.CheckAuthRequest) (*t
 	}
 
 	// 验证接口
-	if err := validate(req.Method, req.Path); err != nil {
+	if err := validate(true); err != nil {
 		return nil, err
 	}
 
 	// 获取用户token信息
 	return &types.AuthorizeInfo{
+		AppKey: ctx.AppKey(),
 		UserId: ctx.Auth().UserId,
 		DeptId: ctx.Auth().DeptId,
 	}, nil
@@ -1065,18 +1102,20 @@ func (u *Authorize) OAutherReport(ctx core.Context, req *types.OAutherReportRequ
 		return errors.SystemError()
 	}
 
-	// 获取token
-	tk, err := author.GetToken(ctx, &types.OAutherTokenRequest{
+	// 完成授权身份解析
+	identity, err := author.Complete(ctx, &types.OAutherCompleteRequest{
 		Code: req.Code,
+		UUID: req.UUID,
+		IP:   ctx.ClientIP(),
 	})
 	if err != nil {
 		return errors.GetOAuthTokenError()
 	}
 
-	// 追加token信息
-	cd.Token = tk.Token
-	cd.Expire = tk.Expire
-	cd.OID = tk.OID
+	// 追加身份信息
+	cd.Token = identity.Token
+	cd.Expire = identity.Expire
+	cd.OID = identity.OID
 	return u.setCacheData(ctx, req.UUID, cd, value.Pointer(3*time.Minute))
 }
 
@@ -1090,38 +1129,25 @@ func (u *Authorize) GetFillInfo(ctx core.Context, uuid string) ([]*types.FillInf
 		return nil, errors.SystemError()
 	}
 
-	// 获取租户层级下的必填字段
-	list, _, err := u.field.ListField(ctx, &types.ListFieldRequest{
-		Required: value.Pointer(true),
-	})
-	if err != nil {
-		return nil, errors.SystemError(err.Error())
-	}
-
+	// 获取app必填字段
 	var (
 		keys   []string
 		bucket = make(map[string]*entity.Field)
 	)
 
-	for _, v := range list {
-		keys = append(keys, v.Keyword)
-		bucket[v.Keyword] = v
-	}
-
-	// 检查app必填写字段
-	afs, _, err := u.appfield.ListAppField(ctx, &types.ListAppFieldRequest{
-		AppId:    cd.AppId,
-		Required: value.Pointer(true),
-	})
-	if err != nil {
-		return nil, errors.SystemError(err.Error())
-	}
-	for _, v := range afs {
-		if _, ok := bucket[v.Field.Keyword]; ok {
-			continue
+	appObj, _ := u.app.GetApp(ctx, cd.AppId)
+	if appObj != nil {
+		afs, _, err := u.appfield.ListAppField(ctx, &types.ListAppFieldRequest{
+			App:      appObj.Keyword,
+			Required: value.Pointer(true),
+		})
+		if err != nil {
+			return nil, errors.SystemError(err.Error())
 		}
-		keys = append(keys, v.Field.Keyword)
-		bucket[v.Field.Keyword] = v.Field
+		for _, v := range afs {
+			keys = append(keys, v.Field.Keyword)
+			bucket[v.Field.Keyword] = v.Field
+		}
 	}
 
 	// 获取用户信息
@@ -1143,7 +1169,7 @@ func (u *Authorize) GetFillInfo(ctx core.Context, uuid string) ([]*types.FillInf
 			Type:    bucket[v].Type,
 			Keyword: bucket[v].Keyword,
 			Name:    bucket[v].Name,
-			Value:   field.New().GetType(bucket[v].Type).ToValue(ib[v].Value),
+			Value:   structpb.NewStringValue(ib[v].Value),
 		})
 	}
 	return reply, nil
@@ -1214,7 +1240,7 @@ func (u *Authorize) FillInfo(ctx core.Context, uuid string, infos map[string]*st
 	}
 
 	// 判断是否需要补充资料信息
-	_, err = u.needInfo(ctx, app.Id, user)
+	_, err = u.needInfo(ctx, app.Keyword, user)
 	if err != nil {
 		return "", errors.SystemError("存在未补充完整的资料")
 	}
@@ -1236,7 +1262,7 @@ func (u *Authorize) FillInfo(ctx core.Context, uuid string, infos map[string]*st
 		// 生成token
 		token, err := u.genToken(ctx, app, az, user)
 
-		go u.AddLoginLog(ctx.Clone(), tp, app.Id, user, err)
+		go u.AddLoginLog(ctx.Clone(), loginLogParams{tp: tp, app: app.Keyword, user: user, err: err})
 
 		if err != nil {
 			return err

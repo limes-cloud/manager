@@ -48,7 +48,7 @@ func (app *Dept) GetDept(c context.Context, req *dept.GetDeptRequest) (*dept.Get
 	ctx := core.MustContext(c)
 
 	// 调用服务
-	ent, err := app.srv.GetDept(ctx, req.Id)
+	ent, err := app.srv.GetDept(ctx, ctx.AppKey(), req.Id)
 	if err != nil {
 		return nil, err
 	}
@@ -74,6 +74,7 @@ func (app *Dept) ListCurrentDept(c context.Context, req *dept.ListDeptRequest) (
 		ctx.Logger().Errorw("msg", "list dept req transform error", "err", err)
 		return nil, errors.TransformError()
 	}
+	in.App = ctx.AppKey()
 
 	// 调用服务
 	list, err := app.srv.ListCurrentDept(ctx, &in)
@@ -102,6 +103,7 @@ func (app *Dept) ListDept(c context.Context, req *dept.ListDeptRequest) (*dept.L
 		ctx.Logger().Errorw("msg", "list dept req transform error", "err", err)
 		return nil, errors.TransformError()
 	}
+	in.App = ctx.AppKey(in.App)
 
 	// 调用服务
 	list, err := app.srv.ListDept(ctx, &in)
@@ -133,6 +135,7 @@ func (app *Dept) CreateDept(c context.Context, req *dept.CreateDeptRequest) (*de
 	if in.ParentId == nil {
 		in.ParentId = value.Pointer(uint32(0))
 	}
+	in.App = ctx.AppKey(in.App)
 
 	// 调用服务
 	id, err := app.srv.CreateDept(ctx, &in)
@@ -155,6 +158,7 @@ func (app *Dept) UpdateDept(c context.Context, req *dept.UpdateDeptRequest) (*de
 		ctx.Logger().Errorw("msg", "create dept req transform error", "err", err)
 		return nil, errors.TransformError()
 	}
+	in.App = ctx.AppKey(in.App)
 
 	// 调用服务
 	if err := app.srv.UpdateDept(ctx, &in); err != nil {
@@ -166,7 +170,8 @@ func (app *Dept) UpdateDept(c context.Context, req *dept.UpdateDeptRequest) (*de
 
 // DeleteDept 删除租户信息
 func (app *Dept) DeleteDept(c context.Context, req *dept.DeleteDeptRequest) (*dept.DeleteDeptReply, error) {
-	return &dept.DeleteDeptReply{}, app.srv.DeleteDept(core.MustContext(c), req.Id)
+	ctx := core.MustContext(c)
+	return &dept.DeleteDeptReply{}, app.srv.DeleteDept(ctx, ctx.AppKey(), req.Id)
 }
 
 // ListDeptClassify 获取租户信息列表
@@ -181,6 +186,7 @@ func (app *Dept) ListDeptClassify(c context.Context, req *dept.ListDeptClassifyR
 		ctx.Logger().Errorw("msg", "list dept classify req transform error", "err", err)
 		return nil, errors.TransformError()
 	}
+	in.App = ctx.AppKey(in.App)
 
 	// 调用服务
 	list, total, err := app.srv.ListDeptClassify(ctx, &in)
@@ -209,6 +215,7 @@ func (app *Dept) CreateDeptClassify(c context.Context, req *dept.CreateDeptClass
 		ctx.Logger().Errorw("msg", "create dept classify req transform error", "err", err)
 		return nil, errors.TransformError()
 	}
+	in.App = ctx.AppKey(in.App)
 
 	// 调用服务
 	id, err := app.srv.CreateDeptClassify(ctx, &in)
@@ -231,6 +238,7 @@ func (app *Dept) UpdateDeptClassify(c context.Context, req *dept.UpdateDeptClass
 		ctx.Logger().Errorw("msg", "create dept classify req transform error", "err", err)
 		return nil, errors.TransformError()
 	}
+	in.App = ctx.AppKey(in.App)
 
 	// 调用服务
 	if err := app.srv.UpdateDeptClassify(ctx, &in); err != nil {
@@ -242,5 +250,6 @@ func (app *Dept) UpdateDeptClassify(c context.Context, req *dept.UpdateDeptClass
 
 // DeleteDeptClassify 删除租户信息
 func (app *Dept) DeleteDeptClassify(c context.Context, req *dept.DeleteDeptClassifyRequest) (*dept.DeleteDeptClassifyReply, error) {
-	return &dept.DeleteDeptClassifyReply{}, app.srv.DeleteDeptClassify(core.MustContext(c), req.Id)
+	ctx := core.MustContext(c)
+	return &dept.DeleteDeptClassifyReply{}, app.srv.DeleteDeptClassify(ctx, ctx.AppKey(), req.Id)
 }

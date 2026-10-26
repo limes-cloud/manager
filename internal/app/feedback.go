@@ -85,7 +85,7 @@ func (fb *Feedback) CreateFeedbackClassify(c context.Context, req *feedback.Crea
 func (fb *Feedback) UpdateFeedbackClassify(c context.Context, req *feedback.UpdateFeedbackClassifyRequest) (*feedback.UpdateFeedbackClassifyReply, error) {
 	if err := fb.srv.UpdateFeedbackClassify(core.MustContext(c), &entity.FeedbackClassify{
 		BaseModel: model.BaseModel{Id: req.Id},
-		Name:            req.Name,
+		Name:      req.Name,
 	}); err != nil {
 		return nil, err
 	}
@@ -102,14 +102,15 @@ func (fb *Feedback) DeleteFeedbackClassify(c context.Context, req *feedback.Dele
 
 // ListFeedback 获取反馈建议列表
 func (fb *Feedback) ListFeedback(c context.Context, req *feedback.ListFeedbackRequest) (*feedback.ListFeedbackReply, error) {
-	list, total, err := fb.srv.ListFeedback(core.MustContext(c), &types.ListFeedbackRequest{
+	ctx := core.MustContext(c)
+	list, total, err := fb.srv.ListFeedback(ctx, &types.ListFeedbackRequest{
 		Search: &page.Search{
 			Page:     req.Page,
 			PageSize: req.PageSize,
 			Order:    req.Order,
 			OrderBy:  req.OrderBy,
 		},
-		AppId:      req.AppId,
+		App:        value.Pointer(ctx.AppKey(req.GetApp())),
 		ClassifyId: req.ClassifyId,
 		Status:     req.Status,
 		Platform:   req.Platform,
@@ -129,7 +130,7 @@ func (fb *Feedback) CreateFeedback(c context.Context, req *feedback.CreateFeedba
 	ctx := core.MustContext(c)
 	id, err := fb.srv.CreateFeedback(ctx, &entity.Feedback{
 		UserId:     ctx.Auth().UserId,
-		AppId:      req.AppId,
+		App:        ctx.AppKey(req.App),
 		ClassifyId: req.ClassifyId,
 		Title:      req.Title,
 		Content:    req.Content,
@@ -156,7 +157,7 @@ func (fb *Feedback) DeleteFeedback(c context.Context, req *feedback.DeleteFeedba
 // UpdateFeedback 更新反馈建议
 func (fb *Feedback) UpdateFeedback(c context.Context, req *feedback.UpdateFeedbackRequest) (*feedback.UpdateFeedbackReply, error) {
 	if err := fb.srv.UpdateFeedback(core.MustContext(c), &entity.Feedback{
-		BaseModel: model.BaseModel{Id: req.Id},
+		BaseModel:       model.BaseModel{Id: req.Id},
 		Status:          req.Status,
 		ProcessedResult: req.ProcessedResult,
 	}); err != nil {

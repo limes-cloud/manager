@@ -43,14 +43,11 @@ func (r Field) ListField(ctx core.Context, req *types.ListFieldRequest) ([]*enti
 	if req.Name != nil {
 		db = db.Where("name LIKE ?", *req.Name+"%")
 	}
+	if req.Type != nil {
+		db = db.Where("type = ?", *req.Type)
+	}
 	if req.Status != nil {
 		db = db.Where("status = ?", *req.Status)
-	}
-	if req.Required != nil {
-		db = db.Where("required = ?", *req.Required)
-	}
-	if req.Unique != nil {
-		db = db.Where("`unique` = ?", *req.Unique)
 	}
 
 	if req.Search != nil {

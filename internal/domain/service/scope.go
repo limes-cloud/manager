@@ -27,11 +27,6 @@ func (r *resp) Condition() *mhook.ConditionGroup {
 	// return r.scope.Rule
 }
 
-func (r *resp) Fields() []string {
-	return []string{}
-	// return r.scope.Fields
-}
-
 func NewScope(
 	repo repository.Scope,
 	userdept repository.UserDept,
@@ -55,7 +50,7 @@ func (r *resp) DeptScopes() (bool, []uint32) {
 }
 
 func (r *resp) UserDeptId(uid uint32) uint32 {
-	return r.userdept.GetUserMainDeptId(uid)
+	return r.userdept.GetUserMainDeptId(r.ctx, r.ctx.AppKey(), uid)
 }
 
 func (r *resp) DeptId() uint32 {

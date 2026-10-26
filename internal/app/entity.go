@@ -10,8 +10,6 @@ import (
 
 	"github.com/go-kratos/kratos/v2/transport/http"
 
-	"google.golang.org/protobuf/types/known/emptypb"
-
 	"github.com/limes-cloud/manager/internal/domain/entity"
 
 	"github.com/limes-cloud/manager/internal/types"
@@ -35,6 +33,7 @@ func NewEntity() *Entity {
 	return &Entity{
 		srv: service.NewEntity(
 			dbs.NewEntity(),
+			dbs.NewApp(),
 		),
 	}
 }
@@ -46,51 +45,6 @@ func init() {
 		apientity.RegisterEntityHTTPServer(hs, srv)
 		apientity.RegisterEntityServer(gs, srv)
 	})
-}
-
-// ImportEntity 载入全部实体信息
-func (app *Entity) ImportEntity(c context.Context, req *apientity.ImportEntityRequest) (*emptypb.Empty, error) {
-	var (
-		ctx  = core.MustContext(c)
-		list []*entity.Entity
-	)
-
-	// 处理请求参数
-	if err := value.Transform(req.List, &list); err != nil {
-		ctx.Logger().Errorw("msg", "list entity req transform error", "err", err)
-		return nil, errors.TransformError()
-	}
-
-	// 调用服务
-	for _, item := range list {
-		item.AppId = req.AppId
-	}
-
-	if err := app.srv.ImportEntity(ctx, list); err != nil {
-		return nil, err
-	}
-
-	// 处理返回数据
-	return &emptypb.Empty{}, nil
-}
-
-// LoadEntity 载入全部实体信息
-func (app *Entity) LoadEntity(c context.Context, _ *emptypb.Empty) (*apientity.LoadEntityReply, error) {
-	ctx := core.MustContext(c)
-
-	// 调用服务
-	list, err := app.srv.LoadEntity(ctx)
-	if err != nil {
-		return nil, err
-	}
-
-	// 处理返回数据
-	reply := apientity.LoadEntityReply{}
-	if err := value.Transform(list, &reply.List); err != nil {
-		ctx.Logger().Errorw("msg", "get entity resp transform error", "err", err)
-		return nil, errors.TransformError()
-	}
-	return &reply, nil
 }
 
 // ListEntity 获取实体列表
@@ -105,6 +59,7 @@ func (app *Entity) ListEntity(c context.Context, req *apientity.ListEntityReques
 		ctx.Logger().Errorw("msg", "list entity req transform error", "err", err)
 		return nil, errors.TransformError()
 	}
+	in.App = ctx.AppKey(in.App)
 
 	// 调用服务
 	list, err := app.srv.ListEntity(ctx, &in)
@@ -133,6 +88,7 @@ func (app *Entity) CreateEntity(c context.Context, req *apientity.CreateEntityRe
 		ctx.Logger().Errorw("msg", "create entity req transform error", "err", err)
 		return nil, errors.TransformError()
 	}
+	in.App = ctx.AppKey(in.App)
 
 	// 调用服务
 	id, err := app.srv.CreateEntity(ctx, &in)
@@ -276,7 +232,9 @@ func (app *Entity) ListEntityRule(c context.Context, req *apientity.ListEntityRu
 			CreatedAt:   uint32(v.CreatedAt),
 			UpdatedAt:   uint32(v.UpdatedAt),
 		}
-		_ = json.Unmarshal([]byte(v.Expression), &item.Expression)
+		if err := json.Unmarshal([]byte(v.Expression), &item.Expression); err != nil {
+			ctx.Logger().Warnw("msg", "parse entity rule expression error", "id", v.Id, "err", err.Error())
+		}
 		reply.List = append(reply.List, item)
 	}
 
@@ -307,12 +265,12 @@ func (app *Entity) UpdateEntityRule(c context.Context, req *apientity.UpdateEnti
 
 	// 调用服务
 	if err := app.srv.UpdateEntityRule(ctx, &entity.EntityRule{
-		BaseModel: model.BaseModel{Id: req.Id},
-		EntityId:        value.Value(req.EntityId),
-		Name:            value.Value(req.Name),
-		Status:          req.Status,
-		Expression:      value.ObjToString(req.Expression),
-		Description:     value.Value(req.Description),
+		BaseModel:   model.BaseModel{Id: req.Id},
+		EntityId:    value.Value(req.EntityId),
+		Name:        value.Value(req.Name),
+		Status:      req.Status,
+		Expression:  value.ObjToString(req.Expression),
+		Description: value.Value(req.Description),
 	}); err != nil {
 		return nil, err
 	}
@@ -323,4 +281,59 @@ func (app *Entity) UpdateEntityRule(c context.Context, req *apientity.UpdateEnti
 // DeleteEntityRule 删除实体规则
 func (app *Entity) DeleteEntityRule(c context.Context, req *apientity.DeleteEntityRuleRequest) (*apientity.DeleteEntityRuleReply, error) {
 	return &apientity.DeleteEntityRuleReply{}, app.srv.DeleteEntityRule(core.MustContext(c), req.Id)
+}
+
+// RegisterEntity 应用启动自注册实体与字段（mode: append|sync）
+func (app *Entity) RegisterEntity(c context.Context, req *apientity.RegisterEntityRequest) (*apientity.RegisterEntityReply, error) {
+	ctx := core.MustContext(c)
+
+	// api 消息 → types（嵌套节点逐层转换）
+	in := &types.RegisterEntityRequest{
+		AppKeyword: req.GetAppKeyword(),
+		Mode:       req.GetMode(),
+	}
+	for _, item := range req.GetEntities() {
+		if item == nil {
+			continue
+		}
+		node := &types.RegisterEntityNode{
+			Database: item.GetDatabase(),
+			Name:     item.GetName(),
+			Comment:  item.GetComment(),
+		}
+		for ind, f := range item.GetFields() {
+			if f == nil {
+				continue
+			}
+			field := &types.RegisterEntityFieldNode{Name: f.GetName(), Comment: f.GetComment()}
+			if f.GetIndex() > 0 {
+				field.Index = int(f.GetIndex())
+			} else {
+				field.Index = ind
+			}
+			node.Fields = append(node.Fields, field)
+		}
+		for _, r := range item.GetRules() {
+			if r == nil {
+				continue
+			}
+			node.Rules = append(node.Rules, &types.RegisterEntityRuleNode{
+				Name:        r.GetName(),
+				Status:      r.Status,
+				Expression:  r.GetExpression(),
+				Description: r.GetDescription(),
+			})
+		}
+		in.Entities = append(in.Entities, node)
+	}
+
+	reply, err := app.srv.RegisterEntity(ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	return &apientity.RegisterEntityReply{
+		Created: reply.Created,
+		Updated: reply.Updated,
+		Deleted: reply.Deleted,
+	}, nil
 }

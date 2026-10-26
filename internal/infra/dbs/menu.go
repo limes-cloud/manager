@@ -59,8 +59,8 @@ func (infra *Menu) ListMenu(ctx core.Context, req *types.ListMenuRequest) ([]*en
 		fs = []string{"*"}
 	)
 	db := ctx.DB().Model(entity.Menu{}).Select(fs)
-	if req.AppId != nil {
-		db = db.Where("app_id = ?", req.AppId)
+	if req.App != nil {
+		db = db.Where("app = ?", req.App)
 	}
 	if req.InIds != nil {
 		// 获取上层菜单
@@ -101,7 +101,7 @@ func (infra *Menu) CreateMenu(ctx core.Context, menu *entity.Menu) (uint32, erro
 			return op.Put(infra.getCacheKey(menu.GetApi(), menu.GetMethod()), &types.CacheMenu{
 				Id:    menu.Id,
 				Type:  menu.Type,
-				AppId: menu.AppId,
+				App: menu.App,
 			}).Do()
 		}
 
@@ -117,18 +117,18 @@ func (infra *Menu) GetMenu(ctx core.Context, id uint32) (*entity.Menu, error) {
 }
 
 // GetMenuByKeyword 获取指定应用下指定标识的菜单
-func (infra *Menu) GetMenuByKeyword(ctx core.Context, appId uint32, keyword string) (*entity.Menu, error) {
+func (infra *Menu) GetMenuByKeyword(ctx core.Context, app string, keyword string) (*entity.Menu, error) {
 	menu := entity.Menu{}
 	return &menu, ctx.DB().
-		Where("app_id = ? AND keyword = ?", appId, keyword).
+		Where("app = ? AND keyword = ?", app, keyword).
 		First(&menu).Error
 }
 
 // GetMenuByApi 获取指定应用下指定接口的菜单
-func (infra *Menu) GetMenuByApi(ctx core.Context, appId uint32, api string, method string) (*entity.Menu, error) {
+func (infra *Menu) GetMenuByApi(ctx core.Context, app string, api string, method string) (*entity.Menu, error) {
 	menu := entity.Menu{}
 	return &menu, ctx.DB().
-		Where("app_id = ? AND api = ? AND method = ?", appId, api, method).
+		Where("app = ? AND api = ? AND method = ?", app, api, method).
 		First(&menu).Error
 }
 
@@ -168,7 +168,7 @@ func (infra *Menu) UpdateMenu(ctx core.Context, menu *entity.Menu) error {
 			op = op.Put(infra.getCacheKey(menu.GetApi(), menu.GetMethod()), &types.CacheMenu{
 				Id:    menu.Id,
 				Type:  menu.Type,
-				AppId: menu.AppId,
+				App: menu.App,
 			})
 			return op.Do()
 		}
@@ -217,7 +217,7 @@ func (infra *Menu) UpdateRegisteredMenu(ctx core.Context, menu *entity.Menu) err
 			op = op.Put(infra.getCacheKey(menu.GetApi(), menu.GetMethod()), &types.CacheMenu{
 				Id:    menu.Id,
 				Type:  menu.Type,
-				AppId: menu.AppId,
+				App: menu.App,
 				Name:  old.Title,
 			})
 		}
@@ -311,12 +311,12 @@ func (infra *Menu) ListMenuChildrenApi(ctx core.Context, id uint32) ([]*entity.M
 	return list, ctx.DB().Select([]string{"id", "type", "api", "method"}).Find(&list, "id in ?", ids).Error
 }
 
-// GetMenuIdsByAppId 获取指定app id的所有菜单id
-func (infra *Menu) GetMenuIdsByAppId(ctx core.Context, id uint32) ([]uint32, error) {
+// GetMenuIdsByApp 获取指定app的所有菜单id
+func (infra *Menu) GetMenuIdsByApp(ctx core.Context, app string) ([]uint32, error) {
 	var ids []uint32
 	return ids, ctx.DB().Model(entity.Menu{}).
 		Select("id").
-		Where("app_id=?", id).
+		Where("app = ?", app).
 		Scan(&ids).Error
 }
 
@@ -399,7 +399,7 @@ func (infra *Menu) load(ctx core.Context) (map[string]*types.CacheMenu, error) {
 		bucket[infra.getCacheKey(item.GetApi(), item.GetMethod())] = &types.CacheMenu{
 			Id:    item.Id,
 			Type:  item.Type,
-			AppId: item.AppId,
+			App: item.App,
 			Name:  item.Title,
 		}
 	}

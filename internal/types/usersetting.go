@@ -1,7 +1,7 @@
 package types
 
 type GetUserSettingRequest struct {
-	AppId  uint32 `json:"appId"`
+	App    string `json:"app"`
 	UserId uint32 `json:"userId"`
 }
 

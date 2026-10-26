@@ -18,25 +18,31 @@ type OAutherType struct {
 	Name    string
 }
 
-type OAutherTokenRequest struct {
+type OAutherStartRequest struct {
+	IP        string `json:"ip"`
+	UUID      string `json:"uuid"`
+	Account   string `json:"account"`
+	App       string `json:"app"`
+	Keyword   string `json:"keyword"`
+	Platform  string `json:"platform"`
+	UserAgent string `json:"userAgent"`
+}
+
+type OAutherStartReply struct {
+	UUID   string `json:"uuid"`
+	Action string `json:"action"`
+	Value  string `json:"value"`
+	Tip    string `json:"tip"`
+}
+
+type OAutherCompleteRequest struct {
 	IP      string `json:"ip"`
 	UUID    string `json:"uuid"`
 	Account string `json:"account"`
 	Code    string `json:"code"`
 }
 
-type OAutherTokenReply struct {
-	Token  string `json:"token"`
-	Expire int64  `json:"expire"`
-	OID    string `json:"oid"`
-}
-
-type OAutherInfoRequest struct {
-	OID   string `json:"oid"`
-	Token string `json:"token"`
-}
-
-type OAutherInfoReply struct {
+type OAutherIdentity struct {
 	OID      string `json:"oid,omitempty"`      // 授权唯一ID
 	Birthday string `json:"birthday,omitempty"` // 生日
 	RealName string `json:"realName,omitempty"` // 姓名
@@ -47,9 +53,11 @@ type OAutherInfoReply struct {
 	Country  string `json:"country,omitempty"`  // 区
 	Avatar   string `json:"avatar,omitempty"`   // 头像
 	UnionId  string `json:"unionId,omitempty"`  // 联合ID
+	Token    string `json:"token,omitempty"`    // 授权token
+	Expire   int64  `json:"expire,omitempty"`   // 过期时间
 }
 
-func (reply OAutherInfoReply) ToString() string {
+func (reply OAutherIdentity) ToString() string {
 	b, _ := json.Marshal(reply)
 	return string(b)
 }

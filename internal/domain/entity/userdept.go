@@ -3,6 +3,7 @@ package entity
 import "github.com/limes-cloud/kratosx/model"
 
 type UserDept struct {
+	App    string `json:"app" gorm:"column:app"`
 	UserId uint32 `json:"userId" gorm:"column:user_id"`
 	DeptId uint32 `json:"deptId" gorm:"column:dept_id;hook:dept[dept]"`
 	JobId  uint32 `json:"jobId" gorm:"column:job_id"`

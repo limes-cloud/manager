@@ -66,10 +66,10 @@ func (r Notice) ListNotice(ctx core.Context, req *types.ListNoticeRequest) ([]*e
 	)
 
 	db := ctx.DB().Model(entity.Notice{})
-	db = db.Preload("App").Preload("Classify")
+	db = db.Preload("AppInfo").Preload("Classify")
 
-	if req.AppId != nil {
-		db = db.Where("app_id = ?", *req.AppId)
+	if req.App != nil {
+		db = db.Where("app = ?", *req.App)
 	}
 	if req.Title != nil {
 		db = db.Where("title like ?", "%"+*req.Title+"%")

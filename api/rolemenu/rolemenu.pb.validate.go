@@ -68,12 +68,12 @@ func (m *GetRoleMenuIdsRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	if m.AppId != nil {
+	if m.App != nil {
 
-		if m.GetAppId() < 1 {
+		if utf8.RuneCountInString(m.GetApp()) > 64 {
 			err := GetRoleMenuIdsRequestValidationError{
-				field:  "AppId",
-				reason: "value must be greater than or equal to 1",
+				field:  "App",
+				reason: "value length must be at most 64 runes",
 			}
 			if !all {
 				return err
@@ -954,10 +954,10 @@ func (m *CreateRoleMenusRequest) validate(all bool) error {
 
 	var errors []error
 
-	if m.GetAppId() < 1 {
+	if l := utf8.RuneCountInString(m.GetApp()); l < 1 || l > 64 {
 		err := CreateRoleMenusRequestValidationError{
-			field:  "AppId",
-			reason: "value must be greater than or equal to 1",
+			field:  "App",
+			reason: "value length must be between 1 and 64 runes, inclusive",
 		}
 		if !all {
 			return err

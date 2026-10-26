@@ -25,12 +25,12 @@ func NewAppField() *AppField {
 }
 
 // GetAppFields 获取列表
-func (r AppField) GetAppFields(ctx core.Context, appId uint32) ([]string, error) {
+func (r AppField) GetAppFields(ctx core.Context, app string) ([]string, error) {
 	var list []string
 	db := ctx.DB().
 		Model(entity.AppField{}).
 		Select("Field.keyword").
-		Where("app_id = ?", appId)
+		Where("app = ?", app)
 	db = db.Joins("Field", ctx.DB().Where("Field.status = true"))
 	db = db.Where("Field.status is not null")
 
@@ -44,7 +44,11 @@ func (r AppField) ListAppField(ctx core.Context, req *types.ListAppFieldRequest)
 		total int64
 	)
 
-	db := ctx.DB().Model(entity.AppField{}).Where("app_id = ?", req.AppId)
+	db := ctx.DB().Model(entity.AppField{}).Where("app = ?", req.App)
+
+	if req.Required != nil {
+		db = db.Where("required = ?", *req.Required)
+	}
 
 	join := ctx.DB().Where("Field.status = true")
 	if req.Keyword != nil {
@@ -52,9 +56,6 @@ func (r AppField) ListAppField(ctx core.Context, req *types.ListAppFieldRequest)
 	}
 	if req.Name != nil {
 		join = join.Where("name LIKE ?", *req.Name+"%")
-	}
-	if req.Required != nil {
-		join = join.Where("app_field.required = ?", *req.Required)
 	}
 	db = db.Joins("Field", join)
 	db = db.Where("Field.status is not null")

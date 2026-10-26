@@ -2,6 +2,7 @@ syntax = "proto3";
 
 package manager.api.appfield;
 
+import "api/field/proto/field.proto";
 import "validate/validate.proto";
 
 option go_package = "manager/api/appfield;appfield";
@@ -10,44 +11,34 @@ option java_package = "manager.api.appfield";
 
 message ListAppFieldRequest {
   uint32 page = 1 [(validate.rules).uint32 = {gte: 1}];
-  uint32 pageSize = 2 [(validate.rules).uint32 = {
-    gte: 1
-    lte: 50
-  }];
-  optional string order = 3 [(validate.rules).string = {
-    in: [
-      "asc",
-      "desc"
-    ]
-  }];
-  optional string orderBy = 4 [(validate.rules).string = {
-    in: [
-      "id",
-      "created_at",
-      "updated_at"
-    ]
-  }];
+  uint32 pageSize = 2 [(validate.rules).uint32 = {gte: 1, lte: 50}];
+  optional string order = 3 [(validate.rules).string = {in: ["asc", "desc"]}];
+  optional string orderBy = 4 [(validate.rules).string = {in: ["id", "sort", "created_at"]}];
   optional string keyword = 5;
   optional string name = 6;
-  uint32 appId = 7 [(validate.rules).uint32 = {gte: 1}];
+  string app = 7 [(validate.rules).string = {min_len: 1, max_len: 64}];
 }
 
 message ListAppFieldReply {
   message Field {
     uint32 id = 1;
-    string name = 2;
-    string keyword = 3;
-    string type = 4;
+    string keyword = 2;
+    string type = 3;
+    string name = 4;
+    optional manager.api.field.FieldConfig config = 5;
+    optional string description = 6;
   }
 
   message Data {
     uint32 id = 1;
-    uint32 appId = 2;
+    string app = 2;
     uint32 fieldId = 3;
     bool required = 4;
-    uint32 createdAt = 5;
-    uint32 updatedAt = 6;
-    Field field = 7;
+    bool unique = 5;
+    uint32 sort = 6;
+    uint32 createdAt = 7;
+    uint32 updatedAt = 8;
+    Field field = 9;
   }
 
   uint32 total = 1;
@@ -55,9 +46,11 @@ message ListAppFieldReply {
 }
 
 message CreateAppFieldRequest {
-  uint32 appId = 1 [(validate.rules).uint32 = {gte: 1}];
+  string app = 1 [(validate.rules).string = {min_len: 1, max_len: 64}];
   uint32 fieldId = 2 [(validate.rules).uint32 = {gte: 1}];
   bool required = 3;
+  bool unique = 4;
+  uint32 sort = 5;
 }
 
 message CreateAppFieldReply {
@@ -66,7 +59,9 @@ message CreateAppFieldReply {
 
 message UpdateAppFieldRequest {
   uint32 id = 1 [(validate.rules).uint32 = {gt: 0}];
-  bool required = 3;
+  bool required = 2;
+  bool unique = 3;
+  uint32 sort = 4;
 }
 
 message UpdateAppFieldReply {}

@@ -8,7 +8,7 @@ import (
 
 type AppField interface {
 	// GetAppFields 获取应用字段列表
-	GetAppFields(ctx core.Context, appId uint32) ([]string, error)
+	GetAppFields(ctx core.Context, app string) ([]string, error)
 
 	// ListAppField 获取应用字段列表
 	ListAppField(ctx core.Context, req *types.ListAppFieldRequest) ([]*entity.AppField, uint32, error)

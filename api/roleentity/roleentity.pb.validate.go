@@ -79,26 +79,83 @@ func (m *CreateRoleEntityRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	if utf8.RuneCountInString(m.GetAction()) < 1 {
-		err := CreateRoleEntityRequestValidationError{
-			field:  "Action",
-			reason: "value length must be at least 1 runes",
+	for idx, item := range m.GetItems() {
+		_, _ = idx, item
+
+		if all {
+			switch v := interface{}(item).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, CreateRoleEntityRequestValidationError{
+						field:  fmt.Sprintf("Items[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, CreateRoleEntityRequestValidationError{
+						field:  fmt.Sprintf("Items[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return CreateRoleEntityRequestValidationError{
+					field:  fmt.Sprintf("Items[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
 		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
+
 	}
 
-	if utf8.RuneCountInString(m.GetScope()) < 1 {
-		err := CreateRoleEntityRequestValidationError{
-			field:  "Scope",
-			reason: "value length must be at least 1 runes",
+	if m.Action != nil {
+
+		if utf8.RuneCountInString(m.GetAction()) < 1 {
+			err := CreateRoleEntityRequestValidationError{
+				field:  "Action",
+				reason: "value length must be at least 1 runes",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
 		}
-		if !all {
-			return err
+
+	}
+
+	if m.Scope != nil {
+
+		if utf8.RuneCountInString(m.GetScope()) < 1 {
+			err := CreateRoleEntityRequestValidationError{
+				field:  "Scope",
+				reason: "value length must be at least 1 runes",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
 		}
-		errors = append(errors, err)
+
+	}
+
+	if m.App != nil {
+
+		if utf8.RuneCountInString(m.GetApp()) > 64 {
+			err := CreateRoleEntityRequestValidationError{
+				field:  "App",
+				reason: "value length must be at most 64 runes",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
 	}
 
 	if len(errors) > 0 {
@@ -180,6 +237,128 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = CreateRoleEntityRequestValidationError{}
+
+// Validate checks the field values on RoleEntityItem with the rules defined in
+// the proto definition for this message. If any rules are violated, the first
+// error encountered is returned, or nil if there are no violations.
+func (m *RoleEntityItem) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on RoleEntityItem with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// result is a list of violation errors wrapped in RoleEntityItemMultiError,
+// or nil if none found.
+func (m *RoleEntityItem) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *RoleEntityItem) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if utf8.RuneCountInString(m.GetAction()) < 1 {
+		err := RoleEntityItemValidationError{
+			field:  "Action",
+			reason: "value length must be at least 1 runes",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if utf8.RuneCountInString(m.GetScope()) < 1 {
+		err := RoleEntityItemValidationError{
+			field:  "Scope",
+			reason: "value length must be at least 1 runes",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	if len(errors) > 0 {
+		return RoleEntityItemMultiError(errors)
+	}
+
+	return nil
+}
+
+// RoleEntityItemMultiError is an error wrapping multiple validation errors
+// returned by RoleEntityItem.ValidateAll() if the designated constraints
+// aren't met.
+type RoleEntityItemMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m RoleEntityItemMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m RoleEntityItemMultiError) AllErrors() []error { return m }
+
+// RoleEntityItemValidationError is the validation error returned by
+// RoleEntityItem.Validate if the designated constraints aren't met.
+type RoleEntityItemValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e RoleEntityItemValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e RoleEntityItemValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e RoleEntityItemValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e RoleEntityItemValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e RoleEntityItemValidationError) ErrorName() string { return "RoleEntityItemValidationError" }
+
+// Error satisfies the builtin error interface
+func (e RoleEntityItemValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sRoleEntityItem.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = RoleEntityItemValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = RoleEntityItemValidationError{}
 
 // Validate checks the field values on CreateRoleEntityReply with the rules
 // defined in the proto definition for this message. If any rules are
@@ -346,6 +525,21 @@ func (m *ListRoleEntityRequest) validate(all bool) error {
 			err := ListRoleEntityRequestValidationError{
 				field:  "EntityId",
 				reason: "value must be greater than or equal to 1",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+	}
+
+	if m.App != nil {
+
+		if utf8.RuneCountInString(m.GetApp()) > 64 {
+			err := ListRoleEntityRequestValidationError{
+				field:  "App",
+				reason: "value length must be at most 64 runes",
 			}
 			if !all {
 				return err
@@ -636,11 +830,11 @@ func (m *UpdateRoleEntityRequest) validate(all bool) error {
 
 	}
 
-	if m.Action != nil {
+	if m.Scope != nil {
 
-		if utf8.RuneCountInString(m.GetAction()) < 1 {
+		if utf8.RuneCountInString(m.GetScope()) < 1 {
 			err := UpdateRoleEntityRequestValidationError{
-				field:  "Action",
+				field:  "Scope",
 				reason: "value length must be at least 1 runes",
 			}
 			if !all {
@@ -651,12 +845,12 @@ func (m *UpdateRoleEntityRequest) validate(all bool) error {
 
 	}
 
-	if m.Scope != nil {
+	if m.App != nil {
 
-		if utf8.RuneCountInString(m.GetScope()) < 1 {
+		if utf8.RuneCountInString(m.GetApp()) > 64 {
 			err := UpdateRoleEntityRequestValidationError{
-				field:  "Scope",
-				reason: "value length must be at least 1 runes",
+				field:  "App",
+				reason: "value length must be at most 64 runes",
 			}
 			if !all {
 				return err

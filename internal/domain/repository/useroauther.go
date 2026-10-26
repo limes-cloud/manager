@@ -10,7 +10,7 @@ type UserOAuther interface {
 	CreateUserOAuther(ctx core.Context, req *entity.UserOAuther) (uint32, error)
 
 	// DeleteUserOAuther 删除用户授权信息
-	DeleteUserOAuther(ctx core.Context, userId uint32, appId uint32) error
+	DeleteUserOAuther(ctx core.Context, userId uint32, oautherId uint32) error
 
 	// IsBindUserOAuther 是否绑定授权信息
 	IsBindUserOAuther(ctx core.Context, channel uint32, oid string) bool

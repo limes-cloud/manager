@@ -57,34 +57,19 @@ func (m *GetRoleRequest) validate(all bool) error {
 
 	var errors []error
 
-	if m.Id != nil {
-
-		if m.GetId() < 1 {
-			err := GetRoleRequestValidationError{
-				field:  "Id",
-				reason: "value must be greater than or equal to 1",
-			}
-			if !all {
-				return err
-			}
-			errors = append(errors, err)
+	if utf8.RuneCountInString(m.GetKeyword()) < 1 {
+		err := GetRoleRequestValidationError{
+			field:  "Keyword",
+			reason: "value length must be at least 1 runes",
 		}
-
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
 	}
 
-	if m.Keyword != nil {
-
-		if utf8.RuneCountInString(m.GetKeyword()) < 1 {
-			err := GetRoleRequestValidationError{
-				field:  "Keyword",
-				reason: "value length must be at least 1 runes",
-			}
-			if !all {
-				return err
-			}
-			errors = append(errors, err)
-		}
-
+	if m.App != nil {
+		// no validation rules for App
 	}
 
 	if len(errors) > 0 {

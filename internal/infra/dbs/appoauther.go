@@ -31,7 +31,7 @@ func (r AppOAuther) ListAppOAuther(ctx core.Context, req *types.ListAppOAutherRe
 		total int64
 	)
 
-	db := ctx.DB().Model(entity.AppOAuther{}).Where("app_id = ?", req.AppId)
+	db := ctx.DB().Model(entity.AppOAuther{}).Where("app = ?", req.App)
 
 	join := ctx.DB().Where("OAuther.status = true")
 	if req.Keyword != nil {
@@ -42,7 +42,6 @@ func (r AppOAuther) ListAppOAuther(ctx core.Context, req *types.ListAppOAutherRe
 	}
 	db = db.Joins("OAuther", join)
 	db = db.Where("OAuther.status is not null")
-
 
 	if req.Search != nil {
 		// 查询条件下数据总数
@@ -67,10 +66,10 @@ func (r AppOAuther) DeleteAppOAuther(ctx core.Context, id uint32) error {
 	return ctx.DB().Where("id = ?", id).Delete(&entity.AppOAuther{}).Error
 }
 
-func (r AppOAuther) GetAppOAutherByAT(ctx core.Context, appId uint32, tp string) (*entity.AppOAuther, error) {
+func (r AppOAuther) GetAppOAutherByAT(ctx core.Context, app string, tp string) (*entity.AppOAuther, error) {
 	var res entity.AppOAuther
 	return &res, ctx.DB().
-		Where("app_id = ?", appId).
+		Where("app = ?", app).
 		Where("type = ?", tp).
 		First(&res).Error
 }

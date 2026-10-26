@@ -4,42 +4,60 @@ package manager.api.field;
 
 import "validate/validate.proto";
 
-option go_package = "manager/api/field;field";
+option go_package = "github.com/limes-cloud/manager/api/field;field";
 option java_multiple_files = true;
 option java_package = "manager.api.field";
 
-message ListFieldTypeRequest {}
+// FieldRule 校验规则
+message FieldRule {
+  string type = 1;             // phone/email/idcard/regex/enum/range/length
+  optional string message = 2; // 自定义错误提示
+  optional string pattern = 3; // type=regex
+  repeated string values = 4;  // type=enum
+  optional double min = 5;     // type=range/length
+  optional double max = 6;     // type=range/length
+}
 
-message ListFieldTypeReply {
-  message Type {
-    string type = 1;
+// FieldOption 选项
+message FieldOption {
+  string label = 1;
+  string value = 2;
+}
+
+// FieldConfig 组件配置
+message FieldConfig {
+  optional string placeholder = 1;      // 提示文本
+  optional string defaultValue = 2;     // 默认值（JSON 字符串表示）
+  optional uint32 maxLength = 3;        // input/textarea/password
+  optional double min = 4;              // number
+  optional double max = 5;              // number
+  optional double step = 6;             // number
+  repeated FieldOption options = 7;     // radio/checkbox/select
+  optional string filetype = 8;         // upload: image/video/file
+  optional uint32 limit = 9;           // upload: 最大文件数
+  optional FieldRule rule = 10;         // 校验规则
+}
+
+message ListFieldOptionsRequest {}
+
+message ListFieldOptionsReply {
+  message Option {
+    string value = 1;
     string name = 2;
   }
-  repeated Type list = 1;
+  repeated Option types = 1; // 组件类型列表
+  repeated Option rules = 2; // 校验规则类型列表
 }
 
 message ListFieldRequest {
   uint32 page = 1 [(validate.rules).uint32 = {gte: 1}];
-  uint32 pageSize = 2 [(validate.rules).uint32 = {
-    gte: 1
-    lte: 50
-  }];
-  optional string order = 3 [(validate.rules).string = {
-    in: [
-      "asc",
-      "desc"
-    ]
-  }];
-  optional string orderBy = 4 [(validate.rules).string = {
-    in: [
-      "id",
-      "created_at"
-    ]
-  }];
+  uint32 pageSize = 2 [(validate.rules).uint32 = {gte: 1, lte: 50}];
+  optional string order = 3 [(validate.rules).string = {in: ["asc", "desc"]}];
+  optional string orderBy = 4 [(validate.rules).string = {in: ["id", "created_at"]}];
   optional string keyword = 5;
   optional string name = 6;
-  optional bool status = 7;
-  optional bool required = 8;
+  optional string type = 7;
+  optional bool status = 8;
 }
 
 message ListFieldReply {
@@ -48,36 +66,22 @@ message ListFieldReply {
     string keyword = 2;
     string type = 3;
     string name = 4;
-    optional bool status = 5;
-    optional string description = 6;
-    optional bool required = 7;
-    optional bool unique = 8;
-    uint32 createdAt = 9;
-    uint32 updatedAt = 10;
+    optional FieldConfig config = 5;
+    optional bool status = 6;
+    optional string description = 7;
+    uint32 createdAt = 8;
+    uint32 updatedAt = 9;
   }
-
   uint32 total = 1;
   repeated Field list = 2;
 }
 
-message ListRequiredFieldRequest {}
-
-message ListRequiredFieldReply {
-  message Field {
-    string keyword = 1;
-    string type = 2;
-    string name = 3;
-  }
-  repeated Field list = 1;
-}
-
 message CreateFieldRequest {
-  string keyword = 1 [(validate.rules).string = {min_len: 1}];
-  string type = 2 [(validate.rules).string = {min_len: 1}];
-  string name = 3 [(validate.rules).string = {min_len: 1}];
-  bool required = 4;
-  bool unique = 5;
-  optional string description = 6;
+  string keyword = 1 [(validate.rules).string = {min_len: 1, max_len: 32}];
+  string type = 2 [(validate.rules).string = {min_len: 1, max_len: 32}];
+  string name = 3 [(validate.rules).string = {min_len: 1, max_len: 64}];
+  optional FieldConfig config = 4;
+  optional string description = 5 [(validate.rules).string = {max_len: 256}];
 }
 
 message CreateFieldReply {
@@ -86,13 +90,12 @@ message CreateFieldReply {
 
 message UpdateFieldRequest {
   uint32 id = 1 [(validate.rules).uint32 = {gte: 1}];
-  string keyword = 2;
-  string type = 3;
-  string name = 4;
-  optional bool status = 5;
-  optional bool required = 6;
-  optional bool unique = 7;
-  optional string description = 8;
+  string keyword = 2 [(validate.rules).string = {max_len: 32}];
+  string type = 3 [(validate.rules).string = {max_len: 32}];
+  string name = 4 [(validate.rules).string = {max_len: 64}];
+  optional FieldConfig config = 5;
+  optional bool status = 6;
+  optional string description = 7 [(validate.rules).string = {max_len: 256}];
 }
 
 message UpdateFieldReply {}

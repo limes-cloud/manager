@@ -329,6 +329,33 @@ func (m *AppSetting) validate(all bool) error {
 		}
 	}
 
+	if len(m.GetModules()) > 64 {
+		err := AppSettingValidationError{
+			field:  "Modules",
+			reason: "value must contain no more than 64 item(s)",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	for idx, item := range m.GetModules() {
+		_, _ = idx, item
+
+		if l := utf8.RuneCountInString(item); l < 1 || l > 32 {
+			err := AppSettingValidationError{
+				field:  fmt.Sprintf("Modules[%v]", idx),
+				reason: "value length must be between 1 and 32 runes, inclusive",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+	}
+
 	if len(errors) > 0 {
 		return AppSettingMultiError(errors)
 	}
@@ -549,8 +576,6 @@ func (m *GetAppReply) validate(all bool) error {
 
 	// no validation rules for Keyword
 
-	// no validation rules for Secret
-
 	// no validation rules for Name
 
 	// no validation rules for ShowName
@@ -591,6 +616,8 @@ func (m *GetAppReply) validate(all bool) error {
 			}
 		}
 	}
+
+	// no validation rules for Loginable
 
 	if m.Comment != nil {
 		// no validation rules for Comment
@@ -1045,6 +1072,21 @@ func (m *ListAppRequest) validate(all bool) error {
 		// no validation rules for Status
 	}
 
+	if m.Type != nil {
+
+		if _, ok := _ListAppRequest_Type_InLookup[m.GetType()]; !ok {
+			err := ListAppRequestValidationError{
+				field:  "Type",
+				reason: "value must be in list [base app]",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+	}
+
 	if len(errors) > 0 {
 		return ListAppRequestMultiError(errors)
 	}
@@ -1132,6 +1174,11 @@ var _ListAppRequest_OrderBy_InLookup = map[string]struct{}{
 	"id":         {},
 	"created_at": {},
 	"updated_at": {},
+}
+
+var _ListAppRequest_Type_InLookup = map[string]struct{}{
+	"base": {},
+	"app":  {},
 }
 
 // Validate checks the field values on ListAppReply with the rules defined in
@@ -1291,10 +1338,10 @@ func (m *CreateAppRequest) validate(all bool) error {
 
 	var errors []error
 
-	if l := utf8.RuneCountInString(m.GetType()); l < 1 || l > 128 {
+	if _, ok := _CreateAppRequest_Type_InLookup[m.GetType()]; !ok {
 		err := CreateAppRequestValidationError{
 			field:  "Type",
-			reason: "value length must be between 1 and 128 runes, inclusive",
+			reason: "value must be in list [base app]",
 		}
 		if !all {
 			return err
@@ -1348,8 +1395,6 @@ func (m *CreateAppRequest) validate(all bool) error {
 
 	// no validation rules for Favicon
 
-	// no validation rules for Secret
-
 	// no validation rules for Private
 
 	if all {
@@ -1380,6 +1425,8 @@ func (m *CreateAppRequest) validate(all bool) error {
 			}
 		}
 	}
+
+	// no validation rules for Loginable
 
 	if m.Description != nil {
 		// no validation rules for Description
@@ -1466,6 +1513,11 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = CreateAppRequestValidationError{}
+
+var _CreateAppRequest_Type_InLookup = map[string]struct{}{
+	"base": {},
+	"app":  {},
+}
 
 // Validate checks the field values on CreateAppReply with the rules defined in
 // the proto definition for this message. If any rules are violated, the first
@@ -1604,10 +1656,10 @@ func (m *UpdateAppRequest) validate(all bool) error {
 
 	if m.Type != nil {
 
-		if utf8.RuneCountInString(m.GetType()) > 128 {
+		if _, ok := _UpdateAppRequest_Type_InLookup[m.GetType()]; !ok {
 			err := UpdateAppRequestValidationError{
 				field:  "Type",
-				reason: "value length must be at most 128 runes",
+				reason: "value must be in list [ base app]",
 			}
 			if !all {
 				return err
@@ -1637,21 +1689,6 @@ func (m *UpdateAppRequest) validate(all bool) error {
 		if utf8.RuneCountInString(m.GetFavicon()) > 128 {
 			err := UpdateAppRequestValidationError{
 				field:  "Favicon",
-				reason: "value length must be at most 128 runes",
-			}
-			if !all {
-				return err
-			}
-			errors = append(errors, err)
-		}
-
-	}
-
-	if m.Secret != nil {
-
-		if utf8.RuneCountInString(m.GetSecret()) > 128 {
-			err := UpdateAppRequestValidationError{
-				field:  "Secret",
 				reason: "value length must be at most 128 runes",
 			}
 			if !all {
@@ -1745,6 +1782,10 @@ func (m *UpdateAppRequest) validate(all bool) error {
 
 	}
 
+	if m.Loginable != nil {
+		// no validation rules for Loginable
+	}
+
 	if len(errors) > 0 {
 		return UpdateAppRequestMultiError(errors)
 	}
@@ -1822,6 +1863,12 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = UpdateAppRequestValidationError{}
+
+var _UpdateAppRequest_Type_InLookup = map[string]struct{}{
+	"":     {},
+	"base": {},
+	"app":  {},
+}
 
 // Validate checks the field values on UpdateAppReply with the rules defined in
 // the proto definition for this message. If any rules are violated, the first
@@ -2304,6 +2351,8 @@ func (m *ListAppReply_Data) validate(all bool) error {
 	// no validation rules for UpdatedAt
 
 	// no validation rules for Type
+
+	// no validation rules for Loginable
 
 	if m.Status != nil {
 		// no validation rules for Status

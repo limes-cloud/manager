@@ -32,6 +32,7 @@ func NewRoleEntity() *RoleEntity {
 	return &RoleEntity{
 		srv: service.NewRoleEntity(
 			dbs.NewRoleEntity(),
+			dbs.NewScope(),
 		),
 	}
 }
@@ -47,7 +48,7 @@ func init() {
 // ListRoleEntity 获取用户字段列表
 func (fd *RoleEntity) ListRoleEntity(c context.Context, req *roleentity.ListRoleEntityRequest) (*roleentity.ListRoleEntityReply, error) {
 	ctx := core.MustContext(c)
-	list, total, err := fd.srv.ListRoleEntity(ctx, &types.ListRoleEntityRequest{
+	list, total, err := fd.srv.ListRoleEntity(ctx, ctx.AppKey(req.GetApp()), &types.ListRoleEntityRequest{
 		Search: page.Search{
 			Page:     req.Page,
 			PageSize: req.PageSize,
@@ -76,7 +77,6 @@ func (fd *RoleEntity) ListRoleEntity(c context.Context, req *roleentity.ListRole
 				Comment: v.Entity.Comment,
 			},
 		}
-		_ = json.Unmarshal([]byte(v.Fields), &item.Fields)
 		_ = json.Unmarshal([]byte(v.Rules), &item.Rules)
 		_ = json.Unmarshal([]byte(v.Depts), &item.Depts)
 		reply.List = append(reply.List, item)
@@ -88,13 +88,38 @@ func (fd *RoleEntity) ListRoleEntity(c context.Context, req *roleentity.ListRole
 // CreateRoleEntity 创建用户字段
 func (fd *RoleEntity) CreateRoleEntity(c context.Context, req *roleentity.CreateRoleEntityRequest) (*roleentity.CreateRoleEntityReply, error) {
 	ctx := core.MustContext(c)
+	app := ctx.AppKey(req.GetApp())
+
+	// 批量模式：items 非空时按各自的 action/scope 逐条创建（事务内一次提交）
+	if len(req.GetItems()) > 0 {
+		var fields []*entity.RoleEntity
+		for _, item := range req.GetItems() {
+			fields = append(fields, &entity.RoleEntity{
+				App:      app,
+				RoleId:   req.RoleId,
+				EntityId: req.EntityId,
+				Action:   item.Action,
+				Scope:    item.Scope,
+				Depts:    value.ObjToString(item.Depts),
+				Rules:    value.ObjToString(item.Rules),
+			})
+		}
+		ids, err := fd.srv.CreateRoleEntities(ctx, fields)
+		if err != nil {
+			return nil, err
+		}
+		if len(ids) > 0 {
+			return &roleentity.CreateRoleEntityReply{Id: ids[0]}, nil
+		}
+		return &roleentity.CreateRoleEntityReply{}, nil
+	}
 
 	id, err := fd.srv.CreateRoleEntity(ctx, &entity.RoleEntity{
+		App:      app,
 		RoleId:   req.RoleId,
 		EntityId: req.EntityId,
-		Action:   req.Action,
-		Scope:    req.Scope,
-		Fields:   value.ObjToString(req.Fields),
+		Action:   value.Value(req.Action),
+		Scope:    value.Value(req.Scope),
 		Rules:    value.ObjToString(req.Rules),
 		Depts:    value.ObjToString(req.Depts),
 	})
@@ -110,11 +135,10 @@ func (fd *RoleEntity) UpdateRoleEntity(c context.Context, req *roleentity.Update
 
 	err := fd.srv.UpdateRoleEntity(ctx, &entity.RoleEntity{
 		BaseModel: model.BaseModel{Id: req.Id},
+		App:       ctx.AppKey(req.GetApp()),
 		RoleId:    value.Value(req.RoleId),
 		EntityId:  value.Value(req.EntityId),
-		Action:    value.Value(req.Action),
 		Scope:     value.Value(req.Scope),
-		Fields:    value.ObjToString(req.Fields),
 		Rules:     value.ObjToString(req.Rules),
 		Depts:     value.ObjToString(req.Depts),
 	})
@@ -126,7 +150,8 @@ func (fd *RoleEntity) UpdateRoleEntity(c context.Context, req *roleentity.Update
 
 // DeleteRoleEntity 删除用户字段
 func (fd *RoleEntity) DeleteRoleEntity(c context.Context, req *roleentity.DeleteRoleEntityRequest) (*roleentity.DeleteRoleEntityReply, error) {
-	if err := fd.srv.DeleteRoleEntity(core.MustContext(c), req.Id); err != nil {
+	ctx := core.MustContext(c)
+	if err := fd.srv.DeleteRoleEntity(ctx, ctx.AppKey(), req.Id); err != nil {
 		return nil, err
 	}
 	return &roleentity.DeleteRoleEntityReply{}, nil

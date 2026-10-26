@@ -1125,7 +1125,7 @@ func (m *GetNoticeReply) validate(all bool) error {
 
 	// no validation rules for Id
 
-	// no validation rules for AppId
+	// no validation rules for App
 
 	// no validation rules for ClassifyId
 
@@ -1142,11 +1142,11 @@ func (m *GetNoticeReply) validate(all bool) error {
 	// no validation rules for UpdatedAt
 
 	if all {
-		switch v := interface{}(m.GetApp()).(type) {
+		switch v := interface{}(m.GetAppInfo()).(type) {
 		case interface{ ValidateAll() error }:
 			if err := v.ValidateAll(); err != nil {
 				errors = append(errors, GetNoticeReplyValidationError{
-					field:  "App",
+					field:  "AppInfo",
 					reason: "embedded message failed validation",
 					cause:  err,
 				})
@@ -1154,16 +1154,16 @@ func (m *GetNoticeReply) validate(all bool) error {
 		case interface{ Validate() error }:
 			if err := v.Validate(); err != nil {
 				errors = append(errors, GetNoticeReplyValidationError{
-					field:  "App",
+					field:  "AppInfo",
 					reason: "embedded message failed validation",
 					cause:  err,
 				})
 			}
 		}
-	} else if v, ok := interface{}(m.GetApp()).(interface{ Validate() error }); ok {
+	} else if v, ok := interface{}(m.GetAppInfo()).(interface{ Validate() error }); ok {
 		if err := v.Validate(); err != nil {
 			return GetNoticeReplyValidationError{
-				field:  "App",
+				field:  "AppInfo",
 				reason: "embedded message failed validation",
 				cause:  err,
 			}
@@ -1329,12 +1329,12 @@ func (m *ListNoticeRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	if m.AppId != nil {
+	if m.App != nil {
 
-		if m.GetAppId() < 1 {
+		if utf8.RuneCountInString(m.GetApp()) > 64 {
 			err := ListNoticeRequestValidationError{
-				field:  "AppId",
-				reason: "value must be greater than or equal to 1",
+				field:  "App",
+				reason: "value length must be at most 64 runes",
 			}
 			if !all {
 				return err
@@ -1510,12 +1510,12 @@ func (m *ListVisibleNoticeRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	if m.AppId != nil {
+	if m.App != nil {
 
-		if m.GetAppId() < 1 {
+		if utf8.RuneCountInString(m.GetApp()) > 64 {
 			err := ListVisibleNoticeRequestValidationError{
-				field:  "AppId",
-				reason: "value must be greater than or equal to 1",
+				field:  "App",
+				reason: "value length must be at most 64 runes",
 			}
 			if !all {
 				return err
@@ -1797,10 +1797,10 @@ func (m *CreateNoticeRequest) validate(all bool) error {
 
 	var errors []error
 
-	if m.GetAppId() < 1 {
+	if l := utf8.RuneCountInString(m.GetApp()); l < 1 || l > 64 {
 		err := CreateNoticeRequestValidationError{
-			field:  "AppId",
-			reason: "value must be greater than or equal to 1",
+			field:  "App",
+			reason: "value length must be between 1 and 64 runes, inclusive",
 		}
 		if !all {
 			return err
@@ -2070,12 +2070,12 @@ func (m *UpdateNoticeRequest) validate(all bool) error {
 
 	// no validation rules for Id
 
-	if m.AppId != nil {
+	if m.App != nil {
 
-		if m.GetAppId() < 1 {
+		if utf8.RuneCountInString(m.GetApp()) > 64 {
 			err := UpdateNoticeRequestValidationError{
-				field:  "AppId",
-				reason: "value must be greater than or equal to 1",
+				field:  "App",
+				reason: "value length must be at most 64 runes",
 			}
 			if !all {
 				return err
@@ -3128,7 +3128,7 @@ func (m *ListNoticeReply_Notice) validate(all bool) error {
 
 	// no validation rules for Id
 
-	// no validation rules for AppId
+	// no validation rules for App
 
 	// no validation rules for ClassifyId
 
@@ -3143,11 +3143,11 @@ func (m *ListNoticeReply_Notice) validate(all bool) error {
 	// no validation rules for UpdatedAt
 
 	if all {
-		switch v := interface{}(m.GetApp()).(type) {
+		switch v := interface{}(m.GetAppInfo()).(type) {
 		case interface{ ValidateAll() error }:
 			if err := v.ValidateAll(); err != nil {
 				errors = append(errors, ListNoticeReply_NoticeValidationError{
-					field:  "App",
+					field:  "AppInfo",
 					reason: "embedded message failed validation",
 					cause:  err,
 				})
@@ -3155,16 +3155,16 @@ func (m *ListNoticeReply_Notice) validate(all bool) error {
 		case interface{ Validate() error }:
 			if err := v.Validate(); err != nil {
 				errors = append(errors, ListNoticeReply_NoticeValidationError{
-					field:  "App",
+					field:  "AppInfo",
 					reason: "embedded message failed validation",
 					cause:  err,
 				})
 			}
 		}
-	} else if v, ok := interface{}(m.GetApp()).(interface{ Validate() error }); ok {
+	} else if v, ok := interface{}(m.GetAppInfo()).(interface{ Validate() error }); ok {
 		if err := v.Validate(); err != nil {
 			return ListNoticeReply_NoticeValidationError{
-				field:  "App",
+				field:  "AppInfo",
 				reason: "embedded message failed validation",
 				cause:  err,
 			}

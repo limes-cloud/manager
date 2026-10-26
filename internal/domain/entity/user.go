@@ -1,14 +1,10 @@
 package entity
 
-import (
-	"fmt"
-
-	"github.com/limes-cloud/kratosx/model"
-)
+import "github.com/limes-cloud/kratosx/model"
 
 type User struct {
-	Avatar    string      `json:"avatar" gorm:"column:avatar"`                       // 用户头像
-	Nickname  string      `json:"nickname" gorm:"column:nickname"`                   // 用户昵称
+	Avatar    *string     `json:"avatar" gorm:"column:avatar"`                       // 用户头像
+	Nickname  *string     `json:"nickname" gorm:"column:nickname"`                   // 用户昵称
 	Signature *string     `json:"signature" gorm:"column:signature"`                 // 用户签名
 	Username  string      `json:"username" gorm:"column:username"`                   // 用户账户
 	Password  string      `json:"password" gorm:"column:password"`                   // 用户密码
@@ -24,24 +20,18 @@ type User struct {
 
 type UserSetting struct {
 	UserId  uint32 `json:"userId" gorm:"column:user_id"`
-	AppId   uint32 `json:"appId" gorm:"column:app_id"`
+	App     string `json:"app" gorm:"column:app"`
 	Setting string `json:"setting" gorm:"column:setting"`
 	model.BaseModel
 }
 
 type Userinfo struct {
-	UserId   uint32 `json:"userId" gorm:"column:user_id"`
-	Field    string `json:"field" gorm:"column:field"`
-	Value    string `json:"value" gorm:"column:value"`
-	ValueMd5 string `json:"valueMd5" gorm:"column:value_md5"`
-	Index    *int   `json:"index" gorm:"-"`
+	UserId uint32 `json:"userId" gorm:"column:user_id"` // 用户 ID
+	Field  string `json:"field" gorm:"column:field"`    // 字段标识（对应 schema 中 node.field）
+	Value  string `json:"value" gorm:"column:value"`    // 字段值
 	model.BaseModel
 }
 
 func (u *Userinfo) GetTableName() string {
-	if u.UserId != 0 && u.Index == nil {
-		index := int(u.UserId % 10)
-		u.Index = &index
-	}
-	return fmt.Sprintf("userinfo_%d", *u.Index)
+	return "userinfo"
 }

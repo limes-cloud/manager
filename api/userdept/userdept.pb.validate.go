@@ -92,6 +92,21 @@ func (m *CreateUserDeptRequest) validate(all bool) error {
 
 	// no validation rules for Main
 
+	if m.App != nil {
+
+		if utf8.RuneCountInString(m.GetApp()) > 64 {
+			err := CreateUserDeptRequestValidationError{
+				field:  "App",
+				reason: "value length must be at most 64 runes",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+	}
+
 	if len(errors) > 0 {
 		return CreateUserDeptRequestMultiError(errors)
 	}
@@ -314,6 +329,21 @@ func (m *UpdateUserDeptRequest) validate(all bool) error {
 	// no validation rules for JobId
 
 	// no validation rules for Main
+
+	if m.App != nil {
+
+		if utf8.RuneCountInString(m.GetApp()) > 64 {
+			err := UpdateUserDeptRequestValidationError{
+				field:  "App",
+				reason: "value length must be at most 64 runes",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
+	}
 
 	if len(errors) > 0 {
 		return UpdateUserDeptRequestMultiError(errors)
@@ -558,6 +588,21 @@ func (m *ListUserDeptRequest) validate(all bool) error {
 
 	if m.Dept != nil {
 		// no validation rules for Dept
+	}
+
+	if m.App != nil {
+
+		if utf8.RuneCountInString(m.GetApp()) > 64 {
+			err := ListUserDeptRequestValidationError{
+				field:  "App",
+				reason: "value length must be at most 64 runes",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
 	}
 
 	if len(errors) > 0 {
@@ -809,6 +854,21 @@ func (m *DeleteUserDeptRequest) validate(all bool) error {
 			return err
 		}
 		errors = append(errors, err)
+	}
+
+	if m.App != nil {
+
+		if utf8.RuneCountInString(m.GetApp()) > 64 {
+			err := DeleteUserDeptRequestValidationError{
+				field:  "App",
+				reason: "value length must be at most 64 runes",
+			}
+			if !all {
+				return err
+			}
+			errors = append(errors, err)
+		}
+
 	}
 
 	if len(errors) > 0 {

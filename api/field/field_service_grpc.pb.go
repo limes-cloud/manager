@@ -19,29 +19,26 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	Field_ListFieldType_FullMethodName     = "/manager.api.field.Field/ListFieldType"
-	Field_ListField_FullMethodName         = "/manager.api.field.Field/ListField"
-	Field_ListRequiredField_FullMethodName = "/manager.api.field.Field/ListRequiredField"
-	Field_CreateField_FullMethodName       = "/manager.api.field.Field/CreateField"
-	Field_UpdateField_FullMethodName       = "/manager.api.field.Field/UpdateField"
-	Field_DeleteField_FullMethodName       = "/manager.api.field.Field/DeleteField"
+	Field_ListFieldOptions_FullMethodName = "/manager.api.field.Field/ListFieldOptions"
+	Field_ListField_FullMethodName        = "/manager.api.field.Field/ListField"
+	Field_CreateField_FullMethodName      = "/manager.api.field.Field/CreateField"
+	Field_UpdateField_FullMethodName      = "/manager.api.field.Field/UpdateField"
+	Field_DeleteField_FullMethodName      = "/manager.api.field.Field/DeleteField"
 )
 
 // FieldClient is the client API for Field service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type FieldClient interface {
-	// ListFieldType 获取可用的字段列表
-	ListFieldType(ctx context.Context, in *ListFieldTypeRequest, opts ...grpc.CallOption) (*ListFieldTypeReply, error)
-	// ListField 获取用户字段列表
+	// ListFieldOptions 获取组件类型和校验规则枚举
+	ListFieldOptions(ctx context.Context, in *ListFieldOptionsRequest, opts ...grpc.CallOption) (*ListFieldOptionsReply, error)
+	// ListField 获取字段列表
 	ListField(ctx context.Context, in *ListFieldRequest, opts ...grpc.CallOption) (*ListFieldReply, error)
-	// ListRequiredField 获取必填的用户字段列表
-	ListRequiredField(ctx context.Context, in *ListRequiredFieldRequest, opts ...grpc.CallOption) (*ListRequiredFieldReply, error)
-	// CreateField 创建用户字段
+	// CreateField 创建字段
 	CreateField(ctx context.Context, in *CreateFieldRequest, opts ...grpc.CallOption) (*CreateFieldReply, error)
-	// UpdateField 更新用户字段
+	// UpdateField 更新字段
 	UpdateField(ctx context.Context, in *UpdateFieldRequest, opts ...grpc.CallOption) (*UpdateFieldReply, error)
-	// DeleteField 删除用户字段
+	// DeleteField 删除字段
 	DeleteField(ctx context.Context, in *DeleteFieldRequest, opts ...grpc.CallOption) (*DeleteFieldReply, error)
 }
 
@@ -53,9 +50,9 @@ func NewFieldClient(cc grpc.ClientConnInterface) FieldClient {
 	return &fieldClient{cc}
 }
 
-func (c *fieldClient) ListFieldType(ctx context.Context, in *ListFieldTypeRequest, opts ...grpc.CallOption) (*ListFieldTypeReply, error) {
-	out := new(ListFieldTypeReply)
-	err := c.cc.Invoke(ctx, Field_ListFieldType_FullMethodName, in, out, opts...)
+func (c *fieldClient) ListFieldOptions(ctx context.Context, in *ListFieldOptionsRequest, opts ...grpc.CallOption) (*ListFieldOptionsReply, error) {
+	out := new(ListFieldOptionsReply)
+	err := c.cc.Invoke(ctx, Field_ListFieldOptions_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -65,15 +62,6 @@ func (c *fieldClient) ListFieldType(ctx context.Context, in *ListFieldTypeReques
 func (c *fieldClient) ListField(ctx context.Context, in *ListFieldRequest, opts ...grpc.CallOption) (*ListFieldReply, error) {
 	out := new(ListFieldReply)
 	err := c.cc.Invoke(ctx, Field_ListField_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *fieldClient) ListRequiredField(ctx context.Context, in *ListRequiredFieldRequest, opts ...grpc.CallOption) (*ListRequiredFieldReply, error) {
-	out := new(ListRequiredFieldReply)
-	err := c.cc.Invoke(ctx, Field_ListRequiredField_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -111,17 +99,15 @@ func (c *fieldClient) DeleteField(ctx context.Context, in *DeleteFieldRequest, o
 // All implementations must embed UnimplementedFieldServer
 // for forward compatibility
 type FieldServer interface {
-	// ListFieldType 获取可用的字段列表
-	ListFieldType(context.Context, *ListFieldTypeRequest) (*ListFieldTypeReply, error)
-	// ListField 获取用户字段列表
+	// ListFieldOptions 获取组件类型和校验规则枚举
+	ListFieldOptions(context.Context, *ListFieldOptionsRequest) (*ListFieldOptionsReply, error)
+	// ListField 获取字段列表
 	ListField(context.Context, *ListFieldRequest) (*ListFieldReply, error)
-	// ListRequiredField 获取必填的用户字段列表
-	ListRequiredField(context.Context, *ListRequiredFieldRequest) (*ListRequiredFieldReply, error)
-	// CreateField 创建用户字段
+	// CreateField 创建字段
 	CreateField(context.Context, *CreateFieldRequest) (*CreateFieldReply, error)
-	// UpdateField 更新用户字段
+	// UpdateField 更新字段
 	UpdateField(context.Context, *UpdateFieldRequest) (*UpdateFieldReply, error)
-	// DeleteField 删除用户字段
+	// DeleteField 删除字段
 	DeleteField(context.Context, *DeleteFieldRequest) (*DeleteFieldReply, error)
 	mustEmbedUnimplementedFieldServer()
 }
@@ -130,14 +116,11 @@ type FieldServer interface {
 type UnimplementedFieldServer struct {
 }
 
-func (UnimplementedFieldServer) ListFieldType(context.Context, *ListFieldTypeRequest) (*ListFieldTypeReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ListFieldType not implemented")
+func (UnimplementedFieldServer) ListFieldOptions(context.Context, *ListFieldOptionsRequest) (*ListFieldOptionsReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListFieldOptions not implemented")
 }
 func (UnimplementedFieldServer) ListField(context.Context, *ListFieldRequest) (*ListFieldReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListField not implemented")
-}
-func (UnimplementedFieldServer) ListRequiredField(context.Context, *ListRequiredFieldRequest) (*ListRequiredFieldReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ListRequiredField not implemented")
 }
 func (UnimplementedFieldServer) CreateField(context.Context, *CreateFieldRequest) (*CreateFieldReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateField not implemented")
@@ -161,20 +144,20 @@ func RegisterFieldServer(s grpc.ServiceRegistrar, srv FieldServer) {
 	s.RegisterService(&Field_ServiceDesc, srv)
 }
 
-func _Field_ListFieldType_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListFieldTypeRequest)
+func _Field_ListFieldOptions_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListFieldOptionsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(FieldServer).ListFieldType(ctx, in)
+		return srv.(FieldServer).ListFieldOptions(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Field_ListFieldType_FullMethodName,
+		FullMethod: Field_ListFieldOptions_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(FieldServer).ListFieldType(ctx, req.(*ListFieldTypeRequest))
+		return srv.(FieldServer).ListFieldOptions(ctx, req.(*ListFieldOptionsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -193,24 +176,6 @@ func _Field_ListField_Handler(srv interface{}, ctx context.Context, dec func(int
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(FieldServer).ListField(ctx, req.(*ListFieldRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Field_ListRequiredField_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ListRequiredFieldRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(FieldServer).ListRequiredField(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Field_ListRequiredField_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(FieldServer).ListRequiredField(ctx, req.(*ListRequiredFieldRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -277,16 +242,12 @@ var Field_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*FieldServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "ListFieldType",
-			Handler:    _Field_ListFieldType_Handler,
+			MethodName: "ListFieldOptions",
+			Handler:    _Field_ListFieldOptions_Handler,
 		},
 		{
 			MethodName: "ListField",
 			Handler:    _Field_ListField_Handler,
-		},
-		{
-			MethodName: "ListRequiredField",
-			Handler:    _Field_ListRequiredField_Handler,
 		},
 		{
 			MethodName: "CreateField",

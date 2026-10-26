@@ -47,7 +47,6 @@ func (s *Menu) ListCurrentMenu(c context.Context, req *menu.ListCurrentMenuReque
 
 	// 调用服务
 	in := &types.ListMenuRequest{
-		AppId:    req.AppId,
 		OnlyMenu: req.OnlyMenu,
 	}
 
@@ -72,7 +71,7 @@ func (s *Menu) ListMenu(c context.Context, req *menu.ListMenuRequest) (*menu.Lis
 
 	// 调用服务
 	in := &types.ListMenuRequest{
-		AppId: &req.AppId,
+		App: value.Pointer(ctx.AppKey(req.App)),
 	}
 
 	list, err := s.srv.ListMenu(ctx, in)
@@ -142,50 +141,21 @@ func (s *Menu) DeleteMenu(c context.Context, req *menu.DeleteMenuRequest) (*menu
 	return &menu.DeleteMenuReply{}, s.srv.DeleteMenu(core.MustContext(c), req.Id)
 }
 
-// RegisterMenu 注册应用菜单
+// RegisterMenu 注册应用菜单（供各服务启动时自注册菜单/接口权限，如 resource）
 func (s *Menu) RegisterMenu(c context.Context, req *menu.RegisterMenuRequest) (*menu.RegisterMenuReply, error) {
-	ctx := core.MustContext(c)
-	reply, err := s.srv.RegisterMenu(ctx, &types.RegisterMenuRequest{
-		AppKeyword: req.AppKeyword,
-		Mode:       req.Mode,
-		Menus:      transRegisterMenuNodes(req.Menus),
-	})
+	var in types.RegisterMenuRequest
+	if err := value.Transform(req, &in); err != nil {
+		return nil, errors.TransformError()
+	}
+
+	reply, err := s.srv.RegisterMenu(core.MustContext(c), &in)
 	if err != nil {
 		return nil, err
 	}
+
 	return &menu.RegisterMenuReply{
 		Created: reply.Created,
 		Updated: reply.Updated,
 		Deleted: reply.Deleted,
 	}, nil
-}
-
-func transRegisterMenuNodes(list []*menu.RegisterMenuNode) []*types.RegisterMenuNode {
-	var res []*types.RegisterMenuNode
-	for _, item := range list {
-		if item == nil {
-			continue
-		}
-		res = append(res, &types.RegisterMenuNode{
-			Key:        item.Key,
-			Title:      item.Title,
-			Type:       item.Type,
-			Icon:       item.Icon,
-			Api:        item.Api,
-			Method:     item.Method,
-			Path:       item.Path,
-			Permission: item.Permission,
-			Component:  item.Component,
-			Url:        item.Url,
-			Redirect:   item.Redirect,
-			Weight:     item.Weight,
-			IsIframe:   item.IsIframe,
-			IsHidden:   item.IsHidden,
-			IsCache:    item.IsCache,
-			IsHome:     item.IsHome,
-			IsAffix:    item.IsAffix,
-			Children:   transRegisterMenuNodes(item.Children),
-		})
-	}
-	return res
 }
